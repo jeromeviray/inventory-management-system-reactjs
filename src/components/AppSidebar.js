@@ -12,16 +12,13 @@ import {
 import SimpleBar from "simplebar-react"
 import "simplebar/dist/simplebar.min.css"
 
-import {
-  sideBarChange,
-  sidebarUnfoldChange,
-} from "../components/apiActions/changeStateAction"
+import { sideBarChange } from "../components/apiActions/changeStateAction"
 
 // sidebar nav config
 import navigation from "../_nav"
 
 // react icons
-import * as BiIcons from 'react-icons/bi'
+import * as BiIcons from "react-icons/bi"
 
 class AppSidebar extends Component {
   state = {
@@ -62,9 +59,7 @@ class AppSidebar extends Component {
           onClick={() => this.props.sidebarUnfoldChange(!sidebarUnfoldable)}
         /> */}
         <CSidebarFooter className="d-flex justify-content-between ">
-          <span className="font-weight-lighter ">
-            Log out
-          </span>
+          <span className="font-weight-lighter ">Log out</span>
           <BiIcons.BiLogOut size={20} />
         </CSidebarFooter>
       </CSidebar>

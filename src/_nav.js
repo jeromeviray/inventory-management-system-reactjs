@@ -1,9 +1,9 @@
 import React from "react"
-import * as FaIcons from "react-icons/fa";
+import * as FaIcons from "react-icons/fa"
 import { NavLink } from "react-router-dom"
 
 const iconMargin = {
-  marginRight: "10px"
+  marginRight: "10px",
 }
 const _nav = [
   {

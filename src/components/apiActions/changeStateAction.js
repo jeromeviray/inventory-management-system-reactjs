@@ -1,4 +1,4 @@
-import { SET_SIDEBAR_UNFOLD, SET_SIDEBAR } from "../redux/constants"
+import { SET_SIDEBAR } from "../redux/constants"
 
 export const sideBarChange = (sidebarState) => async (dispatch) => {
   dispatch({

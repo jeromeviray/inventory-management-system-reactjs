@@ -1,4 +1,4 @@
-import { SET_SIDEBAR_UNFOLD, SET_SIDEBAR } from "../constants"
+import { SET_SIDEBAR } from "../constants"
 
 const changeStateReducer = (state = {}, action) => {
   let response = {
