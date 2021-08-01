@@ -13,10 +13,10 @@ const loading = (
 const DefaultLayout = React.lazy(() => import("./layout/DefaultLayout"))
 
 // Pages
-const Login = React.lazy(() => import("./views/publicPages/login/Login"))
-const Register = React.lazy(() => import("./views/publicPages/register/Register"))
-const Page404 = React.lazy(() => import("./views/publicPages/page404/Page404"))
-const Page500 = React.lazy(() => import("./views/publicPages/page500/Page500"))
+const Login = React.lazy(() => import("./views/public/login/Login"))
+const Register = React.lazy(() => import("./views/public/register/Register"))
+const Page404 = React.lazy(() => import("./views/public/page404/Page404"))
+const Page500 = React.lazy(() => import("./views/public/page500/Page500"))
 
 class App extends Component {
   render() {

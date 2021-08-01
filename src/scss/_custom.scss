@@ -77,12 +77,12 @@
   background-color: rgb(216, 216, 216);
 }
 
-.form-container{
+.form-container {
   background-color: rgba(224, 224, 224, 0.877);
 }
 .login-btn {
   .login-icon {
-    left: -10%;
+    left: -15%;
   }
   .label-btn,
   .login-icon {
@@ -94,4 +94,59 @@
   &:hover .login-icon {
     left: 25%;
   }
+}
+
+.left-to-right {
+  animation: leftToRight;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  position: relative;
+  overflow: hidden;
+}
+
+@keyframes leftToRight {
+  0% {
+    left: -60%;
+  }
+  100% {
+    left: 0%;
+  }
+}
+
+.right-to-left {
+  animation: righToleft;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  position: relative;
+  overflow: hidden;
+}
+
+@keyframes righToleft {
+  0% {
+    right: -60%;
+  }
+  100% {
+    right: 0%;
+  }
+}
+.fancy {
+  line-height: 0.5;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+.fancy:before,
+.fancy:after {
+  content: "";
+  border-top: 1px solid gray;
+  margin: 0 20px 0 0;
+  flex: 1 0 20px;
+}
+.fancy:before {
+  margin-left: 15px;
+}
+.fancy:after {
+  margin-right: 15px;
+  margin-left: 15px;
 }
