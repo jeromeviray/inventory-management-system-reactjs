@@ -81,18 +81,8 @@
   background-color: rgba(224, 224, 224, 0.877);
 }
 .login-btn {
-  .login-icon {
-    left: -15%;
-  }
-  .label-btn,
-  .login-icon {
-    transition: all 0.1s ease-in-out;
-  }
-  &:hover .label-btn {
-    margin-left: 10px;
-  }
-  &:hover .login-icon {
-    left: 25%;
+  .label-btn{
+    font-weight: 400;
   }
 }
 
@@ -149,4 +139,27 @@
 .fancy:after {
   margin-right: 15px;
   margin-left: 15px;
+}
+
+
+// google and facebook link
+.google-link, .facebook-link{
+  width: 60%;
+  padding: 12px 20px; 
+  margin: 12px 0;
+  font-weight: 400;
+  .facebook-icon{
+    color:blue;
+  }
+  &:hover .facebook-icon{
+    color:white;
+  }
+} 
+.google-link:hover{
+  background:#e55353;
+  color:white;
+}
+.facebook-link:hover{
+  background:rgb(51, 153, 255);
+  color:white;
 }
