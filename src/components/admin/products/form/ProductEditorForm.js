@@ -8,6 +8,7 @@ import {
 } from "@coreui/react"
 import { EditorState } from "draft-js"
 import { Editor } from "react-draft-wysiwyg"
+import * as FaIcons from "react-icons/fa"
 
 export class ProductEditorForm extends Component {
   state = {
@@ -93,7 +94,7 @@ export class ProductEditorForm extends Component {
               wrapperClassName="editor-wrapper"
               editorClassName="editor"
               onEditorStateChange={this.onEditorStateChange}
-            />
+                />
           </CCol>
         </CRow>
       </>

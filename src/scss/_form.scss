@@ -1,10 +1,18 @@
 .editor-wrapper {
   border: 1px solid #b1b7c1;
-
+  font-weight: 500;
+  .rdw-block-wrapper, .rdw-fontsize-wrapper, .rdw-fontfamily-wrapper {
+    a {
+      text-decoration: none;
+      color: black;
+    }
+  }
   .editor {
     border: 1px solid #b1b7c1;
     height: 400px;
     padding: 0 20px;
+    text-decoration: none;
+    color: black;
     &::-webkit-scrollbar-track {
       -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
       box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
