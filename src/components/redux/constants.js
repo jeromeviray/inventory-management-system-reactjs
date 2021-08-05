@@ -10,3 +10,14 @@ export const SET_SIDEBAR_UNFOLD = "SET_SIDEBAR_UNFOLD"
 
 
 export const SET_PRODUCTEDITMODAL_VISIBILIT = "PRODUCT_EDITOR_MODAL"
+
+// endpoint constalnts
+export const API_BASE_URL = "http://localhost:4480/"
+
+export const OAUTH2_REDIRECT_URI = 'http://localhost:3000/oauth2/redirect'
+
+export const ACCESS_TOKEN = "accessToken"
+export const REFRESH_TOKEN = "refreshToken"
+
+
+export const GOOGLE_AUTH_URL = API_BASE_URL + "auht2/authorize/google?redirect_uri=" + OAUTH2_REDIRECT_URI;
