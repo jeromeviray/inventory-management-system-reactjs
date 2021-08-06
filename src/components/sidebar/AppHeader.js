@@ -16,11 +16,11 @@ import * as FaIcons from 'react-icons/fa'
 
 import { AppBreadcrumb } from "./index"
 
-import { AppHeaderDropdown } from "./header/index"
-
-import {
-  sideBarChange,
-} from "../components/apiActions/changeStateAction"
+import { AppHeaderDropdown } from "./index"
+// import {
+//   sideBarChange,
+// } from "../components/apiActions/changeStateAction"
+import { sideBarChange } from "../apiActions/changeStateAction"
 
 class AppHeader extends Component {
   state = {

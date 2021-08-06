@@ -3,7 +3,8 @@ import { Redirect, Route, Switch } from 'react-router-dom'
 import { CContainer, CSpinner } from '@coreui/react'
 
 // routes config
-import routes from '../routes'
+import routes from 'src/routes'
+// import routes from '../routes'
 
 const AppContent = () => {
   return (

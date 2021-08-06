@@ -18,11 +18,30 @@ const _nav = [
     },
   },
   {
-    _component: "CNavItem",
-    as: NavLink,
-    anchor: "Products",
-    to: "/products",
+    _component: "CNavGroup",
+    anchor: "Product Management",
+    to: "/product/manangement",
     icon: <FaIcons.FaThLarge size={20} style={iconMargin} />,
+    items: [
+      {
+        _component: "CNavItem",
+        as: NavLink,
+        anchor: "Products",
+        to:"/products"
+      },
+      {
+        _component: "CNavItem",
+        as: NavLink,
+        anchor: "Brand",
+        to:"/products/brand"
+      },
+      {
+        _component: "CNavItem",
+        as: NavLink,
+        anchor: "Category",
+        to:"/products/category"
+      }
+    ]
   },
   {
     _component: "CNavGroup",

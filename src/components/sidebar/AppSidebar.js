@@ -12,10 +12,11 @@ import {
 import SimpleBar from "simplebar-react"
 import "simplebar/dist/simplebar.min.css"
 
-import { sideBarChange } from "../components/apiActions/changeStateAction"
+// import { sideBarChange } from "../"
+import { sideBarChange } from "../apiActions/changeStateAction"
 
 // sidebar nav config
-import navigation from "../_nav"
+import navigation from "../../_nav"
 
 // react icons
 import * as BiIcons from "react-icons/bi"
