@@ -1,5 +1,10 @@
-import React, { Component } from "react"
-import { HashRouter, Route, Switch } from "react-router-dom"
+import React, { Component, lazy } from "react"
+import {
+  BrowserRouter as Router,
+  // HashRouter,
+  Route,
+  Switch
+} from "react-router-dom"
 import "./scss/style.scss"
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css"
 
@@ -17,45 +22,64 @@ const Login = React.lazy(() => import("./views/public/login/Login"))
 const Register = React.lazy(() => import("./views/public/register/Register"))
 const Page404 = React.lazy(() => import("./views/public/page404/Page404"))
 const Page500 = React.lazy(() => import("./views/public/page500/Page500"))
+const RedirectSuccessHandler = lazy(() => import("./components/redirectSuccessHandler/RedirectSuccessHandler"))
 
 class App extends Component {
   render() {
     return (
-      <HashRouter>
-        <React.Suspense fallback={loading}>
-          <Switch>
-            <Route
-              exact
-              path="/login"
-              name="Login Page"
-              render={(props) => <Login {...props} />}
-            />
-            <Route
-              exact
-              path="/register"
-              name="Register Page"
-              render={(props) => <Register {...props} />}
-            />
-            <Route
-              exact
-              path="/404"
-              name="Page 404"
-              render={(props) => <Page404 {...props} />}
-            />
-            <Route
-              exact
-              path="/500"
-              name="Page 500"
-              render={(props) => <Page500 {...props} />}
-            />
-            <Route
-              path="/"
-              name="Admin"
-              render={(props) => <DefaultLayout {...props} />}
-            />
-          </Switch>
-        </React.Suspense>
-      </HashRouter>
+      <>
+        {/* <Router>
+          <Route
+            exact
+            path="/oauth2/redirect"
+            name="success handler"
+            render={(props) => <RedirectSuccessHandler {...props} />}
+          />
+        </Router> */}
+
+        <Router>
+          <React.Suspense fallback={loading}>
+            <Switch>
+              <Route
+                exact
+                path="/oauth2/redirect"
+                name="success handler"
+                render={(props) => <RedirectSuccessHandler {...props} />}
+              />
+              <Route
+                exact
+                path="/login"
+                name="Login Page"
+                render={(props) => <Login {...props} />}
+              />
+              <Route
+                exact
+                path="/register"
+                name="Register Page"
+                render={(props) => <Register {...props} />}
+              />
+              <Route
+                exact
+                path="/404"
+                name="Page 404"
+                render={(props) => <Page404 {...props} />}
+              />
+              <Route
+                exact
+                path="/500"
+                name="Page 500"
+                render={(props) => <Page500 {...props} />}
+              />
+              <Route
+                path="/"
+                name="Admin"
+                render={(props) => <DefaultLayout {...props} />}
+              />
+            </Switch>
+          </React.Suspense>
+        </Router>
+      </>
+
     )
   }
 }

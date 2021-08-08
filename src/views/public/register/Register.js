@@ -154,7 +154,7 @@ export class Register extends Component {
                               <CFormControl
                                 name="email"
                                 type="email"
-                                id="floatingPassword"
+                                id="floatingEmail"
                                 autoCorrect="false"
                                 placeholder="Email"
                                 onChange={this.handleOnChange}

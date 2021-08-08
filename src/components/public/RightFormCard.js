@@ -8,6 +8,7 @@ import * as BsIcons from "react-icons/bs"
 import * as FaIcons from "react-icons/fa"
 
 export class RightFormCard extends Component {
+
   render() {
     return (
       <CCard className="right-to-left border-0">
