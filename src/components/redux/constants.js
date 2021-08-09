@@ -14,7 +14,7 @@ export const SET_PRODUCTEDITMODAL_VISIBILIT = "PRODUCT_EDITOR_MODAL"
 // endpoint constalnts
 export const API_BASE_URL = "http://localhost:4480"
 
-export const OAUTH2_REDIRECT_URI = "http://localhost:3002/oauth2/redirect"
+export const OAUTH2_REDIRECT_URI = "http://localhost:3000/oauth2/redirect"
 
 export const ACCESS_TOKEN = "accessToken"
 export const REFRESH_TOKEN = "refreshToken"
