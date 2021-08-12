@@ -7,6 +7,8 @@ import {
 } from "react-router-dom"
 import "./scss/style.scss"
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css"
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+
 
 const loading = (
   <div className="pt-3 text-center">
@@ -16,6 +18,8 @@ const loading = (
 
 // Containers
 const DefaultLayout = React.lazy(() => import("./layout/DefaultLayout"))
+const PublicLayout = React.lazy(() => import("./layout/PublicLayout"))
+
 
 // Pages
 const Login = React.lazy(() => import("./views/public/login/Login"))
@@ -28,15 +32,6 @@ class App extends Component {
   render() {
     return (
       <>
-        {/* <Router>
-          <Route
-            exact
-            path="/oauth2/redirect"
-            name="success handler"
-            render={(props) => <RedirectSuccessHandler {...props} />}
-          />
-        </Router> */}
-
         <Router>
           <React.Suspense fallback={loading}>
             <Switch>
@@ -58,6 +53,7 @@ class App extends Component {
                 name="Register Page"
                 render={(props) => <Register {...props} />}
               />
+
               <Route
                 exact
                 path="/404"
@@ -71,10 +67,16 @@ class App extends Component {
                 render={(props) => <Page500 {...props} />}
               />
               <Route
-                path="/"
+                path="/home"
+                name="public"
+                render={(props) => <PublicLayout {...props} />}
+              />
+              <Route
+                path="/admin"
                 name="Admin"
                 render={(props) => <DefaultLayout {...props} />}
               />
+
             </Switch>
           </React.Suspense>
         </Router>

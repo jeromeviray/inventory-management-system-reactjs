@@ -10,7 +10,7 @@ const _nav = [
     _component: "CNavItem",
     as: NavLink,
     anchor: "Dashboard",
-    to: "/dashboard",
+    to: "/admin/dashboard",
     icon: <FaIcons.FaTachometerAlt size={20} style={iconMargin} />,
     badge: {
       color: "info",
@@ -27,19 +27,19 @@ const _nav = [
         _component: "CNavItem",
         as: NavLink,
         anchor: "Products",
-        to:"/products"
+        to: "/admin/products"
       },
       {
         _component: "CNavItem",
         as: NavLink,
         anchor: "Brand",
-        to:"/products/brand"
+        to: "/admin/products/brand"
       },
       {
         _component: "CNavItem",
         as: NavLink,
         anchor: "Category",
-        to:"/products/category"
+        to: "/admin/products/category"
       }
     ]
   },

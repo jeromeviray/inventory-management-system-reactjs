@@ -3,8 +3,7 @@ import { Redirect, Route, Switch } from 'react-router-dom'
 import { CContainer, CSpinner } from '@coreui/react'
 
 // routes config
-import routes from 'src/routes'
-// import routes from '../routes'
+import { routes } from 'src/routes'
 
 const AppContent = () => {
   return (
@@ -28,7 +27,9 @@ const AppContent = () => {
               )
             )
           })}
-          <Redirect from="/" to="/dashboard" />
+          <Redirect from="/admin" to="/admin/dashboard" />
+
+
         </Switch>
       </Suspense>
     </CContainer>

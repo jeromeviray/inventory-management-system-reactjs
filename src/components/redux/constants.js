@@ -3,7 +3,7 @@ export const GET_PRODUCT = "GET_PRODUCT"
 export const DELETE_PRODUCT = "DELETE_PRODUCT"
 export const UPDATE_PRODUCT = "UPDATE_PRODUCT"
 export const GET_CAROUSEL_IMAGES = "GET_CAROUSEL_IMAGES"
-export const CAROUSEL_FOLDER_DIRECTORY = "/images/carousel/"
+export const CAROUSEL_FOLDER_DIRECTORY = "/carousel/"
 
 export const SET_SIDEBAR = "SET_SIDEBAR"
 export const SET_SIDEBAR_UNFOLD = "SET_SIDEBAR_UNFOLD"
@@ -18,6 +18,7 @@ export const OAUTH2_REDIRECT_URI = "http://localhost:3000/oauth2/redirect"
 export const ACCESS_TOKEN = "accessToken"
 export const REFRESH_TOKEN = "refreshToken"
 export const USERNAME = "username"
+export const CURRENT_USER = "current_user"
 
 export const GOOGLE_AUTH_URL =
   API_BASE_URL + "/oauth2/authorize/google?redirect_uri=" + OAUTH2_REDIRECT_URI

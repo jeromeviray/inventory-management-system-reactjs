@@ -1,4 +1,5 @@
-import { GET_CAROUSEL_IMAGES, CAROUSEL_FOLDER_DIRECTORY } from "../../../redux/constants";
+// import { GET_CAROUSEL_IMAGES, CAROUSEL_FOLDER_DIRECTORY } from "../../../redux/constants";
+import { GET_CAROUSEL_IMAGES, CAROUSEL_FOLDER_DIRECTORY } from "src/components/redux/constants";
 
 export const getCarouselImages = () => async (dispatch) => {
     dispatch({
