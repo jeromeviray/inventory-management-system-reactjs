@@ -1,6 +1,5 @@
 import React, { Component } from "react"
 import { Redirect } from "react-router-dom"
-import { CURRENT_USER } from "../redux/constants"
 import queryString from "query-string"
 
 export class RedirectSuccessHandler extends Component {
@@ -10,15 +9,16 @@ export class RedirectSuccessHandler extends Component {
         const token = params.accessToken
         const refreshToken = params.refreshToken
         const username = params.username
+
         const currentUser = {
             username: username,
             access_token: token,
             refresh_token: refreshToken,
         }
-        console.log(currentUser);
         const error = params.error
-        if (token) {
-            localStorage.setItem(CURRENT_USER, JSON.stringify(currentUser))
+
+        if (currentUser) {
+            localStorage.setItem("credentials", JSON.stringify(currentUser))
             return (
                 <Redirect
                     to={{

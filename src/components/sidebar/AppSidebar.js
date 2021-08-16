@@ -11,21 +11,28 @@ import {
 } from "@coreui/react"
 import SimpleBar from "simplebar-react"
 import "simplebar/dist/simplebar.min.css"
+import { intersection } from 'lodash';
 
 // import { sideBarChange } from "../"
-import { sideBarChange } from "../apiActions/changeStateAction"
+import { sideBarChange } from "../../service/apiActions/changeStateAction"
 
 // sidebar nav config
 import navigation from "../../_nav"
 
 // react icons
 import * as BiIcons from "react-icons/bi"
+import GetAllowedRoutes from "src/_helper/GetAllowedRoutes"
+import { Roles } from "src/router/config"
 
 class AppSidebar extends Component {
   state = {
     sidebarShow: false,
+    nav: []
   }
+  componentDidMount() {
 
+    this.handleAllowedRoutes();
+  }
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.changeStateResponse !== this.props.changeStateResponse) {
       this.setState({
@@ -33,9 +40,27 @@ class AppSidebar extends Component {
       })
     }
   }
+  isArrayWithLength(arr) {
+    return (Array.isArray(arr) && arr.length)
+  }
+  handleAllowedRoutes = () => {
+    // const credentials = this.props.userResponse.credentials;
+    const roles = [Roles.ADMIN];
+
+    let allowed = navigation.filter(({ permission }) => {
+
+      if (!permission) return true;
+      else if (!this.isArrayWithLength(permission)) return true;
+      else return intersection(permission, roles).length;
+    })
+    this.setState({
+      nav: allowed
+    })
+  }
 
   render() {
-    const { sidebarShow } = this.state
+    const { sidebarShow, nav } = this.state
+    const { userResponse } = this.props;
     return (
       <CSidebar
         position="fixed"
@@ -48,11 +73,11 @@ class AppSidebar extends Component {
         }}
       >
         <CSidebarBrand className=" d-md-flex" to="/">
-          Welcome, JC.
+          Welcome, {userResponse.credentials.username}
         </CSidebarBrand>
         <CSidebarNav>
           <SimpleBar>
-            <CCreateNavItem items={navigation} />
+            <CCreateNavItem items={nav} />
           </SimpleBar>
         </CSidebarNav>
         {/* <CSidebarToggler
@@ -71,6 +96,7 @@ class AppSidebar extends Component {
 const mapStateToProps = (state) => {
   return {
     changeStateResponse: state.changeStateResponse,
+    userResponse: state.userResponse
   }
 }
 

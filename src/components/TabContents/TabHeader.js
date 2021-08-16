@@ -8,6 +8,7 @@ import {
 } from '@coreui/react'
 
 import { NewArrivalProducts, RecommendProducts, PopularProducts } from '../public/index'
+import { connect } from 'react-redux'
 
 export class TabHeader extends Component {
     state = {
@@ -20,6 +21,7 @@ export class TabHeader extends Component {
     }
     render() {
         const { activeKey } = this.state;
+        const isLoggedIn = this.props.isLoggedIn;
         return (
             <>
                 <CNav variant="tabs" className="justify-content-center ">
@@ -39,14 +41,17 @@ export class TabHeader extends Component {
                             Popular
                         </CNavLink>
                     </CNavItem>
-                    <CNavItem>
-                        <CNavLink
-                            active={activeKey === 3}
-                            onClick={() => this.handleOnClick(3)}
-                        >
-                            Recommneded for you
-                        </CNavLink>
-                    </CNavItem>
+                    {isLoggedIn ?
+                        <CNavItem>
+                            <CNavLink
+                                active={activeKey === 3}
+                                onClick={() => this.handleOnClick(3)}
+                            >
+                                Recommneded for you
+                            </CNavLink>
+                        </CNavItem> :
+                        ""
+                    }
 
                 </CNav>
                 <CTabContent>
@@ -56,14 +61,23 @@ export class TabHeader extends Component {
                     <CTabPane visible={activeKey === 2}>
                         <PopularProducts />
                     </CTabPane>
-                    <CTabPane visible={activeKey === 3}>
-                        <RecommendProducts />
-                    </CTabPane>
+                    {isLoggedIn ?
+                        <CTabPane visible={activeKey === 3}>
+                            <RecommendProducts />
+                        </CTabPane> :
+                        ""
+                    }
 
                 </CTabContent>
             </>
         )
     }
 }
+const mapStateToProps = (state) => {
+    const isLoggedIn = state.userResponse.isLoggedIn;
 
-export default TabHeader
+    return {
+        isLoggedIn
+    }
+}
+export default connect(mapStateToProps)(TabHeader)

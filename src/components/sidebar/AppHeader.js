@@ -20,7 +20,7 @@ import { AppHeaderDropdown } from "./index"
 // import {
 //   sideBarChange,
 // } from "../components/apiActions/changeStateAction"
-import { sideBarChange } from "../apiActions/changeStateAction"
+import { sideBarChange } from "../../service/apiActions/changeStateAction"
 
 class AppHeader extends Component {
   state = {

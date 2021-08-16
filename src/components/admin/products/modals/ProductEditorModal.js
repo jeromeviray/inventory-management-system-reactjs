@@ -15,7 +15,7 @@ import {
 
 import { MdDelete } from "react-icons/md"
 import { RiEdit2Line } from "react-icons/ri"
-import { setProductModal } from "../../../apiActions/modalAction/modalAction"
+import { setProductModal } from "../../../../service/apiActions/modalAction/modalAction"
 import ImageUploading from "react-images-uploading"
 
 const ProductEditorForm = lazy(() => import("../form/ProductEditorForm.js"))
@@ -88,9 +88,9 @@ export class ProductEditorModal extends Component {
                       style={
                         isDragging
                           ? {
-                              backgroundColor: "#8E9293",
-                              border: "4px dashed #ffffff",
-                            }
+                            backgroundColor: "#8E9293",
+                            border: "4px dashed #ffffff",
+                          }
                           : undefined
                       }
                       onClick={onImageUpload}

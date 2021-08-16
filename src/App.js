@@ -1,6 +1,7 @@
 import React, { Component, lazy } from "react"
 import {
   BrowserRouter as Router,
+  Redirect,
   // HashRouter,
   Route,
   Switch
@@ -8,7 +9,8 @@ import {
 import "./scss/style.scss"
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css"
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
-
+import { connect } from "react-redux";
+import PrivateRouter from "./router/privateRouter/PrivateRouter";
 
 const loading = (
   <div className="pt-3 text-center">
@@ -22,14 +24,15 @@ const PublicLayout = React.lazy(() => import("./layout/PublicLayout"))
 
 
 // Pages
-const Login = React.lazy(() => import("./views/public/login/Login"))
-const Register = React.lazy(() => import("./views/public/register/Register"))
-const Page404 = React.lazy(() => import("./views/public/page404/Page404"))
-const Page500 = React.lazy(() => import("./views/public/page500/Page500"))
+const Login = React.lazy(() => import("./views/common/public/login/Login"))
+const Register = React.lazy(() => import("./views/common/public/register/Register"))
+const Page404 = React.lazy(() => import("./views/common/public/page404/Page404"))
+const Page500 = React.lazy(() => import("./views/common/public/page500/Page500"))
 const RedirectSuccessHandler = lazy(() => import("./components/redirectSuccessHandler/RedirectSuccessHandler"))
 
 class App extends Component {
   render() {
+    // const credentials = this.props.credentials;
     return (
       <>
         <Router>
@@ -53,28 +56,27 @@ class App extends Component {
                 name="Register Page"
                 render={(props) => <Register {...props} />}
               />
-
-              <Route
-                exact
-                path="/404"
-                name="Page 404"
-                render={(props) => <Page404 {...props} />}
-              />
               <Route
                 exact
                 path="/500"
                 name="Page 500"
                 render={(props) => <Page500 {...props} />}
               />
+              <PrivateRouter path="/app" component={DefaultLayout} />
+              {/* <PrivateRoutes /> */}
               <Route
-                path="/home"
+                path="/"
                 name="public"
                 render={(props) => <PublicLayout {...props} />}
               />
+              {/* <Route exact path="/" render={() => (
+                <Redirect to="/home" />
+              )} /> */}
+
               <Route
-                path="/admin"
-                name="Admin"
-                render={(props) => <DefaultLayout {...props} />}
+                path="*"
+                name="Page 404"
+                render={(props) => <Page404 {...props} />}
               />
 
             </Switch>
@@ -85,5 +87,13 @@ class App extends Component {
     )
   }
 }
+const mapStateToProps = (state) => {
+  const isLoggedIn = state.userResponse.isLoggedIn;
+  const credentials = state.userResponse.credentials;
+  return {
+    isLoggedIn,
+    credentials,
 
-export default App
+  }
+}
+export default connect(mapStateToProps)(App)

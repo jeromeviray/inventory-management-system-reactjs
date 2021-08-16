@@ -1,7 +1,7 @@
 import { CCard, CCardBody, CCol, CButton } from "@coreui/react"
 import { Link } from "react-router-dom"
 import React, { Component } from "react"
-import { GOOGLE_AUTH_URL } from "../redux/constants"
+import { GOOGLE_AUTH_URL } from "../../service/redux/constants"
 import * as FcIcons from "react-icons/fc"
 import * as BsIcons from "react-icons/bs"
 

@@ -1,10 +1,11 @@
 import React, { Component, Suspense } from 'react'
 import { CContainer, CSpinner } from '@coreui/react'
 import { Route, Switch, Redirect } from 'react-router'
-import { publicRoutes } from 'src/routes'
+import { publicRoutes } from 'src/router/config/routes'
 
 export class PublicContent extends Component {
     render() {
+        console.log(publicRoutes)
         return (
             <>
                 <CContainer>

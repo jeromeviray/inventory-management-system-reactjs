@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, compose } from 'redux'
-import reducers from './components/redux/reducers'
+import reducers from './service/redux/reducers'
 
 import thunk from 'redux-thunk'
 import { responsiveStoreEnhancer } from 'redux-responsive'
