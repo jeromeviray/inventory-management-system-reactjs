@@ -2,9 +2,12 @@ import { CCard, CCardBody, CCol, CButton } from "@coreui/react"
 import { Link } from "react-router-dom"
 import React, { Component } from "react"
 import { GOOGLE_AUTH_URL } from "../../service/redux/constants"
+
+
+// icons
 import * as FcIcons from "react-icons/fc"
 import * as BsIcons from "react-icons/bs"
-
+import * as FiIcons from "react-icons/fi"
 import * as FaIcons from "react-icons/fa"
 
 export class RightFormCard extends Component {
@@ -65,7 +68,7 @@ export class RightFormCard extends Component {
                     className="d-flex justify-content-center align-items-center secondary-login-btn"
                   >
                     <span className="d-flex align-items-center login-icon me-2">
-                      <BsIcons.BsFillPersonFill size={20} />
+                      <FiIcons.FiLogIn size={20} />
                     </span>
                     <span className="label-btn">Login</span>
                   </CButton>

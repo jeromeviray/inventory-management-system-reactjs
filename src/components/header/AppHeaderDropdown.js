@@ -35,8 +35,8 @@ class AppHeaderDropdown extends Component {
     eventBus.remove("logout")
   }
   handleLogOut = () => {
-    this.props.logout();
     window.location.reload();
+    this.props.logout();
 
   }
   render() {

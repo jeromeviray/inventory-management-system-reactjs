@@ -28,7 +28,8 @@ import eventBus from "src/_helper/EventBus"
 class AppSidebar extends Component {
   state = {
     sidebarShow: false,
-    nav: []
+    nav: [],
+    roles: ''
   }
 
   componentDidMount() {
@@ -47,7 +48,13 @@ class AppSidebar extends Component {
   }
 
   handleAllowedRoutes = () => {
-    const roles = this.props.userResponse.credentials.roles.roleName
+    let roles = '';
+    let roleName = this.props.userResponse.credentials.roles.roleName;
+    if (!roleName) {
+      roles = this.props.userResponse.credentials.roles
+    } else {
+      roles = roleName;
+    }
     const allowedRoutes = Routings.getAllowedRoutes(navigation, roles);
     this.setState({
       nav: allowedRoutes
@@ -60,9 +67,9 @@ class AppSidebar extends Component {
 
   }
   render() {
-    const { sidebarShow, nav } = this.state
+    const { sidebarShow, nav, roles } = this.state
     const { userResponse } = this.props;
-
+    console.log(roles)
     return (
 
       <CSidebar

@@ -8,7 +8,16 @@ import Routings from 'src/_helper/Routings'
 import { connect, useSelector } from 'react-redux'
 
 const AppBreadcrumb = (props) => {
-  const roles = useSelector((state) => state.userResponse.credentials.roles.roleName)
+  const roles = useSelector((state) => {
+    let getRoleName = state.userResponse.credentials.roles.roleName;
+    let getRoles = state.userResponse.credentials.roles;
+
+    if (!getRoleName) {
+      return getRoles;
+    } else {
+      return getRoleName;
+    }
+  })
   const currentLocation = useLocation().pathname
 
 
@@ -19,6 +28,7 @@ const AppBreadcrumb = (props) => {
   }
 
   const getBreadcrumbs = (location) => {
+
     const allowedRoutes = Routings.getAllowedRoutes(routes, roles);
 
     const breadcrumbs = []

@@ -20,8 +20,11 @@ import { connect } from "react-redux"
 import { authenticateUser } from "src/service/apiActions/userAction/userAction.js"
 
 import React, { Component, lazy } from "react"
+
+//icons
 import * as FaIcons from "react-icons/fa"
-import * as BsIcons from "react-icons/bs"
+import * as FiIcons from "react-icons/fi"
+
 import { Redirect } from "react-router-dom"
 import { history } from "src/_helper/history.js"
 
@@ -207,7 +210,7 @@ export class Login extends Component {
                           >
                             {loading ? <CSpinner size="sm" /> :
                               <span className="d-flex align-items-center login-icon me-2">
-                                <BsIcons.BsFillPersonFill size={20} />
+                                <FiIcons.FiLogIn size={20} />
                               </span>
                             }
 

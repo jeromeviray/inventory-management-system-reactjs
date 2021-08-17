@@ -4,7 +4,9 @@ import { CContainer } from '@coreui/react'
 import { HeroCarousel } from 'src/components/carousel/index'
 
 export class Home extends Component {
+
     render() {
+
         return (
             <>
                 <CContainer>

@@ -9,9 +9,14 @@ import {
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
 import { AppHeaderDropdown } from '../sidebar'
+//icons
 import * as FaIcons from "react-icons/fa"
-import { connect } from 'react-redux'
+import * as FiIcons from "react-icons/fi"
 
+import { connect } from 'react-redux'
+const style = {
+    marginRight: "10px"
+}
 export class NavHeader extends Component {
     render() {
         const isLoggedIn = this.props.isLoggedIn;
@@ -22,14 +27,32 @@ export class NavHeader extends Component {
                     <Link className="nav-link" to="/home" style={{ cursor: "pointer" }}>
                         <h2 className="nav-item">Logo</h2>
                     </Link>
-                    {isLoggedIn &&
+                    {isLoggedIn ?
                         <CHeaderNav className="ms-3 d-lg-none d-md-block">
+                            <div className="d-flex justify-content-center">
+                                <CNavItem>
+                                    <CNavLink href="#">
+                                        <FaIcons.FaBell size={20} />
+                                    </CNavLink>
+                                </CNavItem>
+
+                                <AppHeaderDropdown />
+                            </div>
+
+                        </CHeaderNav> :
+                        <CHeaderNav className="ms-3 ">
                             <CNavItem>
-                                <CNavLink href="#">
-                                    <FaIcons.FaBell size={20} />
+                                <CNavLink href="/login">
+                                    <FiIcons.FiLogIn size={20} style={style} />
+                                    Login
                                 </CNavLink>
                             </CNavItem>
-                            <AppHeaderDropdown />
+                            <CNavItem>
+                                <CNavLink href="/register">
+                                    <FaIcons.FaUserPlus size={20} style={style} />
+                                    Register
+                                </CNavLink>
+                            </CNavItem>
                         </CHeaderNav>
                     }
                 </CContainer>

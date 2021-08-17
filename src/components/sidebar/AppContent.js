@@ -23,7 +23,13 @@ class AppContent extends Component {
   }
 
   handleAllowedRoutes = () => {
-    const roles = this.props.userResponse.credentials.roles.roleName;
+    let roles = '';
+    let roleName = this.props.userResponse.credentials.roles.roleName;
+    if (!roleName) {
+      roles = this.props.userResponse.credentials.roles
+    } else {
+      roles = roleName;
+    }
     const allowedRoutes = Routings.getAllowedRoutes(routes, roles)
     this.props.getRoutes(allowedRoutes)
     this.setState({
