@@ -23,11 +23,17 @@ import * as BsIcons from "react-icons/bs"
 import { connect } from "react-redux"
 import { Redirect } from "react-router-dom"
 import { createAccount } from "src/service/apiActions/userAction/userAction"
-
+import { history } from "src/_helper/history"
+import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 const RightFormCard = lazy(() => import("../../../../components/public/RightFormCard"))
 
 export class Register extends Component {
-
+  constructor(props) {
+    super(props);
+    history.listen((location) => {
+      clearMessage();  // clear message when changing location
+    });
+  }
   state = {
     username: "",
     password: "",
@@ -89,7 +95,6 @@ export class Register extends Component {
     let { username, password, email, type, loading, successful } = this.state;
     const isLoggedIn = this.props.userResponse.isLoggedIn;
     const message = this.props.messageResponse.message;
-    console.log(successful)
     if (isLoggedIn) {
 
       return <Redirect to="/home" />
@@ -262,5 +267,6 @@ const mapStateToProps = (state) => {
   }
 }
 export default connect(mapStateToProps, {
-  createAccount
+  createAccount,
+  clearMessage
 })(Register)

@@ -7,10 +7,14 @@ import {
     CCollapse,
     CNavbarNav,
     CNavItem,
-
+    CNavLink
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
 import { topItems } from './items'
+import { AppHeaderDropdown } from '../sidebar'
+import * as FaIcons from "react-icons/fa"
+import { connect } from 'react-redux'
+
 
 export class Navbar extends Component {
     state = {
@@ -18,9 +22,10 @@ export class Navbar extends Component {
     }
 
     render() {
+
         return (
             <>
-                <CNavbar expand="lg" colorScheme="dark" className="bg-dark d-none d-lg-block" placement="fixed-top">
+                <CNavbar expand="lg" colorScheme="dark" className="bg-dark d-none d-lg-block" placement="sticky-top" >
                     <CContainer>
                         <CNavbarBrand href="#">Navbar</CNavbarBrand>
                         <CNavbarToggler onClick={() => this.setState({
@@ -38,6 +43,16 @@ export class Navbar extends Component {
                                 })}
                             </CNavbarNav>
                         </CCollapse>
+                        {this.props.isLoggedIn &&
+                            <CNavbarNav>
+                                <CNavItem>
+                                    <CNavLink href="#">
+                                        <FaIcons.FaBell size={20} />
+                                    </CNavLink>
+                                </CNavItem>
+                                <AppHeaderDropdown />
+                            </CNavbarNav>
+                        }
                     </CContainer>
                 </CNavbar>
             </>
@@ -45,4 +60,10 @@ export class Navbar extends Component {
     }
 }
 
-export default Navbar
+const mapStateToProps = (state) => {
+    const isLoggedIn = state.userResponse.isLoggedIn;
+    return {
+        isLoggedIn
+    }
+}
+export default connect(mapStateToProps, {})(Navbar)

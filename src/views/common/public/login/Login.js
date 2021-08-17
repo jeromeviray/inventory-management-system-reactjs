@@ -23,6 +23,10 @@ import React, { Component, lazy } from "react"
 import * as FaIcons from "react-icons/fa"
 import * as BsIcons from "react-icons/bs"
 import { Redirect } from "react-router-dom"
+import { history } from "src/_helper/history.js"
+
+// clear message 
+import { clearMessage } from "src/service/apiActions/messageAction/messageAction.js"
 
 //validations
 
@@ -40,7 +44,12 @@ export class Login extends Component {
     loading: false,
     validation: false
   }
-
+  constructor(props) {
+    super(props);
+    history.listen((location) => {
+      clearMessage();  // clear message when changing location
+    });
+  }
   handleOnChange = (event) => {
     const name = event.target.name
     this.setState({
@@ -236,4 +245,4 @@ const mapStateToProps = (state) => {
     messageResponse: state.messageResponse
   }
 }
-export default connect(mapStateToProps, { authenticateUser })(Login)
+export default connect(mapStateToProps, { authenticateUser, clearMessage })(Login)

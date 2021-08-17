@@ -3,7 +3,7 @@ import {
     LOGIN_FAIL,
     REGISTER_SUCCESS,
     REGISTER_FAIL,
-    // LOGOUT,
+    LOGOUT,
     LOGIN_SUCCESS,
     SET_MESSAGE,
     // CLEAR_MESSAGEs
@@ -71,4 +71,11 @@ export const createAccount = (username, password, email) => async (dispatch) => 
 
 
         )
+}
+
+export const logout = () => (dispatch) => {
+    authService.logout();
+    dispatch({
+        type: LOGOUT
+    })
 }

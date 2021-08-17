@@ -21,14 +21,21 @@ import navigation from "../../_nav"
 // react icons
 import * as BiIcons from "react-icons/bi"
 import Routings from "src/_helper/Routings"
+import { logout } from "src/service/apiActions/userAction/userAction"
+import eventBus from "src/_helper/EventBus"
+// import { history } from "src/_helper/history"
 
 class AppSidebar extends Component {
   state = {
     sidebarShow: false,
     nav: []
   }
+
   componentDidMount() {
     this.handleAllowedRoutes();
+    eventBus.on("logout", () => {
+      this.logOut();
+    });
   }
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.changeStateResponse !== this.props.changeStateResponse) {
@@ -36,6 +43,7 @@ class AppSidebar extends Component {
         sidebarShow: this.props.changeStateResponse.state.sidebarState,
       })
     }
+    eventBus.remove("logout")
   }
 
   handleAllowedRoutes = () => {
@@ -46,7 +54,11 @@ class AppSidebar extends Component {
     })
 
   }
+  handleLogOut = () => {
+    this.props.logout();
+    window.location.reload();
 
+  }
   render() {
     const { sidebarShow, nav } = this.state
     const { userResponse } = this.props;
@@ -75,7 +87,10 @@ class AppSidebar extends Component {
           className=" d-lg-flex"
           onClick={() => this.props.sidebarUnfoldChange(!sidebarUnfoldable)}
         /> */}
-        <CSidebarFooter className="d-flex justify-content-between ">
+        <CSidebarFooter
+          className="d-flex justify-content-between "
+          onClick={this.handleLogOut} style={{ cursor: "pointer" }}>
+
           <span className="font-weight-lighter">Log out</span>
           <BiIcons.BiLogOut size={20} />
         </CSidebarFooter>
@@ -87,14 +102,13 @@ class AppSidebar extends Component {
 const mapStateToProps = (state) => {
   return {
     changeStateResponse: state.changeStateResponse,
-    userResponse: state.userResponse
+    userResponse: state.userResponse,
   }
 }
 
 export default withRouter(
   connect(mapStateToProps, {
     sideBarChange,
-    // sidebarUnfoldChange,
-
+    logout
   })(AppSidebar),
 )
