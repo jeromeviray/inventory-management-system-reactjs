@@ -76,7 +76,7 @@ class AppSidebar extends Component {
           onClick={() => this.props.sidebarUnfoldChange(!sidebarUnfoldable)}
         /> */}
         <CSidebarFooter className="d-flex justify-content-between ">
-          <span className="font-weight-lighter ">Log out</span>
+          <span className="font-weight-lighter">Log out</span>
           <BiIcons.BiLogOut size={20} />
         </CSidebarFooter>
       </CSidebar>

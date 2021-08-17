@@ -65,6 +65,7 @@ export const createAccount = (username, password, email) => async (dispatch) => 
                     type: SET_MESSAGE,
                     payload: message
                 })
+                return Promise.reject();
             }
 
 

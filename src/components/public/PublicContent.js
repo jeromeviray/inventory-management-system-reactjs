@@ -7,7 +7,6 @@ const Page404 = React.lazy(() => import("../../views/common/public/page404/Page4
 
 export class PublicContent extends Component {
     render() {
-        console.log(publicRoutes)
         return (
             <>
                 <CContainer>

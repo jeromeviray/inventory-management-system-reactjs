@@ -19,8 +19,6 @@ const AppBreadcrumb = (props) => {
   }
 
   const getBreadcrumbs = (location) => {
-    // const roles = this.props.userResponse.credentials.roles.roleName
-    console.log(roles)
     const allowedRoutes = Routings.getAllowedRoutes(routes, roles);
 
     const breadcrumbs = []

@@ -65,6 +65,7 @@ export class Register extends Component {
     if (username.length !== 0 && password.length !== 0 && email.length !== 0) {
       this.props.createAccount(username, password, email)
         .then(() => {
+          console.log()
           this.setState({
             loading: false,
             successful: true,
@@ -88,7 +89,7 @@ export class Register extends Component {
     let { username, password, email, type, loading, successful } = this.state;
     const isLoggedIn = this.props.userResponse.isLoggedIn;
     const message = this.props.messageResponse.message;
-
+    console.log(successful)
     if (isLoggedIn) {
 
       return <Redirect to="/home" />
@@ -240,7 +241,7 @@ export class Register extends Component {
                             </div>
                           )}
                         </CForm> :
-                        <CSpinner size="lg" />}
+                        <CSpinner />}
                     </CCardBody>
                   </CCard>
                   <RightFormCard button="login" />

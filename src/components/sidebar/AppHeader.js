@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import { withRouter } from "react-router-dom"
+import { Link, withRouter } from "react-router-dom"
 
 import {
   CContainer,
@@ -17,9 +17,7 @@ import * as FaIcons from 'react-icons/fa'
 import { AppBreadcrumb } from "./index"
 
 import { AppHeaderDropdown } from "./index"
-// import {
-//   sideBarChange,
-// } from "../components/apiActions/changeStateAction"
+
 import { sideBarChange } from "../../service/apiActions/changeStateAction"
 
 class AppHeader extends Component {
@@ -47,9 +45,11 @@ class AppHeader extends Component {
           >
             <FaIcons.FaBars size={20} />
           </CHeaderToggler>
-          <CHeaderBrand className="mx-auto  " to="/">
-            <h2>Logo</h2>
-          </CHeaderBrand>
+          {/* <CHeaderBrand className="mx-auto nav-link" to="/home" style={{ cursor: "pointer" }}> */}
+          <Link className="nav-link" to="/home" style={{ cursor: "pointer" }}>
+            <h2 className="nav-item">Logo</h2>
+          </Link>
+          {/* </CHeaderBrand> */}
 
           <CHeaderNav className="ms-3">
             <CNavItem>
