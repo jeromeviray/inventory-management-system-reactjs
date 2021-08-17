@@ -4,7 +4,7 @@ import Roles from "./Roles"
 // examples
 // All Role has access
 const Dashboard = React.lazy(() => import("../../views/private/dashboard/Dashboard"))
-const Profile = React.lazy(() => import("../../views/common/profile/Profile"))
+// const Profile = React.lazy(() => import("../../views/common/profile/Profile"))
 
 // SUPER ADMIN has access
 const Employee = React.lazy(() => import("../../views/private/employee/Employee"))
@@ -148,25 +148,21 @@ export const publicRoutes = [
     path: "/home",
     name: "Home",
     component: Home,
-    exact: true
   },
   {
     path: "/discover",
     name: "Discover",
     component: DiscoverProducts,
-    exact: true
   },
   {
     path: "/sale",
     name: "Sale",
     component: SaleProducts,
-    exact: true
   },
   {
     path: "/about",
     name: "About",
     component: About,
-    exact: true
   },
 ]
 const routers = {

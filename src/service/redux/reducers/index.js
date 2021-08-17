@@ -6,7 +6,7 @@ import changeStateReducer from './changeStateReducer'
 import modalVisibilityReducer from './modalVisibilityReducer'
 import userReducer from './userReducer'
 import messageReducer from './messageReducer'
-
+import routesReducer from './routesReducer'
 
 
 export default combineReducers({
@@ -15,6 +15,10 @@ export default combineReducers({
   changeStateResponse: changeStateReducer,
   carouselResponser: carouselReducer,
   userResponse: userReducer,
+
+
+  // routes
+  routesResponse: routesReducer,
   messageResponse: messageReducer,
   browserSize: responsiveStateReducer,
 })

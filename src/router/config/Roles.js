@@ -8,3 +8,4 @@ export default {
     USER: 'USER',
     ROLE_USER: 'ROLE_USER'
 };
+

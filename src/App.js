@@ -1,7 +1,6 @@
 import React, { Component, lazy } from "react"
 import {
   BrowserRouter as Router,
-  Redirect,
   // HashRouter,
   Route,
   Switch
@@ -26,7 +25,7 @@ const PublicLayout = React.lazy(() => import("./layout/PublicLayout"))
 // Pages
 const Login = React.lazy(() => import("./views/common/public/login/Login"))
 const Register = React.lazy(() => import("./views/common/public/register/Register"))
-const Page404 = React.lazy(() => import("./views/common/public/page404/Page404"))
+// const Page404 = React.lazy(() => import("./views/common/public/page404/Page404"))
 const Page500 = React.lazy(() => import("./views/common/public/page500/Page500"))
 const RedirectSuccessHandler = lazy(() => import("./components/redirectSuccessHandler/RedirectSuccessHandler"))
 
@@ -73,11 +72,6 @@ class App extends Component {
                 <Redirect to="/home" />
               )} /> */}
 
-              <Route
-                path="*"
-                name="Page 404"
-                render={(props) => <Page404 {...props} />}
-              />
 
             </Switch>
           </React.Suspense>

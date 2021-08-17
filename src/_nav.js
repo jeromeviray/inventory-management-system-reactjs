@@ -1,6 +1,6 @@
 import React from "react"
 import { NavLink } from "react-router-dom"
-import { Roles } from "./router/config/index"
+import Roles from "./router/config";
 
 // icons
 import * as FaIcons from "react-icons/fa"
@@ -50,7 +50,9 @@ const _nav = [
     permission: [
       Roles.SUPER_ADMIN,
       Roles.ADMIN,
-
+      Roles.CUSTOMER,
+      Roles.USER,
+      Roles.ROLE_USER
     ]
   },
   {

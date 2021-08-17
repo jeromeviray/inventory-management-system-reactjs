@@ -4,7 +4,7 @@ import {
     CCarouselItem,
 
 } from '@coreui/react'
-import { getCarouselImages } from '../../service/apiActions/carouselAction/CarouselAction'
+import { getCarouselImages } from '../../service/apiActions/carouselAction/carouselAction'
 import { connect } from 'react-redux'
 
 export class HeroCarousel extends Component {

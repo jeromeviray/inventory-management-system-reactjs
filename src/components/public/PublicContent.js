@@ -3,6 +3,8 @@ import { CContainer, CSpinner } from '@coreui/react'
 import { Route, Switch, Redirect } from 'react-router'
 import { publicRoutes } from 'src/router/config/routes'
 
+const Page404 = React.lazy(() => import("../../views/common/public/page404/Page404"))
+
 export class PublicContent extends Component {
     render() {
         console.log(publicRoutes)
@@ -29,7 +31,17 @@ export class PublicContent extends Component {
                                     )
                                 )
                             })}
-                            <Redirect from="/" to="/home" />
+                            <Route path="/" exact render={() => {
+                                return (
+                                    <Redirect to="/home" />
+                                )
+                            }} />
+                            <Route
+                                path="*"
+                                name="Page 404"
+                                render={(props) => <Page404 {...props} />}
+                            />
+
                         </Switch>
                     </Suspense>
                 </CContainer>

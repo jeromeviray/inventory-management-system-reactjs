@@ -1,47 +1,42 @@
 import React, { Suspense, Component } from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import { CContainer, CSpinner } from '@coreui/react'
-import { intersection } from 'lodash'
 
 // routes config
 import { routes } from 'src/router/config/routes'
 
-import { Roles } from 'src/router/config'
+// import Roles from 'src/router/config'
 import Page404 from 'src/views/common/public/page404/Page404'
+
+//action
+import { getRoutes } from 'src/service/apiActions/routesAction/routesAction'
+import { connect } from 'react-redux'
+import Routings from 'src/_helper/Routings'
+
 
 class AppContent extends Component {
   state = {
-    nav: []
+    getRoutes: []
   }
   componentDidMount() {
-
     this.handleAllowedRoutes();
-  }
-  isArrayWithLength(arr) {
-    return (Array.isArray(arr) && arr.length)
   }
 
   handleAllowedRoutes = () => {
-    // const credentials = this.props.userResponse.credentials;
-    const roles = [Roles.ADMIN];
 
-    let allowed = routes.filter(({ permission }) => {
-      if (!permission) return true;
-      else if (!this.isArrayWithLength(permission)) return true;
-      else return intersection(permission, roles).length;
-    })
+    const allowedRoutes = Routings.getAllowedRoutes(routes)
+    this.props.getRoutes(allowedRoutes)
     this.setState({
-      nav: allowed
+      getRoutes: allowedRoutes
     })
   }
   render() {
-    const { nav } = this.state;
-    console.log(nav)
+    const { getRoutes } = this.state;
     return (
       <CContainer lg>
         <Suspense fallback={<CSpinner color="primary" />}>
           <Switch>
-            {nav.map((route, idx) => {
+            {getRoutes.map((route, idx) => {
               return (
                 route.component && (
                   <Route
@@ -72,5 +67,11 @@ class AppContent extends Component {
   }
 
 }
-
-export default React.memo(AppContent)
+const mapStateToProps = (state) => {
+  return {
+    routesResponse: state.routesResponse
+  }
+}
+export default connect(mapStateToProps, {
+  getRoutes
+})(React.memo(AppContent))
