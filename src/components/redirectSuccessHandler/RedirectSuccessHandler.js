@@ -1,6 +1,8 @@
 import React, { Component } from "react"
 import { Redirect } from "react-router-dom"
 import queryString from "query-string"
+import Roles from "src/router/config"
+import { RiArrowLeftSFill } from "react-icons/ri"
 
 export class RedirectSuccessHandler extends Component {
     render() {
@@ -8,12 +10,21 @@ export class RedirectSuccessHandler extends Component {
 
         const token = params.accessToken
         const refreshToken = params.refreshToken
-        const username = params.username
+        const username = params.username;
+        const authorities = params.roles
+        const roles = [
+            {
+                'roleName': authorities.replace(/[\[\]']+/g, '')
+            }, {
+                'roleName': Roles.CUSTOMER
+            }
+        ]
 
         const currentUser = {
             username: username,
             access_token: token,
             refresh_token: refreshToken,
+            roles: roles
         }
         const error = params.error
 

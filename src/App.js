@@ -64,6 +64,7 @@ class App extends Component {
               <PrivateRouter path="/app" component={DefaultLayout} />
               {/* <PrivateRoutes /> */}
               <Route
+
                 path="/"
                 name="public"
                 render={(props) => <PublicLayout {...props} />}

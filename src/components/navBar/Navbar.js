@@ -10,7 +10,7 @@ import {
 
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
-import items from './_items'
+import { topItems } from './items'
 
 export class Navbar extends Component {
     state = {
@@ -28,7 +28,7 @@ export class Navbar extends Component {
                         })} />
                         <CCollapse className="navbar-collapse" visible={this.state.visible}>
                             <CNavbarNav>
-                                {items.map((item, idx) => {
+                                {topItems.map((item, idx) => {
                                     return <CNavItem key={idx}>
                                         <Link className="nav-link d-flex justify-content-center align-items-center" to={item.pathName}>
                                             {item.icon}

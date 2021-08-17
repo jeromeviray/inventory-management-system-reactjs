@@ -7,7 +7,7 @@ import {
 
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
-import items from "./_items"
+import { bottomItems } from "./items"
 
 export class Navbar extends Component {
     state = {
@@ -20,7 +20,7 @@ export class Navbar extends Component {
                 <CNavbar expand="lg" colorScheme="dark" className="bg-dark d-lg-none d-md-block" placement="fixed-bottom">
                     <CContainer fluid >
                         <CNavbarNav className="d-flex flex-row justify-content-evenly w-100 ">
-                            {items.map((item, idx) => {
+                            {bottomItems.map((item, idx) => {
                                 return <CNavItem key={idx}>
                                     <Link className="nav-link d-flex  justify-content-center align-items-center" to={item.pathName}>
                                         {item.icon}

@@ -1,4 +1,5 @@
 import { intersection } from 'lodash';
+import { RiContactsBookUploadLine } from 'react-icons/ri';
 import Roles from 'src/router/config';
 
 // function isArrayWithLength(arr) {
@@ -22,9 +23,8 @@ const Routings = {
 		return (Array.isArray(arr) && arr.length)
 	},
 
-	getAllowedRoutes(routes) {
-		// const credentials = useSelector((state) => state.userResponse.credentials);
-		const roles = [Roles.CUSTOMER];
+	getAllowedRoutes(routes, permission) {
+		const roles = [permission];
 
 		return routes.filter(({ permission }) => {
 			if (!permission) return true;
@@ -33,6 +33,7 @@ const Routings = {
 		})
 	}
 }
+
 export default Routings
 
 

@@ -11,18 +11,13 @@ class AuthService {
                 }
                 return response.data;
             })
-        // return RestApi.post("/account/login", { username, password })
-        //     .then((response) => {
-        //         if (response.data) {
-        //             localStorage.setItem("credentials", JSON.stringify(response.data));
-        //         }
-        //         return response.data;
-        //     })
     }
     logout() {
         localStorage.removeItem("credentials");
     }
-
+    register(username, password, email) {
+        return UserService.register(username, password, email);
+    }
 }
 
 export default new AuthService();

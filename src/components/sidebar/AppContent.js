@@ -23,8 +23,8 @@ class AppContent extends Component {
   }
 
   handleAllowedRoutes = () => {
-
-    const allowedRoutes = Routings.getAllowedRoutes(routes)
+    const roles = this.props.userResponse.credentials.roles.roleName;
+    const allowedRoutes = Routings.getAllowedRoutes(routes, roles)
     this.props.getRoutes(allowedRoutes)
     this.setState({
       getRoutes: allowedRoutes
@@ -69,6 +69,7 @@ class AppContent extends Component {
 }
 const mapStateToProps = (state) => {
   return {
+    userResponse: state.userResponse,
     routesResponse: state.routesResponse
   }
 }

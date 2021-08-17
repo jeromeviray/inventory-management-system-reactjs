@@ -55,7 +55,7 @@ export class Login extends Component {
     })
   }
   handleSubmit = (event) => {
-    // const { history } = this.props;
+    const { history } = this.props;
     const { username, password } = this.state;
     // const form = event.currentTarget
     event.preventDefault()
@@ -63,11 +63,13 @@ export class Login extends Component {
       validation: true,
       loading: true
     })
-    if (username.length !== 0 && (password.length !== 0 && password.length < 8)) {
-      this.props.authenticateUser(username, password).then(() => {
-
-        window.location.reload();
-      })
+    if (username.length !== 0 && password.length !== 0) {
+      console.log(username, password)
+      this.props.authenticateUser(username, password)
+        .then(() => {
+          history.push("/home");
+          window.location.reload();
+        })
         .catch(() => {
           this.setState({
             loading: false
@@ -83,14 +85,8 @@ export class Login extends Component {
     let { type, username, password, validation, loading } = this.state
     const message = this.props.messageResponse.message;
     const isLoggedIn = this.props.userResponse.isLoggedIn;
-    // const credentials = this.props.userResponse.credentials;
 
     if (isLoggedIn) {
-      // if (credentials.roles.roleName === "CUSTOMER") {
-      //   return <Redirect to="/home" />
-      // } else {
-      //   return <Redirect to="/admin" />
-      // }
       return <Redirect to="/home" />
     }
 
@@ -104,7 +100,7 @@ export class Login extends Component {
         <div className="min-vh-100 d-flex flex-row align-items-center text-dark ">
           <CContainer >
             <CRow className="justify-content-center ">
-              <CCol md="8">
+              <CCol md="12" lg="8">
                 <CCardGroup className="shadow-lg ">
                   <CCard className="p-4 m-0 left-to-right form-container border-0">
                     <CCardBody>
@@ -178,7 +174,7 @@ export class Login extends Component {
                                   <FaIcons.FaEye size={20} />
                                 )}
                               </span>
-                              <CFormFeedback invalid>Please provide a valid password</CFormFeedback> :
+                              <CFormFeedback invalid>Please provide a valid password</CFormFeedback>
                             </CFormFloating>
                           </CCol>
                           <CCol xs="12" sm="12" md="12" lg="12">

@@ -39,7 +39,8 @@ class AppSidebar extends Component {
   }
 
   handleAllowedRoutes = () => {
-    const allowedRoutes = Routings.getAllowedRoutes(navigation);
+    const roles = this.props.userResponse.credentials.roles.roleName
+    const allowedRoutes = Routings.getAllowedRoutes(navigation, roles);
     this.setState({
       nav: allowedRoutes
     })
@@ -94,5 +95,6 @@ export default withRouter(
   connect(mapStateToProps, {
     sideBarChange,
     // sidebarUnfoldChange,
+
   })(AppSidebar),
 )

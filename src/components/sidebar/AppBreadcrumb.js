@@ -5,8 +5,10 @@ import { CBreadcrumb, CBreadcrumbItem } from '@coreui/react'
 // import { useSelector } from 'react-redux'
 // import GetAllowedRoutes from 'src/_helper/GetAllowedRoutes'
 import Routings from 'src/_helper/Routings'
+import { connect, useSelector } from 'react-redux'
 
-const AppBreadcrumb = () => {
+const AppBreadcrumb = (props) => {
+  const roles = useSelector((state) => state.userResponse.credentials.roles.roleName)
   const currentLocation = useLocation().pathname
 
 
@@ -17,7 +19,9 @@ const AppBreadcrumb = () => {
   }
 
   const getBreadcrumbs = (location) => {
-    const allowedRoutes = Routings.getAllowedRoutes(routes);
+    // const roles = this.props.userResponse.credentials.roles.roleName
+    console.log(roles)
+    const allowedRoutes = Routings.getAllowedRoutes(routes, roles);
 
     const breadcrumbs = []
     location.split('/').reduce((prev, curr, index, array) => {

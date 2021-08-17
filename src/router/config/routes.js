@@ -56,7 +56,7 @@ export const routes = [
   },
   {
     path: "/app/order",
-    name: "order",
+    name: "Order",
     component: Order,
     permission: [
       Roles.SUPER_ADMIN,
