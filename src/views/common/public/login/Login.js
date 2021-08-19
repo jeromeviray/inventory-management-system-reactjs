@@ -45,7 +45,8 @@ export class Login extends Component {
     username: "",
     password: "",
     loading: false,
-    validation: false
+    validation: false,
+    message: ''
   }
   constructor(props) {
     super(props);
@@ -76,13 +77,20 @@ export class Login extends Component {
       loading: true
     })
     if (username.length !== 0 && password.length !== 0) {
-      console.log(username, password)
       this.props.authenticateUser(username, password)
         .then(() => {
           history.push("/home");
           window.location.reload();
         })
         .catch(() => {
+          const message = this.props.messageResponse;
+          if (message) {
+            console.log(message)
+
+            this.setState({
+              message: message.data.message
+            })
+          }
           this.setState({
             loading: false
           });
@@ -94,8 +102,7 @@ export class Login extends Component {
     }
   }
   render() {
-    let { type, username, password, validation, loading } = this.state
-    const message = this.props.messageResponse.message;
+    let { type, username, password, validation, loading, message } = this.state
     const isLoggedIn = this.props.userResponse.isLoggedIn;
 
     if (isLoggedIn) {

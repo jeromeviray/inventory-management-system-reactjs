@@ -1,7 +1,7 @@
 import React, { Component, lazy } from "react"
 import { connect } from "react-redux"
 import { withRouter } from "react-router-dom"
-import { getProducts } from "../../../service/apiActions/productAction"
+import { getProducts } from "../../../service/apiActions/productAction/productAction"
 import { setProductModal } from "../../../service/apiActions/modalAction/modalAction"
 import { CRow, CCol, CButton } from "@coreui/react"
 import * as FaIcons from 'react-icons/fa'
@@ -101,7 +101,7 @@ class Products extends Component {
 const mapStateToProps = (state) => {
   return {
     productResponser: state.productResponser,
-    modalVisibleResponse: state.modalVisibleResponse
+    modalVisibleResponse: state.modalVisibleResponse,
   }
 }
 

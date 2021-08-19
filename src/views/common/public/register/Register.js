@@ -41,7 +41,8 @@ export class Register extends Component {
     type: "password",
     validated: false,
     loading: false,
-    successful: false
+    successful: false,
+    message: ''
   }
 
   handleOnChange = (event) => {
@@ -71,30 +72,34 @@ export class Register extends Component {
     if (username.length !== 0 && password.length !== 0 && email.length !== 0) {
       this.props.createAccount(username, password, email)
         .then(() => {
-          console.log()
+          const successResponse = this.props.messageResponse.data.message;
+          console.log(successResponse)
           this.setState({
             loading: false,
             successful: true,
             username: "",
             password: "",
-            email: ""
+            email: "",
+            message: successResponse
           })
         })
         .catch(() => {
+          const errorResponse = this.props.messageResponse.data.message;
+          console.log(errorResponse);
           this.setState({
             loading: false,
             successful: false,
             username: "",
             password: "",
-            email: ""
+            email: "",
+            message: errorResponse
           })
         })
     }
   }
   render() {
-    let { username, password, email, type, loading, successful } = this.state;
+    let { username, password, email, type, loading, successful, message } = this.state;
     const isLoggedIn = this.props.userResponse.isLoggedIn;
-    const message = this.props.messageResponse.message;
     if (isLoggedIn) {
 
       return <Redirect to="/home" />

@@ -11,6 +11,7 @@ import {
 
 export const authenticateUser = (username, password) => async (dispact) => {
     return authService.login(username, password).then(
+
         (data) => {
             dispact({
                 type: LOGIN_SUCCESS,
@@ -19,17 +20,24 @@ export const authenticateUser = (username, password) => async (dispact) => {
             return Promise.resolve();
         },
         (error) => {
-            const message = (error.response &&
+            console.log(error)
+            const errorMessage = (error.response &&
                 error.response.data &&
                 error.response.data.message) ||
                 error.message ||
                 error.toString();
+
             dispact({
                 type: LOGIN_FAIL
             })
             dispact({
                 type: SET_MESSAGE,
-                payload: message
+                payload: {
+                    status: 403,
+                    data: {
+                        message: errorMessage
+                    }
+                }
             })
             return Promise.reject();
         }
@@ -46,7 +54,12 @@ export const createAccount = (username, password, email) => async (dispatch) => 
                 })
                 dispatch({
                     type: SET_MESSAGE,
-                    payload: "Successfully Created"
+                    payload: {
+                        status: 200,
+                        data: {
+                            message: "Successfully Register"
+                        }
+                    }
                 })
                 return Promise.resolve();
             },
@@ -57,13 +70,20 @@ export const createAccount = (username, password, email) => async (dispatch) => 
                     error.response.data.message) ||
                     error.message ||
                     error.toString();
+                console.log(error.response.data)
+
                 dispatch({
                     type: REGISTER_FAIL,
 
                 })
                 dispatch({
                     type: SET_MESSAGE,
-                    payload: message
+                    payload: {
+                        status: 500,
+                        data: {
+                            message: message
+                        }
+                    }
                 })
                 return Promise.reject();
             }

@@ -2,12 +2,19 @@ export const GET_PRODUCTS = "GET_PRODUCTS"
 export const GET_PRODUCT = "GET_PRODUCT"
 export const DELETE_PRODUCT = "DELETE_PRODUCT"
 export const UPDATE_PRODUCT = "UPDATE_PRODUCT"
+export const SAVE_PRODUCT = "SAVE_PRODUCT"
+export const SAVE_FAIL = "SAVE_PRODUCT_FAIL"
+export const UPDATE_FAIL = "UPDATE_PRODUCT_FAIL"
+
+//carousel
 export const GET_CAROUSEL_IMAGES = "GET_CAROUSEL_IMAGES"
 export const CAROUSEL_FOLDER_DIRECTORY = "/carousel/"
 
+//sidebar
 export const SET_SIDEBAR = "SET_SIDEBAR"
 export const SET_SIDEBAR_UNFOLD = "SET_SIDEBAR_UNFOLD"
 
+//modal
 export const SET_PRODUCTEDITMODAL_VISIBILIT = "PRODUCT_EDITOR_MODAL"
 
 // endpoint constalnts
@@ -24,4 +31,6 @@ export const GOOGLE_AUTH_URL =
 
 
 
+
+// product Service
 
