@@ -6,7 +6,7 @@ import { setProductModal } from "../../../service/apiActions/modalAction/modalAc
 import { CRow, CCol, CButton } from "@coreui/react"
 import * as FaIcons from 'react-icons/fa'
 
-
+import { logout } from "src/service/apiActions/userAction/userAction"
 
 const ProductCard = lazy(() =>
   import("../../../components/admin/products/ProductCard.js")
@@ -22,11 +22,26 @@ class Products extends Component {
     keyword: "",
     showModal: false,
     recommendedProducts: [],
-    visible: false
+    visible: false,
   }
 
   componentDidMount() {
-    this.props.getProducts()
+    let accessToken = this.props.userResponse.credentials.accessToken;
+    let type = this.props.userResponse.credentials.type;
+
+    let token = type + accessToken;
+    this.props.getProducts(token)
+      .catch(() => {
+        let failMessage = this.props.messageResponse
+        if (failMessage.status === 403 || failMessage.status === 401) {
+          this.props.logout();
+          this.setState({
+            loading: false,
+            message: failMessage.data.message
+          })
+        }
+      }
+      )
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -44,6 +59,7 @@ class Products extends Component {
   manageProductResponse(prevProps, prevState) {
     if (prevProps.productResponser !== this.props.productResponser) {
       let response = this.props.productResponser
+
       if (response.action === "LIST") {
         if (response.status >= 200 && response.status <= 300) {
           this.setState({
@@ -63,7 +79,7 @@ class Products extends Component {
   }
   render() {
 
-    let { visible } = this.state;
+    let { visible, products } = this.state;
     return (
       <>
         {this.renderProductEditorModal()}
@@ -84,10 +100,10 @@ class Products extends Component {
           </CCol>
         </CRow>
         <CRow>
-          {this.state.products.map((productFilted) => {
+          {products.map((product) => {
             return (
-              <CCol xs="6" sm="6" md="4" lg="3" key={productFilted.productName}>
-                <ProductCard product={productFilted} iconModal="edit" imageLink={false} />
+              <CCol xs="6" sm="6" md="4" lg="3" key={product.productName}>
+                <ProductCard product={product} fileImage={product.fileImages} iconModal="edit" imageLink={false} />
 
               </CCol>
             )
@@ -102,6 +118,8 @@ const mapStateToProps = (state) => {
   return {
     productResponser: state.productResponser,
     modalVisibleResponse: state.modalVisibleResponse,
+    userResponse: state.userResponse,
+    messageResponse: state.messageResponse
   }
 }
 
@@ -109,5 +127,6 @@ export default withRouter(
   connect(mapStateToProps, {
     setProductModal,
     getProducts,
+    logout
   })(Products),
 )

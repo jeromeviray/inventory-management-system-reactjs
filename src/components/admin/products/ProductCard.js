@@ -8,6 +8,7 @@ export class ProductCard extends Component {
   state = {
     iconModal: "eye",
     product: [],
+    fileImage: this.props.fileImage,
     imageLink: false,
   }
   componentDidMount = () => {
@@ -31,7 +32,7 @@ export class ProductCard extends Component {
     })
   }
   render() {
-    let { iconModal, product, imageLink } = this.state
+    let { iconModal, product, imageLink, fileImage } = this.state
     return (
       <>
         <CCard className="inner-card-container">
@@ -41,7 +42,7 @@ export class ProductCard extends Component {
                 <div className="inner-img-container">
                   <img
                     variant="top"
-                    src={"/categories/" + product.productImageName}
+                    src={"/images/products/" + fileImage[0].fileName}
                     alt="product"
                   />
                 </div>
@@ -50,7 +51,7 @@ export class ProductCard extends Component {
               <div className="inner-img-container">
                 <img
                   variant="top"
-                  src={"/categories/" + product.productImageName}
+                  src={"/images/products/" + fileImage[0].fileName}
                   alt="product"
                 />
               </div>
@@ -68,7 +69,7 @@ export class ProductCard extends Component {
             </div>
           </div>
           <CCardBody>
-            <CCardTitle>dasdasdasdasd adasd as dasd asd asd asd </CCardTitle>
+            <CCardTitle>{product.productName}</CCardTitle>
             <div className="card-label-price">
               <CCardTitle>
                 <span className="peso-sign">&#8369; </span>

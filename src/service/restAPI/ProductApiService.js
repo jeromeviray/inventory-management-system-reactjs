@@ -7,6 +7,11 @@ export class ProductApiService {
             formData,
             { headers: { Authorization: token } })
     }
+    getProducts(token) {
+        return axios.get("/products", {
+            headers: { Authorization: token }
+        })
+    }
 }
 
 export default new ProductApiService();

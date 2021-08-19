@@ -195,7 +195,6 @@ export class ProductEditorModal extends Component {
           <CModalHeader
             onDismiss={() => {
               this.props.setProductModal(false)
-              this.props.clearMessage();
             }}
             className="modal-header"
           >

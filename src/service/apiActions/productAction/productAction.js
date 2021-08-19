@@ -30,6 +30,7 @@ export const saveProduct = (formData, token) => async (dispatch) => {
 
     },
       (error) => {
+        console.log(error)
         const message = (error.response &&
           error.response.data &&
           error.response.data.message) ||
@@ -40,6 +41,7 @@ export const saveProduct = (formData, token) => async (dispatch) => {
           error.response.data &&
           error.response.data.code) ||
           error.toString();
+        console.log(status)
         dispatch({
           type: SAVE_FAIL
         })
@@ -56,55 +58,46 @@ export const saveProduct = (formData, token) => async (dispatch) => {
       }
     )
 }
-export const getProducts = () => async (dispatch) => {
-  dispatch({
-    type: GET_PRODUCTS,
-    payload: {
-      status: 200,
-      data: {
-        products: [
-          {
-            productId: 1,
-            productName: 'product',
-            productPrice: 1234,
-            productImageName: 'men.jpg',
-            stock: 123,
+export const getProducts = (token) => async (dispatch) => {
+  console.log(token)
+  return ProductApiService.getProducts(token).then(
+    (response) => {
+      dispatch({
+        type: GET_PRODUCTS,
+        payload: {
+          status: 200,
+          data: {
+            products: response.data
           },
-          {
-            productId: 2,
-            productName: 'jeans',
-            productPrice: 1234,
-            productImageName: 'men.jpg',
-            stock: 123,
-          },
-          {
-            productId: 3,
-            productName: 'White Polo shirt',
-            productPrice: 1234,
-            productImageName: 'men.jpg',
-          },
-          {
-            productId: 4,
-            productName: 'mobile',
-            productPrice: 1234,
-            productImageName: 'men.jpg',
-          },
-          {
-            productId: 6,
-            productName: 'Datu puti',
-            productPrice: 1234,
-            productImageName: 'men.jpg',
-          },
-          {
-            productId: 5,
-            productName: 'palmolive',
-            productPrice: 1234,
-            productImageName: 'men.jpg',
-          },
-        ],
-      },
+        },
+      })
+      return Promise.resolve();
     },
-  })
+    (error) => {
+      const message = (error.response &&
+        error.response.data &&
+        error.response.data.message) ||
+        error.message || error.error_message ||
+        error.toString();
+
+      const status = (error.response &&
+        error.response.data &&
+        error.response.data.code) || error.status ||
+        error.toString();
+
+      dispatch({
+        type: SET_MESSAGE,
+        payload: {
+          status: status,
+          data: {
+            message: message
+          }
+        }
+      })
+      return Promise.reject();
+    }
+  )
+
 }
 
 export function getProduct() { }
