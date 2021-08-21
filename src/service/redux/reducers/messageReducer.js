@@ -1,4 +1,5 @@
 import { SET_MESSAGE, CLEAR_MESSAGE } from "src/constants/userConstants";
+import { SET_PRODUCT_MESSAGE } from "../constants";
 
 const initialState = {};
 
@@ -7,13 +8,30 @@ const messageReducer = (state = initialState, action) => {
     switch (type) {
         case SET_MESSAGE:
             return {
+                action: type,
                 status: payload.status,
-                data: payload.data
+                data: {
+                    message: payload.data.message
+                }
             };
 
         case CLEAR_MESSAGE:
-            return { message: "" };
+            return {
+                action: type,
+                status: '',
+                data: {
+                    message: ''
+                }
+            };
 
+        case SET_PRODUCT_MESSAGE:
+            return {
+                action: type,
+                status: payload.status,
+                data: {
+                    message: payload.data.message
+                }
+            }
         default:
             return state;
     }

@@ -21,9 +21,10 @@ export const authenticateUser = (username, password) => async (dispact) => {
         },
         (error) => {
             console.log(error)
-            const errorMessage = (error.response &&
-                error.response.data &&
-                error.response.data.message) ||
+            const errorMessage =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
                 error.message ||
                 error.toString();
 
@@ -70,6 +71,7 @@ export const createAccount = (username, password, email) => async (dispatch) => 
                     error.response.data.message) ||
                     error.message ||
                     error.toString();
+
                 console.log(error.response.data)
 
                 dispatch({

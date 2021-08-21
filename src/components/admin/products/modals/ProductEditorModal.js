@@ -27,6 +27,7 @@ import { RiEdit2Line } from "react-icons/ri"
 // npm packages
 import ImageUploading from "react-images-uploading"
 import {
+  convertFromRaw,
   convertToRaw, EditorState
 } from "draft-js"
 import { Editor } from "react-draft-wysiwyg"
@@ -36,7 +37,8 @@ import { saveProduct } from "src/service/apiActions/productAction/productAction"
 import { setProductModal } from "../../../../service/apiActions/modalAction/modalAction"
 import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
-
+import { getImage } from "src/service/apiActions/productAction/productAction"
+import ProductApiService from "src/service/restAPI/ProductApiService"
 
 
 export class ProductEditorModal extends Component {
@@ -49,7 +51,11 @@ export class ProductEditorModal extends Component {
       loading: false,
       successFully: false,
       message: '',
-      productDetails: this.productDetail
+      status: '',
+      productDetails: this.productDetail,
+      action: '',
+      icon: '',
+      images: []
     }
 
   }
@@ -59,29 +65,112 @@ export class ProductEditorModal extends Component {
     productPrice: 0,
     productDescriptions: "",
     productImage: [],
-    storeBranch: 'main',
-    editorState: EditorState.createEmpty()
+    storeBranch: '',
   }
   onResetValue = () => {
     this.setState(() => this.productDetail)
   }
   componentDidUpdate = (prevProps, prevState) => {
     if (prevProps.modalVisibleResponse !== this.props.modalVisibleResponse) {
-      this.setState({
-        visible: this.props.modalVisibleResponse.state.visible,
-      })
+      if (this.props.modalVisibleResponse.action === "Add") {
+        this.setState({
+          visible: this.props.modalVisibleResponse.visible,
+          action: this.props.modalVisibleResponse.action,
+          icon: this.props.modalVisibleResponse.icon,
+          editorState: EditorState.createEmpty()
+        })
+      } else if (this.props.modalVisibleResponse.action === "Edit") {
+        let product = this.props.modalVisibleResponse.product
+
+
+        this.setState({
+          visible: this.props.modalVisibleResponse.visible,
+          action: this.props.modalVisibleResponse.action,
+          icon: this.props.modalVisibleResponse.icon,
+          productName: product.productName,
+          productPrice: product.productPrice,
+          editorState: product.productDescription ?
+            EditorState.createWithContent(convertFromRaw(JSON.parse(product.productDescription))) :
+            null,
+          storeBranch: product.storeInformation ?
+            product.storeInformation.branch :
+            '',
+        })
+        this.getImages(product.fileImages);
+
+      } else {
+        this.setState({
+          visible: this.props.modalVisibleResponse.visible,
+
+        })
+      }
+
     }
+  }
+  async getImages(fileImages) {
+
+    let { accessToken, type } = this.props.credentials;
+    let token = type + accessToken;
+    // for (let i = 0;i < fileImages.length;i++) {
+    ProductApiService.getImage(fileImages[0].fileName, token)
+      .then((response) => {
+        // this.setState({
+        //   images: response.data
+        // })
+        this.loadImage(response.data)
+
+      }).catch((error) => {
+        const message = (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+          error.message || error.error_message ||
+          error.toString();
+
+        const status = (error.response &&
+          error.response.data &&
+          error.response.data.code) || error.status ||
+          error.toString();
+        this.setState({
+          status: status,
+          message: message
+        })
+      })
+    // }
+  }
+
+  loadImage = (image) => {
+    console.log(image)
+    if (!image) {
+      return
+    }
+    // for (let i = 0;i < images.length;i++) {
+
+    let reader = new FileReader();
+    reader.onloadend = () => {
+      // this.setState({
+      //   productImage: reader.result
+      // })
+
+    }
+    if (image) {
+      reader.readAsDataURL(image)
+
+    }
+    // }
+
   }
   handleVisibility = (state) => {
     this.setState({
       visible: false,
     })
   }
+
   handleImageOnchange = (imageList, addUpdateIndex) => {
     this.setState({
       productImage: imageList,
     })
   }
+
   onEditorStateChange = (editorState) => {
     const rawState = editorState.getCurrentContent();
     this.setState({
@@ -89,12 +178,14 @@ export class ProductEditorModal extends Component {
       productDescriptions: convertToRaw(rawState)
     });
   }
+
   handleOnChange = (event) => {
     let name = event.target.name;
     this.setState({
       [name]: event.target.value
     })
   }
+
   handleSubmit = (event) => {
     event.preventDefault()
 
@@ -103,9 +194,11 @@ export class ProductEditorModal extends Component {
       productPrice,
       productDescriptions,
       productImage,
-      storeBranch
+      storeBranch,
+      action
     } = this.state
 
+    console.log(String(JSON.stringify(productDescriptions)))
     let accessToken = this.props.credentials.accessToken;
     let type = this.props.credentials.type;
 
@@ -128,51 +221,65 @@ export class ProductEditorModal extends Component {
         productData.append('productDescription', JSON.stringify(productDescriptions));
         productData.append('branch', storeBranch);
 
-        this.props.saveProduct(productData, token)
-          .then(() => {
-            this.onResetValue();
-            const successMessage = this.props.messageResponse;
-            if (successMessage.status === 200) {
-              this.setState({
-                loading: false,
-                successFully: true,
-                message: successMessage.data.message
-              })
-            } else {
-              this.setState({
-                loading: false,
-                successFully: false,
-
-              })
-            }
+        if (action === "Add") {
+          this.saveProduct(productData, token);
+        } else if (action === "Edit") {
+          this.editProduct(productData, token);
+        } else {
+          this.setState({
+            visible: this.props.modalVisibleResponse.visible,
           })
-          .catch(() => {
-            this.onResetValue();
-
-            const failMessage = this.props.messageResponse;
-            console.log(failMessage);
-            if (failMessage.status === 403 || failMessage.status === 401) {
-              this.props.logout();
-              this.props.clearMessage();
-              this.setState({
-                loading: false,
-                message: failMessage.data.message
-              })
-            }
-            this.setState({
-              loading: false,
-              message: failMessage.data && failMessage.data.message
-            })
-          })
+        }
       }
-
-
     } else {
       console.log("Select images");
     }
+  }
 
+  saveProduct = (productData, token) => {
+    this.props.saveProduct(productData, token)
+      .then(() => {
+        this.onResetValue();
+        const successMessage = this.props.messageResponse;
+        if (successMessage.status === 200) {
+          this.setState({
+            loading: false,
+            successFully: true,
+            message: successMessage.data.message
+          })
+        } else {
+          this.setState({
+            loading: false,
+            successFully: false,
+
+          })
+        }
+      })
+      .catch(() => {
+        this.onResetValue();
+
+        const failMessage = this.props.messageResponse;
+        console.log(failMessage);
+        if (failMessage.status === 403 ||
+          failMessage.status === 401) {
+
+          this.props.logout();
+          this.props.clearMessage();
+          this.setState({
+            loading: false,
+            message: failMessage.data.message
+          })
+        }
+        this.setState({
+          loading: false,
+          message: failMessage.data && failMessage.data.message
+        })
+      })
+  }
+  editProduct = (productData, token) => {
 
   }
+
   render() {
     let {
       visible,
@@ -184,21 +291,23 @@ export class ProductEditorModal extends Component {
       loading,
       successFully,
       message,
-      storeBranch
+      storeBranch,
+      action,
+      icon,
+      images
     } = this.state
-
-
+    this.loadImage();
     return (
       <>
 
         <CModal size="xl" visible={visible} fullscreen="lg" scrollable>
           <CModalHeader
             onDismiss={() => {
-              this.props.setProductModal(false)
+              this.props.setProductModal(false, 'close')
             }}
             className="modal-header"
           >
-            <CModalTitle>Add Product</CModalTitle>
+            <CModalTitle>{action} Product</CModalTitle>
           </CModalHeader>
           <CForm onSubmit={this.handleSubmit} className="modal-product-form" id="a-form">
 
@@ -319,8 +428,9 @@ export class ProductEditorModal extends Component {
                       id="floatingSelectBranch"
                       aria-label="Floating label select example"
                     >
-                      <option value="main">main</option>
-                      <option value="second">second</option>
+                      <option value={storeBranch}>{storeBranch}</option>
+                      <option value="main">Main</option>
+                      <option value="second">Second</option>
 
                     </CFormSelect>
                     <CFormLabel htmlFor="floatingSelectBranch">Branch</CFormLabel>
@@ -359,7 +469,7 @@ export class ProductEditorModal extends Component {
 
               color="secondary"
               variant="ghost"
-              onClick={() => this.props.setProductModal(!visible)}
+              onClick={() => this.props.setProductModal(!visible, 'close')}
               className="text-body"
             >
               Close
@@ -371,10 +481,10 @@ export class ProductEditorModal extends Component {
               className="d-flex justify-content-center align-items-center position-relative ">
               {loading ? <CSpinner size="sm" /> :
                 <span className="d-flex align-items-center login-icon me-2">
-                  <FaIcons.FaPlus size={20} />
+                  {icon}
                 </span>
               }
-              Save Product
+              Save {action === 'Edit' ? 'Changes' : "Product"}
             </CButton>
           </CModalFooter>
         </CModal>
@@ -389,12 +499,13 @@ const mapStateToProps = (state) => {
     modalVisibleResponse: state.modalVisibleResponse,
     messageResponse: state.messageResponse,
     credentials: state.userResponse.credentials,
-
+    productResponse: state.productResponser
   }
 }
 export default connect(mapStateToProps, {
   setProductModal,
   saveProduct,
   logout,
-  clearMessage
+  clearMessage,
+  getImage
 })(ProductEditorModal)

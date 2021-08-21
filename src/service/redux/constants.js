@@ -5,6 +5,11 @@ export const UPDATE_PRODUCT = "UPDATE_PRODUCT"
 export const SAVE_PRODUCT = "SAVE_PRODUCT"
 export const SAVE_FAIL = "SAVE_PRODUCT_FAIL"
 export const UPDATE_FAIL = "UPDATE_PRODUCT_FAIL"
+export const GET_IMAGE = "GET_IMAGE"
+export const FAIL_GET_IMAGE = "FAIL_GET_IMAGE"
+
+export const SET_IMAGE_MESSAGE = "SET_IMAGE_MESSAGE"
+export const SET_PRODUCT_MESSAGE = "SET_PRODUCT_MESSAGE"
 
 //carousel
 export const GET_CAROUSEL_IMAGES = "GET_CAROUSEL_IMAGES"
@@ -16,6 +21,7 @@ export const SET_SIDEBAR_UNFOLD = "SET_SIDEBAR_UNFOLD"
 
 //modal
 export const SET_PRODUCTEDITMODAL_VISIBILIT = "PRODUCT_EDITOR_MODAL"
+export const EDIT_PRODUCT_MODAL = "EDIT_PRODUCT_MODEL"
 
 // endpoint constalnts
 export const API_BASE_URL = "http://localhost:4480"

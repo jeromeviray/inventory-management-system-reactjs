@@ -7,7 +7,6 @@ const Routings = {
 
 	getAllowedRoutes(routes, permission) {
 		const roles = [permission];
-		console.log(permission)
 		return routes.filter(({ permission }) => {
 			if (!permission) return true;
 			else if (!this.isArrayWithLength(permission)) return true;

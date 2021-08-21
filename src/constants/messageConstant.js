@@ -1,0 +1,13 @@
+//product
+export const SAVE_FAIL = "SAVE_PRODUCT_FAIL"
+export const SET_PRODUCT_MESSAGE = "SET_PRODUCT_MESSAGE"
+export const UPDATE_FAIL = "UPDATE_PRODUCT_FAIL"
+
+//image
+export const FAIL_GET_IMAGE = "FAIL_GET_IMAGE"
+export const SET_IMAGE_MESSAGE = "SET_IMAGE_MESSAGE"
+
+//login
+
+export const LOGIN_MESSAGE = "LOGIN_MESSAGE"
+export const FAIL_LOGIN_MESSAGE = "FAIL_LOGIN_MESSAGE"

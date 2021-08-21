@@ -7,7 +7,7 @@ import { CRow, CCol, CButton } from "@coreui/react"
 import * as FaIcons from 'react-icons/fa'
 
 import { logout } from "src/service/apiActions/userAction/userAction"
-
+import eventBus from "src/_helper/EventBus"
 const ProductCard = lazy(() =>
   import("../../../components/admin/products/ProductCard.js")
 )
@@ -20,7 +20,6 @@ class Products extends Component {
   state = {
     products: [],
     keyword: "",
-    showModal: false,
     recommendedProducts: [],
     visible: false,
   }
@@ -33,13 +32,14 @@ class Products extends Component {
     this.props.getProducts(token)
       .catch(() => {
         let failMessage = this.props.messageResponse
-        if (failMessage.status === 403 || failMessage.status === 401) {
+        if (failMessage.status > 400 && failMessage.status <= 403) {
           this.props.logout();
-          this.setState({
-            loading: false,
-            message: failMessage.data.message
-          })
+
         }
+        this.setState({
+          loading: false,
+          message: failMessage.data.message
+        })
       }
       )
   }
@@ -48,11 +48,20 @@ class Products extends Component {
     this.manageProductResponse(prevProps, prevState)
     this.manageModalResponse(prevProps, prevProps)
   }
+  // componentWillUnmount() {
+  //   eventBus.remove("logout");
+  //   this.setState({
+  //     products: [],
+  //     keyword: "",
+  //     recommendedProducts: [],
+  //     visible: false,
+  //   })
+  // }
   manageModalResponse(prevProps, prevState) {
     if (prevProps.modalVisibleResponse !== this.props.modalVisibleResponse) {
       let response = this.props.modalVisibleResponse
       this.setState({
-        visible: response.state.visible
+        visible: response.visible
       })
     }
   }
@@ -74,12 +83,12 @@ class Products extends Component {
 
   renderProductEditorModal() {
     return (
-      < ProductEditorModal />
+      <ProductEditorModal />
     )
   }
   render() {
 
-    let { visible, products } = this.state;
+    let { visible, products, message } = this.state;
     return (
       <>
         {this.renderProductEditorModal()}
@@ -90,7 +99,7 @@ class Products extends Component {
               color="primary"
               variant="outline"
               className="d-flex justify-content-center align-items-center"
-              onClick={() => this.props.setProductModal(!visible)}>
+              onClick={() => this.props.setProductModal(!visible, "Add", <FaIcons.FaPlus size={20} />)}>
 
               <FaIcons.FaPlus size={20} />
               <span style={{ marginLeft: "10px" }}>
@@ -100,14 +109,24 @@ class Products extends Component {
           </CCol>
         </CRow>
         <CRow>
-          {products.map((product) => {
-            return (
-              <CCol xs="6" sm="6" md="4" lg="3" key={product.productName}>
-                <ProductCard product={product} fileImage={product.fileImages} iconModal="edit" imageLink={false} />
+          {message && (
+            <div className="form-group d-flex justify-content-center align-items-center">
+              <div className="alert alert-danger" role="alert">
+                {message}
+              </div>
+            </div>
+          )}
+          {products.length === 0 ? <div className="form-group d-flex justify-content-center align-items-center">
+            No Product Available
+          </div> :
+            products.map((product, indx) => {
+              return (
+                <CCol xs="6" sm="6" md="4" lg="3" key={indx}>
+                  <ProductCard product={product} fileImage={product.fileImages} iconModal="edit" imageLink={false} />
 
-              </CCol>
-            )
-          })}
+                </CCol>
+              )
+            })}
         </CRow>
       </>
     )

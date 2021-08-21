@@ -5,7 +5,7 @@ import { CBreadcrumb, CBreadcrumbItem } from '@coreui/react'
 // import { useSelector } from 'react-redux'
 // import GetAllowedRoutes from 'src/_helper/GetAllowedRoutes'
 import Routings from 'src/_helper/Routings'
-import { connect, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 const AppBreadcrumb = (props) => {
   const roles = useSelector((state) => {

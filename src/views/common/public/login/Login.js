@@ -84,7 +84,7 @@ export class Login extends Component {
         })
         .catch(() => {
           const message = this.props.messageResponse;
-          if (message) {
+          if (message.action === "SET_MESSAGE") {
             console.log(message)
 
             this.setState({

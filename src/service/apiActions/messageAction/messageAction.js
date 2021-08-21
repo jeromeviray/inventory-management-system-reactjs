@@ -1,10 +1,47 @@
 import { SET_MESSAGE, CLEAR_MESSAGE } from "src/constants/userConstants";
 
-export const setMessage = (message) => ({
-    type: SET_MESSAGE,
-    payload: message,
-});
+export const setMessage = (message, status) => async (dispatch) => {
+    dispatch({
+        type: SET_MESSAGE,
+        payload: {
+            status: status,
+            data: {
+                message: message
+            }
+        }
+    })
 
-export const clearMessage = () => ({
-    type: CLEAR_MESSAGE,
-});
+}
+export const setProductMessage = (message, status) => async (dispatch) => {
+    dispatch({
+        type: SET_MESSAGE,
+        payload: {
+            status: status,
+            data: {
+                message: message
+            }
+        }
+    })
+}
+export const setImageMesssage = (message, status) => async (dispatch) => {
+    dispatch({
+        type: SET_MESSAGE,
+        payload: {
+            status: status,
+            data: {
+                message: message
+            }
+        }
+    })
+}
+export const clearMessage = () => async (dispatch) => {
+    dispatch({
+        type: CLEAR_MESSAGE,
+        payload: {
+            status: '',
+            data: {
+                message: ''
+            }
+        }
+    })
+};

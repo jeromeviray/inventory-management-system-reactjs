@@ -3,24 +3,32 @@ import { CCard, CCardBody, CCardTitle } from "@coreui/react"
 import ReactStars from "react-rating-stars-component"
 import * as FaIcons from "react-icons/fa"
 import * as BsIcons from "react-icons/bs"
+import { connect } from "react-redux"
+import { setProductModal, editProductModal, } from "src/service/apiActions/modalAction/modalAction"
+import ProductEditorModal from "./modals/ProductEditorModal"
+import { getProduct } from "src/service/apiActions/productAction/productAction"
+import { logout } from "src/service/apiActions/userAction/userAction"
+
 
 export class ProductCard extends Component {
   state = {
     iconModal: "eye",
-    product: [],
+    product: this.props.product,
     fileImage: this.props.fileImage,
     imageLink: false,
+    visible: false,
+    action: '',
+    message: '',
   }
   componentDidMount = () => {
     this.handleIconModal()
-    this.handleProduct()
     this.handleImageLink()
+
   }
-  handleProduct = () => {
-    this.setState({
-      product: this.props.product,
-    })
+  componentDidUpdate(prevProps, prevState) {
+    this.manageProductResponse(prevProps, prevState)
   }
+
   handleIconModal = () => {
     this.setState({
       iconModal: this.props.iconModal,
@@ -31,16 +39,61 @@ export class ProductCard extends Component {
       imageLink: this.props.imageLink,
     })
   }
+
+  manageProductResponse(prevProps, prevState) {
+    const { visible, } = this.state;
+
+    if (prevProps.productResponse !== this.props.productResponse) {
+
+      let response = this.props.productResponse
+      if (response.action === "GETBYID") {
+        if (response.status >= 200 && response.status <= 300) {
+          this.props.editProductModal(!visible, "Edit", response.data.product, <FaIcons.FaEdit size={20} />)
+        }
+      } else if (response.status < 400) {
+        this.props.logout();
+        window.location.reload();
+      }
+    }
+  }
+  handleGetProduct = (id) => {
+    const { accessToken, type } = this.props.userResponse.credentials
+    const token = type + accessToken
+
+    this.props.getProduct(id, token)
+      .catch(() => {
+        console.log(this.props.messageResponse)
+        const { status, message } = this.props.messageResponse;
+        // const message = this.props.messaegResponse.data.message
+        console.log(status > 400 && status <= 403);
+        if (status > 400 && status <= 403) {
+          this.props.logout();
+          window.location.reload();
+        }
+        this.setState({
+          message: message
+        })
+      })
+  }
+  renderProductModal = () => {
+    <ProductEditorModal />
+  }
+  renderAlert = () => {
+
+  }
   render() {
-    let { iconModal, product, imageLink, fileImage } = this.state
+    let { iconModal, product, imageLink, fileImage, visible, } = this.state
+
     return (
       <>
+        {this.renderProductModal()}
         <CCard className="inner-card-container">
           <div className="img-container">
             {imageLink ? (
               <a href="/#" className="link-product-content">
                 <div className="inner-img-container">
                   <img
+                    className="border"
                     variant="top"
                     src={"/images/products/" + fileImage[0].fileName}
                     alt="product"
@@ -50,6 +103,7 @@ export class ProductCard extends Component {
             ) : (
               <div className="inner-img-container">
                 <img
+                  className="border"
                   variant="top"
                   src={"/images/products/" + fileImage[0].fileName}
                   alt="product"
@@ -58,12 +112,16 @@ export class ProductCard extends Component {
             )}
             <div className="eye-btn">
               {iconModal === "eye" ? (
-                <span onClick={() => this.setState({ showModal: true })}>
+                <span onClick={() => this.props.setProductModal(!visible)}>
                   <BsIcons.BsEye />
                 </span>
               ) : (
                 <span>
-                  <FaIcons.FaEdit size={14} />
+                  <FaIcons.FaEdit
+                    size={14}
+                    onClick={() => {
+                      this.handleGetProduct(product.id);
+                    }} />
                 </span>
               )}
             </div>
@@ -96,6 +154,20 @@ export class ProductCard extends Component {
       </>
     )
   }
+
 }
 
-export default ProductCard
+const mapStateToProps = (state) => {
+  return {
+    productResponse: state.productResponser,
+    userResponse: state.userResponse,
+    modalVisibleResponse: state.modalVisibleResponse,
+    messageResponse: state.messageResponse
+  }
+}
+export default connect(mapStateToProps, {
+  setProductModal,
+  editProductModal,
+  getProduct,
+  logout
+})(ProductCard)

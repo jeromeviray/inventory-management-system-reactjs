@@ -5,7 +5,6 @@ import { Link, withRouter } from "react-router-dom"
 import {
   CContainer,
   CHeader,
-  CHeaderBrand,
   CHeaderDivider,
   CHeaderNav,
   CHeaderToggler,

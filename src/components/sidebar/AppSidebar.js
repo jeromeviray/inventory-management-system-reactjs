@@ -38,6 +38,10 @@ class AppSidebar extends Component {
       this.logOut();
     });
   }
+  logOut() {
+    this.props.dispatch(logout());
+
+  }
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.changeStateResponse !== this.props.changeStateResponse) {
       this.setState({
@@ -67,9 +71,8 @@ class AppSidebar extends Component {
 
   }
   render() {
-    const { sidebarShow, nav, roles } = this.state
+    const { sidebarShow, nav, } = this.state
     const { userResponse } = this.props;
-    console.log(roles)
     return (
 
       <CSidebar

@@ -12,6 +12,16 @@ export class ProductApiService {
             headers: { Authorization: token }
         })
     }
+    getImage(image, token) {
+        return axios.get("/products/getImages/bytesArrays/" + image, {
+            responseType: 'blob'
+        })
+    }
+    getProduct(id, token) {
+        return axios.get("/products/" + id, {
+            headers: { Authorization: token }
+        })
+    }
 }
 
 export default new ProductApiService();
