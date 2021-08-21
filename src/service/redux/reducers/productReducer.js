@@ -1,5 +1,5 @@
 import {
-  GET_IMAGE,
+  // GET_IMAGE,
   GET_PRODUCT,
   // GET_PRODUCT,
   GET_PRODUCTS,
@@ -40,7 +40,6 @@ const productReducer = (state = {}, action) => {
           product: action.payload.data.product
         }
       }
-      break
     // case GET_IMAGE:
     //   return response = {
     //     type: GET_IMAGE,

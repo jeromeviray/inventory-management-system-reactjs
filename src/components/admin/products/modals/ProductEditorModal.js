@@ -20,7 +20,7 @@ import {
 } from "@coreui/react"
 
 //icons
-import * as FaIcons from 'react-icons/fa'
+// import * as FaIcons from 'react-icons/fa'
 import { MdDelete } from "react-icons/md"
 import { RiEdit2Line } from "react-icons/ri"
 
@@ -55,7 +55,7 @@ export class ProductEditorModal extends Component {
       productDetails: this.productDetail,
       action: '',
       icon: '',
-      images: []
+      // images: []
     }
 
   }
@@ -294,7 +294,7 @@ export class ProductEditorModal extends Component {
       storeBranch,
       action,
       icon,
-      images
+      // images
     } = this.state
     this.loadImage();
     return (
