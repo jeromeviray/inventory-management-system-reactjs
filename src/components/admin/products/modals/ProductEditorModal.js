@@ -413,7 +413,6 @@ export class ProductEditorModal extends Component {
                       name="productPrice"
                       value={productPrice}
                       onChange={this.handleOnChange}
-
                       required
                     />
                     <CFormLabel htmlFor="floatingInput">Product Price</CFormLabel>
