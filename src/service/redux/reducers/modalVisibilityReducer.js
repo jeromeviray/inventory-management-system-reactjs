@@ -1,4 +1,4 @@
-import { ADD_BRANCH_MODAL, ADD_BRAND_MODAL, ADD_CATEGORY_MODAL, ALERT_MODAL, EDIT_PRODUCT_MODAL, SET_PRODUCTEDITMODAL_VISIBILIT } from "../constants"
+import { ADD_BRANCH_MODAL, ADD_BRAND_MODAL, ADD_CATEGORY_MODAL, ADD_EMPLOYEE_MODAL, ALERT_MODAL, EDIT_PRODUCT_MODAL, SET_PRODUCTEDITMODAL_VISIBILIT } from "../constants"
 
 const modalVisibilityReducer = (state = {}, action) => {
     // let response = {
@@ -44,6 +44,13 @@ const modalVisibilityReducer = (state = {}, action) => {
                 visible: action.payload.data.visible,
                 action: action.payload.data.action,
                 category: action.payload.data.category,
+                icon: action.payload.data.icon
+            }
+        case ADD_EMPLOYEE_MODAL:
+            return {
+                visible: action.payload.data.visible,
+                action: action.payload.data.action,
+                employee: action.payload.data.employee,
                 icon: action.payload.data.icon
             }
         default:

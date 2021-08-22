@@ -26,7 +26,7 @@ export const ALERT_MODAL = "ALERT_MODAL"
 export const ADD_BRANCH_MODAL = " ADD_BRANCH_MODAL"
 export const ADD_BRAND_MODAL = "ADD_BRAND_MODAL"
 export const ADD_CATEGORY_MODAL = "ADD_CATEGORY_MODAL"
-
+export const ADD_EMPLOYEE_MODAL = "ADD_EMPLOYEE_MODAL"
 // endpoint constalnts
 export const API_BASE_URL = "http://localhost:4480"
 export const FRONT_END_BASED_URL = "http://localhost:4000"

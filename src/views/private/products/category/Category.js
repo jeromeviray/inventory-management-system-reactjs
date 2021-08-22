@@ -66,31 +66,34 @@ export class Category extends Component {
                             <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                         </CTableRow>
                     </CTableHead>
-                    <CTableBody className="text-center">
-                        {categories.length < 0 ?
-                            <CTableRow className="text-center">
-                                <CTableDataCell>Otto</CTableDataCell>
-                                <CTableDataCell>100</CTableDataCell>
-                                <CTableDataCell className="text-center w-25" colSpan="1">
-                                    <CButton
-                                        color="info"
-                                        className="me-2"
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => this.props.addCategoryModal(!visible, 'Edit', 'category', <MdIcons.MdModeEdit size="20" className="me-2" />)}
-                                    >
-                                        <MdIcons.MdModeEdit size="20" />
-                                    </CButton>
-                                    <CButton
-                                        color="danger"
-                                        className="ms-2"
-                                        variant="ghost"
-                                        onClick={() => this.props.setAlertModal(!visible)}
-                                        size="sm" >
-                                        <MdIcons.MdDelete size="20" />
-                                    </CButton>
-                                </CTableDataCell>
-                            </CTableRow> :
+                    <CTableBody className="text-center" color="light">
+                        {categories.length > 0 ?
+                            <>
+
+                                <CTableRow className="text-center">
+                                    <CTableDataCell>Otto</CTableDataCell>
+                                    <CTableDataCell>100</CTableDataCell>
+                                    <CTableDataCell className="text-center w-25" colSpan="1">
+                                        <CButton
+                                            color="info"
+                                            className="me-2"
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => this.props.addCategoryModal(!visible, 'Edit', 'category', <MdIcons.MdModeEdit size="20" className="me-2" />)}
+                                        >
+                                            <MdIcons.MdModeEdit size="20" />
+                                        </CButton>
+                                        <CButton
+                                            color="danger"
+                                            className="ms-2"
+                                            variant="ghost"
+                                            onClick={() => this.props.setAlertModal(!visible)}
+                                            size="sm" >
+                                            <MdIcons.MdDelete size="20" />
+                                        </CButton>
+                                    </CTableDataCell>
+                                </CTableRow>
+                            </> :
                             <CTableRow>
                                 <CTableDataCell colSpan="4">No data</CTableDataCell>
                             </CTableRow>

@@ -2,7 +2,8 @@ import {
     ADD_BRANCH_MODAL, ALERT_MODAL,
     EDIT_PRODUCT_MODAL, SET_PRODUCTEDITMODAL_VISIBILIT,
     ADD_BRAND_MODAL,
-    ADD_CATEGORY_MODAL
+    ADD_CATEGORY_MODAL,
+    ADD_EMPLOYEE_MODAL
 } from "src/service/redux/constants";
 
 export const setProductModal = (visible, action, icon) => async (dispatch) => {
@@ -82,6 +83,21 @@ export const addCategoryModal = (visible, action, category, icon) => async (disp
                 visible: visible,
                 action: action,
                 category: category,
+                icon: icon
+            }
+        }
+    })
+}
+
+export const addEmployeeModal = (visible, action, employee, icon) => async (dispatch) => {
+    dispatch({
+        type: ADD_EMPLOYEE_MODAL,
+        payload: {
+            status: 200,
+            data: {
+                visible: visible,
+                action: action,
+                employee: employee,
                 icon: icon
             }
         }
