@@ -1,4 +1,4 @@
-import { ADD_BRANCH_MODAL, ALERT_MODAL, EDIT_PRODUCT_MODAL, SET_PRODUCTEDITMODAL_VISIBILIT } from "../constants"
+import { ADD_BRANCH_MODAL, ADD_BRAND_MODAL, ALERT_MODAL, EDIT_PRODUCT_MODAL, SET_PRODUCTEDITMODAL_VISIBILIT } from "../constants"
 
 const modalVisibilityReducer = (state = {}, action) => {
     // let response = {
@@ -26,6 +26,13 @@ const modalVisibilityReducer = (state = {}, action) => {
                 alert: action.payload.data.alert,
             }
         case ADD_BRANCH_MODAL:
+            return {
+                visible: action.payload.data.visible,
+                action: action.payload.data.action,
+                branch: action.payload.data.branch,
+                icon: action.payload.data.icon
+            }
+        case ADD_BRAND_MODAL:
             return {
                 visible: action.payload.data.visible,
                 action: action.payload.data.action,

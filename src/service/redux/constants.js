@@ -24,6 +24,7 @@ export const SET_PRODUCTEDITMODAL_VISIBILIT = "PRODUCT_EDITOR_MODAL"
 export const EDIT_PRODUCT_MODAL = "EDIT_PRODUCT_MODEL"
 export const ALERT_MODAL = "ALERT_MODAL"
 export const ADD_BRANCH_MODAL = " ADD_BRANCH_MODAL"
+export const ADD_BRAND_MODAL = "ADD_BRAND_MODAL"
 
 // endpoint constalnts
 export const API_BASE_URL = "http://localhost:4480"

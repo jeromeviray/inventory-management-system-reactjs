@@ -13,74 +13,59 @@ import {
     CFormLabel,
 
 } from '@coreui/react'
-//redux
 import { connect } from 'react-redux'
-//action
-import {
-    setAlertModal,
-    addBranchModal
-} from 'src/service/apiActions/modalAction/modalAction'
-
-
-export class BranchModal extends Component {
+import { addBrandModal } from 'src/service/apiActions/modalAction/modalAction'
+export class BrandModal extends Component {
     state = {
         visible: false,
-        action: '',
         icon: '',
-        branchLocation: '',
-        loading: true,
+        action: '',
+        brand: [],
+        loading: false
     }
     componentDidUpdate(prevProps, prevState) {
-        this.manageBranchModal(prevProps, prevState)
+        this.manageBrandModal(prevProps, prevState)
     }
-    manageBranchModal = (prevProps, prevState) => {
+    manageBrandModal = (prevProps, prevState) => {
         if (prevProps.modalVisible !== this.props.modalVisible) {
-            let { visible, action, branch, icon } = this.props.modalVisible;
-            console.log(visible + " " + action)
+            let { visible, action, brand, icon } = this.props.modalVisible;
             if (action === "Add") {
                 this.setState({
                     visible: visible,
-                    icon: icon,
-                    action: action
+                    action: action,
+                    icon: icon
                 })
             } else if (action === "Edit") {
                 this.setState({
                     visible: visible,
-                    branch: branch,
+                    action: action,
                     icon: icon,
-                    action: action
+                    brand: brand
                 })
             } else {
                 this.setState({
                     visible: visible
                 })
             }
-
         }
     }
-    handleOnChange = (event) => {
-        let name = event.target.name;
-        this.setState({
-            [name]: event.target.value
-        })
-    }
     render() {
-        let { visible, action, branchLocation, icon, loading } = this.state;
+        let { visible, icon, action, brand, loading } = this.state;
         return (
             <div>
                 <CModal visible={visible}>
-                    <CModalHeader onDismiss={() => this.props.addBranchModal(false, 'close', '', '')}>
+                    <CModalHeader onDismiss={() => this.props.addBrandModal(false, 'close', '', '')}>
                         <CModalTitle >
                             <div className="d-flex align-items-center">
                                 {icon}
-                                {action + " Branch"}
+                                {action + " Brand"}
                             </div>
 
                         </CModalTitle>
                     </CModalHeader>
                     <CModalBody>
                         <CForm>
-                            <div className="mb-3">
+                            {/* <div className="mb-3">
                                 <CFormFloating className="mb-3">
                                     <CFormControl
                                         name="branchLocation"
@@ -92,18 +77,18 @@ export class BranchModal extends Component {
                                     />
                                     <CFormLabel htmlFor="floatingBranchInput">Branch Location</CFormLabel>
                                 </CFormFloating>
-                            </div>
+                            </div> */}
                         </CForm>
                     </CModalBody>
                     <CModalFooter>
-                        <CButton color="dark" variant="ghost" onClick={() => this.props.addBranchModal(false, 'close', '', '')}>
+                        <CButton color="dark" variant="ghost" onClick={() => this.props.addBrandModal(false, 'close', '', '')}>
                             Close
                         </CButton>
                         <CButton color="primary"
                             disabled={loading}
                         >
                             {loading && <CSpinner size="sm" className="ms-1" />}
-                            Save {action === "Edit" ? "Changes" : "Branch"}
+                            Save {action === "Edit" ? "Changes" : "Brand"}
                         </CButton>
                     </CModalFooter>
                 </CModal>
@@ -117,6 +102,5 @@ const mapStateToProps = (state) => {
     }
 }
 export default connect(mapStateToProps, {
-    setAlertModal,
-    addBranchModal
-})(BranchModal)
+    addBrandModal
+})(BrandModal)

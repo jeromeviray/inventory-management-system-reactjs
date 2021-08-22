@@ -1,4 +1,8 @@
-import { ADD_BRANCH_MODAL, ALERT_MODAL, EDIT_PRODUCT_MODAL, SET_PRODUCTEDITMODAL_VISIBILIT } from "src/service/redux/constants";
+import {
+    ADD_BRANCH_MODAL, ALERT_MODAL,
+    EDIT_PRODUCT_MODAL, SET_PRODUCTEDITMODAL_VISIBILIT,
+    ADD_BRAND_MODAL
+} from "src/service/redux/constants";
 
 export const setProductModal = (visible, action, icon) => async (dispatch) => {
     dispatch({
@@ -41,6 +45,21 @@ export const setAlertModal = (alert) => async (dispatch) => {
 export const addBranchModal = (visible, action, branch, icon) => async (dispatch) => {
     dispatch({
         type: ADD_BRANCH_MODAL,
+        payload: {
+            status: 200,
+            data: {
+                visible: visible,
+                action: action,
+                branch: branch,
+                icon: icon
+            }
+        }
+    })
+}
+
+export const addBrandModal = (visible, action, branch, icon) => async (dispatch) => {
+    dispatch({
+        type: ADD_BRAND_MODAL,
         payload: {
             status: 200,
             data: {
