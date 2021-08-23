@@ -45,6 +45,8 @@ export class ProductEditorModal extends Component {
   constructor(props) {
     super(props)
 
+    this.removeImage = this.removeImage.bind(this);
+
     this.state = {
       visible: false,
       alert: true,
@@ -55,7 +57,9 @@ export class ProductEditorModal extends Component {
       productDetails: this.productDetail,
       action: '',
       icon: '',
-      images: []
+      images: [],
+      productImage: [],
+      removedImages: []
     }
 
   }
@@ -117,8 +121,8 @@ export class ProductEditorModal extends Component {
         // this.setState({
         //   images: response.data
         // })
-        this.loadImage(response.data)
-
+        console.log(response.data)
+        this.loadImage(response.data, fileImages[0].fileName)
       }).catch((error) => {
         const message = (error.response &&
           error.response.data &&
@@ -138,27 +142,28 @@ export class ProductEditorModal extends Component {
     // }
   }
 
-  loadImage = (image) => {
-    console.log(image)
+  loadImage = (image, fileName) => {
+    let { productImage } = this.state;
     if (!image) {
       return
     }
-    // for (let i = 0;i < images.length;i++) {
-
     let reader = new FileReader();
     reader.onloadend = () => {
-      // this.setState({
-      //   productImage: reader.result
-      // })
-
+      productImage.push({
+        data_url: reader.result,
+        file: null,
+        image_created: true,
+        filename: fileName
+      })
+      this.setState({
+        productImage: productImage
+      })
     }
     if (image) {
       reader.readAsDataURL(image)
-
     }
-    // }
-
   }
+
   handleVisibility = (state) => {
     this.setState({
       visible: false,
@@ -195,7 +200,8 @@ export class ProductEditorModal extends Component {
       productDescriptions,
       productImage,
       storeBranch,
-      action
+      action,
+      removedImages
     } = this.state
 
     console.log(String(JSON.stringify(productDescriptions)))
@@ -211,11 +217,13 @@ export class ProductEditorModal extends Component {
         this.setState({
           loading: true
         })
-        for (let i = 0;i < productImage.length;i++) {
-          productData.append('productImages[]', productImage[i].file);
-        }
 
-        productData.append('productImages[]', productImage)
+        for (let i = 0; i < productImage.length; i++) {
+          if (productImage[i].file) {
+            productData.append('productImages[]', productImage[i].file);
+          }
+        }
+        productData.append('removedImages', removedImages);
         productData.append('productName', productName);
         productData.append('productPrice', productPrice);
         productData.append('productDescription', JSON.stringify(productDescriptions));
@@ -276,10 +284,18 @@ export class ProductEditorModal extends Component {
         })
       })
   }
+
   editProduct = (productData, token) => {
 
   }
 
+  removeImage(index) {
+    let { productImage, removedImages } = this.state;
+    if (productImage[index].filename) {
+      removedImages.push(productImage[index].filename)
+    }
+  }
+  
   render() {
     let {
       visible,
@@ -296,10 +312,8 @@ export class ProductEditorModal extends Component {
       icon,
       images
     } = this.state
-    this.loadImage();
     return (
       <>
-
         <CModal size="xl" visible={visible} fullscreen="lg" scrollable>
           <CModalHeader
             onDismiss={() => {
@@ -379,7 +393,10 @@ export class ProductEditorModal extends Component {
                               <MdDelete
                                 size={30}
                                 color="#FF0000"
-                                onClick={() => onImageRemove(index)}
+                                onClick={() => {
+                                  this.removeImage(index)
+                                  onImageRemove(index)
+                                }}
                               />
                             </div>
                           </div>
