@@ -30,6 +30,7 @@ import { history } from "src/_helper/history.js"
 
 // clear message 
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction.js"
+import Roles from "src/router/config/Roles.js"
 
 //validations
 
@@ -46,7 +47,9 @@ export class Login extends Component {
     password: "",
     loading: false,
     validation: false,
-    message: ''
+    message: '',
+    permission: '',
+    isLoggedIn: false
   }
   constructor(props) {
     super(props);
@@ -79,7 +82,7 @@ export class Login extends Component {
     if (username.length !== 0 && password.length !== 0) {
       this.props.authenticateUser(username, password)
         .then(() => {
-          history.push("/home");
+          // history.push("/home");
           window.location.reload();
         })
         .catch(() => {
@@ -101,16 +104,33 @@ export class Login extends Component {
       });
     }
   }
-  render() {
-    let { type, username, password, validation, loading, message } = this.state
+  componentDidMount() {
+    this.redirectSuccessAuthentication();
+  }
+  redirectSuccessAuthentication() {
     const isLoggedIn = this.props.userResponse.isLoggedIn;
-
     if (isLoggedIn) {
-      return <Redirect to="/home" />
-    }
+      let roleName = this.props.userResponse.credentials.roles.roleName;
+      let permission = roleName ? roleName : this.props.userResponse.credentials.roles;
 
+      this.setState({
+        isLoggedIn: isLoggedIn,
+        permission: permission
+      })
+    }
+  }
+  render() {
+    let { type, username, password, validation, loading, message, permission, isLoggedIn } = this.state
+    if (isLoggedIn) {
+      if (permission === Roles.SUPER_ADMIN || permission === Roles.ADMIN) {
+        return <Redirect to="/app" />
+      } else {
+        return <Redirect to="/home" />
+      }
+    }
     return (
       <>
+
         <CNavbar colorScheme="dark" className="bg-dark" placement="sticky-top">
           <CContainer fluid className="ps-3 pe-3">
             <CNavbarBrand href="/">Navbar</CNavbarBrand>

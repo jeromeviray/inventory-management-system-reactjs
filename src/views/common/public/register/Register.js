@@ -25,6 +25,7 @@ import { Redirect } from "react-router-dom"
 import { createAccount } from "src/service/apiActions/userAction/userAction"
 import { history } from "src/_helper/history"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
+import Roles from "src/router/config"
 const RightFormCard = lazy(() => import("../../../../components/public/RightFormCard"))
 
 export class Register extends Component {
@@ -42,7 +43,9 @@ export class Register extends Component {
     validated: false,
     loading: false,
     successful: false,
-    message: ''
+    message: '',
+    isLoggedIn: false,
+    permission: ''
   }
 
   handleOnChange = (event) => {
@@ -97,13 +100,30 @@ export class Register extends Component {
         })
     }
   }
-  render() {
-    let { username, password, email, type, loading, successful, message } = this.state;
+  componentDidMount() {
+    this.redirectAuthenticated();
+  }
+  redirectAuthenticated() {
     const isLoggedIn = this.props.userResponse.isLoggedIn;
     if (isLoggedIn) {
+      let roleName = this.props.userResponse.credentials.roles.roleName;
+      let permission = roleName ? roleName : this.props.userResponse.credentials.roles;
 
-      return <Redirect to="/home" />
+      this.setState({
+        isLoggedIn: isLoggedIn,
+        permission: permission
+      })
+    }
+  }
+  render() {
+    let { username, password, email, type, loading, successful, message, isLoggedIn, permission } = this.state;
 
+    if (isLoggedIn) {
+      if (permission === Roles.SUPER_ADMIN || permission === Roles.ADMIN) {
+        return <Redirect to="/app" />
+      } else {
+        return <Redirect to="/home" />
+      }
     }
     return (
       <>

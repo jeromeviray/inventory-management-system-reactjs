@@ -7,18 +7,27 @@ import modalVisibilityReducer from './modalVisibilityReducer'
 import userReducer from './userReducer'
 import messageReducer from './messageReducer'
 import routesReducer from './routesReducer'
+import branchReducer from './branchReducer'
 
 
 export default combineReducers({
+  //modals
   modalVisibleResponse: modalVisibilityReducer,
+  //products
   productResponser: productReducer,
+  //sidebar
   changeStateResponse: changeStateReducer,
+  //carousel
   carouselResponser: carouselReducer,
+  //account
   userResponse: userReducer,
-
+  //branch
+  branchResponse: branchReducer,
 
   // routes
   routesResponse: routesReducer,
+  //message
   messageResponse: messageReducer,
+  //browserSize
   browserSize: responsiveStateReducer,
 })
