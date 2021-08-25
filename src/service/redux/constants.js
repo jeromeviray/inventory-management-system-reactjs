@@ -45,4 +45,7 @@ export const GOOGLE_AUTH_URL =
 // product branch
 export const GET_BRANCH = "GET_BRANCH"
 export const GET_BRANCH_TOTAL_PRODUCT = "GET_BRANCH_TOTAL_PRODUCT"
+export const SAVE_BRANCH = "SAVE_BRANCH"
+export const UPDATE_BRANCH = "UPDATE_BRANCH"
+export const DELETE_BRANCH = "DELETE_BRANCH"
 

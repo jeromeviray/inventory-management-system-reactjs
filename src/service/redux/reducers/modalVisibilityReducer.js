@@ -23,7 +23,10 @@ const modalVisibilityReducer = (state = {}, action) => {
             }
         case ALERT_MODAL:
             return {
-                alert: action.payload.data.alert,
+                alert: action.payload.alert,
+                action: action.payload.action,
+                module: action.payload.module,
+                id: action.payload.data.id
             }
         case ADD_BRANCH_MODAL:
             return {

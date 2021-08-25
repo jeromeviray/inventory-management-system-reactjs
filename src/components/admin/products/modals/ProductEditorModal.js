@@ -265,7 +265,7 @@ export class ProductEditorModal extends Component {
     this.props.saveProduct(productData, token)
       .then(() => {
         this.onResetValue();
-
+        console.log("success")
         const successMessage = this.props.messageResponse;
         if (successMessage.status === 200) {
           this.setState({
@@ -273,7 +273,6 @@ export class ProductEditorModal extends Component {
             successFully: true,
             message: successMessage.data.message
           })
-          window.location.reload();
 
         } else {
           this.setState({
@@ -285,6 +284,7 @@ export class ProductEditorModal extends Component {
       })
       .catch(() => {
         this.onResetValue();
+        console.log("eerrorr")
 
         const failMessage = this.props.messageResponse;
         console.log(failMessage);

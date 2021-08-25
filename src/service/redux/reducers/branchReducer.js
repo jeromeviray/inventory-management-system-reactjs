@@ -1,4 +1,4 @@
-const { GET_BRANCH, GET_BRANCH_TOTAL_PRODUCT } = require("../constants");
+const { GET_BRANCH, GET_BRANCH_TOTAL_PRODUCT, SAVE_BRANCH, UPDATE_BRANCH } = require("../constants");
 
 const branchReducer = (state = {}, action) => {
     const { type, payload } = action;
@@ -17,6 +17,22 @@ const branchReducer = (state = {}, action) => {
                 action: payload.action,
                 data: {
                     branches: payload.data.branches
+                }
+            }
+        case SAVE_BRANCH:
+            return {
+                status: payload.status,
+                action: payload.action,
+                data: {
+                    branch: payload.data.branch
+                }
+            }
+        case UPDATE_BRANCH:
+            return {
+                status: payload.status,
+                action: payload.action,
+                data: {
+
                 }
             }
         default:

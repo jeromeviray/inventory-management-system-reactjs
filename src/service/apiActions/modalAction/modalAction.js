@@ -34,12 +34,15 @@ export const editProductModal = (visible, action, updateProduct, icon) => async 
         }
     })
 }
-export const setAlertModal = (alert) => async (dispatch) => {
+export const setAlertModal = (alert, action, module, id) => async (dispatch) => {
     dispatch({
         type: ALERT_MODAL,
         payload: {
+            action: action,
+            module: module,
+            alert: alert,
             data: {
-                alert: alert,
+                id: id
             }
         }
     })

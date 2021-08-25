@@ -25,19 +25,25 @@ import AlertModal from 'src/components/admin/products/modals/AlertModal'
 
 //add branch modal
 import BranchModal from 'src/components/admin/products/modals/BranchModal'
+import Roles from 'src/router/config'
 
 
 export class Company extends Component {
     state = {
         visible: false,
         branches: [],
-        message: ''
+        message: '',
+        token: '',
+        permission: ''
 
     }
     componentDidMount() {
-        let { type, accessToken } = this.props.credentials;
+        let { type, accessToken, roles } = this.props.credentials;
         let token = type + accessToken;
 
+        this.setState({
+            permission: roles && roles.roleName
+        })
         this.props.getBranchesWithTotalProduct(token).catch(() => {
             let failMessage = this.props.messageResponse
             if (failMessage.status > 400 && failMessage.status <= 403) {
@@ -51,11 +57,11 @@ export class Company extends Component {
     }
     componentDidUpdate(prevProps, prevState) {
         this.manageGetBranchWithTotalProduct(prevProps, prevState);
+        this.manageCredentials(prevProps, prevState);
     }
     manageGetBranchWithTotalProduct = (prevProps, prevState) => {
         if (prevProps.branchResponse !== this.props.branchResponse) {
             let { status, action, data } = this.props.branchResponse;
-            console.log(data)
             if (status === 200 && action === "GETBRANCHPRODUCT") {
                 this.setState({
                     branches: data.branches
@@ -65,6 +71,15 @@ export class Company extends Component {
 
                 this.props.logout();
             }
+        }
+    }
+    manageCredentials = (prevProps, prevState) => {
+        if (prevProps.modalVisible !== this.props.modalVisible) {
+            let { accessToken, type, roles } = this.props.credentials;
+            let token = type + accessToken;
+            this.setState({
+                token: token,
+            })
         }
     }
     renderAlertModal() {
@@ -78,8 +93,7 @@ export class Company extends Component {
         )
     }
     render() {
-        let { visible, branches, message } = this.state;
-        console.log(branches)
+        let { visible, branches, message, permission } = this.state;
 
         let rowBranches = branches.length > 0 && branches.map((branch, index) => {
             return (
@@ -92,18 +106,21 @@ export class Company extends Component {
                             className="me-2"
                             variant="ghost"
                             size="sm"
-                            onClick={() => this.props.addBranchModal(!visible, 'Edit', 'category', <MdIcons.MdModeEdit size="20" className="me-2" />)}
+                            onClick={() => this.props.addBranchModal(!visible, 'Edit', branch, <MdIcons.MdModeEdit size="20" className="me-2" />)}
                         >
                             <MdIcons.MdModeEdit size="20" />
                         </CButton>
-                        <CButton
-                            color="danger"
-                            className="ms-2"
-                            variant="ghost"
-                            onClick={() => this.props.setAlertModal(!visible)}
-                            size="sm" >
-                            <MdIcons.MdDelete size="20" />
-                        </CButton>
+                        {permission === Roles.SUPER_ADMIN ?
+                            <CButton
+                                color="danger"
+                                className="ms-2"
+                                variant="ghost"
+                                onClick={() => this.props.setAlertModal(!visible, "DELETEBRANCH", "BRANCH", branch.id)}
+                                size="sm" >
+                                <MdIcons.MdDelete size="20" />
+                            </CButton> :
+                            <></>
+                        }
                     </CTableDataCell>
                 </CTableRow>
             )
@@ -143,7 +160,7 @@ export class Company extends Component {
                             <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                         </CTableRow>
                     </CTableHead>
-                    <CTableBody color="light" >
+                    <CTableBody color="light">
 
                         {
                             branches.length > 0 ? <>
@@ -162,29 +179,6 @@ export class Company extends Component {
                                 </CTableDataCell>
                             </CTableRow>
                         )}
-                        {/* <CTableRow className="text-center">
-                            <CTableDataCell>Otto</CTableDataCell>
-                            <CTableDataCell>100</CTableDataCell>
-                            <CTableDataCell className="text-center w-25" colSpan="1">
-                                <CButton
-                                    color="info"
-                                    className="me-2"
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => this.props.addBranchModal(!visible, 'Edit', '', <MdIcons.MdModeEdit size="20" className="me-2" />)}
-                                >
-                                    <MdIcons.MdModeEdit size="20" />
-                                </CButton>
-                                <CButton
-                                    color="danger"
-                                    className="ms-2"
-                                    variant="ghost"
-                                    onClick={() => this.props.setAlertModal(!visible)}
-                                    size="sm" >
-                                    <MdIcons.MdDelete size="20" />
-                                </CButton>
-                            </CTableDataCell>
-                        </CTableRow> */}
                     </CTableBody>
                 </CTable>
             </>
