@@ -12,7 +12,6 @@ export class BranchApiService {
         })
     }
     saveBranch(branch, token) {
-        console.log(branch)
         return axios.post("/branches/save", {
             branch
         }, {

@@ -49,3 +49,11 @@ export const SAVE_BRANCH = "SAVE_BRANCH"
 export const UPDATE_BRANCH = "UPDATE_BRANCH"
 export const DELETE_BRANCH = "DELETE_BRANCH"
 
+// brand
+export const GET_BRANDS = "GET_BRANDS"
+export const GET_BRAND = "GET_BRAND"
+export const SAVE_BRAND = "SAVE_BRAND"
+export const UPDATE_BRAND = "UPDATE_BRAND"
+export const DELETE_BRAND = "DELETE_BRAND"
+export const FAIL_BRAND = "FAIL_BRAND"
+export const CLEAR_BRAND = "CLEAR_BRAND"

@@ -79,6 +79,7 @@ export class Company extends Component {
             let token = type + accessToken;
             this.setState({
                 token: token,
+                permission: roles && roles.roleName
             })
         }
     }

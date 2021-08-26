@@ -28,7 +28,7 @@ import { RiEdit2Line } from "react-icons/ri"
 import ImageUploading from "react-images-uploading"
 import {
   convertFromRaw,
-  convertToRaw, EditorState, createEmpty
+  convertToRaw, EditorState
 } from "draft-js"
 import { Editor } from "react-draft-wysiwyg"
 

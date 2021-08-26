@@ -10,7 +10,8 @@ import {
     CForm,
     CFormFloating,
     CFormControl,
-    CFormLabel,
+    CFormLabel, CToast,
+    CToastBody, CToastClose, CToaster,
 
 } from '@coreui/react'
 //redux
@@ -27,7 +28,6 @@ import { clearMessage } from 'src/service/apiActions/messageAction/messageAction
 export class BranchModal extends Component {
     state = {
         visible: false,
-        action: '',
         icon: '',
         branchId: '',
         branchName: '',
@@ -36,21 +36,11 @@ export class BranchModal extends Component {
         action: '',
         status: '',
         successFully: '',
-
+        toast: ''
     }
     componentDidUpdate(prevProps, prevState) {
         this.manageBranchModal(prevProps, prevState)
-        this.manageMessageResponse(prevProps, prevState);
     }
-    // manageCredentials = (prevProps, prevState) => {
-    //     if (prevProps.userResponse !== this.props.userResponse) {
-    //         let { accessToken, type } = this.props.userResponse.credentials;
-    //         let token = type + accessToken;
-    //         this.setState({
-    //             token: token
-    //         })
-    //     }
-    // }
     manageBranchModal = (prevProps, prevState) => {
         if (prevProps.modalVisible !== this.props.modalVisible) {
             let { visible, action, branch, icon } = this.props.modalVisible;
@@ -70,21 +60,17 @@ export class BranchModal extends Component {
                 })
             } else {
                 this.setState({
-                    visible: visible
+                    visible: visible,
+                    branchId: '',
+                    branchName: '',
+                    icon: '',
+                    action: ''
                 })
             }
 
         }
     }
-    manageMessageResponse = (prevProps, prevState) => {
-        if (prevProps.messageResponse !== this.props.messageResponse) {
-            let { status, data } = this.props.messageResponse;
-            this.setState({
-                status: status,
-                message: data.message
-            })
-        }
-    }
+
     handleOnChange = (event) => {
         let name = event.target.name;
         this.setState({
@@ -96,14 +82,17 @@ export class BranchModal extends Component {
         this.setState({
             loading: true
         })
+        let { accessToken, type } = this.props.userResponse.credentials;
+        let token = type + accessToken;
         let { branchId, branchName, action } = this.state;
+
         if (branchName && branchName.length > 0) {
 
             if (action === "Add") {
-                this.handleSaveBranch(branchName);
+                this.handleSaveBranch(branchName, token);
 
             } else if (action === "Edit") {
-                this.handleUpdateBranch(branchId, branchName);
+                this.handleUpdateBranch(branchId, branchName, token);
             }
         } else {
             this.setState({
@@ -112,79 +101,118 @@ export class BranchModal extends Component {
         }
 
     }
-    handleSaveBranch = (branchName) => {
-        let { accessToken, type } = this.props.userResponse.credentials;
-        let token = type + accessToken;
+    handleSaveBranch = (branchName, token) => {
+
         this.props.saveBranch(branchName, token)
             .then(() => {
                 let { status, data } = this.props.messageResponse;
-                console.log(this.props.messageResponse)
                 if (status === 200) {
                     this.setState({
-                        branch: [],
-                        message: data.message,
-                        successFully: true,
-                        loading: false
+                        loading: false,
+                        toast: this.toastComponent()
                     })
                 }
-                window.location.reload();
+                setInterval(() => {
+                    this.props.clearMessage();
+                    window.location.reload();
+                }, 1000)
             })
             .catch(() => {
                 let { status, data } = this.props.messageResponse;
-                if (status < 400 && status >= 403) {
-                    this.props.clearMessage();
-                    this.props.logout();
+                if (status > 400 && status <= 403) {
+                    setInterval(() => {
+                        this.props.logout();
+                        this.props.clearMessage();
+                    }, 1000)
                 } else {
-                    this.setState({
-                        message: data && data.message,
-                        successFully: false,
-                        loading: false
-                    })
+                    if (status >= 500) {
+                        this.setState({
+                            message: data && data.message,
+                            successFully: false,
+                            loading: false,
+                        })
+                    } else {
+                        this.setState({
+                            message: data && data.message,
+                            successFully: false,
+                            loading: false,
+                        })
+                    }
+
                 }
             })
     }
-    handleUpdateBranch = (brandId, branchName) => {
-        let { accessToken, type } = this.props.userResponse.credentials;
-        let token = type + accessToken;
-
+    handleUpdateBranch = (brandId, branchName, token) => {
         this.props.updateBranch(brandId, branchName, token)
             .then(() => {
                 let { status, data } = this.props.messageResponse;
                 let { action } = this.props.branchResponse;
                 if (action === "UPDATEBRANCH" && status >= 200) {
                     this.setState({
-                        message: data.message,
                         loading: false,
-                        successFully: true
+                        toast: this.toastComponent()
                     })
                     setInterval(function () {
                         window.location.reload();
+
                     }, 2000)
                 } else {
                     this.setState({
                         loading: false,
-                        successFully: false,
-                        message: ''
                     })
                 }
             }).catch(() => {
                 let { status, data } = this.props.messageResponse;
                 if (status > 400 && status <= 403) {
-                    this.props.logout();
-                    this.props.clearMessage();
+                    setInterval(() => {
+                        this.props.logout();
+                        this.props.clearMessage();
+                    }, 1000)
                 } else {
-                    this.setState({
-                        message: data && data.message,
-                        successFully: false,
-                        loading: false
-                    })
+                    if (status >= 500) {
+                        this.setState({
+                            message: data && data.message,
+                            successFully: false,
+                            loading: false,
+                        })
+                    } else {
+                        this.setState({
+                            message: data && data.message,
+                            successFully: false,
+                            loading: false,
+                        })
+                    }
+
                 }
             })
     }
+
+    toastComponent() {
+        let { data, status } = this.props.messageResponse;
+        let color = '';
+        if (status === 200) {
+            color = "success"
+        } else if (status > 400 && status <= 403) {
+            color = "danger"
+        } else if (status > 405 && status <= 500) {
+            color = "warning"
+        } else {
+            color = "warning"
+        }
+        return (
+            <CToast color={color} className="text-white align-items-center" delay={3000}>
+                <div className="d-flex">
+                    <CToastBody>{data.message}</CToastBody>
+                    <CToastClose className="me-2 m-auto" white />
+                </div>
+            </CToast>
+        )
+    }
     render() {
-        let { visible, action, branchName, icon, loading, successFully, message } = this.state;
+        let { visible, action, branchName, icon, loading, successFully, message, toast } = this.state;
         return (
             <div>
+                <CToaster push={toast} placement="top-end" />
                 <CModal visible={visible}>
                     <CModalHeader onDismiss={() => {
                         this.props.addBranchModal(false, 'close', '', '')

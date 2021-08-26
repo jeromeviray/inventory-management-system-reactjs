@@ -8,6 +8,7 @@ import userReducer from './userReducer'
 import messageReducer from './messageReducer'
 import routesReducer from './routesReducer'
 import branchReducer from './branchReducer'
+import brandReducer from './brandReducer'
 
 
 export default combineReducers({
@@ -23,7 +24,8 @@ export default combineReducers({
   userResponse: userReducer,
   //branch
   branchResponse: branchReducer,
-
+  // brand
+  brandResponse: brandReducer,
   // routes
   routesResponse: routesReducer,
   //message

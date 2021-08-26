@@ -71,7 +71,7 @@ export class Login extends Component {
     })
   }
   handleSubmit = (event) => {
-    const { history } = this.props;
+    // const { history } = this.props;
     const { username, password } = this.state;
     // const form = event.currentTarget
     event.preventDefault()

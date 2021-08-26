@@ -1,30 +1,26 @@
-const { GET_BRANCH, GET_BRANCH_TOTAL_PRODUCT, SAVE_BRANCH, UPDATE_BRANCH } = require("../constants");
+import { GET_BRANDS, SAVE_BRAND, UPDATE_BRAND } from "../constants";
 
-const branchReducer = (state = {}, action) => {
+const brandReducer = (state = {}, action) => {
     const { type, payload } = action;
     switch (type) {
-        case GET_BRANCH:
+        case GET_BRANDS:
             return {
                 status: payload.status,
                 action: payload.action,
                 data: {
-                    branch: payload.data.branches
+                    brands: payload.data.brands
                 }
             }
-        case GET_BRANCH_TOTAL_PRODUCT:
+
+        case SAVE_BRAND:
             return {
                 status: payload.status,
                 action: payload.action,
                 data: {
-                    branches: payload.data.branches
+
                 }
             }
-        case SAVE_BRANCH:
-            return {
-                status: payload.status,
-                action: payload.action,
-            }
-        case UPDATE_BRANCH:
+        case UPDATE_BRAND:
             return {
                 status: payload.status,
                 action: payload.action,
@@ -36,4 +32,4 @@ const branchReducer = (state = {}, action) => {
             return state
     }
 }
-export default branchReducer;
+export default brandReducer;

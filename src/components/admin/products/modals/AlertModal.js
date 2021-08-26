@@ -15,7 +15,7 @@ import { deleteBranch } from 'src/service/apiActions/branchAction/branchAction'
 import { setAlertModal } from 'src/service/apiActions/modalAction/modalAction'
 import { clearMessage } from 'src/service/apiActions/messageAction/messageAction'
 import { logout } from 'src/service/apiActions/userAction/userAction'
-
+import { deleteBrand } from 'src/service/apiActions/brandAction/brandAction'
 
 export class AlertModal extends Component {
     state = {
@@ -35,20 +35,32 @@ export class AlertModal extends Component {
     manageModalAlert = (prevProps, prevState) => {
         if (prevProps.modalVisible !== this.props.modalVisible) {
             let { alert, id, module, action } = this.props.modalVisible;
-            if (action === "DELETEBRANCH") {
+            switch (action) {
+                case "DELETEBRANCH":
+                    console.log("branch");
+                    this.setState({
+                        visible: alert,
+                        id: id,
+                        module: module,
+                        action: action,
+                    })
+                    break;
+                case "DELETEBRAND":
+                    console.log("brand");
 
-                this.setState({
-                    visible: alert,
-                    id: id,
-                    module: module,
-                    action: action,
-                })
-            } else {
-                this.setState({
-                    visible: alert
-                })
+                    this.setState({
+                        visible: alert,
+                        id: id,
+                        module: module,
+                        action: action,
+                    })
+                    break;
+                default:
+                    this.setState({
+                        visible: alert
+                    })
+
             }
-
         }
     }
     // manageCredentials = (prevProps, prevState) => {
@@ -61,23 +73,26 @@ export class AlertModal extends Component {
     // }
     handleOnDelete = () => {
         let { id, action, module } = this.state;
+        let { accessToken, type } = this.props.userResponse.credentials;
+        let token = type + accessToken;
         this.setState({
             loading: true
         })
         if (action === "DELETEBRANCH" && module === "BRANCH") {
-            this.branchDelete(id)
+            this.branchDelete(id, token)
             console.log("BRANCH")
 
+        } else if (action === "DELETEBRAND" && module === "BRAND") {
+            this.handleDeleteBrand(id, token);
         } else {
             console.log("ERRPR")
         }
     }
-    branchDelete = (id) => {
-        let { accessToken, type } = this.props.userResponse.credentials;
-        let token = type + accessToken;
+    branchDelete = (id, token) => {
+
         this.props.deleteBranch(id, token)
             .then(() => {
-                let { status, data } = this.props.messageResponse;
+                let { data } = this.props.messageResponse;
                 this.setState({
                     loading: false,
                     message: data && data.message,
@@ -91,6 +106,43 @@ export class AlertModal extends Component {
             .catch(() => {
                 let { status, data } = this.props.messageResponse;
                 if (status > 400 && status <= 403) {
+
+                    this.setState({
+                        message: data && data.message,
+                        successFully: false,
+                        loading: false,
+                        toast: this.toastComponent(),
+                    })
+                    setInterval(() => {
+                        this.props.logout();
+                        this.props.clearMessage();
+                    }, 1000)
+                } else {
+                    this.setState({
+                        message: data && data.message,
+                        successFully: false,
+                        loading: false,
+                        toast: this.toastComponent(),
+                    })
+                }
+            })
+    }
+    handleDeleteBrand = (id, token) => {
+        this.props.deleteBrand(id, token)
+            .then(() => {
+                let { data } = this.props.messageResponse;
+                this.setState({
+                    loading: false,
+                    message: data && data.message,
+                    toast: this.toastComponent()
+                })
+                setInterval(function () {
+                    window.location.reload();
+                }, 1000)
+            })
+            .catch(() => {
+                let { status, data } = this.props.messageResponse;
+                if (status > 400 && status <= 403) {
                     // this.props.logout();
                     // this.props.clearMessage();
                     this.setState({
@@ -99,6 +151,10 @@ export class AlertModal extends Component {
                         loading: false,
                         toast: this.toastComponent(),
                     })
+                    setInterval(() => {
+                        this.props.logout();
+                        this.props.clearMessage();
+                    }, 1000)
                 } else {
                     this.setState({
                         message: data && data.message,
@@ -171,5 +227,5 @@ export default connect(mapStateToProps, {
     setAlertModal,
     deleteBranch,
     clearMessage,
-    logout
+    logout, deleteBrand
 })(AlertModal)
