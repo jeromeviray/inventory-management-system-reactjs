@@ -117,8 +117,8 @@ const _nav = [
     _component: "CNavItem",
     as: NavLink,
     icon: <FaIcons.FaWarehouse size={20} style={iconMargin} />,
-    anchor: "Warehouse",
-    to: "/app/warehouse",
+    anchor: "Branch",
+    to: "/app/branch",
     permission: [
       Roles.SUPER_ADMIN
     ]

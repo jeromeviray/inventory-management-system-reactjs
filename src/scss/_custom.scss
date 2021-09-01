@@ -1,7 +1,9 @@
 // Here you can add other styles
 
 //upload-image design UI
+body{
 
+}
 .upload__image-wrapper {
   .upload-container {
     height: 90px;
@@ -199,4 +201,17 @@
   //     -moz-transition: overflow .5s;
   //     transition: overflow .5s;
   // }
+}
+
+// border
+.border-envelope{
+    padding: 12px 16px;
+    border: 3px solid transparent;
+    background: linear-gradient(white, white) padding-box,
+    repeating-linear-gradient(-45deg,
+    rgba(255, 0, 0, 0.918) 0, red 12.5%,
+    transparent 0, transparent 25%,
+    #58a 0, #58a 37.5%,
+    transparent 0, transparent 50%)
+    0 /3em 3em;
 }

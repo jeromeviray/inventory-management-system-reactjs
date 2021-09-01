@@ -112,8 +112,8 @@ export const routes = [
     ]
   },
   {
-    path: "/app/warehouse",
-    name: "WareHouse",
+    path: "/app/branch",
+    name: "Branch",
     component: Company,
     permission: [
       Roles.SUPER_ADMIN,

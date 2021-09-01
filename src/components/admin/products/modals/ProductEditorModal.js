@@ -20,7 +20,7 @@ import {
 } from "@coreui/react"
 
 //icons
-import * as FaIcons from 'react-icons/fa'
+// import * as FaIcons from 'react-icons/fa'
 import { MdDelete } from "react-icons/md"
 import { RiEdit2Line } from "react-icons/ri"
 
@@ -38,6 +38,8 @@ import { setProductModal } from "../../../../service/apiActions/modalAction/moda
 import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { getImage } from "src/service/apiActions/productAction/productAction"
+import { getBranches } from "src/service/apiActions/branchAction/branchAction"
+//api
 import ProductApiService from "src/service/restAPI/ProductApiService"
 
 
@@ -60,6 +62,8 @@ export class ProductEditorModal extends Component {
       images: [],
       productImage: [],
       removedImages: []
+
+      // images: []
     }
 
   }
@@ -69,12 +73,25 @@ export class ProductEditorModal extends Component {
     productPrice: 0,
     productDescriptions: "",
     productImage: [],
-    storeBranch: '',
+    branches: [],
+    branch: ''
   }
   onResetValue = () => {
     this.setState(() => this.productDetail)
   }
+  componentDidMount() {
+    let { accessToken, type } = this.props.credentials;
+    let token = type + accessToken;
+    this.props.getBranches(token);
+    this.loadImage();
+
+  }
   componentDidUpdate = (prevProps, prevState) => {
+    this.manageModalVisible(prevProps, prevState);
+    this.manageBranchResponse(prevProps, prevState);
+  }
+  manageModalVisible = (prevProps, prevState) => {
+
     if (prevProps.modalVisibleResponse !== this.props.modalVisibleResponse) {
       if (this.props.modalVisibleResponse.action === "Add") {
         this.setState({
@@ -85,8 +102,6 @@ export class ProductEditorModal extends Component {
         })
       } else if (this.props.modalVisibleResponse.action === "Edit") {
         let product = this.props.modalVisibleResponse.product
-
-
         this.setState({
           visible: this.props.modalVisibleResponse.visible,
           action: this.props.modalVisibleResponse.action,
@@ -96,8 +111,8 @@ export class ProductEditorModal extends Component {
           editorState: product.productDescription ?
             EditorState.createWithContent(convertFromRaw(JSON.parse(product.productDescription))) :
             null,
-          storeBranch: product.storeInformation ?
-            product.storeInformation.branch :
+          branch: product.branch ?
+            product.branch.branch :
             '',
         })
         this.getImages(product.fileImages);
@@ -111,39 +126,47 @@ export class ProductEditorModal extends Component {
 
     }
   }
+  manageBranchResponse = (prevProps, prevState) => {
+    if (prevProps.branchResponse !== this.props.branchResponse) {
+      let { status, action, data } = this.props.branchResponse;
+      console.log(this.props.branchResponse)
+      if (status <= 200 && action === "GETBRANCH") {
+        this.setState({
+          branches: data.branch,
+        })
+      }
+    }
+  }
   async getImages(fileImages) {
-
     let { accessToken, type } = this.props.credentials;
     let token = type + accessToken;
-    // for (let i = 0;i < fileImages.length;i++) {
-    ProductApiService.getImage(fileImages[0].fileName, token)
-      .then((response) => {
-        // this.setState({
-        //   images: response.data
-        // })
-        console.log(response.data)
-        this.loadImage(response.data, fileImages[0].fileName)
-      }).catch((error) => {
-        const message = (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-          error.message || error.error_message ||
-          error.toString();
+    for (let i = 0;i < fileImages.length;i++) {
+      ProductApiService.getImage(fileImages[i].fileName, token)
+        .then((response) => {
+          // console.log(response.data)
+          this.loadImage(response.data, fileImages[i].fileName)
+        }).catch((error) => {
+          const message = (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+            error.message || error.error_message ||
+            error.toString();
 
-        const status = (error.response &&
-          error.response.data &&
-          error.response.data.code) || error.status ||
-          error.toString();
-        this.setState({
-          status: status,
-          message: message
+          const status = (error.response &&
+            error.response.data &&
+            error.response.data.code) || error.status ||
+            error.toString();
+          this.setState({
+            status: status,
+            message: message
+          })
         })
-      })
-    // }
+    }
   }
 
   loadImage = (image, fileName) => {
     let { productImage } = this.state;
+    console.log(productImage);
     if (!image) {
       return
     }
@@ -199,12 +222,11 @@ export class ProductEditorModal extends Component {
       productPrice,
       productDescriptions,
       productImage,
-      storeBranch,
       action,
-      removedImages
+      removedImages,
+      branch,
     } = this.state
 
-    console.log(String(JSON.stringify(productDescriptions)))
     let accessToken = this.props.credentials.accessToken;
     let type = this.props.credentials.type;
 
@@ -218,7 +240,7 @@ export class ProductEditorModal extends Component {
           loading: true
         })
 
-        for (let i = 0; i < productImage.length; i++) {
+        for (let i = 0;i < productImage.length;i++) {
           if (productImage[i].file) {
             productData.append('productImages[]', productImage[i].file);
           }
@@ -227,7 +249,7 @@ export class ProductEditorModal extends Component {
         productData.append('productName', productName);
         productData.append('productPrice', productPrice);
         productData.append('productDescription', JSON.stringify(productDescriptions));
-        productData.append('branch', storeBranch);
+        productData.append('branch', branch);
 
         if (action === "Add") {
           this.saveProduct(productData, token);
@@ -248,6 +270,7 @@ export class ProductEditorModal extends Component {
     this.props.saveProduct(productData, token)
       .then(() => {
         this.onResetValue();
+        console.log("success")
         const successMessage = this.props.messageResponse;
         if (successMessage.status === 200) {
           this.setState({
@@ -255,6 +278,7 @@ export class ProductEditorModal extends Component {
             successFully: true,
             message: successMessage.data.message
           })
+
         } else {
           this.setState({
             loading: false,
@@ -265,6 +289,7 @@ export class ProductEditorModal extends Component {
       })
       .catch(() => {
         this.onResetValue();
+        console.log("eerrorr")
 
         const failMessage = this.props.messageResponse;
         console.log(failMessage);
@@ -295,7 +320,7 @@ export class ProductEditorModal extends Component {
       removedImages.push(productImage[index].filename)
     }
   }
-  
+
   render() {
     let {
       visible,
@@ -307,11 +332,20 @@ export class ProductEditorModal extends Component {
       loading,
       successFully,
       message,
-      storeBranch,
       action,
       icon,
-      images
+      branch,
+      branches
     } = this.state
+
+
+    let getBranchOption = branches
+      && branches.map((branch, i) => {
+        return (
+
+          <option key={i} value={branch}>{branch}</option>
+        )
+      }, this);
     return (
       <>
         <CModal size="xl" visible={visible} fullscreen="lg" scrollable>
@@ -430,7 +464,6 @@ export class ProductEditorModal extends Component {
                       name="productPrice"
                       value={productPrice}
                       onChange={this.handleOnChange}
-
                       required
                     />
                     <CFormLabel htmlFor="floatingInput">Product Price</CFormLabel>
@@ -439,16 +472,14 @@ export class ProductEditorModal extends Component {
                 <CCol sm="12" md="6" lg>
                   <CFormFloating className="mb-3">
                     <CFormSelect
-                      value={storeBranch}
+                      value={branch}
                       onChange={this.handleOnChange}
-                      name="storeBranch"
+                      name="branch"
                       id="floatingSelectBranch"
                       aria-label="Floating label select example"
                     >
-                      <option value={storeBranch}>{storeBranch}</option>
-                      <option value="main">Main</option>
-                      <option value="second">Second</option>
-
+                      <option>Choose Branch</option>
+                      {getBranchOption}
                     </CFormSelect>
                     <CFormLabel htmlFor="floatingSelectBranch">Branch</CFormLabel>
                   </CFormFloating>
@@ -516,7 +547,8 @@ const mapStateToProps = (state) => {
     modalVisibleResponse: state.modalVisibleResponse,
     messageResponse: state.messageResponse,
     credentials: state.userResponse.credentials,
-    productResponse: state.productResponser
+    productResponse: state.productResponser,
+    branchResponse: state.branchResponse
   }
 }
 export default connect(mapStateToProps, {
@@ -524,5 +556,6 @@ export default connect(mapStateToProps, {
   saveProduct,
   logout,
   clearMessage,
-  getImage
+  getImage,
+  getBranches
 })(ProductEditorModal)

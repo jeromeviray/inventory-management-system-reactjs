@@ -2,8 +2,13 @@ import React, { Component } from 'react'
 import TabHeader from 'src/components/TabContents/TabHeader'
 import { CContainer } from '@coreui/react'
 import { HeroCarousel } from 'src/components/carousel/index'
+import { connect } from 'react-redux'
 
 export class Home extends Component {
+
+    componentDidMount() {
+        // console.log(this.props.userResponse.credentials.refresh_token);
+    }
 
     render() {
 
@@ -21,5 +26,9 @@ export class Home extends Component {
         )
     }
 }
-
-export default Home
+const mapStateToProps = (state) => {
+    return {
+        userResponse: state.userResponse
+    }
+}
+export default connect(mapStateToProps, {})(Home)

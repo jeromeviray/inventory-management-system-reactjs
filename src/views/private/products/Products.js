@@ -7,7 +7,7 @@ import { CRow, CCol, CButton } from "@coreui/react"
 import * as FaIcons from 'react-icons/fa'
 
 import { logout } from "src/service/apiActions/userAction/userAction"
-import eventBus from "src/_helper/EventBus"
+// import eventBus from "src/_helper/EventBus"
 const ProductCard = lazy(() =>
   import("../../../components/admin/products/ProductCard.js")
 )
