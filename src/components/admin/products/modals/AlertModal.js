@@ -16,6 +16,7 @@ import { setAlertModal } from 'src/service/apiActions/modalAction/modalAction'
 import { clearMessage } from 'src/service/apiActions/messageAction/messageAction'
 import { logout } from 'src/service/apiActions/userAction/userAction'
 import { deleteBrand } from 'src/service/apiActions/brandAction/brandAction'
+import { deleteEmployee } from 'src/service/apiActions/employeeAction/EmployeeAction'
 
 export class AlertModal extends Component {
     state = {
@@ -55,6 +56,13 @@ export class AlertModal extends Component {
                         action: action,
                     })
                     break;
+                case "DELETEEMPLOYEE":
+                    this.setState({
+                        visible: alert,
+                        id: id,
+                        module: module,
+                        action: action
+                    })
                 default:
                     this.setState({
                         visible: alert
@@ -84,6 +92,8 @@ export class AlertModal extends Component {
 
         } else if (action === "DELETEBRAND" && module === "BRAND") {
             this.handleDeleteBrand(id, token);
+        } else if (action === "DELETEEMPLOYEE", module === "EMPLOYEE") {
+            this.handleEmployeeDelete(id, token);
         } else {
             console.log("ERRPR")
         }
@@ -145,6 +155,41 @@ export class AlertModal extends Component {
                 if (status > 400 && status <= 403) {
                     // this.props.logout();
                     // this.props.clearMessage();
+                    this.setState({
+                        message: data && data.message,
+                        successFully: false,
+                        loading: false,
+                        toast: this.toastComponent(),
+                    })
+                    setInterval(() => {
+                        this.props.logout();
+                        this.props.clearMessage();
+                    }, 1000)
+                } else {
+                    this.setState({
+                        message: data && data.message,
+                        successFully: false,
+                        loading: false,
+                        toast: this.toastComponent(),
+                    })
+                }
+            })
+    }
+    handleEmployeeDelete = (id, token) => {
+        this.props.deleteEmployee(id, token)
+            .then(() => {
+                let { data } = this.props.messageResponse;
+                this.setState({
+                    loading: false,
+                    toast: this.toastComponent()
+                })
+                setInterval(function () {
+                    window.location.reload();
+                }, 1000)
+            })
+            .catch(() => {
+                let { status, data } = this.props.messageResponse;
+                if (status > 400 && status <= 403) {
                     this.setState({
                         message: data && data.message,
                         successFully: false,
@@ -227,5 +272,6 @@ export default connect(mapStateToProps, {
     setAlertModal,
     deleteBranch,
     clearMessage,
-    logout, deleteBrand
+    logout, deleteBrand,
+    deleteEmployee
 })(AlertModal)

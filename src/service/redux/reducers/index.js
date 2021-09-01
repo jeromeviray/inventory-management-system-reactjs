@@ -10,6 +10,7 @@ import routesReducer from './routesReducer'
 import branchReducer from './branchReducer'
 import brandReducer from './brandReducer'
 import orderReducer from './orderReducer'
+import employeeReducer from './employeeReducer'
 
 
 export default combineReducers({
@@ -29,7 +30,8 @@ export default combineReducers({
   brandResponse: brandReducer,
   //order
   orderResponse: orderReducer,
-
+  // employee
+  employeeResponse: employeeReducer,
   // routes
   routesResponse: routesReducer,
   //message

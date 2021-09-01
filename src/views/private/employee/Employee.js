@@ -5,20 +5,60 @@ import {
 } from '@coreui/react'
 //icons
 import * as MdIcons from 'react-icons/md'
+import * as BiIcons from 'react-icons/bi'
 import * as FaIcons from "react-icons/fa"
 import { connect } from 'react-redux'
 // action
+import { clearMessage } from 'src/service/apiActions/messageAction/messageAction'
 import { setAlertModal, addEmployeeModal } from 'src/service/apiActions/modalAction/modalAction'
+import { getEmployees } from 'src/service/apiActions/employeeAction/EmployeeAction'
+import { logout } from 'src/service/apiActions/userAction/userAction'
 //component modal
 import AlertModal from 'src/components/admin/products/modals/AlertModal'
 import EmployeeModal from 'src/components/admin/products/modals/EmployeeModal'
 
 export class Employee extends Component {
     state = {
-        employee: [{
-            "name": "naem"
-        }],
+        employee: [],
         visible: false,
+        token: "",
+        message: '',
+        action: '',
+        status: "",
+
+    }
+    componentDidMount() {
+        let { type, accessToken } = this.props.userResponse.credentials;
+        let token = type + accessToken;
+        this.setState({
+            token: token
+        })
+        this.props.getEmployees(token).catch(() => {
+            let failMessage = this.props.messageResponse;
+            if (failMessage.status > 400 && failMessage.status <= 403) {
+                this.props.logout();
+            }
+            this.setState({
+                message: failMessage.data.message
+            })
+        })
+    }
+    componentDidUpdate(prevProps, prevState) {
+        this.manageEmployeeResponse(prevProps, prevState);
+    }
+    manageEmployeeResponse = (prevProps, prevState) => {
+        if (prevProps.employeeResponse !== this.props.employeeResponse) {
+            let { status, action, data } = this.props.employeeResponse;
+            if (status === 200 && action === "GETEMPLOYEES") {
+                this.setState({
+                    employee: data.employees
+                })
+            } else if (status > 400 && status <= 403) {
+                this.props.clearMessage();
+
+                this.props.logout();
+            }
+        }
     }
     renderAlerModal() {
         return (
@@ -31,7 +71,8 @@ export class Employee extends Component {
         )
     }
     render() {
-        let { employee, visible } = this.state;
+        let { employee, visible, message } = this.state;
+        console.log(employee);
         return (
 
             <div>
@@ -47,7 +88,7 @@ export class Employee extends Component {
 
                     <FaIcons.FaPlus size={20} />
                     <span style={{ marginLeft: "10px" }}>
-                        Add Employee
+                        Add Employee Account
                     </span>
                 </CButton>
                 <CTable striped
@@ -56,51 +97,67 @@ export class Employee extends Component {
                     responsive="md"
                     bordered
                     align="middle" >
-                    <CTableCaption>List of Brand: <b>12</b></CTableCaption>
+                    <CTableCaption>List of Brand: <b>{employee.length}</b></CTableCaption>
 
                     <CTableHead color="dark">
                         <CTableRow className="text-center">
                             <CTableHeaderCell scope="col">Name</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Contact</CTableHeaderCell>
-                            <CTableHeaderCell scope="col">Address</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Username</CTableHeaderCell>
-                            <CTableHeaderCell scope="col">Password</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Email Address</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Created Date</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                         </CTableRow>
                     </CTableHead>
                     <CTableBody className="text-center" color="light" >
+                        {message && (
+                            <CTableRow className="text-center">
+                                <CTableDataCell colSpan="6">
+                                    <div className="alert alert-danger" role="alert">
+                                        {message}
+                                    </div>
+                                </CTableDataCell>
+                            </CTableRow>
+                        )}
                         {employee.length > 0 ?
                             <>
-                                <CTableRow className="text-center">
-                                    <CTableDataCell>Otto</CTableDataCell>
-                                    <CTableDataCell>100</CTableDataCell>
-                                    <CTableDataCell>Otto</CTableDataCell>
-                                    <CTableDataCell>100</CTableDataCell>
-                                    <CTableDataCell>100</CTableDataCell>
-                                    <CTableHeaderCell className="text-center" colSpan="1">
-                                        <CButton
-                                            color="info"
-                                            className="me-2"
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={() => this.props.addEmployeeModal(!visible, 'Edit', 'category', <MdIcons.MdModeEdit size="20" className="me-2" />)}
-                                        >
-                                            <MdIcons.MdModeEdit size="20" />
-                                        </CButton>
-                                        <CButton
-                                            color="danger"
-                                            className="ms-2"
-                                            variant="ghost"
-                                            onClick={() => this.props.setAlertModal(!visible)}
-                                            size="sm" >
-                                            <MdIcons.MdDelete size="20" />
-                                        </CButton>
-                                    </CTableHeaderCell>
-                                </CTableRow>
+                                {employee.map((employee, index) => {
+                                    let { firstName, lastName, phoneNumber, account } = employee
+                                    return (
+                                        <CTableRow className="text-center" key={index}>
+                                            <CTableDataCell>{firstName + " " + lastName}</CTableDataCell>
+                                            <CTableDataCell>{phoneNumber}</CTableDataCell>
+                                            <CTableDataCell>{account.username}</CTableDataCell>
+                                            <CTableDataCell>{account.email}</CTableDataCell>
+                                            <CTableDataCell>{account.created}</CTableDataCell>
+                                            <CTableHeaderCell className="text-center" colSpan="1">
+                                                {/* <CButton
+                                                    color="info"
+                                                    className="me-2"
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    onClick={() => this.props.addEmployeeModal(!visible, 'Edit', 'category', <MdIcons.MdModeEdit size="20" className="me-2" />)}
+                                                >
+                                                    <MdIcons.MdModeEdit size="20" />
+                                                </CButton> */}
+                                                <CButton
+
+                                                    color="danger"
+                                                    className="ms-2"
+                                                    variant="ghost"
+                                                    onClick={() => this.props.setAlertModal(!visible, "DELETEEMPLOYEE", "EMPLOYEE", account.id)}
+                                                    size="sm" >
+                                                    <MdIcons.MdDelete size="20" />
+                                                </CButton>
+                                            </CTableHeaderCell>
+                                        </CTableRow>
+                                    )
+                                })}
+
 
                             </> :
                             <CTableRow>
-                                <CTableDataCell colSpan="4">No data</CTableDataCell>
+                                <CTableDataCell colSpan="6">No data</CTableDataCell>
                             </CTableRow>
                         }
                     </CTableBody>
@@ -111,9 +168,13 @@ export class Employee extends Component {
 }
 const mapStateToProps = (state) => {
     return {
-        modalVisible: state.modalVisibleResponse
+        modalVisible: state.modalVisibleResponse,
+        userResponse: state.userResponse,
+        messageResponse: state.messageResponse,
+        employeeResponse: state.employeeResponse
     }
 }
 export default connect(mapStateToProps, {
-    setAlertModal, addEmployeeModal
+    setAlertModal, addEmployeeModal,
+    getEmployees, logout, clearMessage
 })(Employee)
