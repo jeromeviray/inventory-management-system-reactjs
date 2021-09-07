@@ -1,4 +1,4 @@
-import { GET_COMPLETED_ORDER, GET_CONFIRMED_ORDER, GET_PENDING_ORDER } from "../constants";
+import { GET_COMPLETED_ORDER, GET_CONFIRMED_ORDER, GET_PENDING_ORDER, ORDER_ITEMS, PLACE_ORDER } from "../constants";
 
 const orderReducer = (state = {}, action) => {
     const { type, payload } = action;
@@ -25,6 +25,22 @@ const orderReducer = (state = {}, action) => {
                 action: payload.action,
                 data: {
                     completedOrder: payload.data.completedOrder
+                }
+            }
+        case ORDER_ITEMS:
+            return {
+                status: payload.status,
+                action: payload.action,
+                data: {
+                    items: payload.data.items
+                }
+            }
+        case PLACE_ORDER:
+            return {
+                status: payload.status,
+                action: payload.action,
+                data: {
+
                 }
             }
         default:

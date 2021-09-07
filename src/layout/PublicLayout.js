@@ -9,7 +9,7 @@ export default class PublicLayout extends Component {
                     <NavHeader />
                     <Navbar />
                     <BottomNavBar />
-                    <div className="body" style={{ marginTop: "70px" }}>
+                    <div className="body" style={{ margin: "20px 0" }}>
                          <PublicContent />
                     </div>
                </>

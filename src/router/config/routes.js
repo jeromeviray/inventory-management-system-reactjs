@@ -22,11 +22,12 @@ const Category = React.lazy(() => import("../../views/private/products/category/
 
 // public routes
 const Home = React.lazy(() => import("../../views/common/public/home/Home"))
-const DiscoverProducts = React.lazy(() => import("../../views/common/public/productFeatures/discover/DiscoverProducts"))
-const SaleProducts = React.lazy(() => import("../../views/common/public/productFeatures/sale/SaleProducts"))
+const DiscoverProducts = React.lazy(() => import("../../views/common/productFeatures/discover/DiscoverProducts"))
+const SaleProducts = React.lazy(() => import("../../views/common/productFeatures/sale/SaleProducts"))
 const About = React.lazy(() => import("../../views/common/public/about/About"))
-
-
+// const Checkout = React.lazy(() => import('src/views/common/cart/Checkout'))
+// const CustomerAddress = React.lazy(() => import('src/views/common/cart/customerAddress/CustomerAddress'))
+const Cart = React.lazy(() => import('src/views/common/cart/Cart'))
 export const routes = [
   {
     path: "/app",
@@ -164,6 +165,14 @@ export const publicRoutes = [
     name: "About",
     component: About,
   },
+
+  {
+    exact: true,
+    path: "/cart",
+    name: "Cart",
+    component: Cart,
+  },
+
 ]
 const routers = {
   routes, publicRoutes

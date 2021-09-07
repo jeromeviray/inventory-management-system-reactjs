@@ -17,10 +17,6 @@ const _nav = [
     anchor: "Dashboard",
     to: "/app/dashboard",
     icon: <FaIcons.FaTachometerAlt size={20} style={iconMargin} />,
-    badge: {
-      color: "info",
-      text: "NEW",
-    },
     permission: [
       Roles.ADMIN,
       Roles.SUPER_ADMIN,

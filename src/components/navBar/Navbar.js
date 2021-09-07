@@ -22,7 +22,7 @@ export class Navbar extends Component {
     }
 
     render() {
-
+        const isLoggedIn = this.props.isLoggedIn;
         return (
             <>
                 <CNavbar expand="lg" colorScheme="dark" className="bg-dark d-none d-lg-block" placement="sticky-top" >
@@ -43,11 +43,11 @@ export class Navbar extends Component {
                                 })}
                             </CNavbarNav>
                         </CCollapse>
-                        {this.props.isLoggedIn &&
+                        {isLoggedIn &&
                             <CNavbarNav>
                                 <CNavItem>
-                                    <CNavLink href="#">
-                                        <FaIcons.FaBell size={20} />
+                                    <CNavLink href="/cart">
+                                        <FaIcons.FaShoppingCart size={25} />
                                     </CNavLink>
                                 </CNavItem>
                                 <AppHeaderDropdown />
@@ -61,9 +61,10 @@ export class Navbar extends Component {
 }
 
 const mapStateToProps = (state) => {
-    const isLoggedIn = state.userResponse.isLoggedIn;
+    const { isLoggedIn, credentials } = state.userResponse;
     return {
-        isLoggedIn
+        isLoggedIn,
+        credentials
     }
 }
 export default connect(mapStateToProps, {})(Navbar)

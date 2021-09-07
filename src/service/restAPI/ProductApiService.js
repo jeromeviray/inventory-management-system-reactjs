@@ -1,4 +1,5 @@
 
+import authHeader from '../auth/authHeader'
 import axios from './RestApi'
 
 export class ProductApiService {
@@ -21,6 +22,12 @@ export class ProductApiService {
         return axios.get("/products/" + id, {
             headers: { Authorization: token }
         })
+    }
+    getProductDetails(id) {
+        return axios.get("/products/details/" + id);
+    }
+    getDiscoverProducts() {
+        return axios.get("/products/discover")
     }
 }
 

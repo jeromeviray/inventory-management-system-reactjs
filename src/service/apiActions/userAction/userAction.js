@@ -9,18 +9,25 @@ import {
     // CLEAR_MESSAGEs
 } from 'src/constants/userConstants'
 
-export const authenticateUser = (username, password) => async (dispact) => {
+export const authenticateUser = (username, password) => async (dispatch) => {
     return authService.login(username, password).then(
-
         (data) => {
-            dispact({
+            dispatch({
                 type: LOGIN_SUCCESS,
-                payload: { credentails: data }
+                payload: { credentials: data }
+            })
+            dispatch({
+                type: SET_MESSAGE,
+                payload: {
+                    status: 200,
+                    data: {
+                        message: "Login Successfullys"
+                    }
+                }
             })
             return Promise.resolve();
         },
         (error) => {
-            console.log(error)
             const errorMessage =
                 (error.response &&
                     error.response.data &&
@@ -28,10 +35,10 @@ export const authenticateUser = (username, password) => async (dispact) => {
                 error.message ||
                 error.toString();
 
-            dispact({
+            dispatch({
                 type: LOGIN_FAIL
             })
-            dispact({
+            dispatch({
                 type: SET_MESSAGE,
                 payload: {
                     status: 403,
@@ -71,8 +78,6 @@ export const createAccount = (username, password, email) => async (dispatch) => 
                     error.response.data.message) ||
                     error.message ||
                     error.toString();
-
-                console.log(error.response.data)
 
                 dispatch({
                     type: REGISTER_FAIL,

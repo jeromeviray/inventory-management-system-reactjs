@@ -20,7 +20,6 @@ const style = {
 export class NavHeader extends Component {
     render() {
         const isLoggedIn = this.props.isLoggedIn;
-        console.log(isLoggedIn)
         return (
             <CHeader>
                 <CContainer>
@@ -30,9 +29,10 @@ export class NavHeader extends Component {
                     {isLoggedIn ?
                         <CHeaderNav className="ms-3 d-lg-none d-md-block">
                             <div className="d-flex justify-content-center">
+
                                 <CNavItem>
-                                    <CNavLink href="#">
-                                        <FaIcons.FaBell size={20} />
+                                    <CNavLink href="/cart">
+                                        <FaIcons.FaShoppingCart size={25} />
                                     </CNavLink>
                                 </CNavItem>
 
@@ -63,9 +63,10 @@ export class NavHeader extends Component {
 
 
 const mapStateToProps = (state) => {
-    const isLoggedIn = state.userResponse.isLoggedIn;
+    const { isLoggedIn, credentials } = state.userResponse;
     return {
-        isLoggedIn
+        isLoggedIn,
+        credentials
     }
 }
 export default connect(mapStateToProps, {

@@ -215,3 +215,29 @@ body{
     transparent 0, transparent 50%)
     0 /3em 3em;
 }
+
+//carousel \
+.arrow-style{
+    // position: 'absolute',
+    //         zIndex: "2",
+    //         // top: 'calc(50% - 15px)',
+    //         width: "30",
+    //         height: "100%",
+    //         cursor: 'pointer',
+    //         border: "none",
+    
+    background-color: transparent;
+    transition: all .25s ease-in;
+        opacity: .4;
+    &:hover{
+      background-color: rgba(0, 0, 0, 0.493);
+    }
+}
+
+
+// default font
+.font-style{
+  font-size: 14px;
+  font-weight: 500;
+  
+}

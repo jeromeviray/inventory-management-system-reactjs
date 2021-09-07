@@ -12,8 +12,8 @@ import { connect } from 'react-redux'
 import { setAlertModal } from 'src/service/apiActions/modalAction/modalAction'
 import { addCategoryModal } from 'src/service/apiActions/modalAction/modalAction'
 //component modal
-import AlertModal from 'src/components/admin/products/modals/AlertModal'
-import CategoryModal from 'src/components/admin/products/modals/CategoryModal'
+import AlertModal from 'src/components/modals/alert/AlertModal'
+import CategoryModal from 'src/components/modals/category/CategoryModal'
 export class Category extends Component {
     state = {
         visible: false,

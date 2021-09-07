@@ -21,10 +21,10 @@ import { clearMessage, } from 'src/service/apiActions/messageAction/messageActio
 import { getBranchesWithTotalProduct } from 'src/service/apiActions/branchAction/branchAction'
 import { logout } from 'src/service/apiActions/userAction/userAction'
 //modal alert
-import AlertModal from 'src/components/admin/products/modals/AlertModal'
+import AlertModal from 'src/components/modals/alert/AlertModal'
 
 //add branch modal
-import BranchModal from 'src/components/admin/products/modals/BranchModal'
+import BranchModal from 'src/components/modals/branch/BranchModal'
 import Roles from 'src/router/config'
 
 

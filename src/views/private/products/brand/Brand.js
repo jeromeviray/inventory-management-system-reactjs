@@ -13,8 +13,8 @@ import { logout } from 'src/service/apiActions/userAction/userAction'
 import { setAlertModal, addBrandModal } from 'src/service/apiActions/modalAction/modalAction'
 import { getBrands } from 'src/service/apiActions/brandAction/brandAction'
 //modal component
-import AlertModal from 'src/components/admin/products/modals/AlertModal'
-import BrandModal from 'src/components/admin/products/modals/BrandModal'
+import AlertModal from 'src/components/modals/alert/AlertModal'
+import BrandModal from 'src/components/modals/brand/BrandModal'
 import Roles from 'src/router/config'
 
 

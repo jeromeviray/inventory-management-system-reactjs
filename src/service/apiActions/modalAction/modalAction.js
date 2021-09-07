@@ -3,7 +3,10 @@ import {
     EDIT_PRODUCT_MODAL, SET_PRODUCTEDITMODAL_VISIBILIT,
     ADD_BRAND_MODAL,
     ADD_CATEGORY_MODAL,
-    ADD_EMPLOYEE_MODAL
+    ADD_EMPLOYEE_MODAL,
+    SET_PRODUCT_DETAILS_MODAL,
+    LOGIN_MODAL,
+    SET_ADDRESS_MODAL
 } from "src/service/redux/constants";
 
 export const setProductModal = (visible, action, icon) => async (dispatch) => {
@@ -19,7 +22,19 @@ export const setProductModal = (visible, action, icon) => async (dispatch) => {
         }
     })
 }
-
+export const setProductDetailsModal = (visible, action, product) => async (dispatch) => {
+    dispatch({
+        type: SET_PRODUCT_DETAILS_MODAL,
+        payload: {
+            status: 200,
+            data: {
+                visible: visible,
+                action: action,
+                product: product
+            }
+        }
+    })
+}
 export const editProductModal = (visible, action, updateProduct, icon) => async (dispatch) => {
     dispatch({
         type: EDIT_PRODUCT_MODAL,
@@ -101,6 +116,32 @@ export const addEmployeeModal = (visible, action, employee, icon) => async (disp
                 visible: visible,
                 action: action,
                 employee: employee,
+                icon: icon
+            }
+        }
+    })
+}
+export const setLoginModal = (visible, action) => async (dispatch) => {
+    dispatch({
+        type: LOGIN_MODAL,
+        payload: {
+            data: {
+                visible: visible,
+                action: action
+            }
+        }
+    })
+}
+
+export const setAddressModal = (visible, action, address, icon) => async (dispatch) => {
+    // console.log(visible)
+    dispatch({
+        type: SET_ADDRESS_MODAL,
+        payload: {
+            data: {
+                visible: visible,
+                action: action,
+                address: address,
                 icon: icon
             }
         }

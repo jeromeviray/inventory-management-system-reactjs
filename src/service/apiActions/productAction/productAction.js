@@ -3,9 +3,11 @@ import { SET_MESSAGE } from 'src/constants/userConstants'
 import ProductApiService from 'src/service/restAPI/ProductApiService'
 import {
   FAIL_GET_IMAGE,
+  GET_DISCOVER_PRODUCT,
   GET_IMAGE,
   GET_PRODUCT,
   GET_PRODUCTS,
+  GET_PRODUCT_DETAILS,
   SAVE_FAIL,
   // UPDATE_PRODUCT,
   // DELETE_PRODUCT
@@ -65,6 +67,46 @@ export const getProducts = (token) => async (dispatch) => {
     (response) => {
       dispatch({
         type: GET_PRODUCTS,
+        payload: {
+          status: 200,
+          data: {
+            products: response.data
+          },
+        },
+      })
+      return Promise.resolve();
+    },
+    (error) => {
+      const message = (error.response &&
+        error.response.data &&
+        error.response.data.message) ||
+        error.message || error.error_message ||
+        error.toString();
+
+      const status = (error.response &&
+        error.response.data &&
+        error.response.data.code) || error.status ||
+        error.toString();
+
+      dispatch({
+        type: SET_PRODUCT_MESSAGE,
+        payload: {
+          status: status,
+          data: {
+            message: message
+          }
+        }
+      })
+      return Promise.reject();
+    }
+  )
+
+}
+export const getDiscoverProducts = (token) => async (dispatch) => {
+  return ProductApiService.getDiscoverProducts(token).then(
+    (response) => {
+      dispatch({
+        type: GET_DISCOVER_PRODUCT,
         payload: {
           status: 200,
           data: {
@@ -184,7 +226,46 @@ export const getProduct = (id, token) => async (dispatch) => {
     }
   )
 }
+export const getProductDetails = (id) => async (dispatch) => {
+  return ProductApiService.getProductDetails(id).then(
+    (response) => {
+      dispatch({
+        type: GET_PRODUCT_DETAILS,
+        payload: {
+          status: 200,
+          data: {
+            product: response.data
+          }
+        }
+      })
+      return Promise.resolve();
+    },
+    (error) => {
+      const message = (error.response &&
+        error.response.data &&
+        error.response.data.message) ||
+        error.message || error.error_message ||
+        error.toString();
 
+      const status = (error.response &&
+        error.response.data &&
+        error.response.data.code) || error.status ||
+        error.toString();
+
+      dispatch({
+        type: SET_MESSAGE,
+        payload: {
+          status: status,
+          data: {
+            message: message
+          }
+        }
+      })
+      return Promise.reject();
+
+    }
+  )
+}
 export function deleteProduct() { }
 
 export function updateProduct() { }

@@ -11,6 +11,9 @@ import branchReducer from './branchReducer'
 import brandReducer from './brandReducer'
 import orderReducer from './orderReducer'
 import employeeReducer from './employeeReducer'
+import cartReducer from './cartReducer'
+import addressReducer from './addressReducer'
+import paymentReducer from './paymentReducer'
 
 
 export default combineReducers({
@@ -38,4 +41,10 @@ export default combineReducers({
   messageResponse: messageReducer,
   //browserSize
   browserSize: responsiveStateReducer,
+  //cart
+  cartResponse: cartReducer,
+  //address
+  addressResponse: addressReducer,
+  // payment
+  paymentMethodResponse: paymentReducer
 })

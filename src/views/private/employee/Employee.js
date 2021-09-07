@@ -14,8 +14,8 @@ import { setAlertModal, addEmployeeModal } from 'src/service/apiActions/modalAct
 import { getEmployees } from 'src/service/apiActions/employeeAction/EmployeeAction'
 import { logout } from 'src/service/apiActions/userAction/userAction'
 //component modal
-import AlertModal from 'src/components/admin/products/modals/AlertModal'
-import EmployeeModal from 'src/components/admin/products/modals/EmployeeModal'
+import AlertModal from 'src/components/modals/alert/AlertModal'
+import EmployeeModal from 'src/components/modals/employee/EmployeeModal'
 
 export class Employee extends Component {
     state = {

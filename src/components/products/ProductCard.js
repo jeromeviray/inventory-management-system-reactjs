@@ -4,9 +4,9 @@ import ReactStars from "react-rating-stars-component"
 import * as FaIcons from "react-icons/fa"
 import * as BsIcons from "react-icons/bs"
 import { connect } from "react-redux"
-import { setProductModal, editProductModal, } from "src/service/apiActions/modalAction/modalAction"
-import ProductEditorModal from "./modals/ProductEditorModal"
-import { getProduct } from "src/service/apiActions/productAction/productAction"
+import { setProductModal, editProductModal, setProductDetailsModal } from "src/service/apiActions/modalAction/modalAction"
+import ProductEditorModal from "../modals/product/ProductEditorModal"
+import { getProduct, getProductDetails } from "src/service/apiActions/productAction/productAction"
 import { logout } from "src/service/apiActions/userAction/userAction"
 
 
@@ -44,11 +44,15 @@ export class ProductCard extends Component {
     const { visible, } = this.state;
 
     if (prevProps.productResponse !== this.props.productResponse) {
+      let response = this.props.productResponse;
 
-      let response = this.props.productResponse
       if (response.action === "GETBYID") {
         if (response.status >= 200 && response.status <= 300) {
           this.props.editProductModal(!visible, "Edit", response.data.product, <FaIcons.FaEdit size={20} />)
+        }
+      } else if (response.action === "DETAILS") {
+        if (response.status === 200) {
+          this.props.setProductDetailsModal(!visible, "PRODUCTDETAILS", response.data.product);
         }
       } else if (response.status < 400) {
         this.props.logout();
@@ -70,6 +74,17 @@ export class ProductCard extends Component {
           this.props.logout();
           window.location.reload();
         }
+        this.setState({
+          message: message
+        })
+      })
+  }
+  handleProductDetails = (id) => {
+    this.props.getProductDetails(id)
+      .catch(() => {
+
+        const { status, message } = this.props.messageResponse;
+        // const message = this.props.messaegResponse.data.message
         this.setState({
           message: message
         })
@@ -112,7 +127,7 @@ export class ProductCard extends Component {
             )}
             <div className="eye-btn">
               {iconModal === "eye" ? (
-                <span onClick={() => this.props.setProductModal(!visible)}>
+                <span onClick={() => this.handleProductDetails(product.id)}>
                   <BsIcons.BsEye />
                 </span>
               ) : (
@@ -130,8 +145,7 @@ export class ProductCard extends Component {
             <CCardTitle>{product.productName}</CCardTitle>
             <div className="card-label-price">
               <CCardTitle>
-                <span className="peso-sign">&#8369; </span>
-                <span className="peso-price">{product.productPrice}</span>
+                <h5 className="peso-price text-dark">&#8369;{product.productPrice.toFixed(2)}</h5>
               </CCardTitle>
               <div className="product-stock-container">
                 <span className="stock-label">Stock: </span>
@@ -167,7 +181,9 @@ const mapStateToProps = (state) => {
 }
 export default connect(mapStateToProps, {
   setProductModal,
+  setProductDetailsModal,
   editProductModal,
   getProduct,
+  getProductDetails,
   logout
 })(ProductCard)

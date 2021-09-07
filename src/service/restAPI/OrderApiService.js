@@ -1,3 +1,4 @@
+import authHeader from '../auth/authHeader';
 import axios from './RestApi';
 
 export class OrderApiService {
@@ -14,6 +15,15 @@ export class OrderApiService {
     getCompletedOrders(token) {
         return axios.get("/orders/completed", {
             headers: { Authorization: token }
+        })
+    }
+    placeOrderDetails(orderDetails) {
+        return axios.post("/orders/place", {
+            customerAddressId: orderDetails.addressId,
+            paymentId: orderDetails.paymentMethodId,
+            cartItems: orderDetails.items
+        }, {
+            headers: authHeader()
         })
     }
 }

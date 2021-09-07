@@ -9,10 +9,10 @@ import * as FaIcons from 'react-icons/fa'
 import { logout } from "src/service/apiActions/userAction/userAction"
 // import eventBus from "src/_helper/EventBus"
 const ProductCard = lazy(() =>
-  import("../../../components/admin/products/ProductCard.js")
+  import("../../../components/products/ProductCard.js")
 )
 const ProductEditorModal = lazy(() =>
-  import("../../../components/admin/products/modals/ProductEditorModal.js")
+  import("../../../components/modals/product/ProductEditorModal.js")
 )
 
 
