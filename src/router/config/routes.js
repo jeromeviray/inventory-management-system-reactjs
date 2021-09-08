@@ -76,8 +76,46 @@ export const routes = [
       Roles.ADMIN,
     ]
   },
+  // {
+  //   _tag: 'CSidebarNavDropdown',
+  //   name: 'Buttons',
+  //   route: '/buttons',
+  //   icon: 'cil-cursor',
+  //   _children: [
+  //     {
+  //       _tag: 'CSidebarNavItem',
+  //       name: 'Buttons',
+  //       to: '/buttons/buttons',
+  //     },
+  //     {
+  //       _tag: 'CSidebarNavItem',
+  //       name: 'Brand buttons',
+  //       to: '/buttons/brand-buttons',
+  //     },
+  //     {
+  //       _tag: 'CSidebarNavItem',
+  //       name: 'Buttons groups',
+  //       to: '/buttons/button-groups',
+  //     },
+  //     {
+  //       _tag: 'CSidebarNavItem',
+  //       name: 'Dropdowns',
+  //       to: '/buttons/button-dropdowns',
+  //     }
+  //   ],
+  // },
   {
     path: "/app/products",
+    name: "Product",
+    exact: true,
+    component: Products,
+    permission: [
+      Roles.SUPER_ADMIN,
+      Roles.ADMIN
+    ]
+  },
+  {
+    path: "/app/products/products",
     name: "Product",
     exact: true,
     component: Products,
@@ -122,6 +160,15 @@ export const routes = [
   },
   {
     path: "/app/reports",
+    exact: true,
+    name: "Reports",
+    component: Reports,
+    permission: [
+      Roles.SUPER_ADMIN
+    ]
+  },
+  {
+    path: "/app/reports/reports",
     exact: true,
     name: "Reports",
     component: Reports,

@@ -14,6 +14,7 @@ const PendingOrder = React.lazy(() => import('src/components/orderTabContent/pen
 const ConfirmedOrder = React.lazy(() => import('src/components/orderTabContent/confirmed/ConfirmedOrder'));
 const CompletedOrder = React.lazy(() => import('src/components/orderTabContent/completed/CompletedOrder'))
 const DeliveryOrder = React.lazy(() => import("src/components/orderTabContent/delivery/DeliveryOrder"))
+
 export class Order extends Component {
     state = {
         activeKey: 1,

@@ -97,7 +97,7 @@ class Products extends Component {
             <CButton
               shape="rounded-pill"
               color="primary"
-              variant="outline"
+              variant="ghost"
               className="d-flex justify-content-center align-items-center"
               onClick={() => this.props.setProductModal(!visible, "Add", <FaIcons.FaPlus size={20} />)}>
 

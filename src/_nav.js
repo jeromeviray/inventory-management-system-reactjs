@@ -64,39 +64,49 @@ const _nav = [
     ]
   },
   {
-    _component: "CNavItem",
-    as: NavLink,
-
-    anchor: "Product",
-    to: "/app/products",
+    _component: "CNavGroup",
+    anchor: "Products",
     icon: <FaIcons.FaThLarge size={20} style={iconMargin} />,
     permission: [
       Roles.SUPER_ADMIN,
       Roles.ADMIN,
 
-    ]
-  },
-  {
-    _component: "CNavItem",
-    as: NavLink,
-    anchor: "Brands",
-    to: "/app/products/brand",
-    icon: <FaIcons.FaTags size={20} style={iconMargin} />,
-    permission: [
-      Roles.SUPER_ADMIN,
-      Roles.ADMIN,
+    ],
+    items: [
+      {
+        _component: "CNavItem",
+        as: NavLink,
+        anchor: "Product",
+        to: "/app/products/products",
+        icon: <FaIcons.FaThLarge size={20} style={iconMargin} />,
+        permission: [
+          Roles.SUPER_ADMIN,
+          Roles.ADMIN,
 
-    ]
-  },
-  {
-    _component: "CNavItem",
-    as: NavLink,
-    anchor: "Category",
-    to: "/app/products/category",
-    icon: <ImIcons.ImTree size={20} style={iconMargin} />,
-    permission: [
-      Roles.SUPER_ADMIN,
-      Roles.ADMIN,
+        ]
+      },
+      {
+        _component: "CNavItem",
+        as: NavLink,
+        anchor: "Brands",
+        to: "/app/products/brand",
+        icon: <FaIcons.FaTags size={20} style={iconMargin} />,
+        permission: [
+          Roles.SUPER_ADMIN,
+          Roles.ADMIN,
+
+        ]
+      }, {
+        _component: "CNavItem",
+        as: NavLink,
+        anchor: "Category",
+        to: "/app/products/category",
+        icon: <ImIcons.ImTree size={20} style={iconMargin} />,
+        permission: [
+          Roles.SUPER_ADMIN,
+          Roles.ADMIN,
+        ]
+      },
     ]
   },
   {
@@ -131,7 +141,7 @@ const _nav = [
         _component: "CNavItem",
         as: NavLink,
         anchor: "Report",
-        to: "/app/reports",
+        to: "/app/reports/reports",
       },
       {
         _component: "CNavItem",

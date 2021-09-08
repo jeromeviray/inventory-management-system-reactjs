@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Suspense } from 'react'
 import {
     CRow,
     CCol,
@@ -11,9 +11,9 @@ import {
     CToastBody, CToastClose, CToaster,
     CSpinner
 } from '@coreui/react';
-import Checkout from './checkout/Checkout'
-import CustomerAddress from './customerAddress/CustomerAddress';
-import PaymentMethod from './payment/PaymentMethod';
+// import Checkout from './checkout/Checkout'
+// import CustomerAddress from './customerAddress/CustomerAddress';
+// import PaymentMethod from './payment/PaymentMethod';
 import { connect } from 'react-redux';
 //action
 import { logout } from 'src/service/apiActions/userAction/userAction';
@@ -22,7 +22,11 @@ import { placeOrder } from 'src/service/apiActions/orderAction/orderAction';
 import { history } from 'src/_helper/history';
 import { Redirect } from 'react-router-dom';
 import Roles from 'src/router/config';
-import SuccessOrderPlace from './SuccessOrderPlace';
+// import SuccessOrderPlace from './SuccessOrderPlace';
+const Checkout = React.lazy(() => import("src/views/common/cart/checkout/Checkout"))
+const CustomerAddress = React.lazy(() => import('src/views/common/cart/customerAddress/CustomerAddress'))
+const PaymentMethod = React.lazy(() => import('src/views/common/cart/payment/PaymentMethod'))
+const SuccessOrderPlace = React.lazy(() => import('src/views/common/cart/SuccessOrderPlace'))
 
 export class Cart extends Component {
     state = {
@@ -230,117 +234,119 @@ export class Cart extends Component {
             <div>
                 <CToaster push={toast} placement="top-end" />
 
-                <CRow>
-                    <h3 className="mt-2 mb-4">{this.renderHeader()}</h3>
-                </CRow>
-                {successfull ? <SuccessOrderPlace /> :
+
+                <Suspense fallback={<CSpinner color="primary" />}>
                     <CRow>
-                        <CCol sm="12" lg="8">
-                            {this.renderSteps()}
-                        </CCol>
-                        <CCol sm="12" lg="4" className="mb-5">
-                            <CCard>
-                                <CCardHeader>
-                                    <span className="" style={{ fontSize: "18px", ...headerStyle }}>Summary Payment</span>
-                                </CCardHeader>
-                                <CCardBody className="border-bottom">
-                                    <div className="d-flex justify-content-between bg-light p-2">
-                                        <div>
-                                            <span style={{ ...headerStyle }}>Item</span>
-                                        </div>
-                                        <div>
-                                            <span style={{ ...headerStyle }}>Amount</span>
-                                        </div>
-
-                                    </div>
-
-                                    {items.length > 0 ? items.map((item, index) => {
-                                        return (
-                                            <>
-                                                <div key={index} className="p-2 d-flex justify-content-between align-items-center">
-                                                    <span className="text-truncate d-inline-block"
-                                                        style={{ maxWidth: "150px" }}
-                                                    >
-                                                        {item.product.productName}
-                                                    </span>
-                                                    <span>{item.amount.toFixed(2)}</span>
-                                                </div>
-                                            </>
-
-                                        )
-                                    }) :
-                                        <CCol style={{ fontStyle: "italic", textAlign: "center", }} className="p-2">
-                                            No Item
-                                        </CCol>
-                                    }
-                                </CCardBody>
-                                <div className="p-3 ">
-                                    <div className="d-flex justify-content-between align-items-center pb-2">
-                                        <span className="text-muted font-style me-2">
-                                            Total Quantity
-                                        </span>
-                                        <span style={{ fontWeight: "500" }}>
-                                            {Tquantity}
-                                        </span>
-                                    </div>
-                                    <div className="d-flex justify-content-between align-items-center pb-2">
-                                        <span className="text-muted font-style me-2">
-                                            Total Amount
-                                        </span>
-                                        <span style={{ fontWeight: "500" }}>
-                                            &#8369;{Tamount.toFixed(2)}
-                                        </span>
-                                    </div>
-                                </div>
-                                <CCardFooter>
-                                    <div className="d-grid gap-2 mx-auto">
-                                        {step > 1 ?
-                                            <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                                                <CButton
-                                                    variant="ghost"
-                                                    color="dark"
-                                                    onClick={this.handleOnPre}
-                                                    className="w-100">
-                                                    Back
-                                                </CButton>
-                                                {step === 3 ?
-                                                    <CButton
-                                                        className="w-100"
-                                                        color="info"
-                                                        disabled={paymentMethodId === undefined ? true : false}
-                                                        onClick={this.handleOnPlaceOrder}
-                                                    >
-                                                        {loading && <CSpinner size="sm" className="ms-1" />}
-                                                        Place Order
-                                                    </CButton> :
-                                                    <CButton
-                                                        className="w-100"
-                                                        color="info"
-                                                        onClick={this.handleOnNext}
-                                                        disabled={addressId === undefined ? true : false}
-                                                    >
-                                                        Next
-                                                    </CButton>}
+                        <h3 className="mt-2 mb-4">{this.renderHeader()}</h3>
+                    </CRow>
+                    {successfull ? <SuccessOrderPlace /> :
+                        <CRow>
+                            <CCol sm="12" lg="8">
+                                {this.renderSteps()}
+                            </CCol>
+                            <CCol sm="12" lg="4" className="mb-5">
+                                <CCard>
+                                    <CCardHeader>
+                                        <span className="" style={{ fontSize: "18px", ...headerStyle }}>Summary Payment</span>
+                                    </CCardHeader>
+                                    <CCardBody className="border-bottom">
+                                        <div className="d-flex justify-content-between bg-light p-2">
+                                            <div>
+                                                <span style={{ ...headerStyle }}>Item</span>
+                                            </div>
+                                            <div>
+                                                <span style={{ ...headerStyle }}>Amount</span>
                                             </div>
 
-                                            :
-                                            <CButton
-                                                type="submit"
-                                                color="info"
-                                                disabled={items.length <= 0 ? true : false}
-                                                className="d-flex justify-content-center align-items-center"
-                                                onClick={this.handleOnNext}
-                                            >
-                                                {/* <IoIcons.IoBagCheckOutline size="23" /> */}
-                                                <span className="ms-2">Checkout</span>
-                                            </CButton>}
-                                    </div>
-                                </CCardFooter>
-                            </CCard>
-                        </CCol>
-                    </CRow>
-                }
+                                        </div>
 
+                                        {items.length > 0 ? items.map((item, index) => {
+                                            return (
+                                                <>
+                                                    <div key={index} className="p-2 d-flex justify-content-between align-items-center">
+                                                        <span className="text-truncate d-inline-block"
+                                                            style={{ maxWidth: "150px" }}
+                                                        >
+                                                            {item.product.productName}
+                                                        </span>
+                                                        <span>{item.amount.toFixed(2)}</span>
+                                                    </div>
+                                                </>
+
+                                            )
+                                        }) :
+                                            <CCol style={{ fontStyle: "italic", textAlign: "center", }} className="p-2">
+                                                No Item
+                                            </CCol>
+                                        }
+                                    </CCardBody>
+                                    <div className="p-3 ">
+                                        <div className="d-flex justify-content-between align-items-center pb-2">
+                                            <span className="text-muted font-style me-2">
+                                                Total Quantity
+                                            </span>
+                                            <span style={{ fontWeight: "500" }}>
+                                                {Tquantity}
+                                            </span>
+                                        </div>
+                                        <div className="d-flex justify-content-between align-items-center pb-2">
+                                            <span className="text-muted font-style me-2">
+                                                Total Amount
+                                            </span>
+                                            <span style={{ fontWeight: "500" }}>
+                                                &#8369;{Tamount.toFixed(2)}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <CCardFooter>
+                                        <div className="d-grid gap-2 mx-auto">
+                                            {step > 1 ?
+                                                <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                                                    <CButton
+                                                        variant="ghost"
+                                                        color="dark"
+                                                        onClick={this.handleOnPre}
+                                                        className="w-100">
+                                                        Back
+                                                    </CButton>
+                                                    {step === 3 ?
+                                                        <CButton
+                                                            className="w-100"
+                                                            color="info"
+                                                            disabled={paymentMethodId === undefined ? true : false}
+                                                            onClick={this.handleOnPlaceOrder}
+                                                        >
+                                                            {loading && <CSpinner size="sm" className="ms-1" />}
+                                                            Place Order
+                                                        </CButton> :
+                                                        <CButton
+                                                            className="w-100"
+                                                            color="info"
+                                                            onClick={this.handleOnNext}
+                                                            disabled={addressId === undefined ? true : false}
+                                                        >
+                                                            Next
+                                                        </CButton>}
+                                                </div>
+
+                                                :
+                                                <CButton
+                                                    type="submit"
+                                                    color="info"
+                                                    disabled={items.length <= 0 ? true : false}
+                                                    className="d-flex justify-content-center align-items-center"
+                                                    onClick={this.handleOnNext}
+                                                >
+                                                    {/* <IoIcons.IoBagCheckOutline size="23" /> */}
+                                                    <span className="ms-2">Checkout</span>
+                                                </CButton>}
+                                        </div>
+                                    </CCardFooter>
+                                </CCard>
+                            </CCol>
+                        </CRow>
+                    }
+                </Suspense>
             </div>
         )
     }
