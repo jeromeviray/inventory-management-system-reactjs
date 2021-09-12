@@ -2,9 +2,9 @@ import authHeader from '../auth/authHeader';
 import axios from './RestApi';
 
 export class OrderApiService {
-    getPendingOrders(token) {
+    getPendingOrders() {
         return axios.get("/orders/pending", {
-            headers: { Authorization: token }
+            headers: authHeader()
         })
     }
     getConfirmedOrders(token) {

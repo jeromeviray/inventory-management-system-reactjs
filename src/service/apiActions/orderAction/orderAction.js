@@ -3,8 +3,8 @@ import { SET_MESSAGE } from "src/constants/userConstants";
 import OrderApiService from "src/service/restAPI/OrderApiService";
 
 
-export const getPendingOrders = (token) => async (dispatch) => {
-    return OrderApiService.getPendingOrders(token).then(
+export const pendingOrder = () => async (dispatch) => {
+    return OrderApiService.getPendingOrders().then(
         (response) => {
             dispatch({
                 type: GET_PENDING_ORDER,

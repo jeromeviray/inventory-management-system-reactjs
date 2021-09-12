@@ -98,3 +98,6 @@ export const SAVE_ADDRESS = "SAVE_ADDRESS"
 // payment method 
 export const GET_PAYMENT_METHODS = "GET_PAYMENT_METHODS"
 export const GET_PAYMENT_METHOD = "GET_PAYMENT_METHOD"
+
+//inventory
+export const GET_INVENTORY = "GET_INVENTORY"

@@ -6,7 +6,7 @@ import {
     CContainer, CImage
 } from '@coreui/react'
 //action 
-import { getPendingOrders } from 'src/service/apiActions/orderAction/orderAction'
+import { pendingOrder } from 'src/service/apiActions/orderAction/orderAction'
 import { logout } from 'src/service/apiActions/userAction/userAction'
 import { clearMessage } from 'src/service/apiActions/messageAction/messageAction'
 import { connect } from 'react-redux'
@@ -27,10 +27,9 @@ export class PendingOrder extends Component {
             token: token,
             permission: roles.roleName ? roles.roleName : roles
         })
-        this.props.getPendingOrders(token).catch(() => {
-            let failMessage = this.props.messageResponse
+        this.props.pendingOrder().catch(() => {
+            let failMessage = this.props.messageResponse;
             if (failMessage.status > 400 && failMessage.status <= 403) {
-
                 // this.props.clearMessage();
                 setInterval(() => {
                     this.props.logout();
@@ -47,6 +46,7 @@ export class PendingOrder extends Component {
     managePendingOrderRepsonse = (prevProps, prevState) => {
         if (prevProps.orderResponse !== this.props.orderResponse) {
             let { status, action, data } = this.props.orderResponse;
+            console.log(this.props.orderResponse);
             if (status === 200 && action === "GETPENDINGORDER") {
                 this.setState({
                     pendingOrders: data.pendingOrder
@@ -82,6 +82,7 @@ export class PendingOrder extends Component {
                         </CCardBody>
                     </CCard> :
                     pendingOrders.map((pendingOrder, index) => {
+
                         const { firstName, lastName, street, barangay, province, region, city, postalCode } = pendingOrder.customerAddress;
 
                         return (
@@ -146,7 +147,7 @@ const mapStateToProps = (state) => {
     }
 }
 export default connect(mapStateToProps, {
-    getPendingOrders,
+    pendingOrder,
     logout,
     clearMessage
 })(PendingOrder)

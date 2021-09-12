@@ -89,6 +89,7 @@ class Products extends Component {
   render() {
 
     let { visible, products, message } = this.state;
+    console.log(products);
     return (
       <>
         {this.renderProductEditorModal()}
