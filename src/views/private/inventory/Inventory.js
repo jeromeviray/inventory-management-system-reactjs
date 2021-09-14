@@ -8,13 +8,16 @@ import {
     CTableDataCell,
     CTableCaption,
     CButton,
-    CBadge
+    CBadge,
+    CNavItem
 } from '@coreui/react'
 import { connect } from 'react-redux'
 //action
 import { getInventory } from 'src/service/apiActions/inventoryAction/inventoryAction'
 import { logout } from 'src/service/apiActions/userAction/userAction'
 import { clearMessage } from 'src/service/apiActions/messageAction/messageAction'
+// barcode
+import Barcode from "react-barcode"
 export class Inventory extends Component {
     state = {
         message: '',
@@ -69,7 +72,9 @@ export class Inventory extends Component {
     }
     render() {
         let { inventory, message } = this.state;
-
+        const barcodeStyle = {
+            height: "50%"
+        }
         return (
             <>
                 <CTable
@@ -83,6 +88,7 @@ export class Inventory extends Component {
                     <CTableHead color="dark">
 
                         <CTableRow className="text-center">
+                            <CTableHeaderCell scope="col">Product Barcode</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Product Name</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Threshold</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Total Stock</CTableHeaderCell>
@@ -91,8 +97,19 @@ export class Inventory extends Component {
                     </CTableHead>
                     <CTableBody color="light">
                         {inventory.length > 0 ? inventory.map((item, index) => {
+                            console.log(item)
                             return (
                                 <CTableRow className="text-center" key={index}>
+                                    <CTableDataCell>
+                                        <Barcode
+                                            value={item.barcode}
+                                            height={50}
+                                            width={1}
+                                            fontSize={14}
+                                            margin={7}
+                                            background="#f5f5f548"
+                                        />
+                                    </CTableDataCell>
                                     <CTableDataCell>{item.productName}</CTableDataCell>
                                     <CTableDataCell>{item.threshold}</CTableDataCell>
                                     <CTableDataCell>{item.totalStock}</CTableDataCell>
