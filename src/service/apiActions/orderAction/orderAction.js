@@ -1,4 +1,4 @@
-import { GET_COMPLETED_ORDER, GET_CONFIRMED_ORDER, GET_DELIVERY_ORDER, GET_PENDING_ORDER, ORDER_ITEMS, PLACE_ORDER } from "src/service/redux/constants";
+import { GET_COMPLETED_ORDER, GET_CONFIRMED_ORDER, GET_DELIVERY_ORDER, GET_ORDER_BY_ID, GET_PENDING_ORDER, ORDER_ITEMS, PLACE_ORDER } from "src/service/redux/constants";
 import { SET_MESSAGE } from "src/constants/userConstants";
 import OrderApiService from "src/service/restAPI/OrderApiService";
 
@@ -163,6 +163,57 @@ export const placeOrder = (orderDetials) => async (dispatch) => {
                     status: 200,
                     data: {
                         message: "Successfully Place your Order"
+                    }
+                }
+            })
+            return Promise.resolve();
+        },
+        (error) => {
+            const errorMessage =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+
+            const status = (error.response &&
+                error.response.data &&
+                error.response.data.code) ||
+                error.toString();
+
+            dispatch({
+                type: SET_MESSAGE,
+                payload: {
+                    status: status,
+                    data: {
+                        message: errorMessage
+                    }
+                }
+            })
+            return Promise.reject();
+        }
+    )
+}
+
+export const getOrderByOrderId = (orderId) => async (dispatch) => {
+    return OrderApiService.getOrderByOrderId(orderId).then(
+        (response) => {
+            dispatch({
+                type: GET_ORDER_BY_ID,
+                payload: {
+                    status: 200,
+                    action: "GETORDERBYID",
+                    data: {
+                        order: response.data
+                    }
+                }
+            })
+            dispatch({
+                type: SET_MESSAGE,
+                payload: {
+                    status: 200,
+                    data: {
+                        message: "Get Order By Id Success"
                     }
                 }
             })

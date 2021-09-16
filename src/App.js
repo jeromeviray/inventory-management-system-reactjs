@@ -25,7 +25,7 @@ const PublicLayout = React.lazy(() => import("./layout/PublicLayout"))
 // Pages
 const Login = React.lazy(() => import("./views/common/public/login/Login"))
 const Register = React.lazy(() => import("./views/common/public/register/Register"))
-// const Page404 = React.lazy(() => import("./views/common/public/page404/Page404"))
+const Page404 = React.lazy(() => import("./views/common/public/page404/Page404"))
 const Page500 = React.lazy(() => import("./views/common/public/page500/Page500"))
 const RedirectSuccessHandler = lazy(() => import("./components/redirectSuccessHandler/RedirectSuccessHandler"))
 
@@ -60,6 +60,12 @@ class App extends Component {
                 path="/500"
                 name="Page 500"
                 render={(props) => <Page500 {...props} />}
+              />
+              <Route
+                exact
+                path="/400"
+                name="Page 400"
+                render={(props) => <Page404 {...props} />}
               />
               <PrivateRouter path="/app" component={DefaultLayout} />
               {/* <PrivateRoutes /> */}

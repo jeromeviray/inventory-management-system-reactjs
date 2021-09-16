@@ -26,5 +26,10 @@ export class OrderApiService {
             headers: authHeader()
         })
     }
+    getOrderByOrderId(orderId) {
+        return axios.get("/orders/" + orderId, {
+            headers: authHeader()
+        })
+    }
 }
 export default new OrderApiService();

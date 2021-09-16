@@ -1,4 +1,4 @@
-import { GET_COMPLETED_ORDER, GET_CONFIRMED_ORDER, GET_PENDING_ORDER, ORDER_ITEMS, PLACE_ORDER } from "../constants";
+import { GET_COMPLETED_ORDER, GET_CONFIRMED_ORDER, GET_ORDER_BY_ID, GET_PENDING_ORDER, ORDER_ITEMS, PLACE_ORDER } from "../constants";
 
 const orderReducer = (state = {}, action) => {
     const { type, payload } = action;
@@ -41,6 +41,14 @@ const orderReducer = (state = {}, action) => {
                 action: payload.action,
                 data: {
 
+                }
+            }
+        case GET_ORDER_BY_ID:
+            return {
+                status: payload.status,
+                action: payload.action,
+                data: {
+                    order: payload.data.order
                 }
             }
         default:

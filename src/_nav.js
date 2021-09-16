@@ -20,9 +20,6 @@ const _nav = [
     permission: [
       Roles.ADMIN,
       Roles.SUPER_ADMIN,
-      Roles.CUSTOMER,
-      Roles.USER,
-      Roles.ROLE_USER
     ]
   },
   {
@@ -46,9 +43,6 @@ const _nav = [
     permission: [
       Roles.SUPER_ADMIN,
       Roles.ADMIN,
-      Roles.CUSTOMER,
-      Roles.USER,
-      Roles.ROLE_USER
     ]
   },
   {

@@ -74,6 +74,7 @@ export const GET_COMPLETED_ORDER = "GET_COMPLETED_ORDER"
 export const CONFIRM_ORDER = "CONFIRM_ORDER"
 export const PLACE_ORDER = "PLACE_ORDER"
 export const ORDER_ITEMS = "ORDER_ITEMS"
+export const GET_ORDER_BY_ID = "GET_ORDER_BY_ID"
 
 // customer address
 export const SAVE_CUSTOMER_ADDRESS = "SAVE_CUSTOMER_ADDRESS"

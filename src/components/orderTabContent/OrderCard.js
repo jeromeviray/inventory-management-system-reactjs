@@ -42,7 +42,7 @@ export class OrderCard extends Component {
                                             Price
                                         </span>
                                         <span className="pt-3">
-                                            {orderItem.product.productPrice}
+                                            &#8369;{orderItem.product.productPrice.toFixed(2)}
 
                                         </span>
                                     </CCol>
@@ -70,7 +70,7 @@ export class OrderCard extends Component {
                                             Amount
                                         </span>
                                         <span className="pt-3">
-                                            {orderItem.amount}
+                                            &#8369;{orderItem.amount.toFixed(2)}
 
                                         </span>
 

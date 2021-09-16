@@ -28,11 +28,19 @@ const About = React.lazy(() => import("../../views/common/public/about/About"))
 // const Checkout = React.lazy(() => import('src/views/common/cart/Checkout'))
 // const CustomerAddress = React.lazy(() => import('src/views/common/cart/customerAddress/CustomerAddress'))
 const Cart = React.lazy(() => import('src/views/common/cart/Cart'))
+
+//common
+const OrderDetails = React.lazy(() => import('src/components/orderTabContent/OrderDetails'))
+
 export const routes = [
   {
     path: "/app",
     exact: true,
     name: "Inventory",
+    permission: [
+      Roles.SUPER_ADMIN,
+      Roles.ADMIN,
+    ]
   },
   {
     path: "/app/dashboard",
@@ -41,9 +49,6 @@ export const routes = [
     permission: [
       Roles.SUPER_ADMIN,
       Roles.ADMIN,
-      Roles.CUSTOMER,
-      Roles.USER,
-      Roles.ROLE_USER
     ]
   },
   {
@@ -56,15 +61,23 @@ export const routes = [
     ]
   },
   {
+    exact: true,
     path: "/app/order",
     name: "Order",
     component: Order,
     permission: [
       Roles.SUPER_ADMIN,
       Roles.ADMIN,
-      Roles.CUSTOMER,
-      Roles.USER,
-      Roles.ROLE_USER
+    ]
+  },
+
+  {
+    path: "/app/order/:id",
+    name: "Details",
+    component: OrderDetails,
+    permission: [
+      Roles.SUPER_ADMIN,
+      Roles.ADMIN,
     ]
   },
   {
@@ -76,34 +89,6 @@ export const routes = [
       Roles.ADMIN,
     ]
   },
-  // {
-  //   _tag: 'CSidebarNavDropdown',
-  //   name: 'Buttons',
-  //   route: '/buttons',
-  //   icon: 'cil-cursor',
-  //   _children: [
-  //     {
-  //       _tag: 'CSidebarNavItem',
-  //       name: 'Buttons',
-  //       to: '/buttons/buttons',
-  //     },
-  //     {
-  //       _tag: 'CSidebarNavItem',
-  //       name: 'Brand buttons',
-  //       to: '/buttons/brand-buttons',
-  //     },
-  //     {
-  //       _tag: 'CSidebarNavItem',
-  //       name: 'Buttons groups',
-  //       to: '/buttons/button-groups',
-  //     },
-  //     {
-  //       _tag: 'CSidebarNavItem',
-  //       name: 'Dropdowns',
-  //       to: '/buttons/button-dropdowns',
-  //     }
-  //   ],
-  // },
   {
     path: "/app/products",
     name: "Product",
@@ -184,6 +169,7 @@ export const routes = [
       Roles.SUPER_ADMIN,
     ]
   },
+
 ]
 
 export const publicRoutes = [
