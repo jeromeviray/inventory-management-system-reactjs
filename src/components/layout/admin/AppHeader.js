@@ -17,7 +17,8 @@ import { AppBreadcrumb } from "./index"
 
 import { AppHeaderDropdown } from "./index"
 
-import { sideBarChange } from "../../service/apiActions/changeStateAction"
+// import { sideBarChange } from "../../service/apiActions/changeStateAction"
+import { sideBarChange } from "src/service/apiActions/changeStateAction"
 
 class AppHeader extends Component {
   state = {
@@ -39,15 +40,15 @@ class AppHeader extends Component {
       <CHeader position="sticky" className="mb-4">
         <CContainer fluid>
           <CHeaderToggler
-            className="ms-md-3"
+            className="ms-md-3 d-lg-none d-md-block"
             onClick={() => this.props.sideBarChange(!sidebarShow)}
           >
             <FaIcons.FaBars size={20} />
           </CHeaderToggler>
           {/* <CHeaderBrand className="mx-auto nav-link" to="/home" style={{ cursor: "pointer" }}> */}
-          <Link className="nav-link" to="/home" style={{ cursor: "pointer" }}>
-            <h2 className="nav-item">Logo</h2>
-          </Link>
+          {/* <Link className="nav-link" to="/home" style={{ cursor: "pointer" }}> */}
+          <h2 className="nav-item">Logo</h2>
+          {/* </Link> */}
           {/* </CHeaderBrand> */}
 
           <CHeaderNav className="ms-3">

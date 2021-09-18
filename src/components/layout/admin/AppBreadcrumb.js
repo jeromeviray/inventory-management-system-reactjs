@@ -1,6 +1,6 @@
 import React from 'react'
 import { useLocation } from 'react-router-dom'
-import { routes } from 'src/router/config/routes'
+import { routes } from 'src/router/privateRouter/routes'
 import { CBreadcrumb, CBreadcrumbItem } from '@coreui/react'
 // import { useSelector } from 'react-redux'
 // import GetAllowedRoutes from 'src/_helper/GetAllowedRoutes'

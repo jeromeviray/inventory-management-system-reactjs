@@ -11,7 +11,8 @@ import {
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
 import { topItems } from './items'
-import { AppHeaderDropdown } from '../sidebar'
+// import { AppHeaderDropdown } from '../sidebar'
+import { AppHeaderDropdown } from 'src/components/header'
 import * as FaIcons from "react-icons/fa"
 import { connect } from 'react-redux'
 

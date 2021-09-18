@@ -5,7 +5,7 @@ import Roles from 'src/router/config';
 import { Redirect } from 'react-router-dom';
 import { logout } from 'src/service/apiActions/userAction/userAction';
 import { clearMessage } from 'src/service/apiActions/messageAction/messageAction';
-import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/sidebar/index'
+import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/layout/admin/index'
 
 export class DefaultLayout extends Component {
   state = {

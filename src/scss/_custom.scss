@@ -241,3 +241,28 @@ body{
   font-weight: 500;
   
 }
+.side-nav-wrapper {
+  margin: 0;
+  padding: 0;
+  .side-nav-list{
+    list-style: none;
+  }
+  .side-nav-item{
+    color: black;
+    text-decoration: none;
+    &:hover{
+      color:rgb(78, 78, 78);
+    }
+    // &:hover{
+    //   color: rgb(0, 11, 58);
+    // }
+    // a {
+    //   text-decoration: none;
+    //   color: black;
+    //   &:hover{
+    //     color: rgb(0, 11, 58);
+    //   }
+    // }
+   
+  }
+}

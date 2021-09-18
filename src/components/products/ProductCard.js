@@ -102,7 +102,7 @@ export class ProductCard extends Component {
     return (
       <>
         {this.renderProductModal()}
-        <CCard className="inner-card-container">
+        <CCard className="inner-card-container shadow-sm">
           <div className="img-container">
             {imageLink ? (
               <a href="/#" className="link-product-content">

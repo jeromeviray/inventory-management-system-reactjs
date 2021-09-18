@@ -3,7 +3,7 @@ import { Redirect, Route, Switch } from 'react-router-dom'
 import { CContainer, CSpinner } from '@coreui/react'
 
 // routes config
-import { routes } from 'src/router/config/routes'
+import { routes } from 'src/router/privateRouter/routes'
 
 // import Roles from 'src/router/config'
 import Page404 from 'src/views/common/public/page404/Page404'

@@ -29,11 +29,15 @@ const Page404 = React.lazy(() => import("./views/common/public/page404/Page404")
 const Page500 = React.lazy(() => import("./views/common/public/page500/Page500"))
 const RedirectSuccessHandler = lazy(() => import("./components/redirectSuccessHandler/RedirectSuccessHandler"))
 
+// customer layou
+const CustomerLayout = React.lazy(() => import("src/layout/CustomerLayout"))
+
 class App extends Component {
   render() {
     // const credentials = this.props.credentials;
     return (
       <>
+        {/* <div className="bg-light "> */}
         <Router>
           <React.Suspense fallback={loading}>
             <Switch>
@@ -67,22 +71,23 @@ class App extends Component {
                 name="Page 400"
                 render={(props) => <Page404 {...props} />}
               />
-              <PrivateRouter path="/app" component={DefaultLayout} />
-              {/* <PrivateRoutes /> */}
+              <PrivateRouter
+                path="/app"
+                component={DefaultLayout}
+              />
+              <PrivateRouter
+                path="/user"
+                component={CustomerLayout}
+              />
               <Route
-
                 path="/"
                 name="public"
                 render={(props) => <PublicLayout {...props} />}
               />
-              {/* <Route exact path="/" render={() => (
-                <Redirect to="/home" />
-              )} /> */}
-
-
             </Switch>
           </React.Suspense>
         </Router>
+        {/* </div> */}
       </>
 
     )

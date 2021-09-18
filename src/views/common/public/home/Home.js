@@ -1,34 +1,65 @@
-import React, { Component } from 'react'
-import TabHeader from 'src/components/TabContents/TabHeader'
-import { CContainer } from '@coreui/react'
-import { HeroCarousel } from 'src/components/carousel/index'
+import React, { Component, Suspense } from 'react'
+import { CContainer, CSpinner } from '@coreui/react'
+// import { HeroCarousel } from 'src/components/carousel/index'
+
 import { connect } from 'react-redux'
+// import { NewArrivalProducts, PopularProducts } from 'src/components/public'
+// action 
+import { getDiscoverProducts } from 'src/service/apiActions/productAction/productAction'
+// import ProductDetialsModal from 'src/components/modals/product/ProductDetialsModal'
+const HeroCarousel = React.lazy(() => import('src/components/carousel/HeroCarousel'))
+const NewArrivalProducts = React.lazy(() => import('src/components/public/productFeatures/newArrivalProducts/NewArrivalProducts'))
+const PopularProducts = React.lazy(() => import('src/components/public/productFeatures/popularProducts/PopularProducts'))
+const ProductDetialsModal = React.lazy(() => import('src/components/modals/product/ProductDetialsModal'))
 
 export class Home extends Component {
-
+    state = {
+        loading: false,
+        message: ''
+    }
     componentDidMount() {
-        // console.log(this.props.userResponse.credentials.refresh_token);
+        this.props.getDiscoverProducts().catch(() => {
+            let failMessage = this.props.messageResponse
+            this.setState({
+                loading: false,
+                message: failMessage.data.message
+            })
+        })
     }
 
     render() {
-
+        let { message } = this.state;
         return (
             <>
-                <CContainer>
-                    <HeroCarousel />
-                </CContainer>
-                <CContainer className="mt-4">
-                    <TabHeader />
-                </CContainer>
+                <Suspense fallback={<CSpinner color="primary" />}>
+                    <ProductDetialsModal />
 
+                    <CContainer>
+                        <HeroCarousel />
+                    </CContainer>
+                    <CContainer className="mt-4">
+                        {message && (
+                            <div className="form-group d-flex justify-content-center align-items-center">
+                                <div className="alert alert-danger" role="alert">
+                                    {message}
+                                </div>
+                            </div>
+                        )}
+                        <PopularProducts />
+                        <NewArrivalProducts />
 
+                    </CContainer>
+                </Suspense>
             </>
         )
     }
 }
 const mapStateToProps = (state) => {
     return {
-        userResponse: state.userResponse
+        userResponse: state.userResponse,
+        messageResponse: state.messageResponse
     }
 }
-export default connect(mapStateToProps, {})(Home)
+export default connect(mapStateToProps, {
+    getDiscoverProducts
+})(Home)

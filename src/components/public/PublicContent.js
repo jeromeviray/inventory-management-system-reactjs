@@ -1,13 +1,13 @@
 import React, { Component, Suspense } from 'react'
 import { CContainer, CSpinner } from '@coreui/react'
 import { Route, Switch, Redirect } from 'react-router'
-import { publicRoutes } from 'src/router/config/routes'
+import { publicRoutes } from 'src/router/privateRouter/routes'
 import { connect } from 'react-redux'
 //action
 import { logout } from 'src/service/apiActions/userAction/userAction'
 import { clearMessage } from 'src/service/apiActions/messageAction/messageAction'
-import { history } from 'src/_helper/history'
 import Roles from 'src/router/config'
+
 const Page404 = React.lazy(() => import("../../views/common/public/page404/Page404"))
 
 export class PublicContent extends Component {
@@ -16,21 +16,16 @@ export class PublicContent extends Component {
         permission: ''
     }
     componentDidMount() {
-        if (!this.props.userResponse.isLoggedIn) {
-            history.push("/login");
-        } else {
-            this.redirectUser();
-            this.handleLogout();
-        }
+        this.redirectUser();
     }
-    handleLogout = () => {
-        let { status, data } = this.props.messageResponse
-        if (status > 400 && status <= 403) {
-            this.props.logout();
-            this.props.clearMessage();
-            window.location.reload();
-        }
-    }
+    // handleLogout = () => {
+    //     let { status, data } = this.props.messageResponse
+    //     if (status > 400 && status <= 403) {
+    //         this.props.logout();
+    //         this.props.clearMessage();
+    //         window.location.reload();
+    //     }
+    // }
     redirectUser = () => {
         const isLoggedIn = this.props.userResponse.isLoggedIn;
         if (isLoggedIn) {
@@ -77,6 +72,11 @@ export class PublicContent extends Component {
                             <Route path="/" exact render={() => {
                                 return (
                                     <Redirect to="/home" />
+                                )
+                            }} />
+                            <Route path="/user" exact render={() => {
+                                return (
+                                    <Redirect to="/user/order" />
                                 )
                             }} />
                             <Route

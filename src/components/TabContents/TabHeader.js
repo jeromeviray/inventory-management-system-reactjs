@@ -7,7 +7,7 @@ import {
     CTabPane
 } from '@coreui/react'
 
-import { NewArrivalProducts, RecommendProducts, PopularProducts } from '../public/index'
+import { NewArrivalProducts, PopularProducts } from '../public/index'
 import { connect } from 'react-redux'
 
 export class TabHeader extends Component {
@@ -41,17 +41,6 @@ export class TabHeader extends Component {
                             Popular
                         </CNavLink>
                     </CNavItem>
-                    {isLoggedIn ?
-                        <CNavItem>
-                            <CNavLink
-                                active={activeKey === 3}
-                                onClick={() => this.handleOnClick(3)}
-                            >
-                                Recommneded for you
-                            </CNavLink>
-                        </CNavItem> :
-                        ""
-                    }
 
                 </CNav>
                 <CTabContent>
@@ -61,12 +50,7 @@ export class TabHeader extends Component {
                     <CTabPane visible={activeKey === 2}>
                         <PopularProducts />
                     </CTabPane>
-                    {isLoggedIn ?
-                        <CTabPane visible={activeKey === 3}>
-                            <RecommendProducts />
-                        </CTabPane> :
-                        ""
-                    }
+
 
                 </CTabContent>
             </>

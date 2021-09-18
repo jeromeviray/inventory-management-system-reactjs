@@ -21,14 +21,20 @@ export class PendingOrder extends Component {
         action: '',
         pendingOrders: [],
         token: '',
-        permission: ''
+        permission: '',
+        path: ''
     }
     componentDidMount() {
         let { type, accessToken, roles } = this.props.userResponse.credentials;
         let token = type + accessToken;
+        let roleName = roles.roleName;
+        let getPermission = roleName ? roleName : roles;
+        let href = this.manageHrefLinkBasedInPermission(getPermission);
+
         this.setState({
             token: token,
-            permission: roles.roleName ? roles.roleName : roles
+            permission: roles.roleName ? roles.roleName : roles,
+            path: href
         })
         this.props.pendingOrder().catch(() => {
             let failMessage = this.props.messageResponse;
@@ -57,8 +63,15 @@ export class PendingOrder extends Component {
             }
         }
     }
+    manageHrefLinkBasedInPermission = (permission) => {
+        if (permission === Roles.SUPER_ADMIN || permission === Roles.ADMIN) {
+            return "/app/order/";
+        } else {
+            return "/user/order/"
+        }
+    }
     render() {
-        let { message, pendingOrders, permission } = this.state;
+        let { message, pendingOrders, permission, path } = this.state;
         const fontStyle = {
             fontSize: "14px",
             fontWeight: "400"
@@ -119,7 +132,7 @@ export class PendingOrder extends Component {
                                             })} */}
                                             <Link
                                                 to={{
-                                                    pathname: "/app/order/" + pendingOrder.orderId,
+                                                    pathname: path + pendingOrder.orderId,
                                                     state: pendingOrder.orderId
                                                 }}
                                                 className="m-2"

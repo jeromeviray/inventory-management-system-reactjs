@@ -5,10 +5,18 @@ import {
     CHeaderNav,
     CNavItem,
     CNavLink,
-
+    CHeaderDivider,
+    CForm,
+    CFormControl,
+    CButton,
+    CFormFloating,
+    CFormLabel,
+    CInputGroup,
+    CInputGroupText
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
-import { AppHeaderDropdown } from '../sidebar'
+// import { AppHeaderDropdown } from '../sidebar'
+import { AppHeaderDropdown } from 'src/components/header'
 //icons
 import * as FaIcons from "react-icons/fa"
 import * as FiIcons from "react-icons/fi"
@@ -21,13 +29,13 @@ export class NavHeader extends Component {
     render() {
         const isLoggedIn = this.props.isLoggedIn;
         return (
-            <CHeader>
+            <CHeader position="sticky" >
                 <CContainer>
                     <Link className="nav-link" to="/home" style={{ cursor: "pointer" }}>
                         <h2 className="nav-item">Logo</h2>
                     </Link>
                     {isLoggedIn ?
-                        <CHeaderNav className="ms-3 d-lg-none d-md-block">
+                        <CHeaderNav className="ms-3" >
                             <div className="d-flex justify-content-center">
 
                                 <CNavItem>
@@ -55,6 +63,18 @@ export class NavHeader extends Component {
                             </CNavItem>
                         </CHeaderNav>
                     }
+                </CContainer>
+                <CHeaderDivider />
+                <CContainer className="d-flex justify-content-center align-items-center">
+
+                    <CForm className="w-50">
+                        <CInputGroup>
+                            <CFormControl type="text" id="floatingInput" placeholder="Search" className="p-2" />
+                            <CButton type="button" color="info" variant="outline" id="button-addon2" className="">
+                                <FaIcons.FaSearch />
+                            </CButton>
+                        </CInputGroup>
+                    </CForm>
                 </CContainer>
             </CHeader>
         )

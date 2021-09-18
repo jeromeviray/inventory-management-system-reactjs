@@ -47,7 +47,7 @@ export const bottomItems = [
         icon: <AiIcons.AiFillTags style={iconStyle} />
     },
     {
-        pathName: "/app",
+        pathName: "/user/profile",
         title: "Profile",
         icon: <MdIcons.MdAccountBox style={iconStyle} />
     },

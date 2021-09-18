@@ -18,7 +18,7 @@ const _nav = [
     to: "/app/dashboard",
     icon: <FaIcons.FaTachometerAlt size={20} style={iconMargin} />,
     permission: [
-      Roles.ADMIN,
+      // Roles.ADMIN,
       Roles.SUPER_ADMIN,
     ]
   },
