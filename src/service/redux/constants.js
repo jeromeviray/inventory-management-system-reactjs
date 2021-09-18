@@ -44,9 +44,6 @@ export const USERNAME = "username"
 export const GOOGLE_AUTH_URL =
   API_BASE_URL + "/oauth2/authorize/google?redirect_uri=" + OAUTH2_REDIRECT_URI
 
-
-
-
 // product branch
 export const GET_BRANCH = "GET_BRANCH"
 export const GET_BRANCH_TOTAL_PRODUCT = "GET_BRANCH_TOTAL_PRODUCT"
@@ -65,7 +62,6 @@ export const DELETE_BRAND = "DELETE_BRAND"
 export const FAIL_BRAND = "FAIL_BRAND"
 export const CLEAR_BRAND = "CLEAR_BRAND"
 
-
 // order
 export const GET_PENDING_ORDER = "GET_PENDING_ORDER"
 export const GET_CONFIRMED_ORDER = "GET_CONFIRMED_ORDER"
@@ -82,7 +78,8 @@ export const UPDATE_CUSTOMER_ADDRESS = "UPDATE_CUSTOMER_ADDRESS"
 export const GET_CUSTOMER_ADDRESSES = "GET_CUSTOMER_ADDRESSES"
 export const GET_CUSTOMER_ADDRESS = "GET_CUSTOMER_ADDRESS"
 export const DELETE_CUSTOMER_ADDRESS = "DELETE_CUSTOMER_ADDRESS"
-/// employee
+/// account
+export const GET_CUSTOMERS = "GET_CUSTOMERS"
 export const GET_EMPLOYEES = "GET_EMPLOYEES"
 export const SAVE_EMPLOYEE = "SAVE_EMPLOYEE"
 
@@ -96,7 +93,7 @@ export const GET_ADDRESSES = "GET_ADDRESSES"
 export const UPDATE_ADDRESS = "UPDATE_ADDRESS"
 export const SAVE_ADDRESS = "SAVE_ADDRESS"
 
-// payment method 
+// payment method
 export const GET_PAYMENT_METHODS = "GET_PAYMENT_METHODS"
 export const GET_PAYMENT_METHOD = "GET_PAYMENT_METHOD"
 

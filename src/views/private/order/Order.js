@@ -3,13 +3,18 @@ import {
     CNav,
     CNavItem,
     CNavLink, CTabContent,
-    CTabPane, CSpinner
-
+    CTabPane, CSpinner,
+    CForm,
+    CInputGroup,
+    CFormControl,
+    CButton
 } from '@coreui/react'
 
 // icon
 // import * as FiIcons from 'react-icons/fi'
 //component tab
+import * as FaIcons from "react-icons/fa"
+
 const PendingOrder = React.lazy(() => import('src/components/orderTabContent/pending/PendingOrder'))
 const ConfirmedOrder = React.lazy(() => import('src/components/orderTabContent/confirmed/ConfirmedOrder'));
 const CompletedOrder = React.lazy(() => import('src/components/orderTabContent/completed/CompletedOrder'))
@@ -29,80 +34,122 @@ export class Order extends Component {
         }
 
         return (
+          <>
+            <div className="d-flex justify-content-end mb-2">
+              <CForm className="w-25">
+                <CInputGroup>
+                  <CFormControl
+                    type="text"
+                    id="floatingInput"
+                    placeholder="Search"
+                    className="p-2"
+                  />
+                  <CButton
+                    type="button"
+                    color="info"
+                    variant="outline"
+                    id="button-addon2"
+                    className=""
+                  >
+                    <FaIcons.FaSearch />
+                  </CButton>
+                </CInputGroup>
+              </CForm>
+            </div>
+            <CNav
+              variant="pills"
+              role="tablist"
+              layout="fill"
 
-            <>
-                <CNav
-                    variant="pills"
-                    role="tablist"
-                    layout="fill"
-
-                // className="flex-column flex-sm-row"
+              // className="flex-column flex-sm-row"
+            >
+              <CNavItem>
+                <CNavLink
+                  href="#pending"
+                  active={activeKey === 1}
+                  onClick={() => {
+                    this.setState({ activeKey: 1 })
+                  }}
                 >
-                    <CNavItem>
-                        <CNavLink
-                            href="#pending"
-                            active={activeKey === 1}
-                            onClick={() => { this.setState({ activeKey: 1 }) }}
-                        >
-                            Pending
-                        </CNavLink>
-                    </CNavItem>
-                    <CNavItem>
-                        <CNavLink
-                            href="#confirmed"
-                            active={activeKey === 2}
-                            onClick={() => { this.setState({ activeKey: 2 }) }}
-                        >
-                            Confirmed
-                        </CNavLink>
-                    </CNavItem>
-                    <CNavItem>
-                        <CNavLink
-                            href="#delivery"
-                            active={activeKey === 3}
-                            onClick={() => { this.setState({ activeKey: 3 }) }}
-                        >
-                            Delivery
-                        </CNavLink>
-                    </CNavItem>
-                    <CNavItem>
-                        <CNavLink
-                            href="#completed"
-                            active={activeKey === 4}
-                            onClick={() => { this.setState({ activeKey: 4 }) }}
-                        >
-                            Completed
-                        </CNavLink>
-                    </CNavItem>
-                </CNav>
+                  Pending
+                </CNavLink>
+              </CNavItem>
+              <CNavItem>
+                <CNavLink
+                  href="#confirmed"
+                  active={activeKey === 2}
+                  onClick={() => {
+                    this.setState({ activeKey: 2 })
+                  }}
+                >
+                  Confirmed
+                </CNavLink>
+              </CNavItem>
+              <CNavItem>
+                <CNavLink
+                  href="#delivery"
+                  active={activeKey === 3}
+                  onClick={() => {
+                    this.setState({ activeKey: 3 })
+                  }}
+                >
+                  Delivery
+                </CNavLink>
+              </CNavItem>
+              <CNavItem>
+                <CNavLink
+                  href="#completed"
+                  active={activeKey === 4}
+                  onClick={() => {
+                    this.setState({ activeKey: 4 })
+                  }}
+                >
+                  Completed
+                </CNavLink>
+              </CNavItem>
+            </CNav>
 
-                <CTabContent className="border" style={tabStyle}>
-                    <CTabPane role="tabpanel" aria-labelledby="home-tab" visible={activeKey === 1}>
-                        <Suspense fallback={<CSpinner color="primary" />}>
-                            <PendingOrder />
-                        </Suspense>
+            <CTabContent className="border" style={tabStyle}>
+              <CTabPane
+                role="tabpanel"
+                aria-labelledby="home-tab"
+                visible={activeKey === 1}
+              >
+                <Suspense fallback={<CSpinner color="primary" />}>
+                  <PendingOrder />
+                </Suspense>
+              </CTabPane>
+              <CTabPane
+                role="tabpanel"
+                aria-labelledby="profile-tab"
+                visible={activeKey === 2}
+              >
+                <Suspense fallback={<CSpinner color="primary" />}>
+                  <ConfirmedOrder />
+                </Suspense>
+              </CTabPane>
+              <CTabPane
+                role="tabpanel"
+                aria-labelledby="contact-tab"
+                visible={activeKey === 3}
+              >
+                <Suspense fallback={<CSpinner color="primary" />}>
+                  <DeliveryOrder />
+                </Suspense>
+              </CTabPane>
+              <CTabPane
+                role="tabpanel"
+                aria-labelledby="contact-tab"
+                visible={activeKey === 4}
+              >
+                <Suspense fallback={<CSpinner color="primary" />}>
+                  <CompletedOrder />
+                </Suspense>
+              </CTabPane>
+            </CTabContent>
 
-                    </CTabPane>
-                    <CTabPane role="tabpanel" aria-labelledby="profile-tab" visible={activeKey === 2}>
-                        <Suspense fallback={<CSpinner color="primary" />}>
-                            <ConfirmedOrder />
-                        </Suspense>
-                    </CTabPane>
-                    <CTabPane role="tabpanel" aria-labelledby="contact-tab" visible={activeKey === 3}>
-                        <Suspense fallback={<CSpinner color="primary" />}>
-                            <DeliveryOrder />
-                        </Suspense>
-                    </CTabPane>
-                    <CTabPane role="tabpanel" aria-labelledby="contact-tab" visible={activeKey === 4}>
-                        <Suspense fallback={<CSpinner color="primary" />}>
-                            <CompletedOrder />
-                        </Suspense>
-                    </CTabPane>
-                </CTabContent>
-
-                {/* </CContainer> */}
-
-            </>
+            {/* </CContainer> */}
+          </>
         )
     }
 }

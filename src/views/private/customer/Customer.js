@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import { connect } from "react-redux"
 import {
   CTable,
   CTableHead,
@@ -9,39 +10,22 @@ import {
   CTableCaption,
   CButton,
 } from "@coreui/react"
+//action
+import { getCustomers } from "src/service/apiActions/employeeAction/EmployeeAction"
+import { logout } from "src/service/apiActions/userAction/userAction"
 //icons
 import * as MdIcons from "react-icons/md"
 import * as BiIcons from "react-icons/bi"
 import * as FaIcons from "react-icons/fa"
-import { connect } from "react-redux"
-// action
-import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
-import {
-  setAlertModal,
-  addEmployeeModal,
-} from "src/service/apiActions/modalAction/modalAction"
-import { getEmployees } from "src/service/apiActions/employeeAction/EmployeeAction"
-import { logout } from "src/service/apiActions/userAction/userAction"
-//component modal
-import AlertModal from "src/components/modals/alert/AlertModal"
-import EmployeeModal from "src/components/modals/employee/EmployeeModal"
 
-export class Employee extends Component {
+export class Customer extends Component {
   state = {
-    employee: [],
-    visible: false,
-    token: "",
     message: "",
-    action: "",
-    status: "",
+    customers: [],
+    visible: false,
   }
   componentDidMount() {
-    let { type, accessToken } = this.props.userResponse.credentials
-    let token = type + accessToken
-    this.setState({
-      token: token,
-    })
-    this.props.getEmployees(token).catch(() => {
+    this.props.getCustomers().catch(() => {
       let failMessage = this.props.messageResponse
       if (failMessage.status > 400 && failMessage.status <= 403) {
         this.props.logout()
@@ -52,51 +36,23 @@ export class Employee extends Component {
     })
   }
   componentDidUpdate(prevProps, prevState) {
-    this.manageEmployeeResponse(prevProps, prevState)
+    this.manageCustomerResponse(prevProps, prevState)
   }
-  manageEmployeeResponse = (prevProps, prevState) => {
-    if (prevProps.employeeResponse !== this.props.employeeResponse) {
-      let { status, action, data } = this.props.employeeResponse
-      if (status === 200 && action === "GETEMPLOYEES") {
+  manageCustomerResponse = (prevProps, prevState) => {
+    if (prevProps.customerResponse !== this.props.customerResponse) {
+      let { status, action, customers } = this.props.customerResponse
+      if (status === 200 && action === "GETCUSTOMERS") {
         this.setState({
-          employee: data.employees,
+          customers: customers,
         })
-      } else if (status > 400 && status <= 403) {
-        this.props.clearMessage()
-
-        this.props.logout()
       }
     }
   }
-  renderAlerModal() {
-    return <AlertModal />
-  }
-  renderEmployeeModal() {
-    return <EmployeeModal />
-  }
   render() {
-    let { employee, visible, message } = this.state
+    let { customers, message, visible } = this.state
+    console.log(message)
     return (
-      <div>
-        {this.renderAlerModal()}
-        {this.renderEmployeeModal()}
-        <CButton
-          shape="rounded-pill"
-          color="primary"
-          variant="ghost"
-          className="d-flex justify-content-center align-items-center mb-3"
-          onClick={() =>
-            this.props.addEmployeeModal(
-              !visible,
-              "Add",
-              "",
-              <FaIcons.FaPlus size={20} className="me-2" />,
-            )
-          }
-        >
-          <FaIcons.FaPlus size={20} />
-          <span style={{ marginLeft: "10px" }}>Add Employee Account</span>
-        </CButton>
+      <>
         <CTable
           striped
           hover
@@ -106,7 +62,7 @@ export class Employee extends Component {
           align="middle"
         >
           <CTableCaption>
-            List of Brand: <b>{employee.length}</b>
+            List of Brand: <b>{customers.length}</b>
           </CTableCaption>
 
           <CTableHead color="dark">
@@ -130,10 +86,10 @@ export class Employee extends Component {
                 </CTableDataCell>
               </CTableRow>
             )}
-            {employee.length > 0 ? (
+            {customers.length > 0 ? (
               <>
-                {employee.map((employee, index) => {
-                  let { firstName, lastName, phoneNumber, account } = employee
+                {customers.map((customer, index) => {
+                  let { firstName, lastName, phoneNumber, account } = customer
                   return (
                     <CTableRow className="text-center" key={index}>
                       <CTableDataCell>
@@ -156,7 +112,7 @@ export class Employee extends Component {
                             this.props.addEmployeeModal(
                               !visible,
                               "Edit",
-                              employee,
+                              customer,
                               <MdIcons.MdModeEdit size="20" className="me-2" />,
                             )
                           }
@@ -170,8 +126,8 @@ export class Employee extends Component {
                           onClick={() =>
                             this.props.setAlertModal(
                               !visible,
-                              "DELETEEMPLOYEE",
-                              "EMPLOYEE",
+                              "DELETECUSTOMER",
+                              "CUSTOMER",
                               account.id,
                             )
                           }
@@ -191,22 +147,17 @@ export class Employee extends Component {
             )}
           </CTableBody>
         </CTable>
-      </div>
+      </>
     )
   }
 }
 const mapStateToProps = (state) => {
   return {
-    modalVisible: state.modalVisibleResponse,
-    userResponse: state.userResponse,
+    customerResponse: state.accountResponse,
     messageResponse: state.messageResponse,
-    employeeResponse: state.accountResponse,
   }
 }
 export default connect(mapStateToProps, {
-  setAlertModal,
-  addEmployeeModal,
-  getEmployees,
+  getCustomers,
   logout,
-  clearMessage,
-})(Employee)
+})(Customer)

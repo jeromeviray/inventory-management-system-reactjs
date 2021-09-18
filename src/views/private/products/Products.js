@@ -3,18 +3,24 @@ import { connect } from "react-redux"
 import { withRouter } from "react-router-dom"
 import { getProducts } from "../../../service/apiActions/productAction/productAction"
 import { setProductModal } from "../../../service/apiActions/modalAction/modalAction"
-import { CRow, CCol, CButton } from "@coreui/react"
-import * as FaIcons from 'react-icons/fa'
+import {
+  CRow,
+  CCol,
+  CButton,
+  CForm,
+  CInputGroup,
+  CFormControl,
+} from "@coreui/react"
+import * as FaIcons from "react-icons/fa"
 
 import { logout } from "src/service/apiActions/userAction/userAction"
 // import eventBus from "src/_helper/EventBus"
 const ProductCard = lazy(() =>
-  import("../../../components/products/ProductCard.js")
+  import("../../../components/products/ProductCard.js"),
 )
 const ProductEditorModal = lazy(() =>
-  import("../../../components/modals/product/ProductEditorModal.js")
+  import("../../../components/modals/product/ProductEditorModal.js"),
 )
-
 
 class Products extends Component {
   state = {
@@ -25,23 +31,20 @@ class Products extends Component {
   }
 
   componentDidMount() {
-    let accessToken = this.props.userResponse.credentials.accessToken;
-    let type = this.props.userResponse.credentials.type;
+    let accessToken = this.props.userResponse.credentials.accessToken
+    let type = this.props.userResponse.credentials.type
 
-    let token = type + accessToken;
-    this.props.getProducts(token)
-      .catch(() => {
-        let failMessage = this.props.messageResponse
-        if (failMessage.status > 400 && failMessage.status <= 403) {
-          this.props.logout();
-
-        }
-        this.setState({
-          loading: false,
-          message: failMessage.data.message
-        })
+    let token = type + accessToken
+    this.props.getProducts(token).catch(() => {
+      let failMessage = this.props.messageResponse
+      if (failMessage.status > 400 && failMessage.status <= 403) {
+        this.props.logout()
       }
-      )
+      this.setState({
+        loading: false,
+        message: failMessage.data.message,
+      })
+    })
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -61,7 +64,7 @@ class Products extends Component {
     if (prevProps.modalVisibleResponse !== this.props.modalVisibleResponse) {
       let response = this.props.modalVisibleResponse
       this.setState({
-        visible: response.visible
+        visible: response.visible,
       })
     }
   }
@@ -82,33 +85,51 @@ class Products extends Component {
   }
 
   renderProductEditorModal() {
-    return (
-      <ProductEditorModal />
-    )
+    return <ProductEditorModal />
   }
   render() {
-
-    let { visible, products, message } = this.state;
-    console.log(products);
+    let { visible, products, message } = this.state
+    console.log(products)
     return (
       <>
         {this.renderProductEditorModal()}
-        <CRow>
-          <CCol>
-            <CButton
-              shape="rounded-pill"
-              color="primary"
-              variant="ghost"
-              className="d-flex justify-content-center align-items-center"
-              onClick={() => this.props.setProductModal(!visible, "Add", <FaIcons.FaPlus size={20} />)}>
-
-              <FaIcons.FaPlus size={20} />
-              <span style={{ marginLeft: "10px" }}>
-                Add Product
-              </span>
-            </CButton>
-          </CCol>
-        </CRow>
+        <div className="d-flex justify-content-between mb-2">
+          <CButton
+            shape="rounded-pill"
+            color="primary"
+            variant="ghost"
+            className="d-flex justify-content-center align-items-center"
+            onClick={() =>
+              this.props.setProductModal(
+                !visible,
+                "Add",
+                <FaIcons.FaPlus size={20} />,
+              )
+            }
+          >
+            <FaIcons.FaPlus size={20} />
+            <span style={{ marginLeft: "10px" }}>Add Product</span>
+          </CButton>
+          <CForm className="w-25">
+            <CInputGroup>
+              <CFormControl
+                type="text"
+                id="floatingInput"
+                placeholder="Search"
+                className="p-2"
+              />
+              <CButton
+                type="button"
+                color="info"
+                variant="outline"
+                id="button-addon2"
+                className=""
+              >
+                <FaIcons.FaSearch />
+              </CButton>
+            </CInputGroup>
+          </CForm>
+        </div>
         <CRow>
           {message && (
             <div className="form-group d-flex justify-content-center align-items-center">
@@ -117,17 +138,24 @@ class Products extends Component {
               </div>
             </div>
           )}
-          {products.length === 0 ? <div className="form-group d-flex justify-content-center align-items-center">
-            No Product Available
-          </div> :
+          {products.length === 0 ? (
+            <div className="form-group d-flex justify-content-center align-items-center">
+              No Product Available
+            </div>
+          ) : (
             products.map((product, indx) => {
               return (
                 <CCol xs="6" sm="6" md="4" lg="3" key={indx}>
-                  <ProductCard product={product} fileImage={product.fileImages} iconModal="edit" imageLink={false} />
-
+                  <ProductCard
+                    product={product}
+                    fileImage={product.fileImages}
+                    iconModal="edit"
+                    imageLink={false}
+                  />
                 </CCol>
               )
-            })}
+            })
+          )}
         </CRow>
       </>
     )
@@ -139,7 +167,7 @@ const mapStateToProps = (state) => {
     productResponser: state.productResponser,
     modalVisibleResponse: state.modalVisibleResponse,
     userResponse: state.userResponse,
-    messageResponse: state.messageResponse
+    messageResponse: state.messageResponse,
   }
 }
 
@@ -147,6 +175,6 @@ export default withRouter(
   connect(mapStateToProps, {
     setProductModal,
     getProducts,
-    logout
+    logout,
   })(Products),
 )
