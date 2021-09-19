@@ -28,7 +28,6 @@ import { clearMessage } from "src/service/apiActions/messageAction/messageAction
 //icons
 import * as FaIcons from "react-icons/fa"
 import { connect } from "react-redux"
-import Roles from "src/router/config"
 
 export class EmployeeModal extends Component {
   state = {
@@ -106,7 +105,7 @@ export class EmployeeModal extends Component {
   }
   handleOnSubmit = (event) => {
     event.preventDefault()
-    let { firstName, lastName, email, phoneNumber, username, password } =
+    let { firstName, lastName, email, phoneNumber, username, password, role } =
       this.state
     let { type, accessToken } = this.props.userResponse.credentials
     let token = type + accessToken
@@ -122,6 +121,7 @@ export class EmployeeModal extends Component {
         username,
         password,
         token,
+        role,
       )
       .then(() => {
         let { status } = this.props.messageResponse

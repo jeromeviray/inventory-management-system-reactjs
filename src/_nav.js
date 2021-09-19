@@ -9,6 +9,7 @@ import * as IoIcons from "react-icons/io"
 import * as Io5Icons from "react-icons/io5"
 import * as BsIcons from "react-icons/bs"
 import * as AiIcons from "react-icons/ai"
+import * as MdIcons from "react-icons/md"
 
 const iconMargin = {
   marginRight: "10px",
@@ -46,6 +47,14 @@ const _nav = [
         anchor: "Customer Orders",
         to: "/app/order",
         icon: <FaIcons.FaShoppingCart size={20} style={iconMargin} />,
+        permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
+      },
+      {
+        _component: "CNavItem",
+        as: NavLink,
+        anchor: "Sale",
+        to: "/app/sale",
+        icon: <FaIcons.FaPercent size={20} style={iconMargin} />,
         permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
       },
     ],
@@ -106,39 +115,30 @@ const _nav = [
       },
     ],
   },
-  // {
-  //   _component: "CNavItem",
-  //   as: NavLink,
-  //   icon: <IoIcons.IoIosPeople size={20} style={iconMargin} />,
-  //   anchor: "Employees",
-  //   to: "/app/account/employee",
-  //   permission: [Roles.SUPER_ADMIN],
-  // },
-
   {
-    _component: "CNavItem",
-    as: NavLink,
-    icon: <IoIcons.IoIosPeople size={20} style={iconMargin} />,
-    anchor: "Employee Accounts",
-    to: "/app/employee",
+    _component: "CNavGroup",
+    anchor: "Accounts",
+    icon: <MdIcons.MdSupervisorAccount size={20} style={iconMargin} />,
     permission: [Roles.SUPER_ADMIN],
+    items: [
+      {
+        _component: "CNavItem",
+        as: NavLink,
+        icon: <IoIcons.IoIosPeople size={20} style={iconMargin} />,
+        anchor: "Employee Accounts",
+        to: "/app/employee",
+        permission: [Roles.SUPER_ADMIN],
+      },
+      {
+        _component: "CNavItem",
+        as: NavLink,
+        icon: <IoIcons.IoIosPeople size={20} style={iconMargin} />,
+        anchor: "Customer Accounts",
+        to: "/app/customers",
+        permission: [Roles.SUPER_ADMIN],
+      },
+    ],
   },
-  {
-    _component: "CNavItem",
-    as: NavLink,
-    icon: <IoIcons.IoIosPeople size={20} style={iconMargin} />,
-    anchor: "Customer Accounts",
-    to: "/app/customers",
-    permission: [Roles.SUPER_ADMIN],
-  },
-  // {
-  //   _component: "CNavItem",
-  //   as: NavLink,
-  //   icon: <FaIcons.FaWarehouse size={20} style={iconMargin} />,
-  //   anchor: "Branch",
-  //   to: "/app/branch",
-  //   permission: [Roles.SUPER_ADMIN],
-  // },
   {
     _component: "CNavGroup",
     anchor: "Reports",

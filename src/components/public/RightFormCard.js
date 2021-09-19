@@ -3,7 +3,6 @@ import { Link } from "react-router-dom"
 import React, { Component } from "react"
 import { GOOGLE_AUTH_URL } from "../../service/redux/constants"
 
-
 // icons
 import * as FcIcons from "react-icons/fc"
 import * as BsIcons from "react-icons/bs"
@@ -11,7 +10,6 @@ import * as FiIcons from "react-icons/fi"
 import * as FaIcons from "react-icons/fa"
 
 export class RightFormCard extends Component {
-
   render() {
     return (
       <CCard className="right-to-left border-0">
@@ -39,15 +37,6 @@ export class RightFormCard extends Component {
                 </span>
                 <span className="ps-3">Google</span>
               </a>
-              <Link
-                to="/register"
-                className="facebook-link btn border border-info d-flex"
-              >
-                <span>
-                  <FaIcons.FaFacebook size={20} className="facebook-icon" />
-                </span>
-                <span className="ps-3">Facebook</span>
-              </Link>
             </CCol>
             <span className="fancy">OR</span>
             <CCol

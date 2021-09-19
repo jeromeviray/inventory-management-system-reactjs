@@ -87,7 +87,7 @@ export const getCustomers = () => async (dispatch) => {
   )
 }
 export const saveEmployee =
-  (firstName, lastName, email, phoneNumber, username, password, token) =>
+  (firstName, lastName, email, phoneNumber, username, password, token, role) =>
   async (dispatch) => {
     return AccountApiService.saveEmployeeAccount(
       firstName,
@@ -97,6 +97,7 @@ export const saveEmployee =
       username,
       password,
       token,
+      role,
     ).then(
       (response) => {
         dispatch({

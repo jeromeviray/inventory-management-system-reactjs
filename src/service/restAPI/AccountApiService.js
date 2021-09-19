@@ -12,7 +12,7 @@ export class EmployeeApiService {
       headers: authHeader(),
     })
   }
-    
+
   saveEmployeeAccount(
     firstName,
     lastName,
@@ -21,9 +21,10 @@ export class EmployeeApiService {
     username,
     password,
     token,
+    role,
   ) {
     return axios.post(
-      "/users/accoutns/create",
+      "/users/accounts/create",
       {
         firstName,
         lastName,
@@ -31,6 +32,7 @@ export class EmployeeApiService {
         phoneNumber,
         username,
         password,
+        role,
       },
       {
         headers: { Authorization: token },
