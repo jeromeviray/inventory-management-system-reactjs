@@ -6,7 +6,6 @@ import { history } from "src/_helper/history"
 export class RedirectSuccessHandler extends Component {
     render() {
         let params = queryString.parse(this.props.location.search)
-        console.log(params.roles)
         const token = params.accessToken
         const refreshToken = params.refreshToken
         const username = params.username;

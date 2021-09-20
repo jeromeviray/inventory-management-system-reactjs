@@ -15,8 +15,8 @@ class AuthService {
     logout() {
         localStorage.removeItem("credentials");
     }
-    register(username, password, email) {
-        return UserService.register(username, password, email);
+    register(username, password, email, firstName, lastName, phoneNumber) {
+        return UserService.register(username, password, email, firstName, lastName, phoneNumber);
     }
 }
 

@@ -52,9 +52,9 @@ export const authenticateUser = (username, password) => async (dispatch) => {
     )
 
 }
-export const createAccount = (username, password, email) => async (dispatch) => {
+export const createAccount = (username, password, email, firstName, lastName, phoneNumber) => async (dispatch) => {
     console.log(username);
-    return authService.register(username, password, email)
+    return authService.register(username, password, email, firstName, lastName, phoneNumber)
         .then(
             (response) => {
                 dispatch({
