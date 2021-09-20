@@ -3,6 +3,8 @@ import { connect } from "react-redux"
 import { withRouter } from "react-router-dom"
 import { getProducts } from "../../../service/apiActions/productAction/productAction"
 import { setProductModal } from "../../../service/apiActions/modalAction/modalAction"
+import { getInventory } from "src/service/apiActions/inventoryAction/inventoryAction"
+import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import {
   CTable,
   CTableHead,
@@ -15,86 +17,117 @@ import {
   CForm,
   CInputGroup,
   CFormControl,
+  CBadge,
 } from "@coreui/react"
 import * as FaIcons from "react-icons/fa"
-
+import * as IoIcons from "react-icons/io"
+import Barcode from "react-barcode"
+import { Carousel } from "react-responsive-carousel"
 import { logout } from "src/service/apiActions/userAction/userAction"
-// import eventBus from "src/_helper/EventBus"
-const ProductCard = lazy(() =>
-  import("../../../components/products/ProductCard.js"),
-)
+
 const ProductEditorModal = lazy(() =>
   import("../../../components/modals/product/ProductEditorModal.js"),
 )
-
+//action
 class Products extends Component {
   state = {
     products: [],
     keyword: "",
-    recommendedProducts: [],
     visible: false,
+    inventory: [],
   }
 
   componentDidMount() {
-    let accessToken = this.props.userResponse.credentials.accessToken
-    let type = this.props.userResponse.credentials.type
-
-    let token = type + accessToken
-    this.props.getProducts(token).catch(() => {
-      let failMessage = this.props.messageResponse
-      if (failMessage.status > 400 && failMessage.status <= 403) {
-        this.props.logout()
+    this.getInventory()
+  }
+  getInventory = () => {
+    this.props.getInventory().catch(() => {
+      let { status, data } = this.props.messageResponse
+      if (status > 400 && status <= 403) {
+        setInterval(() => {
+          this.props.logout()
+          this.props.clearMessage()
+        }, 1000)
       }
       this.setState({
-        loading: false,
-        message: failMessage.data.message,
+        message: data.message,
       })
     })
   }
-
   componentDidUpdate(prevProps, prevState) {
-    this.manageProductResponse(prevProps, prevState)
+    this.manageInventoryResponse(prevProps, prevState)
     this.manageModalResponse(prevProps, prevProps)
   }
-  // componentWillUnmount() {
-  //   eventBus.remove("logout");
-  //   this.setState({
-  //     products: [],
-  //     keyword: "",
-  //     recommendedProducts: [],
-  //     visible: false,
-  //   })
-  // }
   manageModalResponse(prevProps, prevState) {
     if (prevProps.modalVisibleResponse !== this.props.modalVisibleResponse) {
       let response = this.props.modalVisibleResponse
+      console.log(response.action === "close")
       this.setState({
         visible: response.visible,
       })
-    }
-  }
-  manageProductResponse(prevProps, prevState) {
-    if (prevProps.productResponser !== this.props.productResponser) {
-      let response = this.props.productResponser
-
-      if (response.action === "LIST") {
-        if (response.status >= 200 && response.status <= 300) {
-          this.setState({
-            products: response.data,
-          })
-        }
-      } else if (response.status < 400) {
-        // alert message
+      if (response.action === "close") {
+        this.getInventory()
       }
     }
   }
-
+  manageInventoryResponse = (prevPros, prevState) => {
+    if (prevPros.inventoryResponse !== this.props.inventoryResponse) {
+      let { status, action, data } = this.props.inventoryResponse
+      if (status === 200 && action === "GETINVENTORY") {
+        this.setState({
+          inventory: data.inventory,
+        })
+      }
+    }
+  }
   renderProductEditorModal() {
     return <ProductEditorModal />
   }
+  manageStatus = (status) => {
+    switch (status) {
+      case "OK":
+        return (
+          <CBadge color="success" shape="rounded-pill">
+            {status}
+          </CBadge>
+        )
+      case "LOW":
+        return (
+          <CBadge color="warning" shape="rounded-pill">
+            {status}
+          </CBadge>
+        )
+      case "OUT_OF_STOCK":
+        return (
+          <CBadge color="danger" shape="rounded-pill">
+            OUT OF STOCK
+          </CBadge>
+        )
+      default:
+        return (
+          <CBadge color="danger" shape="rounded-pill">
+            {status}
+          </CBadge>
+        )
+    }
+  }
   render() {
-    let { visible, products, message } = this.state
-    console.log(products)
+    let { visible, message, inventory } = this.state
+
+    const arrowStyles = {
+      position: "absolute",
+      zIndex: "2",
+      top: "calc(4% - 16px)",
+      // width: "30",
+      height: "100%",
+      cursor: "pointer",
+      border: "none",
+    }
+    const fontStyle = {
+      fontSize: "14px",
+      fontWeight: "500",
+    }
+
     return (
       <>
         {this.renderProductEditorModal()}
@@ -135,43 +168,16 @@ class Products extends Component {
             </CInputGroup>
           </CForm>
         </div>
-        {/* <CRow>
-          {message && (
-            <div className="form-group d-flex justify-content-center align-items-center">
-              <div className="alert alert-danger" role="alert">
-                {message}
-              </div>
-            </div>
-          )}
-          {products.length === 0 ? (
-            <div className="form-group d-flex justify-content-center align-items-center">
-              No Product Available
-            </div>
-          ) : (
-            products.map((product, indx) => {
-              return (
-                <CCol xs="6" sm="6" md="4" lg="3" key={indx}>
-                  <ProductCard
-                    product={product}
-                    fileImage={product.fileImages}
-                    iconModal="edit"
-                    imageLink={false}
-                  />
-                </CCol>
-              )
-            })
-          )}
-        </CRow> */}
         <CTable
           striped
           hover
           className="shadow-sm "
-          responsive="md"
+          responsive
           bordered
           align="middle"
         >
           <CTableCaption>
-            List of Brand: <b>{products.length}</b>
+            List of Brand: <b>{inventory.length}</b>
           </CTableCaption>
 
           <CTableHead color="dark">
@@ -196,41 +202,98 @@ class Products extends Component {
                 </CTableDataCell>
               </CTableRow>
             )}
-          </CTableBody>
-        </CTable>
-        {/* {employee.length > 0 ? (
-              <>
-                {employee.map((employee, index) => {
-                  let { firstName, lastName, phoneNumber, account } = employee
-                  return (
-                    <CTableRow className="text-center" key={index}>
-                      <CTableDataCell>
-                        {firstName + " " + lastName}
-                      </CTableDataCell>
-                      <CTableDataCell>{phoneNumber}</CTableDataCell>
-                      <CTableDataCell>{account.username}</CTableDataCell>
-                      <CTableDataCell>{account.email}</CTableDataCell>
-                      <CTableDataCell>
-                        {account.roles[0].roleName}
-                      </CTableDataCell>
-                      <CTableDataCell>{account.created}</CTableDataCell>
-                      <CTableHeaderCell className="text-center" colSpan="1">
-                        <CButton
-                          color="info"
-                          className="me-2"
-                          variant="ghost"
-                          size="sm"
-                          onClick={() =>
-                            this.props.addEmployeeModal(
-                              !visible,
-                              "Edit",
-                              employee,
-                              <MdIcons.MdModeEdit size="20" className="me-2" />,
+            {inventory.length > 0 ? (
+              inventory.map((item, index) => {
+                let { product, threshold, totalStock, status } = item
+                return (
+                  <CTableRow className="text-center" key={index}>
+                    <CTableDataCell style={{ width: "10%" }}>
+                      <div>
+                        <Carousel
+                          showArrows={true}
+                          infiniteLoop={true}
+                          renderArrowPrev={(onClickHandler, hasPrev, label) =>
+                            hasPrev && (
+                              <button
+                                type="button"
+                                onClick={onClickHandler}
+                                title={label}
+                                className="arrow-style"
+                                style={{ ...arrowStyles, left: 0 }}
+                              >
+                                <IoIcons.IoIosArrowBack
+                                  size="40"
+                                  style={{ color: "white" }}
+                                />
+                              </button>
+                            )
+                          }
+                          renderArrowNext={(onClickHandler, hasNext, label) =>
+                            hasNext && (
+                              <button
+                                type="button"
+                                onClick={onClickHandler}
+                                title={label}
+                                className="arrow-style"
+                                style={{ ...arrowStyles, right: 0 }}
+                              >
+                                <IoIcons.IoIosArrowForward
+                                  size="40"
+                                  style={{ color: "white" }}
+                                />
+                              </button>
                             )
                           }
                         >
-                          <MdIcons.MdModeEdit size="20" />
-                        </CButton>
+                          {product.fileImages &&
+                            product.fileImages.map((image, index) => {
+                              return (
+                                <div key={index}>
+                                  <img
+                                    src={"/images/products/" + image.fileName}
+                                  />
+                                </div>
+                              )
+                            })}
+                        </Carousel>
+                      </div>
+                    </CTableDataCell>
+                    <CTableDataCell>
+                      <Barcode
+                        value={String(product.barcode)}
+                        height={50}
+                        width={1}
+                        fontSize={14}
+                        margin={7}
+                        background="#f5f5f548"
+                      />
+                    </CTableDataCell>
+                    <CTableDataCell>{product.productName}</CTableDataCell>
+                    <CTableDataCell>
+                      &#8369;{product.productPrice.toFixed(2)}
+                    </CTableDataCell>
+                    <CTableDataCell>{threshold}</CTableDataCell>
+                    <CTableDataCell>{totalStock}</CTableDataCell>
+                    <CTableDataCell>{this.manageStatus(status)}</CTableDataCell>
+                    <CTableDataCell></CTableDataCell>
+                    {/* <CTableDataCell className="text-center w-25" colSpan="1">
+                      <CButton
+                        color="info"
+                        className="me-2"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() =>
+                          this.props.addBranchModal(
+                            !visible,
+                            "Edit",
+                            branch,
+                            <MdIcons.MdModeEdit size="20" className="me-2" />,
+                          )
+                        }
+                      >
+                        <MdIcons.MdModeEdit size="20" />
+                      </CButton>
+                      {permission === Roles.SUPER_ADMIN ? (
                         <CButton
                           color="danger"
                           className="ms-2"
@@ -238,26 +301,29 @@ class Products extends Component {
                           onClick={() =>
                             this.props.setAlertModal(
                               !visible,
-                              "DELETEEMPLOYEE",
-                              "EMPLOYEE",
-                              account.id,
+                              "DELETEBRANCH",
+                              "BRANCH",
+                              branch.id,
                             )
                           }
                           size="sm"
                         >
                           <MdIcons.MdDelete size="20" />
                         </CButton>
-                      </CTableHeaderCell>
-                    </CTableRow>
-                  )
-                })}
-              </>
+                      ) : (
+                        <></>
+                      )}
+                    </CTableDataCell> */}
+                  </CTableRow>
+                )
+              })
             ) : (
               <CTableRow>
-                <CTableDataCell colSpan="7">No data</CTableDataCell>
+                <CTableDataCell colSpan="4">No data</CTableDataCell>
               </CTableRow>
-            )} */}
-
+            )}
+          </CTableBody>
+        </CTable>
       </>
     )
   }
@@ -269,6 +335,7 @@ const mapStateToProps = (state) => {
     modalVisibleResponse: state.modalVisibleResponse,
     userResponse: state.userResponse,
     messageResponse: state.messageResponse,
+    inventoryResponse: state.inventoryResponse,
   }
 }
 
@@ -277,5 +344,7 @@ export default withRouter(
     setProductModal,
     getProducts,
     logout,
+    getInventory,
+    clearMessage,
   })(Products),
 )
