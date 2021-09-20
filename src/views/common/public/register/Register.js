@@ -219,7 +219,7 @@ export class Register extends Component {
                                   <CFormFloating className="mb-3 text-dark ">
                                     <CFormControl
                                       name="phoneNumber"
-                                      type="text"
+                                      type="number"
                                       autoCorrect="false"
                                       id="floatingPhoneNumber"
                                       placeholder="Phone number"
