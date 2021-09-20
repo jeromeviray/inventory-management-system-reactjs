@@ -105,14 +105,14 @@ const _nav = [
         icon: <FaIcons.FaCartArrowDown size={20} style={iconMargin} />,
         permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
       },
-      {
-        _component: "CNavItem",
-        as: NavLink,
-        anchor: "Outgoing Orders",
-        to: "/app/outgoingorders",
-        icon: <Io5Icons.IoBagCheckSharp size={20} style={iconMargin} />,
-        permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
-      },
+      // {
+      //   _component: "CNavItem",
+      //   as: NavLink,
+      //   anchor: "Outgoing Orders",
+      //   to: "/app/outgoingorders",
+      //   icon: <Io5Icons.IoBagCheckSharp size={20} style={iconMargin} />,
+      //   permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
+      // },
     ],
   },
   {

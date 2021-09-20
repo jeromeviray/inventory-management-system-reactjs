@@ -4,8 +4,13 @@ import { withRouter } from "react-router-dom"
 import { getProducts } from "../../../service/apiActions/productAction/productAction"
 import { setProductModal } from "../../../service/apiActions/modalAction/modalAction"
 import {
-  CRow,
-  CCol,
+  CTable,
+  CTableHead,
+  CTableRow,
+  CTableHeaderCell,
+  CTableDataCell,
+  CTableBody,
+  CTableCaption,
   CButton,
   CForm,
   CInputGroup,
@@ -110,7 +115,7 @@ class Products extends Component {
             <FaIcons.FaPlus size={20} />
             <span style={{ marginLeft: "10px" }}>Add Product</span>
           </CButton>
-          <CForm className="w-25">
+          <CForm className="w-50">
             <CInputGroup>
               <CFormControl
                 type="text"
@@ -130,7 +135,7 @@ class Products extends Component {
             </CInputGroup>
           </CForm>
         </div>
-        <CRow>
+        {/* <CRow>
           {message && (
             <div className="form-group d-flex justify-content-center align-items-center">
               <div className="alert alert-danger" role="alert">
@@ -156,7 +161,103 @@ class Products extends Component {
               )
             })
           )}
-        </CRow>
+        </CRow> */}
+        <CTable
+          striped
+          hover
+          className="shadow-sm "
+          responsive="md"
+          bordered
+          align="middle"
+        >
+          <CTableCaption>
+            List of Brand: <b>{products.length}</b>
+          </CTableCaption>
+
+          <CTableHead color="dark">
+            <CTableRow className="text-center">
+              <CTableHeaderCell scope="col">Image</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Barcode</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Name</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Price</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Threshold</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Total Stocks</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Status</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+            </CTableRow>
+          </CTableHead>
+          <CTableBody className="text-center" color="light">
+            {message && (
+              <CTableRow className="text-center">
+                <CTableDataCell colSpan="8">
+                  <div className="alert alert-danger" role="alert">
+                    {message}
+                  </div>
+                </CTableDataCell>
+              </CTableRow>
+            )}
+          </CTableBody>
+        </CTable>
+        {/* {employee.length > 0 ? (
+              <>
+                {employee.map((employee, index) => {
+                  let { firstName, lastName, phoneNumber, account } = employee
+                  return (
+                    <CTableRow className="text-center" key={index}>
+                      <CTableDataCell>
+                        {firstName + " " + lastName}
+                      </CTableDataCell>
+                      <CTableDataCell>{phoneNumber}</CTableDataCell>
+                      <CTableDataCell>{account.username}</CTableDataCell>
+                      <CTableDataCell>{account.email}</CTableDataCell>
+                      <CTableDataCell>
+                        {account.roles[0].roleName}
+                      </CTableDataCell>
+                      <CTableDataCell>{account.created}</CTableDataCell>
+                      <CTableHeaderCell className="text-center" colSpan="1">
+                        <CButton
+                          color="info"
+                          className="me-2"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() =>
+                            this.props.addEmployeeModal(
+                              !visible,
+                              "Edit",
+                              employee,
+                              <MdIcons.MdModeEdit size="20" className="me-2" />,
+                            )
+                          }
+                        >
+                          <MdIcons.MdModeEdit size="20" />
+                        </CButton>
+                        <CButton
+                          color="danger"
+                          className="ms-2"
+                          variant="ghost"
+                          onClick={() =>
+                            this.props.setAlertModal(
+                              !visible,
+                              "DELETEEMPLOYEE",
+                              "EMPLOYEE",
+                              account.id,
+                            )
+                          }
+                          size="sm"
+                        >
+                          <MdIcons.MdDelete size="20" />
+                        </CButton>
+                      </CTableHeaderCell>
+                    </CTableRow>
+                  )
+                })}
+              </>
+            ) : (
+              <CTableRow>
+                <CTableDataCell colSpan="7">No data</CTableDataCell>
+              </CTableRow>
+            )} */}
+
       </>
     )
   }

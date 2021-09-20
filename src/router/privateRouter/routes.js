@@ -133,12 +133,12 @@ export const routes = [
     component: IncomingPurchases,
     permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
   },
-  {
-    path: "/app/outgoingorders",
-    name: "Outgoing Orders",
-    component: OutgoingOrders,
-    permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
-  },
+  // {
+  //   path: "/app/outgoingorders",
+  //   name: "Outgoing Orders",
+  //   component: OutgoingOrders,
+  //   permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
+  // },
   {
     path: "/app/employee",
     name: "Employee Accounts",

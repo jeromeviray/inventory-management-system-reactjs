@@ -8,6 +8,9 @@ import {
   CTableBody,
   CTableCaption,
   CButton,
+  CInputGroup,
+  CFormControl,
+  CForm
 } from "@coreui/react"
 //icons
 import * as MdIcons from "react-icons/md"
@@ -80,23 +83,45 @@ export class Employee extends Component {
       <div>
         {this.renderAlerModal()}
         {this.renderEmployeeModal()}
-        <CButton
-          shape="rounded-pill"
-          color="primary"
-          variant="ghost"
-          className="d-flex justify-content-center align-items-center mb-3"
-          onClick={() =>
-            this.props.addEmployeeModal(
-              !visible,
-              "Add",
-              "",
-              <FaIcons.FaPlus size={20} className="me-2" />,
-            )
-          }
-        >
-          <FaIcons.FaPlus size={20} />
-          <span style={{ marginLeft: "10px" }}>Add Employee Account</span>
-        </CButton>
+        <div className="d-flex justify-content-between mb-2">
+          <CButton
+            shape="rounded-pill"
+            color="primary"
+            variant="ghost"
+            className="d-flex justify-content-center align-items-center mb-3"
+            onClick={() =>
+              this.props.addEmployeeModal(
+                !visible,
+                "Add",
+                "",
+                <FaIcons.FaPlus size={20} className="me-2" />,
+              )
+            }
+          >
+            <FaIcons.FaPlus size={20} />
+            <span style={{ marginLeft: "10px" }}>Add Employee Account</span>
+          </CButton>
+          <CForm className="w-50">
+            <CInputGroup>
+              <CFormControl
+                type="text"
+                id="floatingInput"
+                placeholder="Search"
+                className="p-2"
+              />
+              <CButton
+                type="button"
+                color="info"
+                variant="outline"
+                id="button-addon2"
+                className=""
+              >
+                <FaIcons.FaSearch />
+              </CButton>
+            </CInputGroup>
+          </CForm>
+        </div>
+
         <CTable
           striped
           hover

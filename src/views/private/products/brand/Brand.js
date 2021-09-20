@@ -156,7 +156,7 @@ export class Brand extends Component {
             <FaIcons.FaPlus size={20} />
             <span style={{ marginLeft: "10px" }}>Add Brand</span>
           </CButton>
-          <CForm className="w-25">
+          <CForm className="w-50">
             <CInputGroup>
               <CFormControl
                 type="text"

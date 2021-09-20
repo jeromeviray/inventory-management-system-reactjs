@@ -9,6 +9,9 @@ import {
   CTableBody,
   CTableCaption,
   CButton,
+  CInputGroup,
+  CFormControl,
+  CForm
 } from "@coreui/react"
 //action
 import { getCustomers } from "src/service/apiActions/employeeAction/EmployeeAction"
@@ -53,6 +56,43 @@ export class Customer extends Component {
     console.log(message)
     return (
       <>
+        <div className="d-flex justify-content-end mb-2">
+          {/* <CButton
+            shape="rounded-pill"
+            color="primary"
+            variant="ghost"
+            className="d-flex justify-content-center align-items-center"
+          // onClick={() =>
+          //      this.props.setProductModal(
+          //           !visible,
+          //           "Add",
+          //           <FaIcons.FaPlus size={20} />,
+          //      )
+          // }
+          >
+            <FaIcons.FaPlus size={20} />
+            <span style={{ marginLeft: "10px" }}>Add Product</span>
+          </CButton> */}
+          <CForm className="w-50">
+            <CInputGroup>
+              <CFormControl
+                type="text"
+                id="floatingInput"
+                placeholder="Search"
+                className="p-2"
+              />
+              <CButton
+                type="button"
+                color="info"
+                variant="outline"
+                id="button-addon2"
+                className=""
+              >
+                <FaIcons.FaSearch />
+              </CButton>
+            </CInputGroup>
+          </CForm>
+        </div>
         <CTable
           striped
           hover
