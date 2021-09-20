@@ -38,7 +38,6 @@ import { setProductModal } from "../../../service/apiActions/modalAction/modalAc
 import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { getImage } from "src/service/apiActions/productAction/productAction"
-import { getBranches } from "src/service/apiActions/branchAction/branchAction"
 //api
 import ProductApiService from "src/service/restAPI/ProductApiService"
 
@@ -73,8 +72,6 @@ export class ProductEditorModal extends Component {
     productPrice: 0,
     productDescriptions: "",
     productImage: [],
-    branches: [],
-    branch: ''
   }
   onResetValue = () => {
     this.setState(() => this.productDetail)
@@ -82,13 +79,10 @@ export class ProductEditorModal extends Component {
   componentDidMount() {
     let { accessToken, type } = this.props.credentials;
     let token = type + accessToken;
-    this.props.getBranches(token);
     this.loadImage();
-
   }
   componentDidUpdate = (prevProps, prevState) => {
     this.manageModalVisible(prevProps, prevState);
-    this.manageBranchResponse(prevProps, prevState);
   }
   manageModalVisible = (prevProps, prevState) => {
 
@@ -111,9 +105,6 @@ export class ProductEditorModal extends Component {
           editorState: product.productDescription ?
             EditorState.createWithContent(convertFromRaw(JSON.parse(product.productDescription))) :
             null,
-          branch: product.branch ?
-            product.branch.branch :
-            '',
         })
         this.getImages(product.fileImages);
 
@@ -124,17 +115,6 @@ export class ProductEditorModal extends Component {
         })
       }
 
-    }
-  }
-  manageBranchResponse = (prevProps, prevState) => {
-    if (prevProps.branchResponse !== this.props.branchResponse) {
-      let { status, action, data } = this.props.branchResponse;
-      console.log(this.props.branchResponse)
-      if (status <= 200 && action === "GETBRANCH") {
-        this.setState({
-          branches: data.branch,
-        })
-      }
     }
   }
   async getImages(fileImages) {
@@ -224,7 +204,6 @@ export class ProductEditorModal extends Component {
       productImage,
       action,
       removedImages,
-      branch,
     } = this.state
 
     let accessToken = this.props.credentials.accessToken;
@@ -249,7 +228,6 @@ export class ProductEditorModal extends Component {
         productData.append('productName', productName);
         productData.append('productPrice', productPrice);
         productData.append('productDescription', JSON.stringify(productDescriptions));
-        productData.append('branch', branch);
 
         if (action === "Add") {
           this.saveProduct(productData, token);
@@ -334,18 +312,8 @@ export class ProductEditorModal extends Component {
       message,
       action,
       icon,
-      branch,
-      branches
     } = this.state
 
-
-    let getBranchOption = branches
-      && branches.map((branch, i) => {
-        return (
-
-          <option key={i} value={branch}>{branch}</option>
-        )
-      }, this);
     return (
       <>
         <CModal size="xl" visible={visible} fullscreen="lg" scrollable>
@@ -469,21 +437,6 @@ export class ProductEditorModal extends Component {
                     <CFormLabel htmlFor="floatingInput">Product Price</CFormLabel>
                   </CFormFloating>
                 </CCol>
-                <CCol sm="12" md="6" lg>
-                  <CFormFloating className="mb-3">
-                    <CFormSelect
-                      value={branch}
-                      onChange={this.handleOnChange}
-                      name="branch"
-                      id="floatingSelectBranch"
-                      aria-label="Floating label select example"
-                    >
-                      <option>Choose Branch</option>
-                      {getBranchOption}
-                    </CFormSelect>
-                    <CFormLabel htmlFor="floatingSelectBranch">Branch</CFormLabel>
-                  </CFormFloating>
-                </CCol>
                 <CCol sm="12" md="12" lg="12">
                   <Editor
                     editorState={editorState}
@@ -548,7 +501,6 @@ const mapStateToProps = (state) => {
     messageResponse: state.messageResponse,
     credentials: state.userResponse.credentials,
     productResponse: state.productResponser,
-    branchResponse: state.branchResponse
   }
 }
 export default connect(mapStateToProps, {
@@ -557,5 +509,4 @@ export default connect(mapStateToProps, {
   logout,
   clearMessage,
   getImage,
-  getBranches
 })(ProductEditorModal)

@@ -21,13 +21,13 @@ import { connect } from "react-redux"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import {
   setAlertModal,
-  addEmployeeModal,
+  addAccountModal,
 } from "src/service/apiActions/modalAction/modalAction"
-import { getEmployees } from "src/service/apiActions/employeeAction/EmployeeAction"
+import { getEmployees } from "src/service/apiActions/accountAction/accountAction"
 import { logout } from "src/service/apiActions/userAction/userAction"
 //component modal
 import AlertModal from "src/components/modals/alert/AlertModal"
-import EmployeeModal from "src/components/modals/employee/EmployeeModal"
+import AccountModal from "src/components/modals/account/AccountModal"
 
 export class Employee extends Component {
   state = {
@@ -75,7 +75,7 @@ export class Employee extends Component {
     return <AlertModal />
   }
   renderEmployeeModal() {
-    return <EmployeeModal />
+    return <AccountModal />
   }
   render() {
     let { employee, visible, message } = this.state
@@ -230,7 +230,7 @@ const mapStateToProps = (state) => {
 }
 export default connect(mapStateToProps, {
   setAlertModal,
-  addEmployeeModal,
+  addEmployeeModal: addAccountModal,
   getEmployees,
   logout,
   clearMessage,

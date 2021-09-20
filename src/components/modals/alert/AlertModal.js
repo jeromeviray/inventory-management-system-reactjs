@@ -16,7 +16,7 @@ import { setAlertModal } from 'src/service/apiActions/modalAction/modalAction'
 import { clearMessage } from 'src/service/apiActions/messageAction/messageAction'
 import { logout } from 'src/service/apiActions/userAction/userAction'
 import { deleteBrand } from 'src/service/apiActions/brandAction/brandAction'
-import { deleteEmployee } from 'src/service/apiActions/employeeAction/EmployeeAction'
+import { deleteEmployee } from 'src/service/apiActions/accountAction/accountAction'
 
 export class AlertModal extends Component {
     state = {

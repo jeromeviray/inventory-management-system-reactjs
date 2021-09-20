@@ -21,15 +21,18 @@ import {
   CFormCheck,
 } from "@coreui/react"
 //action
-import { addEmployeeModal } from "src/service/apiActions/modalAction/modalAction"
-import { saveEmployee } from "src/service/apiActions/employeeAction/EmployeeAction"
+import { addAccountModal } from "src/service/apiActions/modalAction/modalAction"
+import {
+  saveEmployee,
+  changePassword,
+} from "src/service/apiActions/accountAction/accountAction"
 import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 //icons
 import * as FaIcons from "react-icons/fa"
 import { connect } from "react-redux"
 
-export class EmployeeModal extends Component {
+export class AccountModal extends Component {
   state = {
     visible: false,
     icon: "",
@@ -41,6 +44,7 @@ export class EmployeeModal extends Component {
     edit: false,
     checked: false,
     changePassword: this.changePasswordState,
+    changePasswordLoading: false,
   }
   employeeState = {
     firstName: "",
@@ -52,9 +56,13 @@ export class EmployeeModal extends Component {
     password: "",
   }
   changePasswordState = {
+    accountId: "",
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
+  }
+  onResetChangePasswordValue = () => {
+    this.setState(() => this.changePasswordState)
   }
   componentDidUpdate(prevProps, prevState) {
     this.manageEmployeeModal(prevProps, prevState)
@@ -82,11 +90,15 @@ export class EmployeeModal extends Component {
           username: account.username,
           role: account.roles[0].roleName,
           email: account.email,
+          accountId: account.id,
         })
       } else {
         this.setState({
           visible: visible,
+          edit: false,
+          checked: false,
         })
+        this.onResetChangePasswordValue()
       }
     }
   }
@@ -187,9 +199,46 @@ export class EmployeeModal extends Component {
     })
   }
   handleOnChangePassword = (event) => {
-    let { currentPassword, newPassword, confirmPassword } = this.state
+    let { currentPassword, newPassword, confirmPassword, accountId } =
+      this.state
+    this.setState({
+      changePasswordLoading: true,
+    })
     event.preventDefault()
-    console.log(currentPassword)
+    this.props
+      .changePassword(accountId, currentPassword, newPassword, confirmPassword)
+      .then(() => {
+        let { status } = this.props.messageResponse
+        if (status === 200) {
+          this.setState({
+            loading: false,
+            toast: this.toastComponent(),
+          })
+        }
+        this.onResetChangePasswordValue()
+        this.setState({
+          changePasswordLoading: false,
+        })
+      })
+      .catch(() => {
+        let { status } = this.props.messageResponse
+
+        if (status > 400 && status <= 403) {
+          this.setState({
+            changePasswordLoading: false,
+            toast: this.toastComponent(),
+          })
+          setInterval(() => {
+            this.props.logout()
+            this.props.clearMessage()
+          }, 1000)
+        } else {
+          this.setState({
+            changePasswordLoading: false,
+            toast: this.toastComponent(),
+          })
+        }
+      })
   }
   render() {
     let {
@@ -211,6 +260,7 @@ export class EmployeeModal extends Component {
       newPassword,
       currentPassword,
       confirmPassword,
+      changePasswordLoading,
     } = this.state
     return (
       <div>
@@ -455,7 +505,14 @@ export class EmployeeModal extends Component {
                   </CFormFloating>
                 </CCol>
                 <CCol sm="12" lg="12" className="mt-3">
-                  <CButton type="submit" form="changePassowrd">
+                  <CButton
+                    type="submit"
+                    form="changePassowrd"
+                    disabled={changePasswordLoading}
+                  >
+                    {changePasswordLoading && (
+                      <CSpinner size="sm" className="ms-1" />
+                    )}
                     Change Password
                   </CButton>
                 </CCol>
@@ -495,8 +552,9 @@ const mapStateToProps = (state) => {
   }
 }
 export default connect(mapStateToProps, {
-  addEmployeeModal,
+  addEmployeeModal: addAccountModal,
   saveEmployee,
   logout,
   clearMessage,
-})(EmployeeModal)
+  changePassword,
+})(AccountModal)

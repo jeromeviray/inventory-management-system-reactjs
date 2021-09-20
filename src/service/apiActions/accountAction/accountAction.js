@@ -1,4 +1,6 @@
 import {
+  CHANGE_PASSWORD,
+  DELETE_ACCOUNT,
   GET_CUSTOMERS,
   GET_EMPLOYEES,
   SAVE_EMPLOYEE,
@@ -144,13 +146,13 @@ export const saveEmployee =
     )
   }
 export const deleteEmployee = (id, token) => async (dispatch) => {
-  return AccountApiService.deleteEmployee(id, token).then(
+  return AccountApiService.deleteAccount(id, token).then(
     (response) => {
       dispatch({
-        type: SAVE_EMPLOYEE,
+        type: DELETE_ACCOUNT,
         payload: {
           status: 200,
-          action: "SAVEEMPLOYEE",
+          action: "DELETEACCOUNT",
           data: {},
         },
       })
@@ -189,3 +191,56 @@ export const deleteEmployee = (id, token) => async (dispatch) => {
     },
   )
 }
+export const changePassword =
+  (id, currentPassword, newPassword, confirmPassword) => async (dispatch) => {
+    return AccountApiService.changePassword(
+      id,
+      currentPassword,
+      newPassword,
+      confirmPassword,
+    ).then(
+      (response) => {
+        dispatch({
+          type: CHANGE_PASSWORD,
+          payload: {
+            status: 200,
+            action: "changepassword",
+            data: {},
+          },
+        })
+        dispatch({
+          type: SET_MESSAGE,
+          payload: {
+            status: 200,
+            data: {
+              message: "Password Change Successfully.",
+            },
+          },
+        })
+        return Promise.resolve()
+      },
+      (error) => {
+        const errorMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString()
+
+        const status =
+          (error.response && error.response.data && error.response.data.code) ||
+          error.toString()
+
+        dispatch({
+          type: SET_MESSAGE,
+          payload: {
+            status: status,
+            data: {
+              message: errorMessage,
+            },
+          },
+        })
+        return Promise.reject()
+      },
+    )
+  }

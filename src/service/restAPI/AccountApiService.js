@@ -1,14 +1,14 @@
 import authHeader from "../auth/authHeader"
 import axios from "./RestApi"
 
-export class EmployeeApiService {
+export class AccountApiService {
   getAccountEmployees(token) {
-    return axios.get("/users/accounts", {
+    return axios.get("/users/account", {
       headers: { Authorization: token },
     })
   }
   getAccountCustomers(token) {
-    return axios.get("/users/accounts/customers", {
+    return axios.get("/users/account/customers", {
       headers: authHeader(),
     })
   }
@@ -24,7 +24,7 @@ export class EmployeeApiService {
     role,
   ) {
     return axios.post(
-      "/users/accounts/create",
+      "/users/account/create",
       {
         firstName,
         lastName,
@@ -39,10 +39,21 @@ export class EmployeeApiService {
       },
     )
   }
-  deleteEmployee(id, token) {
-    return axios.delete("/account/employee/delete/" + id, {
+  deleteAccount(id, token) {
+    return axios.delete("/users/account/delete/" + id, {
       headers: { Authorization: token },
     })
   }
+  changePassword(id, currentPassword, newPassword, confirmPassword) {
+    let password = newPassword;
+    return axios.post("/users/account/change/password", {
+      id,
+      currentPassword,
+      password,
+      confirmPassword
+    }, {
+      headers: authHeader()
+    })
+  }
 }
-export default new EmployeeApiService()
+export default new AccountApiService()

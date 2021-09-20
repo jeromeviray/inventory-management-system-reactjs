@@ -107,7 +107,7 @@ export const addCategoryModal = (visible, action, category, icon) => async (disp
     })
 }
 
-export const addEmployeeModal = (visible, action, employee, icon) => async (dispatch) => {
+export const addAccountModal = (visible, action, employee, icon) => async (dispatch) => {
     dispatch({
         type: ADD_EMPLOYEE_MODAL,
         payload: {

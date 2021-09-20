@@ -1,6 +1,6 @@
-import { GET_CUSTOMERS, GET_EMPLOYEES, SAVE_EMPLOYEE } from "../constants"
+import { CHANGE_PASSWORD, DELETE_ACCOUNT, GET_CUSTOMERS, GET_EMPLOYEES, SAVE_EMPLOYEE } from "../constants"
 
-const employeeReducer = (state = {}, action) => {
+const accoutReducer = (state = {}, action) => {
   const { type, payload } = action
   switch (type) {
     case GET_EMPLOYEES:
@@ -23,8 +23,20 @@ const employeeReducer = (state = {}, action) => {
         action: payload.action,
         data: payload.data,
       }
+    case DELETE_ACCOUNT:
+      return {
+        status: payload.status,
+        action: payload.action,
+        data: payload.data,
+      }
+    case CHANGE_PASSWORD:
+      return {
+        status: payload.status,
+        action: payload.action,
+        data: payload.data,
+      }
     default:
       return state
   }
 }
-export default employeeReducer
+export default accoutReducer

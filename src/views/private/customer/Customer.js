@@ -11,15 +11,22 @@ import {
   CButton,
   CInputGroup,
   CFormControl,
-  CForm
+  CForm,
 } from "@coreui/react"
 //action
-import { getCustomers } from "src/service/apiActions/employeeAction/EmployeeAction"
+import { getCustomers } from "src/service/apiActions/accountAction/accountAction"
 import { logout } from "src/service/apiActions/userAction/userAction"
+import { setAlertModal } from "src/service/apiActions/modalAction/modalAction"
+import { addAccountModal } from "src/service/apiActions/modalAction/modalAction"
+import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 //icons
 import * as MdIcons from "react-icons/md"
 import * as BiIcons from "react-icons/bi"
 import * as FaIcons from "react-icons/fa"
+
+//modal
+import AlertModal from "src/components/modals/alert/AlertModal"
+import AccountModal from "src/components/modals/account/AccountModal"
 
 export class Customer extends Component {
   state = {
@@ -51,28 +58,20 @@ export class Customer extends Component {
       }
     }
   }
+  renderAlerModal() {
+    return <AlertModal />
+  }
+  renderEmployeeModal() {
+    return <AccountModal />
+  }
   render() {
     let { customers, message, visible } = this.state
     console.log(message)
     return (
       <>
+        {this.renderAlerModal()}
+        {this.renderEmployeeModal()}
         <div className="d-flex justify-content-end mb-2">
-          {/* <CButton
-            shape="rounded-pill"
-            color="primary"
-            variant="ghost"
-            className="d-flex justify-content-center align-items-center"
-          // onClick={() =>
-          //      this.props.setProductModal(
-          //           !visible,
-          //           "Add",
-          //           <FaIcons.FaPlus size={20} />,
-          //      )
-          // }
-          >
-            <FaIcons.FaPlus size={20} />
-            <span style={{ marginLeft: "10px" }}>Add Product</span>
-          </CButton> */}
           <CForm className="w-50">
             <CInputGroup>
               <CFormControl
@@ -200,4 +199,7 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
   getCustomers,
   logout,
+  setAlertModal,
+  addEmployeeModal: addAccountModal,
+  clearMessage,
 })(Customer)
