@@ -3,6 +3,7 @@ import { connect } from "react-redux"
 import { withRouter } from "react-router-dom"
 import { getProducts } from "../../../service/apiActions/productAction/productAction"
 import { setProductModal } from "../../../service/apiActions/modalAction/modalAction"
+import { setProductDetailsModal } from "../../../service/apiActions/modalAction/modalAction"
 import { getInventory } from "src/service/apiActions/inventoryAction/inventoryAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import {
@@ -22,9 +23,8 @@ import {
 import * as FaIcons from "react-icons/fa"
 import * as IoIcons from "react-icons/io"
 import Barcode from "react-barcode"
-import { Carousel } from "react-responsive-carousel"
 import { logout } from "src/service/apiActions/userAction/userAction"
-
+import ProductDetialsModal from "src/components/modals/product/ProductDetialsModal"
 const ProductEditorModal = lazy(() =>
   import("../../../components/modals/product/ProductEditorModal.js"),
 )
@@ -61,7 +61,6 @@ class Products extends Component {
   manageModalResponse(prevProps, prevState) {
     if (prevProps.modalVisibleResponse !== this.props.modalVisibleResponse) {
       let response = this.props.modalVisibleResponse
-      console.log(response.action === "close")
       this.setState({
         visible: response.visible,
       })
@@ -113,6 +112,7 @@ class Products extends Component {
   }
   render() {
     let { visible, message, inventory } = this.state
+    console.log(inventory)
 
     const arrowStyles = {
       position: "absolute",
@@ -131,6 +131,7 @@ class Products extends Component {
     return (
       <>
         {this.renderProductEditorModal()}
+        <ProductDetialsModal />
         <div className="d-flex justify-content-between mb-2">
           <CButton
             shape="rounded-pill"
@@ -182,7 +183,7 @@ class Products extends Component {
 
           <CTableHead color="dark">
             <CTableRow className="text-center">
-              <CTableHeaderCell scope="col">Image</CTableHeaderCell>
+              {/* <CTableHeaderCell scope="col">Image</CTableHeaderCell> */}
               <CTableHeaderCell scope="col">Barcode</CTableHeaderCell>
               <CTableHeaderCell scope="col">Name</CTableHeaderCell>
               <CTableHeaderCell scope="col">Price</CTableHeaderCell>
@@ -207,57 +208,7 @@ class Products extends Component {
                 let { product, threshold, totalStock, status } = item
                 return (
                   <CTableRow className="text-center" key={index}>
-                    <CTableDataCell style={{ width: "10%" }}>
-                      <div>
-                        <Carousel
-                          showArrows={true}
-                          infiniteLoop={true}
-                          renderArrowPrev={(onClickHandler, hasPrev, label) =>
-                            hasPrev && (
-                              <button
-                                type="button"
-                                onClick={onClickHandler}
-                                title={label}
-                                className="arrow-style"
-                                style={{ ...arrowStyles, left: 0 }}
-                              >
-                                <IoIcons.IoIosArrowBack
-                                  size="40"
-                                  style={{ color: "white" }}
-                                />
-                              </button>
-                            )
-                          }
-                          renderArrowNext={(onClickHandler, hasNext, label) =>
-                            hasNext && (
-                              <button
-                                type="button"
-                                onClick={onClickHandler}
-                                title={label}
-                                className="arrow-style"
-                                style={{ ...arrowStyles, right: 0 }}
-                              >
-                                <IoIcons.IoIosArrowForward
-                                  size="40"
-                                  style={{ color: "white" }}
-                                />
-                              </button>
-                            )
-                          }
-                        >
-                          {product.fileImages &&
-                            product.fileImages.map((image, index) => {
-                              return (
-                                <div key={index}>
-                                  <img
-                                    src={"/images/products/" + image.fileName}
-                                  />
-                                </div>
-                              )
-                            })}
-                        </Carousel>
-                      </div>
-                    </CTableDataCell>
+
                     <CTableDataCell>
                       <Barcode
                         value={String(product.barcode)}
@@ -275,51 +226,23 @@ class Products extends Component {
                     <CTableDataCell>{threshold}</CTableDataCell>
                     <CTableDataCell>{totalStock}</CTableDataCell>
                     <CTableDataCell>{this.manageStatus(status)}</CTableDataCell>
-                    <CTableDataCell></CTableDataCell>
-                    {/* <CTableDataCell className="text-center w-25" colSpan="1">
+                    <CTableDataCell>
                       <CButton
-                        color="info"
-                        className="me-2"
+                        color="secondary"
                         variant="ghost"
                         size="sm"
-                        onClick={() =>
-                          this.props.addBranchModal(
-                            !visible,
-                            "Edit",
-                            branch,
-                            <MdIcons.MdModeEdit size="20" className="me-2" />,
-                          )
-                        }
+                        onClick={() => this.props.setProductDetailsModal(true, "view", product)}
                       >
-                        <MdIcons.MdModeEdit size="20" />
+                        <FaIcons.FaEye size="20" />
                       </CButton>
-                      {permission === Roles.SUPER_ADMIN ? (
-                        <CButton
-                          color="danger"
-                          className="ms-2"
-                          variant="ghost"
-                          onClick={() =>
-                            this.props.setAlertModal(
-                              !visible,
-                              "DELETEBRANCH",
-                              "BRANCH",
-                              branch.id,
-                            )
-                          }
-                          size="sm"
-                        >
-                          <MdIcons.MdDelete size="20" />
-                        </CButton>
-                      ) : (
-                        <></>
-                      )}
-                    </CTableDataCell> */}
+                    </CTableDataCell>
+
                   </CTableRow>
                 )
               })
             ) : (
               <CTableRow>
-                <CTableDataCell colSpan="4">No data</CTableDataCell>
+                <CTableDataCell colSpan="7">No data</CTableDataCell>
               </CTableRow>
             )}
           </CTableBody>
@@ -346,5 +269,6 @@ export default withRouter(
     logout,
     getInventory,
     clearMessage,
+    setProductDetailsModal
   })(Products),
 )

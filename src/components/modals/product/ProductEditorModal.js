@@ -82,29 +82,30 @@ export class ProductEditorModal extends Component {
   }
   manageModalVisible = (prevProps, prevState) => {
     if (prevProps.modalVisibleResponse !== this.props.modalVisibleResponse) {
-      if (this.props.modalVisibleResponse.action === "Add") {
+      let { action, visible, icon } = this.props.modalVisibleResponse;
+      if (action === "Add") {
         this.setState({
-          visible: this.props.modalVisibleResponse.visible,
-          action: this.props.modalVisibleResponse.action,
-          icon: this.props.modalVisibleResponse.icon,
+          visible: visible,
+          action: action,
+          icon: icon,
           editorState: EditorState.createEmpty(),
         })
-      } else if (this.props.modalVisibleResponse.action === "Edit") {
-        let product = this.props.modalVisibleResponse.product
+      } else if (action === "Edit") {
+        let { product, action, visible, icon } = this.props.modalVisibleResponse
         this.setState({
-          visible: this.props.modalVisibleResponse.visible,
-          action: this.props.modalVisibleResponse.action,
-          icon: this.props.modalVisibleResponse.icon,
+          visible: visible,
+          action: action,
+          icon: icon,
           productName: product.productName,
           productPrice: product.productPrice,
           editorState: product.productDescription
             ? EditorState.createWithContent(
-                convertFromRaw(JSON.parse(product.productDescription)),
-              )
+              convertFromRaw(JSON.parse(product.productDescription)),
+            )
             : null,
         })
         this.getImages(product.fileImages)
-      } else {
+      } else if (action === "close") {
         this.setState({
           visible: this.props.modalVisibleResponse.visible,
         })
@@ -114,7 +115,7 @@ export class ProductEditorModal extends Component {
   async getImages(fileImages) {
     let { accessToken, type } = this.props.credentials
     let token = type + accessToken
-    for (let i = 0; i < fileImages.length; i++) {
+    for (let i = 0;i < fileImages.length;i++) {
       ProductApiService.getImage(fileImages[i].fileName, token)
         .then((response) => {
           // console.log(response.data)
@@ -218,7 +219,7 @@ export class ProductEditorModal extends Component {
           loading: true,
         })
 
-        for (let i = 0; i < productImage.length; i++) {
+        for (let i = 0;i < productImage.length;i++) {
           if (productImage[i].file) {
             productData.append("productImages[]", productImage[i].file)
           }
@@ -288,7 +289,7 @@ export class ProductEditorModal extends Component {
       })
   }
 
-  editProduct = (productData, token) => {}
+  editProduct = (productData, token) => { }
 
   removeImage(index) {
     let { productImage, removedImages } = this.state
@@ -375,9 +376,9 @@ export class ProductEditorModal extends Component {
                         style={
                           isDragging
                             ? {
-                                backgroundColor: "#8E9293",
-                                border: "4px dashed #ffffff",
-                              }
+                              backgroundColor: "#8E9293",
+                              border: "4px dashed #ffffff",
+                            }
                             : undefined
                         }
                         onClick={onImageUpload}
@@ -510,7 +511,7 @@ export class ProductEditorModal extends Component {
                   {icon}
                 </span>
               )}
-              Save {action === "Edit" ? "Changes" : "Product"}
+              {action === "Edit" ? "Update" : "Create"} Product
             </CButton>
           </CModalFooter>
         </CModal>

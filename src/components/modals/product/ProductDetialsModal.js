@@ -21,14 +21,15 @@ import { logout } from 'src/service/apiActions/userAction/userAction';
 import * as FaIcons from 'react-icons/fa'
 import ProductDetails from '../../products/ProductDetails';
 import LoginModal from '../shortcut/LoginModal';
-
+import ProductDescriptions from 'src/components/products/ProductDescriptions';
 export class ProductDetialsModal extends Component {
     state = {
         visible: false,
         product: [],
         loading: false,
         message: '',
-        toast: ''
+        toast: '',
+        footerDisplay: false
     }
     componentDidUpdate(prevProps, prevState) {
         this.manageModalVisibleResponse(prevProps, prevState);
@@ -39,18 +40,26 @@ export class ProductDetialsModal extends Component {
             if (action === "PRODUCTDETAILS") {
                 this.setState({
                     visible: visible,
-                    product: product
+                    product: product,
+                    footerDisplay: true
                 })
             } else if (action === 'close') {
                 this.setState({
                     visible: visible,
-                    product: product
+                    product: product,
+                    footerDisplay: false
+                })
+            } else if (action === "view") {
+                this.setState({
+                    visible: visible,
+                    product: product,
+                    footerDisplay: false
                 })
             }
         }
     }
     handleAddToCart = (event) => {
-        let { product } = this.state;
+        let { product, } = this.state;
         let { isLoggedIn, credentials } = this.props.userResponse;
 
         this.setState({
@@ -115,8 +124,7 @@ export class ProductDetialsModal extends Component {
         )
     }
     render() {
-        let { visible, product, loading, toast } = this.state;
-        console.log(loading);
+        let { visible, product, loading, toast, footerDisplay } = this.state;
         return (
             <>
                 <LoginModal />
@@ -133,33 +141,45 @@ export class ProductDetialsModal extends Component {
                     </CModalHeader>
                     <CModalBody>
                         <ProductDetails product={product} />
-
+                        <div className=" p-2">
+                            <h4 className="mb-4">Product Description</h4>
+                            <ProductDescriptions productDescription={product.productDescription} />
+                        </div>
                     </CModalBody>
                     <CModalFooter>
+                        <div className={footerDisplay ? "d-flex" : "d-none"}>
+                            <CButton
+                                variant="ghost"
+                                color="dark"
+                                className="d-flex justify-content-center align-items-center"
+                            >
+                                <span className='text-black'>View Detailed</span>
+                            </CButton>
+                            <CButton
+                                type="button"
+                                color="info"
+                                className="d-flex justify-content-center align-items-center"
+                                onClick={this.handleAddToCart}
+                                disabled={loading}
+
+                            >
+                                {loading ? <CSpinner size="sm" /> :
+                                    <span className="d-flex align-items-center login-icon me-2">
+                                        <FaIcons.FaCartPlus />
+
+                                    </span>
+                                }
+                                <span className="ms-2">Add To Cart</span>
+                            </CButton>
+                        </div>
                         <CButton
+                            className={footerDisplay ? "d-none" : "d-block"}
+                            color="secondary"
                             variant="ghost"
-                            color="dark"
-                            className="d-flex justify-content-center align-items-center"
+                            onClick={() => this.props.setProductDetailsModal(false, 'close', '')}
                         >
-                            <span className='text-black'>View Detailed</span>
+                            Close
                         </CButton>
-                        <CButton
-                            type="button"
-                            color="info"
-                            className="d-flex justify-content-center align-items-center"
-                            onClick={this.handleAddToCart}
-                            disabled={loading}
-
-                        >
-                            {loading ? <CSpinner size="sm" /> :
-                                <span className="d-flex align-items-center login-icon me-2">
-                                    <FaIcons.FaCartPlus />
-
-                                </span>
-                            }
-                            <span className="ms-2">Add To Cart</span>
-                        </CButton>
-                        {/* FaCartPlus, FaShoppingCart */}
                     </CModalFooter>
                 </CModal>
             </>
