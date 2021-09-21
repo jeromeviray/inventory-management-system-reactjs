@@ -15,6 +15,7 @@ import cartReducer from './cartReducer'
 import addressReducer from './addressReducer'
 import paymentReducer from './paymentReducer'
 import inventoryReducer from './inventoryReducer'
+import supplierReducer from './supplierReducer'
 
 
 export default combineReducers({
@@ -50,4 +51,6 @@ export default combineReducers({
   paymentMethodResponse: paymentReducer,
   //inventory
   inventoryResponse: inventoryReducer,
+  // supplier
+  supplierResponse: supplierReducer
 })

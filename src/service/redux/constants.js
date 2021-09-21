@@ -31,6 +31,7 @@ export const ADD_EMPLOYEE_MODAL = "ADD_EMPLOYEE_MODAL"
 export const SET_PRODUCT_DETAILS_MODAL = "SET_PRODUCT_DETAILS_MODAL"
 export const LOGIN_MODAL = "LOGIN_MODAL"
 export const SET_ADDRESS_MODAL = "SET_ADDRESS_MODAL"
+export const SET_SUPPLIER_MODAL = "SET_SUPPLIER_MODAL"
 
 // endpoint constalnts
 export const API_BASE_URL = "http://localhost:4480"
@@ -101,3 +102,10 @@ export const GET_PAYMENT_METHOD = "GET_PAYMENT_METHOD"
 
 //inventory
 export const GET_INVENTORY = "GET_INVENTORY"
+
+// supplier
+export const CREATE_SUPPLIER = "CREATE_SUPPLIER"
+export const UPDATE_SUPPLIER = "UPDATE_SUPPLIER"
+export const DELETE_SUPPLIER = "DELETE_SUPPLIER"
+export const GET_SUPPLIERS = "GET_SUPPLIERS"
+export const GET_SUPPLIER = "GET_SUPPLIER"

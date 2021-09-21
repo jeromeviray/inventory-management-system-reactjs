@@ -33,8 +33,12 @@ const Brand = React.lazy(() =>
 const Category = React.lazy(() =>
   import("../../views/private/products/category/Category"),
 )
-const IncomingPurchases = React.lazy(() => import('src/views/private/incoming/IncomingPurchases'))
-const OutgoingOrders = React.lazy(() => import('src/views/private/outgoing/OutgoingOrders'))
+const IncomingPurchases = React.lazy(() =>
+  import("src/views/private/incoming/IncomingPurchases"),
+)
+const Suppliers = React.lazy(() =>
+  import("src/views/private/supplier/Supplier"),
+)
 // public routes
 const Home = React.lazy(() => import("../../views/common/public/home/Home"))
 const DiscoverProducts = React.lazy(() =>
@@ -128,17 +132,17 @@ export const routes = [
     permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
   },
   {
-    path: "/app/purchases",
-    name: "Incoming Purchases",
+    path: "/app/supply",
+    name: "Incoming supply",
     component: IncomingPurchases,
     permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
   },
-  // {
-  //   path: "/app/outgoingorders",
-  //   name: "Outgoing Orders",
-  //   component: OutgoingOrders,
-  //   permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
-  // },
+  {
+    path: "/app/suppliers",
+    name: "Suppliers",
+    component: Suppliers,
+    permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
+  },
   {
     path: "/app/employee",
     name: "Employee Accounts",
