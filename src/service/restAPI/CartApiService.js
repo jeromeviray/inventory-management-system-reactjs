@@ -15,6 +15,7 @@ export class CartApiService {
         })
     }
     removeItem(id) {
+        console.log(id);
         return axios.delete("/cart/item/remove/" + id, {
             headers: authHeader()
         });

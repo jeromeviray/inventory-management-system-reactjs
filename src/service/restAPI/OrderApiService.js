@@ -18,7 +18,7 @@ export class OrderApiService {
         })
     }
     placeOrderDetails(orderDetails) {
-        return axios.post("/orders/place", {
+        return axios.post("/orders/checkout", {
             customerAddressId: orderDetails.addressId,
             paymentId: orderDetails.paymentMethodId,
             cartItems: orderDetails.items

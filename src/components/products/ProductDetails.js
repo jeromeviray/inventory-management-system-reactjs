@@ -82,10 +82,10 @@ export class ProductDetails extends Component {
                                     <span className="me-3 ">Brand</span>
                                     <span className="me-3 ">brand naem</span>
                                 </div>
-                                <div className="mt-2 mb-4 text-black-50 " style={{ ...fontStyle }} >
+                                {/* <div className="mt-2 mb-4 text-black-50 " style={{ ...fontStyle }} >
                                     <span className="me-3 ">Branch</span>
                                     <span className="me-3 ">{product.branch.branch}</span>
-                                </div>
+                                </div> */}
                                 <div className="mt-3 mb-3  d-flex align-items-center justify-content-between">
                                     <h5 className="peso-price">&#8369;{product.productPrice.toFixed(2)}</h5>
                                     <span style={{ ...fontStyle }} className="peso-price">21k <span className="text-muted">sold</span></span>
