@@ -16,6 +16,7 @@ import addressReducer from './addressReducer'
 import paymentReducer from './paymentReducer'
 import inventoryReducer from './inventoryReducer'
 import supplierReducer from './supplierReducer'
+import incomingSupplyReducer from './incomingSupplyReducer'
 
 
 export default combineReducers({
@@ -52,5 +53,7 @@ export default combineReducers({
   //inventory
   inventoryResponse: inventoryReducer,
   // supplier
-  supplierResponse: supplierReducer
+  supplierResponse: supplierReducer,
+  //incoming supplies
+  incomingSupplyResponse: incomingSupplyReducer
 })
