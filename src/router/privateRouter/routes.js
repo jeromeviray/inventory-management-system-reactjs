@@ -33,8 +33,11 @@ const Brand = React.lazy(() =>
 const Category = React.lazy(() =>
   import("../../views/private/products/category/Category"),
 )
-const IncomingPurchases = React.lazy(() =>
+const IncomingSupplies = React.lazy(() =>
   import("src/views/private/incoming/IncomingSupplies"),
+)
+const IncomingSuppliesDetails = React.lazy(() =>
+  import("src/views/private/incoming/IncomingSuppliesDetails"),
 )
 const Suppliers = React.lazy(() =>
   import("src/views/private/supplier/Supplier"),
@@ -132,9 +135,16 @@ export const routes = [
     permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
   },
   {
+    exact: true,
     path: "/app/supply",
     name: "Incoming supply",
-    component: IncomingPurchases,
+    component: IncomingSupplies,
+    permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
+  },
+  {
+    path: "/app/supply/:id",
+    name: "Details",
+    component: IncomingSuppliesDetails,
     permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
   },
   {
