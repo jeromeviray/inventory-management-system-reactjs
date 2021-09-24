@@ -128,7 +128,7 @@ export class OrderDetails extends Component {
                                 content={() => this.componentRef}
                             />
                         </div>
-                        <div ref={(el) => (this.componentRef = el)}>
+                        <div ref={(el) => (this.componentRef = el)} className="ps-4 pe-4 pt-3">
                             <CCard className="border-envelope">
                                 <CCardBody>
                                     <h5 className="text-black-50">Customer Address</h5>

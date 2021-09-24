@@ -15,6 +15,9 @@ import { connect } from 'react-redux';
 import { logout } from 'src/service/apiActions/userAction/userAction';
 import { clearMessage } from 'src/service/apiActions/messageAction/messageAction';
 import { getIncomingSupplies } from 'src/service/apiActions/incomingSupplyAction/incomingSupplyAction';
+import { setSupplyModal } from 'src/service/apiActions/modalAction/modalAction';
+//mdoal
+import SupplyModal from 'src/components/modals/supply/SupplyModal';
 
 // lazy fetch
 const IncomingSuppliesByShipStatus = React.lazy(() => import('src/components/incomingSupplyTabContent/ship/IncomingSuppliesByPendingStatus'))
@@ -22,7 +25,8 @@ export class IncomingSupplies extends Component {
      state = {
           incomingSupplies: [],
           message: '',
-          activeKey: 1
+          activeKey: 1,
+          visible: false
      }
      componentDidMount() {
           this.props.getIncomingSupplies().catch(() => {
@@ -50,7 +54,7 @@ export class IncomingSupplies extends Component {
           }
      }
      render() {
-          let { incomingSupplies, message, activeKey } = this.state;
+          let { activeKey, visible } = this.state;
           const tabStyle = {
 
                margin: "10px 0",
@@ -59,22 +63,24 @@ export class IncomingSupplies extends Component {
           }
           return (
                <>
+                    <SupplyModal />
                     <div className="d-flex justify-content-between mb-4">
                          <CButton
                               shape="rounded-pill"
                               color="primary"
                               variant="ghost"
                               className="d-flex justify-content-center align-items-center"
-                         // onClick={() =>
-                         //      this.props.setProductModal(
-                         //           !visible,
-                         //           "Add",
-                         //           <FaIcons.FaPlus size={20} />,
-                         //      )
-                         // }
+                              onClick={() =>
+                                   this.props.setSupplyModal(
+                                        !visible,
+                                        "Add",
+                                        '',
+                                        <FaIcons.FaPlus size={20} />,
+                                   )
+                              }
                          >
                               <FaIcons.FaPlus size={20} />
-                              <span style={{ marginLeft: "10px" }}>Create Incoming Supply</span>
+                              <span style={{ marginLeft: "10px" }}>Add Incoming Supply</span>
                          </CButton>
                          <CForm className="w-50">
                               <CInputGroup>
@@ -158,5 +164,6 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
      getIncomingSupplies,
      logout,
-     clearMessage
+     clearMessage,
+     setSupplyModal
 })(IncomingSupplies)

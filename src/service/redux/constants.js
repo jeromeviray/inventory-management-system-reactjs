@@ -32,6 +32,7 @@ export const SET_PRODUCT_DETAILS_MODAL = "SET_PRODUCT_DETAILS_MODAL"
 export const LOGIN_MODAL = "LOGIN_MODAL"
 export const SET_ADDRESS_MODAL = "SET_ADDRESS_MODAL"
 export const SET_SUPPLIER_MODAL = "SET_SUPPLIER_MODAL"
+export const SET_SUPPLY_MODAL = "SET_SUPPLY_MODAL"
 
 // endpoint constalnts
 export const API_BASE_URL = "http://localhost:4480"

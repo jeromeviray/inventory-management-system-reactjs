@@ -25,8 +25,10 @@ export class IncomingSuppliesDetails extends Component {
     message: "",
     hasError: false,
     incomingSupply: [],
+    status: ''
   }
   componentDidMount() {
+
     let supplyId = this.props.location.state
     this.props.getIncomingSupply(supplyId).catch(() => {
       let { status, data } = this.props.messageResponse
@@ -39,6 +41,7 @@ export class IncomingSuppliesDetails extends Component {
       this.setState({
         message: data.message,
         hasError: true,
+        status: status
       })
     })
   }
@@ -58,7 +61,7 @@ export class IncomingSuppliesDetails extends Component {
     }
   }
   render() {
-    let { message, hasError, incomingSupply } = this.state
+    let { message, hasError, incomingSupply, status } = this.state
     let {
       incomingSupplyItems,
       deliveredAt,
@@ -67,7 +70,7 @@ export class IncomingSuppliesDetails extends Component {
       incomingSupplyStatus,
       supplier,
       updatedAt,
-    } = incomingSupply
+    } = incomingSupply;
     const fontStyle = {
       fontSize: "14px",
       fontWeight: "500",
@@ -91,106 +94,109 @@ export class IncomingSuppliesDetails extends Component {
             </div>
           </div>
         )}
-        <div className="d-flex align-items-end flex-row-reverse m-2">
-          <ReactToPrint
-            trigger={() => (
-              <CButton color="info" className="d-flex align-items-center">
-                <IoIcons.IoPrintOutline size={20} />
-              </CButton>
-            )}
-            content={() => this.componentRef}
-          />
-        </div>
-        {incomingSupply && (
-          <div ref={(el) => (this.componentRef = el)} className="ps-4 pe-4">
-            {/*  */}
-            <CCallout color="info">
-              <div className="d-flex flex-column p-3">
-                <div className="d-flex  align-items-center ">
-                  <span style={fontStyle} className="text-black-50">
-                    Supply Name:
-                  </span>
-                  <h6 className="ps-2 m-0">{supplier && supplier.name}</h6>
-                </div>
-                <div style={fontStyle} className="mt-2">
-                  <span className="text-black-50 me-2">Purchased Date:</span>
-                  <span style={{ fontWeight: "500" }}>{purchasedAt}</span>
-                </div>
+        <div className={hasError ? "d-none" : "d-block"}>
+          <div className="d-flex align-items-end flex-row-reverse m-2">
+            <ReactToPrint
+              trigger={() => (
+                <CButton color="info" className="d-flex align-items-center">
+                  <IoIcons.IoPrintOutline size={20} />
+                </CButton>
+              )}
+              content={() => this.componentRef}
+            />
+          </div>
+          {incomingSupply && (
+            <div ref={(el) => (this.componentRef = el)} className="ps-4 pe-4 ">
+              {/*  */}
+              <CCallout color="info">
+                <div className="d-flex flex-column p-3">
+                  <div className="d-flex  align-items-center ">
+                    <span style={fontStyle} className="text-black-50">
+                      Supply Name:
+                    </span>
+                    <h6 className="ps-2 m-0">{supplier && supplier.name}</h6>
+                  </div>
+                  <div style={fontStyle} className="mt-2">
+                    <span className="text-black-50 me-2">Purchased Date:</span>
+                    <span style={{ fontWeight: "500" }}>{purchasedAt}</span>
+                  </div>
 
-                <div style={fontStyle} className="mt-2">
-                  <span style={fontStyle} className="text-black-50 me-2">
-                    Last Update:
-                  </span>
-                  <span style={{ fontWeight: "500" }}>{updatedAt}</span>
-                </div>
-                {deliveredAt && (
                   <div style={fontStyle} className="mt-2">
                     <span style={fontStyle} className="text-black-50 me-2">
-                      Delivered Date:
+                      Last Update:
+                    </span>
+                    <span style={{ fontWeight: "500" }}>{updatedAt}</span>
+                  </div>
+                  {deliveredAt && (
+                    <div style={fontStyle} className="mt-2">
+                      <span style={fontStyle} className="text-black-50 me-2">
+                        Delivered Date:
+                      </span>
+                      <span className="text-danger" style={{ fontWeight: "500" }}>
+                        {deliveredAt}
+                      </span>
+                    </div>
+                  )}
+                  <div style={fontStyle} className="mt-2">
+                    <span style={fontStyle} className="text-black-50 me-2">
+                      Supply Status:
                     </span>
                     <span className="text-danger" style={{ fontWeight: "500" }}>
-                      {deliveredAt}
+                      {incomingSupplyStatus}
                     </span>
                   </div>
-                )}
-                <div style={fontStyle} className="mt-2">
-                  <span style={fontStyle} className="text-black-50 me-2">
-                    Supply Status:
-                  </span>
-                  <span className="text-danger" style={{ fontWeight: "500" }}>
-                    {incomingSupplyStatus}
-                  </span>
                 </div>
-              </div>
-            </CCallout>
-            <h5 className="m-3">Product Items</h5>
-            <CTable
-              striped
-              hover
-              className="shadow-sm "
-              responsive="md"
-              bordered
-              align="middle"
-            >
-              <CTableCaption>
-                List of Brand:{" "}
-                <b>{incomingSupplyItems && incomingSupplyItems.length}</b>
-              </CTableCaption>
-              <CTableHead color="dark">
-                <CTableRow className="text-center">
-                  <CTableHeaderCell scope="col">Product Name</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">
-                    Product Barcode
-                  </CTableHeaderCell>
-                  <CTableHeaderCell scope="col">
-                    Qunatity Recieved
-                  </CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableBody className="text-center" color="light">
-                {incomingSupplyItems &&
-                  incomingSupplyItems.map((item, index) => {
-                    return (
-                      <CTableRow className="text-center" key={index}>
-                        <CTableDataCell>{item.product.name}</CTableDataCell>
-                        <CTableDataCell>
-                          <Barcode
-                            value={String(item.product.barcode)}
-                            height={50}
-                            width={1}
-                            fontSize={14}
-                            margin={7}
-                            background="#f5f5f548"
-                          />
-                        </CTableDataCell>
-                        <CTableDataCell>{item.numberReceived}</CTableDataCell>
-                      </CTableRow>
-                    )
-                  })}
-              </CTableBody>
-            </CTable>
-          </div>
-        )}
+              </CCallout>
+              <h5 className="m-3">Product Items</h5>
+              <CTable
+                striped
+                hover
+                className="shadow-sm "
+                responsive="md"
+                bordered
+                align="middle"
+              >
+                <CTableCaption>
+                  List of Products:{" "}
+                  <b>{incomingSupplyItems && incomingSupplyItems.length}</b>
+                </CTableCaption>
+                <CTableHead color="dark">
+                  <CTableRow className="text-center">
+                    <CTableHeaderCell scope="col">Product Name</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">
+                      Product Barcode
+                    </CTableHeaderCell>
+                    <CTableHeaderCell scope="col">
+                      Qunatity Recieved
+                    </CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody className="text-center" color="light">
+                  {incomingSupplyItems &&
+                    incomingSupplyItems.map((item, index) => {
+                      return (
+                        <CTableRow className="text-center" key={index}>
+                          <CTableDataCell>{item.product.name}</CTableDataCell>
+                          <CTableDataCell>
+                            <Barcode
+                              value={String(item.product.barcode)}
+                              height={50}
+                              width={1}
+                              fontSize={14}
+                              margin={7}
+                              background="#f5f5f548"
+                            />
+                          </CTableDataCell>
+                          <CTableDataCell>{item.numberReceived}</CTableDataCell>
+                        </CTableRow>
+                      )
+                    })}
+                </CTableBody>
+              </CTable>
+            </div>
+          )}
+        </div>
+
       </>
     )
   }

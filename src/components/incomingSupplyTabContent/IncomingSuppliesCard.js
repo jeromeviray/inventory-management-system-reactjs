@@ -92,55 +92,6 @@ export class IncomingSuppliesCard extends Component {
                   </div>
                 </CCardHeader>
                 <CCardBody>
-                  {/* <CContainer>
-                                        {incomingSupplyItems && incomingSupplyItems.slice(0, 5).map((item, index) => {
-                                            return (
-                                                <CRow className="mb-3" key={index}>
-                                                    <CCard>
-                                                        <CCardBody>
-                                                            <div className="d-flex align-items-start">
-                                                                <CImage rounded
-                                                                    src={"/images/products/" + orderItem.product.fileImages[0].fileName}
-                                                                    width={100} height={100}
-                                                                />
-                                                                <div className="ms-2  w-100">
-                                                                    <CRow className="d-flex justify-content-between">
-                                                                        <CCol
-                                                                            className="text-dark d-flex flex-column align-items-center"
-                                                                        >
-                                                                            <span
-                                                                                style={fontStyle}
-                                                                                className="text-black-50"
-                                                                            >
-                                                                                Product Name
-                                                                            </span>
-                                                                            <span className="pt-3">
-                                                                                {item.product.name}
-                                                                            </span>
-                                                                        </CCol>
-                                                                        <CCol
-                                                                            className="text-dark d-flex flex-column align-items-center"
-                                                                        >
-                                                                            <span
-                                                                                style={fontStyle}
-                                                                                className="text-black-50"
-                                                                            >
-                                                                                Quantity Receieved
-                                                                            </span>
-                                                                            <span className="pt-3">
-                                                                                {item.numberReceived}
-                                                                            </span>
-                                                                        </CCol>
-                                                                    </CRow>
-                                                                </div>
-                                                            </div>
-
-                                                        </CCardBody>
-                                                    </CCard>
-                                                </CRow>
-                                            )
-                                        })}
-                                    </CContainer> */}
                   <CTable
                     striped
                     hover
