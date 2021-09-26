@@ -22,7 +22,10 @@ import {
 } from "@coreui/react"
 import * as FaIcons from "react-icons/fa"
 import * as IoIcons from "react-icons/io"
+
 import Barcode from "react-barcode"
+import ReactPaginate from 'react-paginate';
+
 import { logout } from "src/service/apiActions/userAction/userAction"
 import ProductDetialsModal from "src/components/modals/product/ProductDetialsModal"
 const ProductEditorModal = lazy(() =>
@@ -34,30 +37,41 @@ class Products extends Component {
     products: [],
     keyword: "",
     visible: false,
-    inventory: [],
+    inventory: {
+      data: [],
+      totalPages: 0
+    },
+    page: 0,
+    limit: 10,
+    query: ""
   }
 
   componentDidMount() {
-    this.getInventory()
+    const { page, limit, query } = this.state;
+    this.getInventory(page, limit, query)
   }
-  getInventory = () => {
-    this.props.getInventory().catch(() => {
+
+  getInventory(page, limit, query) {
+    this.props.getInventory(query, page, limit).catch(() => {
       let { status, data } = this.props.messageResponse
       if (status > 400 && status <= 403) {
         setInterval(() => {
           this.props.logout()
           this.props.clearMessage()
         }, 1000)
+        this.setState({
+          message: data.message,
+        })
       }
-      this.setState({
-        message: data.message,
-      })
+
     })
   }
+
   componentDidUpdate(prevProps, prevState) {
     this.manageInventoryResponse(prevProps, prevState)
     this.manageModalResponse(prevProps, prevProps)
   }
+
   manageModalResponse(prevProps, prevState) {
     if (prevProps.modalVisibleResponse !== this.props.modalVisibleResponse) {
       let response = this.props.modalVisibleResponse
@@ -65,7 +79,8 @@ class Products extends Component {
         visible: response.visible,
       })
       if (response.action === "close") {
-        this.getInventory()
+        const { page, limit, query } = this.state;
+        this.getInventory(page, limit, query)
       }
     }
   }
@@ -110,6 +125,20 @@ class Products extends Component {
         )
     }
   }
+
+  handleSearch = (event) => {
+    const { page, limit } = this.state;
+    this.props.getInventory(event.target.value, page, limit);
+    this.setState({ query: event.target.value });
+  };
+
+  handlePageClick = (data) => {
+    let page = data.selected;
+    this.setState({ page: page });
+    const { limit, query } = this.state;
+    this.props.getInventory(query, page, limit);
+  };
+
   render() {
     let { visible, message, inventory } = this.state
     console.log(inventory)
@@ -156,6 +185,8 @@ class Products extends Component {
                 id="floatingInput"
                 placeholder="Search"
                 className="p-2"
+                value={this.state.query}
+                onChange={this.handleSearch}
               />
               <CButton
                 type="button"
@@ -178,7 +209,7 @@ class Products extends Component {
           align="middle"
         >
           <CTableCaption>
-            List of Brand: <b>{inventory.length}</b>
+            List of Brand: <b>{inventory.totalItems}</b>
           </CTableCaption>
 
           <CTableHead color="dark">
@@ -203,8 +234,8 @@ class Products extends Component {
                 </CTableDataCell>
               </CTableRow>
             )}
-            {inventory.length > 0 ? (
-              inventory.map((item, index) => {
+            {inventory.data.length > 0 ? (
+              inventory.data.map((item, index) => {
                 let { product, threshold, totalStock, status } = item
                 return (
                   <CTableRow className="text-center" key={index}>
@@ -247,6 +278,18 @@ class Products extends Component {
             )}
           </CTableBody>
         </CTable>
+        <ReactPaginate
+          previousLabel={'previous'}
+          nextLabel={'next'}
+          breakLabel={'...'}
+          breakClassName={'break-me'}
+          pageCount={inventory.totalPages}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          onPageChange={this.handlePageClick}
+          containerClassName={'pagination'}
+          activeClassName={'active'}
+        />
       </>
     )
   }

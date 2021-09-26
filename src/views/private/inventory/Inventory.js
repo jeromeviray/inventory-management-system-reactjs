@@ -18,13 +18,19 @@ import { logout } from 'src/service/apiActions/userAction/userAction'
 import { clearMessage } from 'src/service/apiActions/messageAction/messageAction'
 // barcode
 import Barcode from "react-barcode"
+import ReactPaginate from 'react-paginate';
+
 export class Inventory extends Component {
     state = {
         message: '',
-        inventory: []
+        inventory: [],
+        page: 0,
+        limit: 10,
+        query: ""
     }
     componentDidMount() {
-        this.props.getInventory().catch(() => {
+        const { page, limit, query } = this.state;
+        this.props.getInventory(query, page, limit).catch(() => {
             let { status, data } = this.props.messageResponse;
             if (status > 400 && status <= 403) {
                 setInterval(() => {
@@ -46,7 +52,7 @@ export class Inventory extends Component {
             console.log(data);
             if (status === 200 && action === 'GETINVENTORY') {
                 this.setState({
-                    inventory: data.inventory
+                    inventory: data.inventory.data
                 })
             }
         }
@@ -70,6 +76,22 @@ export class Inventory extends Component {
                 return <CBadge color="danger" shape="rounded-pill">{status}</CBadge>
         }
     }
+
+    handleSearch = (query) => {
+        this.setState({ query: query }, () => {
+            const { page, limit, query } = this.state;
+            this.props.getInventory(query, page, limit);
+        });
+    };
+
+    handlePageClick = (data) => {
+        let page = data.selected;
+        this.setState({ page: page }, () => {
+            const { page, limit, query } = this.state;
+            this.props.getInventory(query, page, limit);
+        });
+    };
+
     render() {
         let { inventory, message } = this.state;
         const barcodeStyle = {
@@ -154,6 +176,18 @@ export class Inventory extends Component {
                         )}
                     </CTableBody>
                 </CTable>
+                <ReactPaginate
+                    previousLabel={'previous'}
+                    nextLabel={'next'}
+                    breakLabel={'...'}
+                    breakClassName={'break-me'}
+                    pageCount={inventory.totalPages}
+                    marginPagesDisplayed={2}
+                    pageRangeDisplayed={5}
+                    onPageChange={this.handlePageClick}
+                    containerClassName={'pagination'}
+                    activeClassName={'active'}
+                />
             </>
         )
     }

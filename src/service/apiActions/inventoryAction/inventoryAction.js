@@ -2,8 +2,8 @@ import { SET_MESSAGE } from "src/constants/userConstants";
 import { GET_INVENTORY } from "src/service/redux/constants";
 import InventoryApiService from "src/service/restAPI/InventoryApiService"
 
-export const getInventory = () => async (dispatch) => {
-    return InventoryApiService.getInventory().then(
+export const getInventory = (query = "", page = 0, limit = 10) => async (dispatch) => {
+    return InventoryApiService.getInventory(query, page, limit).then(
         (response) => {
             dispatch({
                 type: GET_INVENTORY,
