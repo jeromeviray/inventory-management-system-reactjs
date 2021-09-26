@@ -11,7 +11,8 @@ const messageReducer = (state = initialState, action) => {
                 action: type,
                 status: payload.status,
                 data: {
-                    message: payload.data.message
+                    message: payload.data.message,
+                    order: payload.data.order,
                 }
             };
 

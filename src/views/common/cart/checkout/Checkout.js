@@ -22,6 +22,9 @@ import { getCart, removeCartItem } from 'src/service/apiActions/cartAction/cartA
 import { logout } from 'src/service/apiActions/userAction/userAction';
 import { clearMessage } from 'src/service/apiActions/messageAction/messageAction';
 import { getOrderItems } from 'src/service/apiActions/orderAction/orderAction';
+
+import { NO_IMAGE_BASE64 } from "src/service/redux/constants"
+
 //icon
 // import * as IoIcons from "react-icons/io5";
 
@@ -201,7 +204,7 @@ export class Checkout extends Component {
                                                         />
                                                     </div>
                                                     <CImage rounded
-                                                        src={"/images/products/" + item.product.fileImages[0].fileName}
+                                                        src={item.product.fileImages.length > 0 ? "/images/products/" + item.product.fileImages[0].fileName : NO_IMAGE_BASE64}
                                                         width={100} height={100}
                                                     />
                                                     <div className="ms-2  w-100">

@@ -20,10 +20,13 @@ export class Home extends Component {
     componentDidMount() {
         this.props.getDiscoverProducts().catch(() => {
             let failMessage = this.props.messageResponse
-            this.setState({
-                loading: false,
-                message: failMessage.data.message
-            })
+            console.log(failMessage)
+            if (failMessage.data && failMessage.data.message) {
+                this.setState({
+                    loading: false,
+                    message: failMessage.data.message
+                })
+            }
         })
     }
 
