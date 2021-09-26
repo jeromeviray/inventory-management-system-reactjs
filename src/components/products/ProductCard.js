@@ -9,6 +9,7 @@ import ProductEditorModal from "../modals/product/ProductEditorModal"
 import { getProduct, getProductDetails } from "src/service/apiActions/productAction/productAction"
 import { logout } from "src/service/apiActions/userAction/userAction"
 
+import { NO_IMAGE_BASE64 } from "src/service/redux/constants"
 
 export class ProductCard extends Component {
   state = {
@@ -110,7 +111,7 @@ export class ProductCard extends Component {
                   <img
                     className="border"
                     variant="top"
-                    src={"/images/products/" + fileImage[0].fileName}
+                    src={fileImage.length > 0 ? "/images/products/" + fileImage[0].fileName : NO_IMAGE_BASE64}
                     alt="product"
                   />
                 </div>
@@ -120,7 +121,7 @@ export class ProductCard extends Component {
                 <img
                   className="border"
                   variant="top"
-                  src={"/images/products/" + fileImage[0].fileName}
+                  src={fileImage.length > 0 ? "/images/products/" + fileImage[0].fileName : NO_IMAGE_BASE64}
                   alt="product"
                 />
               </div>
