@@ -1,23 +1,23 @@
-import { combineReducers } from 'redux'
-import { responsiveStateReducer } from 'redux-responsive'
-import productReducer from './productReducer'
-import carouselReducer from './carouselReducer'
-import changeStateReducer from './changeStateReducer'
-import modalVisibilityReducer from './modalVisibilityReducer'
-import userReducer from './userReducer'
-import messageReducer from './messageReducer'
-import routesReducer from './routesReducer'
-import branchReducer from './branchReducer'
-import brandReducer from './brandReducer'
-import orderReducer from './orderReducer'
-import accountReducer from './accountReducer'
-import cartReducer from './cartReducer'
-import addressReducer from './addressReducer'
-import paymentReducer from './paymentReducer'
-import inventoryReducer from './inventoryReducer'
-import supplierReducer from './supplierReducer'
-import incomingSupplyReducer from './incomingSupplyReducer'
-
+import { combineReducers } from "redux"
+import { responsiveStateReducer } from "redux-responsive"
+import productReducer from "./productReducer"
+import carouselReducer from "./carouselReducer"
+import changeStateReducer from "./changeStateReducer"
+import modalVisibilityReducer from "./modalVisibilityReducer"
+import userReducer from "./userReducer"
+import messageReducer from "./messageReducer"
+import routesReducer from "./routesReducer"
+import branchReducer from "./branchReducer"
+import brandReducer from "./brandReducer"
+import orderReducer from "./orderReducer"
+import accountReducer from "./accountReducer"
+import cartReducer from "./cartReducer"
+import addressReducer from "./addressReducer"
+import paymentReducer from "./paymentReducer"
+import inventoryReducer from "./inventoryReducer"
+import supplierReducer from "./supplierReducer"
+import incomingSupplyReducer from "./incomingSupplyReducer"
+import categoryReducer from "./categoryReducer"
 
 export default combineReducers({
   //modals
@@ -55,5 +55,7 @@ export default combineReducers({
   // supplier
   supplierResponse: supplierReducer,
   //incoming supplies
-  incomingSupplyResponse: incomingSupplyReducer
+  incomingSupplyResponse: incomingSupplyReducer,
+  //category
+  categoryResponse: categoryReducer,
 })
