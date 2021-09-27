@@ -16,6 +16,7 @@ export class PopularProducts extends Component {
     componentDidUpdate(prevProps, prevState) {
         this.manageProductResponse(prevProps, prevState);
     }
+
     manageProductResponse = (prevProps, prevState) => {
         if (prevProps.productResponser !== this.props.productResponser) {
             let { status, action, data } = this.props.productResponser;
@@ -28,12 +29,10 @@ export class PopularProducts extends Component {
     }
     render() {
         let { message, products } = this.state;
+        console.log(products)
         return (
             <>
                 {/* <ProductDetialsModal /> */}
-
-
-
                 <CRow className=" pt-2 pb-2 mb-4">
                     <h4>Popular Product</h4>
                     {products.map((product, index) => {

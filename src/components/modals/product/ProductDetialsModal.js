@@ -127,61 +127,65 @@ export class ProductDetialsModal extends Component {
         let { visible, product, loading, toast, footerDisplay } = this.state;
         return (
             <>
-                <LoginModal />
-                <CToaster push={toast} placement="top-end" />
-                <CModal
-                    backdrop={false}
-                    scrollable={true}
-                    size="xl"
-                    visible={visible}
-                    onDismiss={() => this.props.setProductDetailsModal(false, 'close', '')}
-                >
-                    <CModalHeader onDismiss={() => this.props.setProductDetailsModal(false, 'close', '')}>
-                        <CModalTitle>Product Details</CModalTitle>
-                    </CModalHeader>
-                    <CModalBody>
-                        <ProductDetails product={product} />
-                        <div className=" p-2">
-                            <h4 className="mb-4">Product Description</h4>
-                            <ProductDescriptions productDescription={product.productDescription} />
-                        </div>
-                    </CModalBody>
-                    <CModalFooter>
-                        <div className={footerDisplay ? "d-flex" : "d-none"}>
-                            <CButton
-                                variant="ghost"
-                                color="dark"
-                                className="d-flex justify-content-center align-items-center"
-                            >
-                                <span className='text-black'>View Detailed</span>
-                            </CButton>
-                            <CButton
-                                type="button"
-                                color="info"
-                                className="d-flex justify-content-center align-items-center"
-                                onClick={this.handleAddToCart}
-                                disabled={loading}
-
-                            >
-                                {loading ? <CSpinner size="sm" /> :
-                                    <span className="d-flex align-items-center login-icon me-2">
-                                        <FaIcons.FaCartPlus />
-
-                                    </span>
-                                }
-                                <span className="ms-2">Add To Cart</span>
-                            </CButton>
-                        </div>
-                        <CButton
-                            className={footerDisplay ? "d-none" : "d-block"}
-                            color="secondary"
-                            variant="ghost"
-                            onClick={() => this.props.setProductDetailsModal(false, 'close', '')}
+                {product &&
+                    <>
+                        <LoginModal />
+                        <CToaster push={toast} placement="top-end" />
+                        <CModal
+                            backdrop={false}
+                            scrollable={true}
+                            size="xl"
+                            visible={visible}
+                            onDismiss={() => this.props.setProductDetailsModal(false, 'close', '')}
                         >
-                            Close
-                        </CButton>
-                    </CModalFooter>
-                </CModal>
+                            <CModalHeader onDismiss={() => this.props.setProductDetailsModal(false, 'close', '')}>
+                                <CModalTitle>Product Details</CModalTitle>
+                            </CModalHeader>
+                            <CModalBody>
+                                <ProductDetails product={product} />
+                                <div className=" p-2">
+                                    <h4 className="mb-4">Product Description</h4>
+                                    <ProductDescriptions productDescription={product.productDescription} />
+                                </div>
+                            </CModalBody>
+                            <CModalFooter>
+                                <div className={footerDisplay ? "d-flex" : "d-none"}>
+                                    <CButton
+                                        variant="ghost"
+                                        color="dark"
+                                        className="d-flex justify-content-center align-items-center"
+                                    >
+                                        <span className='text-black'>View Detailed</span>
+                                    </CButton>
+                                    <CButton
+                                        type="button"
+                                        color="info"
+                                        className="d-flex justify-content-center align-items-center"
+                                        onClick={this.handleAddToCart}
+                                        disabled={loading}
+
+                                    >
+                                        {loading ? <CSpinner size="sm" /> :
+                                            <span className="d-flex align-items-center login-icon me-2">
+                                                <FaIcons.FaCartPlus />
+
+                                            </span>
+                                        }
+                                        <span className="ms-2">Add To Cart</span>
+                                    </CButton>
+                                </div>
+                                <CButton
+                                    className={footerDisplay ? "d-none" : "d-block"}
+                                    color="secondary"
+                                    variant="ghost"
+                                    onClick={() => this.props.setProductDetailsModal(false, 'close', '')}
+                                >
+                                    Close
+                                </CButton>
+                            </CModalFooter>
+                        </CModal>
+                    </>
+                }
             </>
         )
     }

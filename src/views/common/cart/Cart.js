@@ -40,8 +40,10 @@ export class Cart extends Component {
         paymentMethodId: undefined,
         toast: '',
         successfull: false,
-        loading: false
+        loading: false,
+        redirectUrl: ""
     }
+
     componentDidMount() {
         if (!this.props.userResponse.isLoggedIn) {
             history.push("/login");
@@ -50,6 +52,10 @@ export class Cart extends Component {
             this.handleLogout();
         }
 
+        if (this.props.userResponse.isLoggedIn) {
+            const { orderId, paymentStatus } = this.props.match.params;
+            this.setState({ successfull: paymentStatus == 'success' })
+        }
     }
     handleLogout = () => {
         let { status, data } = this.props.messageResponse
@@ -162,11 +168,14 @@ export class Cart extends Component {
         })
         this.props.placeOrder(orderDetails)
             .then(() => {
+                let { data } = this.props.messageResponse
+                console.log(data)
                 this.setState({
                     successfull: true,
                     toast: this.toastComponent(),
                     loading: false,
-                    step: 4
+                    step: 4,
+                    redirectUrl: data.order.redirectUrl
                 })
             })
             .catch(() => {
@@ -218,7 +227,8 @@ export class Cart extends Component {
             paymentMethodId,
             successfull,
             toast,
-            loading
+            loading,
+            redirectUrl
         } = this.state;
         const headerStyle = {
             fontWeight: "800"
@@ -230,6 +240,13 @@ export class Cart extends Component {
         } else if (!this.props.userResponse.isLoggedIn) {
             return <Redirect to="/login" />
         }
+
+        console.log(redirectUrl, successfull);
+        if (successfull && redirectUrl != "" && redirectUrl) {
+            window.location.replace(redirectUrl)
+            return <></>;
+        }
+
         return (
             <div>
                 <CToaster push={toast} placement="top-end" />

@@ -44,9 +44,11 @@ export class PendingOrder extends Component {
                     this.props.logout();
                 }, 1000)
             }
-            this.setState({
-                message: failMessage.data.message
-            })
+            if (failMessage.data && failMessage.data.message) {
+                this.setState({
+                    message: failMessage.data.message
+                })
+            }
         })
     }
     componentDidUpdate(prevProps, prevState) {

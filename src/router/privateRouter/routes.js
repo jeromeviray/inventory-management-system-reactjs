@@ -227,7 +227,12 @@ export const publicRoutes = [
     name: "Cart",
     component: Cart,
   },
-
+  {
+    exact: true,
+    path: "/cart/:orderId/payment/:paymentStatus",
+    name: "Cart",
+    component: Cart,
+  },
   {
     exact: true,
     path: "/user/profile",

@@ -24,7 +24,7 @@ export class OrderCard extends Component {
                     <CCardBody>
                         <div className="d-flex align-items-start">
                             <CImage rounded
-                                src={"/images/products/" + orderItem.product.fileImages[0].fileName}
+                                src={orderItem.product.fileImages.length > 0 && "/images/products/" + orderItem.product.fileImages[0].fileName}
                                 width={100} height={100}
                             />
                             <div className="ms-2  w-100">

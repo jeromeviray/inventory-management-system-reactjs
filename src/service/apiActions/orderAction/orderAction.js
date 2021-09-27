@@ -162,7 +162,8 @@ export const placeOrder = (orderDetials) => async (dispatch) => {
                 payload: {
                     status: 200,
                     data: {
-                        message: "Successfully Place your Order"
+                        message: "Successfully Place your Order",
+                        order: response.data
                     }
                 }
             })
