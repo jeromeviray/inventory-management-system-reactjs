@@ -3,9 +3,13 @@ import { connect } from "react-redux"
 import { withRouter } from "react-router-dom"
 import { getProducts } from "../../../service/apiActions/productAction/productAction"
 import { setProductModal } from "../../../service/apiActions/modalAction/modalAction"
-import { setProductDetailsModal } from "../../../service/apiActions/modalAction/modalAction"
+import {
+  setProductDetailsModal,
+  editProductModal,
+} from "../../../service/apiActions/modalAction/modalAction"
 import { getInventory } from "src/service/apiActions/inventoryAction/inventoryAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
+import { getProduct } from "../../../service/apiActions/productAction/productAction"
 import {
   CTable,
   CTableHead,
@@ -27,9 +31,12 @@ import Barcode from "react-barcode"
 import ReactPaginate from "react-paginate"
 
 import { logout } from "src/service/apiActions/userAction/userAction"
-import ProductDetialsModal from "src/components/modals/product/ProductDetialsModal"
+// import ProductDetialsModal from "src/components/modals/product/ProductDetialsModal"
+const ProductDetialsModal = lazy(() =>
+  import("src/components/modals/product/ProductDetialsModal"),
+)
 const ProductEditorModal = lazy(() =>
-  import("../../../components/modals/product/ProductEditorModal.js"),
+  import("src/components/modals/product/ProductEditorModal.js"),
 )
 //action
 class Products extends Component {
@@ -69,6 +76,7 @@ class Products extends Component {
   componentDidUpdate(prevProps, prevState) {
     this.manageInventoryResponse(prevProps, prevState)
     this.manageModalResponse(prevProps, prevProps)
+    this.manageProductResponse(prevProps, prevState)
   }
 
   manageModalResponse(prevProps, prevState) {
@@ -90,6 +98,23 @@ class Products extends Component {
         this.setState({
           inventory: data.inventory,
         })
+      }
+    }
+  }
+  manageProductResponse(prevProps, prevState) {
+    const { visible } = this.state
+
+    if (prevProps.productResponse !== this.props.productResponse) {
+      let { action, status, data } = this.props.productResponse
+      if (action === "GETBYID") {
+        if (status >= 200 && status <= 300) {
+          this.props.editProductModal(
+            !visible,
+            "Edit",
+            data.product,
+            <FaIcons.FaEdit size={20} />,
+          )
+        }
       }
     }
   }
@@ -137,23 +162,25 @@ class Products extends Component {
     const { limit, query } = this.state
     this.props.getInventory(query, page, limit)
   }
+  handleGetProduct = (id) => {
+    const { accessToken, type } = this.props.userResponse.credentials
+    const token = type + accessToken
 
+    this.props.getProduct(id, token).catch(() => {
+      console.log(this.props.messageResponse)
+      const { status, message } = this.props.messageResponse
+      // const message = this.props.messaegResponse.data.message
+      if (status > 400 && status <= 403) {
+        this.props.logout()
+        window.location.reload()
+      }
+      this.setState({
+        message: message,
+      })
+    })
+  }
   render() {
     let { visible, message, inventory } = this.state
-
-    const arrowStyles = {
-      position: "absolute",
-      zIndex: "2",
-      top: "calc(4% - 16px)",
-      // width: "30",
-      height: "100%",
-      cursor: "pointer",
-      border: "none",
-    }
-    const fontStyle = {
-      fontSize: "14px",
-      fontWeight: "500",
-    }
 
     return (
       <>
@@ -207,7 +234,7 @@ class Products extends Component {
           align="middle"
         >
           <CTableCaption>
-            List of Brand: <b>{inventory.totalItems}</b>
+            List of Products: <b>{inventory.totalItems}</b>
           </CTableCaption>
 
           <CTableHead color="dark">
@@ -269,6 +296,14 @@ class Products extends Component {
                       >
                         <FaIcons.FaEye size="20" />
                       </CButton>
+                      <CButton
+                        color="info"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => this.handleGetProduct(product.id)}
+                      >
+                        <FaIcons.FaEdit size="20" />
+                      </CButton>
                     </CTableDataCell>
                   </CTableRow>
                 )
@@ -299,7 +334,7 @@ class Products extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    productResponser: state.productResponser,
+    productResponse: state.productResponser,
     modalVisibleResponse: state.modalVisibleResponse,
     userResponse: state.userResponse,
     messageResponse: state.messageResponse,
@@ -315,5 +350,7 @@ export default withRouter(
     getInventory,
     clearMessage,
     setProductDetailsModal,
+    getProduct,
+    editProductModal,
   })(Products),
 )

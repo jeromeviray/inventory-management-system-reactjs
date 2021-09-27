@@ -3,10 +3,10 @@ import authHeader from '../auth/authHeader'
 import axios from './RestApi'
 
 export class ProductApiService {
-    save(formData, token) {
+    saveProduct(formData) {
         return axios.post("/products/save",
             formData,
-            { headers: { Authorization: token } })
+            { headers: authHeader() })
     }
     getProducts(token) {
         return axios.get("/products", {

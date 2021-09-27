@@ -16,7 +16,12 @@ import {
   CFormLabel,
   CForm,
   CSpinner,
+  CToast,
+  CToastBody,
+  CToastClose,
+  CToaster,
   CFormSelect,
+  CFormCheck,
 } from "@coreui/react"
 
 //icons
@@ -28,6 +33,8 @@ import { RiEdit2Line } from "react-icons/ri"
 import ImageUploading from "react-images-uploading"
 import { convertFromRaw, convertToRaw, EditorState } from "draft-js"
 import { Editor } from "react-draft-wysiwyg"
+// import { convertToHTML } from "draft-convert"
+import draftToHtml from "draftjs-to-html"
 
 // action
 import { saveProduct } from "src/service/apiActions/productAction/productAction"
@@ -57,8 +64,9 @@ export class ProductEditorModal extends Component {
       images: [],
       productImage: [],
       removedImages: [],
-
-      // images: []
+      toast: "",
+      editorState: EditorState.createEmpty(),
+      autoGenerateBarcode: false,
     }
   }
 
@@ -68,13 +76,16 @@ export class ProductEditorModal extends Component {
     productDescriptions: "",
     productImage: [],
     barcode: "",
+    brandName: "",
+    brandId: "",
+    categoryName: "",
+    categoryId: "",
+    threshold: 0,
   }
   onResetValue = () => {
     this.setState(() => this.productDetail)
   }
   componentDidMount() {
-    let { accessToken, type } = this.props.credentials
-    let token = type + accessToken
     this.loadImage()
   }
   componentDidUpdate = (prevProps, prevState) => {
@@ -82,13 +93,12 @@ export class ProductEditorModal extends Component {
   }
   manageModalVisible = (prevProps, prevState) => {
     if (prevProps.modalVisibleResponse !== this.props.modalVisibleResponse) {
-      let { action, visible, icon } = this.props.modalVisibleResponse;
+      let { action, visible, icon } = this.props.modalVisibleResponse
       if (action === "Add") {
         this.setState({
           visible: visible,
           action: action,
           icon: icon,
-          editorState: EditorState.createEmpty(),
         })
       } else if (action === "Edit") {
         let { product, action, visible, icon } = this.props.modalVisibleResponse
@@ -100,14 +110,19 @@ export class ProductEditorModal extends Component {
           productPrice: product.productPrice,
           editorState: product.productDescription
             ? EditorState.createWithContent(
-              convertFromRaw(JSON.parse(product.productDescription)),
-            )
-            : null,
+                convertFromRaw(JSON.parse(product.productDescription)),
+              )
+            : EditorState.createEmpty(),
         })
         this.getImages(product.fileImages)
       } else if (action === "close") {
+        this.props.clearMessage()
         this.setState({
           visible: this.props.modalVisibleResponse.visible,
+          productName: "",
+          productPrice: "",
+          editorState: EditorState.createEmpty(),
+          productImage: [],
         })
       }
     }
@@ -115,10 +130,9 @@ export class ProductEditorModal extends Component {
   async getImages(fileImages) {
     let { accessToken, type } = this.props.credentials
     let token = type + accessToken
-    for (let i = 0;i < fileImages.length;i++) {
+    for (let i = 0; i < fileImages.length; i++) {
       ProductApiService.getImage(fileImages[i].fileName, token)
         .then((response) => {
-          // console.log(response.data)
           this.loadImage(response.data, fileImages[i].fileName)
         })
         .catch((error) => {
@@ -146,7 +160,6 @@ export class ProductEditorModal extends Component {
 
   loadImage = (image, fileName) => {
     let { productImage } = this.state
-    console.log(productImage)
     if (!image) {
       return
     }
@@ -183,7 +196,6 @@ export class ProductEditorModal extends Component {
     const rawState = editorState.getCurrentContent()
     this.setState({
       editorState,
-      productDescriptions: convertToRaw(rawState),
     })
   }
 
@@ -200,18 +212,12 @@ export class ProductEditorModal extends Component {
     let {
       productName,
       productPrice,
-      productDescriptions,
       productImage,
       action,
       removedImages,
-      barcode
+      barcode,
+      editorState,
     } = this.state
-
-    let accessToken = this.props.credentials.accessToken
-    let type = this.props.credentials.type
-
-    let token = type + accessToken
-
     let productData = new FormData()
     if (productImage) {
       if (productImage.length > 0) {
@@ -219,77 +225,78 @@ export class ProductEditorModal extends Component {
           loading: true,
         })
 
-        for (let i = 0;i < productImage.length;i++) {
+        for (let i = 0; i < productImage.length; i++) {
           if (productImage[i].file) {
             productData.append("productImages[]", productImage[i].file)
           }
         }
-        productData.append('removedImages', removedImages);
+        productData.append("removedImages", removedImages)
         productData.append("barcode", barcode)
         productData.append("productName", productName)
         productData.append("productPrice", productPrice)
         productData.append(
           "productDescription",
-          JSON.stringify(productDescriptions),
+          JSON.stringify(convertToRaw(editorState.getCurrentContent())),
         )
 
-        if (action === "Add") {
-          this.saveProduct(productData, token)
-        } else if (action === "Edit") {
-          this.editProduct(productData, token)
-        } else {
-          this.setState({
-            visible: this.props.modalVisibleResponse.visible,
-          })
-        }
+        // if (action === "Add") {
+        //   this.saveProduct(productData)
+        // } else if (action === "Edit") {
+        //   this.editProduct(productData)
+        // } else {
+        //   this.setState({
+        //     visible: this.props.modalVisibleResponse.visible,
+        //   })
+        // }
       }
     } else {
       console.log("Select images")
     }
   }
 
-  saveProduct = (productData, token) => {
+  saveProduct = (productData) => {
     this.props
-      .saveProduct(productData, token)
+      .saveProduct(productData)
       .then(() => {
         this.onResetValue()
-        console.log("success")
         const successMessage = this.props.messageResponse
         if (successMessage.status === 200) {
           this.setState({
             loading: false,
             successFully: true,
-            message: successMessage.data.message,
+            toast: this.toastComponent(),
+            editorState: EditorState.createEmpty(),
           })
         } else {
           this.setState({
             loading: false,
             successFully: false,
+            editorState: EditorState.createEmpty(),
           })
         }
       })
       .catch(() => {
         this.onResetValue()
-        console.log("eerrorr")
+        let { status, data } = this.props.messageResponse
 
-        const failMessage = this.props.messageResponse
-        console.log(failMessage)
-        if (failMessage.status === 403 || failMessage.status === 401) {
+        if (status > 400 && status <= 403) {
           this.props.logout()
           this.props.clearMessage()
           this.setState({
             loading: false,
-            message: failMessage.data.message,
+            toast: this.toastComponent(),
+            editorState: EditorState.createEmpty(),
           })
         }
         this.setState({
           loading: false,
-          message: failMessage.data && failMessage.data.message,
+          toast: this.toastComponent(),
+          editorState: EditorState.createEmpty(),
         })
       })
   }
 
-  editProduct = (productData, token) => { }
+  editProduct = (productData, token) => {}
 
   removeImage(index) {
     let { productImage, removedImages } = this.state
@@ -297,7 +304,31 @@ export class ProductEditorModal extends Component {
       removedImages.push(productImage[index].filename)
     }
   }
-
+  toastComponent() {
+    let { data, status } = this.props.messageResponse
+    let color = ""
+    if (status === 200) {
+      color = "success"
+    } else if (status > 400 && status <= 403) {
+      color = "danger"
+    } else if (status > 405 && status <= 500) {
+      color = "warning"
+    } else {
+      color = "primary"
+    }
+    return (
+      <CToast
+        color={color}
+        className="text-white align-items-center"
+        delay={3000}
+      >
+        <div className="d-flex">
+          <CToastBody>{data.message}</CToastBody>
+          <CToastClose className="me-2 m-auto" white />
+        </div>
+      </CToast>
+    )
+  }
   render() {
     let {
       visible,
@@ -312,10 +343,18 @@ export class ProductEditorModal extends Component {
       message,
       action,
       icon,
+      toast,
+      categoryName,
+      categoryId,
+      brandName,
+      brandId,
+      threshold,
+      autoGenerateBarcode,
     } = this.state
-
     return (
       <>
+        <CToaster push={toast} placement="top-end" />
+
         <CModal size="xl" visible={visible} fullscreen="lg" scrollable>
           <CModalHeader
             onDismiss={() => {
@@ -376,9 +415,9 @@ export class ProductEditorModal extends Component {
                         style={
                           isDragging
                             ? {
-                              backgroundColor: "#8E9293",
-                              border: "4px dashed #ffffff",
-                            }
+                                backgroundColor: "#8E9293",
+                                border: "4px dashed #ffffff",
+                              }
                             : undefined
                         }
                         onClick={onImageUpload}
@@ -448,21 +487,87 @@ export class ProductEditorModal extends Component {
                   </CFormFloating>
                 </CCol>
                 <CCol sm="12" md="6" lg>
+                  <CRow className="align-items-end">
+                    <CCol sm="8" md="8" lg="8">
+                      <CFormFloating className="mb-3">
+                        <CFormControl
+                          type="number"
+                          id="floatingBarcode"
+                          placeholder="Product Barcode"
+                          name="barcode"
+                          value={barcode}
+                          onChange={this.handleOnChange}
+                          required
+                          disabled={autoGenerateBarcode}
+                        />
+                        <CFormLabel htmlFor="floatingBarcode">
+                          Product Barcode
+                        </CFormLabel>
+                      </CFormFloating>
+                    </CCol>
+                    <CCol sm="4" md="4" lg="4">
+                      <CFormCheck
+                        value={autoGenerateBarcode}
+                        onChange={() =>
+                          this.setState({
+                            autoGenerateBarcode: !autoGenerateBarcode,
+                          })
+                        }
+                        name="autoGenerateBarcode"
+                        className="mb-3"
+                        id="autoGenerateBarcode"
+                        label="Generate Barcode"
+                      />
+                    </CCol>
+                  </CRow>
+                </CCol>
+                <CCol sm="12" md="6" lg>
                   <CFormFloating className="mb-3">
                     <CFormControl
                       type="number"
-                      id="floatingBarcode"
-                      placeholder="Product Barcode"
-                      name="barcode"
-                      value={barcode}
+                      id="floatingThreshold"
+                      placeholder="Product Threshold"
+                      name="threshold"
+                      value={threshold}
                       onChange={this.handleOnChange}
                       required
                     />
-                    <CFormLabel htmlFor="floatingBarcode">
-                      Product Barcode
+                    <CFormLabel htmlFor="floatingThreshold">
+                      Product Threshold
                     </CFormLabel>
                   </CFormFloating>
                 </CCol>
+                <CCol sm="12" md="6" lg>
+                  <CFormFloating className="mb-3">
+                    <CFormSelect
+                      value={brandName}
+                      onChange={this.handleOnChange}
+                      name="brandName"
+                      id="floatingSelectBrand"
+                      aria-label="Brand Names"
+                    >
+                      <option>Choose Brand</option>
+                    </CFormSelect>
+                    <CFormLabel htmlFor="floatingSelectBrand">Brand</CFormLabel>
+                  </CFormFloating>
+                </CCol>
+                <CCol sm="12" md="6" lg>
+                  <CFormFloating className="mb-3">
+                    <CFormSelect
+                      value={categoryName}
+                      onChange={this.handleOnChange}
+                      name="branch"
+                      id="floatingSelectCategory"
+                      aria-label="Categories"
+                    >
+                      <option>Choose Category</option>
+                    </CFormSelect>
+                    <CFormLabel htmlFor="floatingSelectCategory">
+                      Category
+                    </CFormLabel>
+                  </CFormFloating>
+                </CCol>
+
                 <CCol sm="12" md="12" lg="12">
                   <Editor
                     editorState={editorState}
@@ -503,6 +608,7 @@ export class ProductEditorModal extends Component {
               color="info"
               form="a-form"
               className="d-flex justify-content-center align-items-center position-relative "
+              disabled={loading}
             >
               {loading ? (
                 <CSpinner size="sm" />

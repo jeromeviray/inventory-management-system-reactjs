@@ -15,8 +15,8 @@ import {
   SET_PRODUCT_MESSAGE
 } from '../../redux/constants'
 
-export const saveProduct = (formData, token) => async (dispatch) => {
-  return ProductApiService.save(formData, token)
+export const saveProduct = (formData) => async (dispatch) => {
+  return ProductApiService.saveProduct(formData )
     .then((response) => {
       dispatch({
         type: SAVE_PRODUCT
