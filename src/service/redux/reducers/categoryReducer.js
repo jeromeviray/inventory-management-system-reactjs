@@ -3,6 +3,7 @@ const {
   GET_CATEGORIES,
   GET_CATEGORY,
   UPDATE_CATEGORY,
+  DELETE_CATEGORY,
 } = require("../constants")
 
 const categoryReducer = (state = {}, action) => {
@@ -37,6 +38,14 @@ const categoryReducer = (state = {}, action) => {
         status: payload.status,
         data: {
           updatedCategory: payload.data.updatedCategory,
+        },
+      }
+    case DELETE_CATEGORY:
+      return {
+        action: payload.action,
+        status: payload.status,
+        data: {
+         
         },
       }
     default:

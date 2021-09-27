@@ -1,5 +1,6 @@
 import { SET_MESSAGE } from "src/constants/userConstants"
 import {
+  DELETE_CATEGORY,
   GET_CATEGORIES,
   GET_CATEGORY,
   SAVE_CATEGORY,
@@ -161,6 +162,55 @@ export const updateCategory = (id, name) => async (dispatch) => {
           status: 200,
           data: {
             message: "Successfully Updated",
+          },
+        },
+      })
+      return Promise.resolve()
+    },
+    (error) => {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.error_message ||
+        error.toString()
+
+      const status =
+        (error.response && error.response.data && error.response.data.code) ||
+        error.toString()
+
+      dispatch({
+        type: SET_MESSAGE,
+        payload: {
+          status: status,
+          data: {
+            message: message,
+          },
+        },
+      })
+      return Promise.reject()
+    },
+  )
+}
+
+export const deleteCategory = (id) => async (dispatch) => {
+  return CategoriesApiService.deleteCategory(id).then(
+    (response) => {
+      dispatch({
+        type: DELETE_CATEGORY,
+        payload: {
+          status: 200,
+          action: DELETE_CATEGORY,
+          data: {},
+        },
+      })
+      dispatch({
+        type: SET_MESSAGE,
+        payload: {
+          status: 200,
+          data: {
+            message: "Successfully Deleted.",
           },
         },
       })

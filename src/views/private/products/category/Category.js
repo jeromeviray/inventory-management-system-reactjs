@@ -176,7 +176,14 @@ export class Category extends Component {
                             color="danger"
                             className="ms-2"
                             variant="ghost"
-                            onClick={() => this.props.setAlertModal(!visible)}
+                            onClick={() =>
+                              this.props.setAlertModal(
+                                !visible,
+                                "DELETECATEGORY",
+                                "CATEGORY",
+                                category.id,
+                              )
+                            }
                             size="sm"
                           >
                             <MdIcons.MdDelete size="20" />

@@ -112,7 +112,7 @@ export class Brand extends Component {
               >
                 <MdIcons.MdModeEdit size="20" />
               </CButton>
-              {permission === Roles.SUPER_ADMIN ? (
+              {/* {permission === Roles.SUPER_ADMIN ? ( */}
                 <CButton
                   color="danger"
                   className="ms-2"
@@ -129,7 +129,7 @@ export class Brand extends Component {
                 >
                   <MdIcons.MdDelete size="20" />
                 </CButton>
-              ) : null}
+              {/* ) : null} */}
             </CTableDataCell>
           </CTableRow>
         )

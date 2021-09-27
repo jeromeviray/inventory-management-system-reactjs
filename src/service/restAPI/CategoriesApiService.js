@@ -25,6 +25,12 @@ export class CategoriesApiService {
       },
     )
   }
+
+  deleteCategory(id) {
+    return axios.delete("/categories/delete/" + id, {
+      headers: authHeader(),
+    })
+  }
   getCategories() {
     return axios.get("/categories", {
       headers: authHeader(),

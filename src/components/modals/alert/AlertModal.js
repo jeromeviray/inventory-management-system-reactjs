@@ -21,6 +21,7 @@ import { logout } from "src/service/apiActions/userAction/userAction"
 import { deleteBrand } from "src/service/apiActions/brandAction/brandAction"
 import { deleteEmployee } from "src/service/apiActions/accountAction/accountAction"
 import { deleteSupplier } from "src/service/apiActions/supplierAction/supplierAction"
+import { deleteCategory } from "src/service/apiActions/categoryAction/categoryAction"
 
 export class AlertModal extends Component {
   state = {
@@ -40,9 +41,9 @@ export class AlertModal extends Component {
   manageModalAlert = (prevProps, prevState) => {
     if (prevProps.modalVisible !== this.props.modalVisible) {
       let { alert, id, module, action } = this.props.modalVisible
+      console.log(action)
       switch (action) {
         case "DELETEBRANCH":
-          console.log("branch")
           this.setState({
             visible: alert,
             id: id,
@@ -51,8 +52,6 @@ export class AlertModal extends Component {
           })
           break
         case "DELETEBRAND":
-          console.log("brand")
-
           this.setState({
             visible: alert,
             id: id,
@@ -68,6 +67,13 @@ export class AlertModal extends Component {
             action: action,
           })
         case "DELETESUPPLIER":
+          this.setState({
+            visible: alert,
+            id: id,
+            module: module,
+            action: action,
+          })
+        case "DELETECATEGORY":
           this.setState({
             visible: alert,
             id: id,
@@ -96,15 +102,18 @@ export class AlertModal extends Component {
     this.setState({
       loading: true,
     })
+    // console.log(action + " " + module)
     if (action === "DELETEBRANCH" && module === "BRANCH") {
       this.branchDelete(id, token)
       console.log("BRANCH")
     } else if (action === "DELETEBRAND" && module === "BRAND") {
       this.handleDeleteBrand(id, token)
-    } else if ((action === "DELETEEMPLOYEE", module === "EMPLOYEE")) {
+    } else if (action === "DELETEEMPLOYEE" && module === "EMPLOYEE") {
       this.handleEmployeeDelete(id, token)
-    } else if ((action === "DELETESUPPLIER", module === "SUPPLIER")) {
+    } else if (action === "DELETESUPPLIER" && module === "SUPPLIER") {
       this.handleSupplierDelete(id)
+    } else if (action === "DELETECATEGORY" && module === "CATEGORY") {
+      this.handleDeleteCategory(id)
     } else {
       console.log("ERRPR")
     }
@@ -256,6 +265,41 @@ export class AlertModal extends Component {
         }
       })
   }
+  handleDeleteCategory = (id) => {
+    this.props
+      .deleteCategory(id)
+      .then(() => {
+        this.setState({
+          loading: false,
+          toast: this.toastComponent(),
+        })
+        setInterval(function () {
+          window.location.reload()
+        }, 1000)
+      })
+      .catch(() => {
+        let { status, data } = this.props.messageResponse
+        if (status > 400 && status <= 403) {
+          this.setState({
+            message: data && data.message,
+            successFully: false,
+            loading: false,
+            toast: this.toastComponent(),
+          })
+          setInterval(() => {
+            this.props.logout()
+            this.props.clearMessage()
+          }, 1000)
+        } else {
+          this.setState({
+            message: data && data.message,
+            successFully: false,
+            loading: false,
+            toast: this.toastComponent(),
+          })
+        }
+      })
+  }
   toastComponent() {
     let { data, status } = this.props.messageResponse
     let color = ""
@@ -338,4 +382,5 @@ export default connect(mapStateToProps, {
   deleteBrand,
   deleteEmployee,
   deleteSupplier,
+  deleteCategory,
 })(AlertModal)
