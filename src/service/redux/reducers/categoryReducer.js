@@ -1,0 +1,46 @@
+const {
+  SAVE_CATEGORY,
+  GET_CATEGORIES,
+  GET_CATEGORY,
+  UPDATE_CATEGORY,
+} = require("../constants")
+
+const categoryReducer = (state = {}, action) => {
+  const { type, payload } = action
+
+  switch (type) {
+    case SAVE_CATEGORY:
+      return {
+        action: payload.action,
+        status: payload.status,
+        data: {},
+      }
+    case GET_CATEGORIES:
+      return {
+        action: payload.action,
+        status: payload.status,
+        data: {
+          categories: payload.data.categories,
+        },
+      }
+    case GET_CATEGORY:
+      return {
+        action: payload.action,
+        status: payload.status,
+        data: {
+          category: payload.data.category,
+        },
+      }
+    case UPDATE_CATEGORY:
+      return {
+        action: payload.action,
+        status: payload.status,
+        data: {
+          updatedCategory: payload.data.updatedCategory,
+        },
+      }
+    default:
+      return state
+  }
+}
+export default categoryReducer

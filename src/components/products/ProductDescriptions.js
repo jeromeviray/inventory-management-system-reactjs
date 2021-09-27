@@ -14,12 +14,12 @@ export class ProductDescriptions extends Component {
     };
     render() {
         let { description } = this.state;
-        console.log(description);
+        // console.log(description);
         let content = description && JSON.parse(description);
         let convertFromRawContent = convertFromRaw(content);
-
         const editorState = EditorState.createWithContent(convertFromRawContent);
         const html = convertToHTML(editorState.getCurrentContent());
+        console.log(editorState);
         return (
             <>
                 <div

@@ -130,7 +130,7 @@ export const routes = [
   },
   {
     path: "/app/products/categories",
-    name: "Categiries",
+    name: "Categories",
     component: Category,
     permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
   },

@@ -50,7 +50,6 @@ export const savingBrand = (brand, token) => async (dispatch) => {
     return BrandApiService.saveBrand(brand, token)
         .then(
             (response) => {
-                console.log(response);
                 dispatch({
                     type: SAVE_BRAND,
                     payload: {
@@ -100,54 +99,10 @@ export const savingBrand = (brand, token) => async (dispatch) => {
             }
         )
 }
-// (response) => {
-//     console.log("success")
-//     dispatch({
-//         type: SAVE_BRAND,
-//         status: 200,
-//         action: "SABEBRAND"
-//     })
-//     dispatch({
-//         type: SET_MESSAGE,
-//         payload: {
-//             status: 200,
-//             data: {
-//                 message: "Successfully Saved"
-//             }
-//         }
-//     })
-//     return Promise.resolve();
 
-// },
-//     (error) => {
-//         console.log(error)
-//         const message = (error.response &&
-//             error.response.data &&
-//             error.response.data.message) ||
-//             error.message || error.error_message ||
-//             error.toString();
-
-//         const status = (error.response &&
-//             error.response.data &&
-//             error.response.data.code) ||
-//             error.toString();
-//         console.log(status)
-
-//         dispatch({
-//             type: SET_MESSAGE,
-//             payload: {
-//                 status: status,
-//                 data: {
-//                     message: message
-//                 }
-//             }
-//         })
-//         return Promise.reject();
-//     }
 export const updateBrand = (id, branch, token) => async (dispatch) => {
     return BrandApiService.updateBrand(id, branch, token)
         .then((response) => {
-            console.log(response)
             dispatch({
                 type: UPDATE_BRAND,
                 payload: {
@@ -169,7 +124,6 @@ export const updateBrand = (id, branch, token) => async (dispatch) => {
 
         },
             (error) => {
-                console.log(error)
                 const message = (error.response &&
                     error.response.data &&
                     error.response.data.message) ||
@@ -180,7 +134,6 @@ export const updateBrand = (id, branch, token) => async (dispatch) => {
                     error.response.data &&
                     error.response.data.code) ||
                     error.toString();
-                console.log(status)
 
                 dispatch({
                     type: SET_MESSAGE,
@@ -199,7 +152,6 @@ export const updateBrand = (id, branch, token) => async (dispatch) => {
 export const deleteBrand = (id, token) => async (dispatch) => {
     return BrandApiService.deleteBrand(id, token)
         .then((response) => {
-            console.log(response)
             dispatch({
                 type: DELETE_BRAND,
                 payload: {
@@ -221,7 +173,6 @@ export const deleteBrand = (id, token) => async (dispatch) => {
 
         },
             (error) => {
-                console.log(error)
                 const message = (error.response &&
                     error.response.data &&
                     error.response.data.message) ||
@@ -232,7 +183,6 @@ export const deleteBrand = (id, token) => async (dispatch) => {
                     error.response.data &&
                     error.response.data.code) ||
                     error.toString();
-                console.log(status)
 
                 dispatch({
                     type: SET_MESSAGE,
