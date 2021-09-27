@@ -41,7 +41,6 @@ export class AlertModal extends Component {
   manageModalAlert = (prevProps, prevState) => {
     if (prevProps.modalVisible !== this.props.modalVisible) {
       let { alert, id, module, action } = this.props.modalVisible
-      console.log(action)
       switch (action) {
         case "DELETEBRANCH":
           this.setState({

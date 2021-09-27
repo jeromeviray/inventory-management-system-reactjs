@@ -24,7 +24,7 @@ import * as FaIcons from "react-icons/fa"
 import * as IoIcons from "react-icons/io"
 
 import Barcode from "react-barcode"
-import ReactPaginate from 'react-paginate';
+import ReactPaginate from "react-paginate"
 
 import { logout } from "src/service/apiActions/userAction/userAction"
 import ProductDetialsModal from "src/components/modals/product/ProductDetialsModal"
@@ -39,15 +39,15 @@ class Products extends Component {
     visible: false,
     inventory: {
       data: [],
-      totalPages: 0
+      totalPages: 0,
     },
     page: 0,
     limit: 10,
-    query: ""
+    query: "",
   }
 
   componentDidMount() {
-    const { page, limit, query } = this.state;
+    const { page, limit, query } = this.state
     this.getInventory(page, limit, query)
   }
 
@@ -63,7 +63,6 @@ class Products extends Component {
           message: data.message,
         })
       }
-
     })
   }
 
@@ -79,7 +78,7 @@ class Products extends Component {
         visible: response.visible,
       })
       if (response.action === "close") {
-        const { page, limit, query } = this.state;
+        const { page, limit, query } = this.state
         this.getInventory(page, limit, query)
       }
     }
@@ -127,21 +126,20 @@ class Products extends Component {
   }
 
   handleSearch = (event) => {
-    const { page, limit } = this.state;
-    this.props.getInventory(event.target.value, page, limit);
-    this.setState({ query: event.target.value });
-  };
+    const { page, limit } = this.state
+    this.props.getInventory(event.target.value, page, limit)
+    this.setState({ query: event.target.value })
+  }
 
   handlePageClick = (data) => {
-    let page = data.selected;
-    this.setState({ page: page });
-    const { limit, query } = this.state;
-    this.props.getInventory(query, page, limit);
-  };
+    let page = data.selected
+    this.setState({ page: page })
+    const { limit, query } = this.state
+    this.props.getInventory(query, page, limit)
+  }
 
   render() {
     let { visible, message, inventory } = this.state
-    console.log(inventory)
 
     const arrowStyles = {
       position: "absolute",
@@ -166,7 +164,7 @@ class Products extends Component {
             shape="rounded-pill"
             color="primary"
             variant="ghost"
-            className="d-flex justify-content-center align-items-center"
+            className="d-flex justify-content-center align-items-center mb-3"
             onClick={() =>
               this.props.setProductModal(
                 !visible,
@@ -239,7 +237,6 @@ class Products extends Component {
                 let { product, threshold, totalStock, status } = item
                 return (
                   <CTableRow className="text-center" key={index}>
-
                     <CTableDataCell>
                       <Barcode
                         value={String(product.barcode)}
@@ -262,12 +259,17 @@ class Products extends Component {
                         color="secondary"
                         variant="ghost"
                         size="sm"
-                        onClick={() => this.props.setProductDetailsModal(true, "view", product)}
+                        onClick={() =>
+                          this.props.setProductDetailsModal(
+                            true,
+                            "view",
+                            product,
+                          )
+                        }
                       >
                         <FaIcons.FaEye size="20" />
                       </CButton>
                     </CTableDataCell>
-
                   </CTableRow>
                 )
               })
@@ -279,16 +281,16 @@ class Products extends Component {
           </CTableBody>
         </CTable>
         <ReactPaginate
-          previousLabel={'previous'}
-          nextLabel={'next'}
-          breakLabel={'...'}
-          breakClassName={'break-me'}
+          previousLabel={"previous"}
+          nextLabel={"next"}
+          breakLabel={"..."}
+          breakClassName={"break-me"}
           pageCount={inventory.totalPages}
           marginPagesDisplayed={2}
           pageRangeDisplayed={5}
           onPageChange={this.handlePageClick}
-          containerClassName={'pagination'}
-          activeClassName={'active'}
+          containerClassName={"pagination"}
+          activeClassName={"active"}
         />
       </>
     )
@@ -312,6 +314,6 @@ export default withRouter(
     logout,
     getInventory,
     clearMessage,
-    setProductDetailsModal
+    setProductDetailsModal,
   })(Products),
 )

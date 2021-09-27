@@ -94,7 +94,9 @@ export class Brand extends Component {
       brands.map((brand, index) => {
         return (
           <CTableRow className="text-center" key={index}>
-            <CTableDataCell>{brand.brand}</CTableDataCell>
+            <CTableDataCell>{brand.brandName}</CTableDataCell>
+            <CTableDataCell>{brand.totalProducts}</CTableDataCell>
+            <CTableDataCell>{brand.createdAt}</CTableDataCell>
             <CTableDataCell className="text-center w-25" colSpan="1">
               <CButton
                 color="info"
@@ -113,22 +115,22 @@ export class Brand extends Component {
                 <MdIcons.MdModeEdit size="20" />
               </CButton>
               {/* {permission === Roles.SUPER_ADMIN ? ( */}
-                <CButton
-                  color="danger"
-                  className="ms-2"
-                  variant="ghost"
-                  onClick={() =>
-                    this.props.setAlertModal(
-                      !visible,
-                      "DELETEBRAND",
-                      "BRAND",
-                      brand.id,
-                    )
-                  }
-                  size="sm"
-                >
-                  <MdIcons.MdDelete size="20" />
-                </CButton>
+              <CButton
+                color="danger"
+                className="ms-2"
+                variant="ghost"
+                onClick={() =>
+                  this.props.setAlertModal(
+                    !visible,
+                    "DELETEBRAND",
+                    "BRAND",
+                    brand.id,
+                  )
+                }
+                size="sm"
+              >
+                <MdIcons.MdDelete size="20" />
+              </CButton>
               {/* ) : null} */}
             </CTableDataCell>
           </CTableRow>
@@ -190,6 +192,8 @@ export class Brand extends Component {
           <CTableHead color="dark">
             <CTableRow className="text-center">
               <CTableHeaderCell scope="col">Brand Name</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Products</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Created Date</CTableHeaderCell>
               <CTableHeaderCell scope="col">Action</CTableHeaderCell>
             </CTableRow>
           </CTableHead>

@@ -134,7 +134,8 @@ export class Category extends Component {
           <CTableHead color="dark">
             <CTableRow className="text-center">
               <CTableHeaderCell scope="col">Brand Name</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Product</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Products</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Created Date</CTableHeaderCell>
               <CTableHeaderCell scope="col">Action</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
@@ -149,6 +150,7 @@ export class Category extends Component {
                         <CTableDataCell>
                           {category.totalProducts}
                         </CTableDataCell>
+                        <CTableDataCell>{category.createdAt}</CTableDataCell>
                         <CTableDataCell
                           className="text-center w-25"
                           colSpan="1"
