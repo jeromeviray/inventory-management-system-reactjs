@@ -21,7 +21,6 @@ import {
   CToastClose,
   CToaster,
   CFormSelect,
-  CFormCheck,
 } from "@coreui/react"
 
 //icons
@@ -33,8 +32,6 @@ import { RiEdit2Line } from "react-icons/ri"
 import ImageUploading from "react-images-uploading"
 import { convertFromRaw, convertToRaw, EditorState } from "draft-js"
 import { Editor } from "react-draft-wysiwyg"
-// import { convertToHTML } from "draft-convert"
-import draftToHtml from "draftjs-to-html"
 
 // action
 import { saveProduct } from "src/service/apiActions/productAction/productAction"
@@ -44,6 +41,7 @@ import { clearMessage } from "src/service/apiActions/messageAction/messageAction
 import { getImage } from "src/service/apiActions/productAction/productAction"
 import { getCategories } from "src/service/apiActions/categoryAction/categoryAction"
 import { getBrands } from "src/service/apiActions/brandAction/brandAction"
+import { updateProduct } from "src/service/apiActions/productAction/productAction"
 //api
 import ProductApiService from "src/service/restAPI/ProductApiService"
 
@@ -70,7 +68,7 @@ export class ProductEditorModal extends Component {
       editorState: EditorState.createEmpty(),
       autoGenerateBarcode: false,
       brands: [],
-      categories: []
+      categories: [],
     }
   }
 
@@ -78,21 +76,21 @@ export class ProductEditorModal extends Component {
     productName: "",
     productPrice: 0,
     productDescriptions: "",
-    productImage: [],
     barcode: "",
     brandName: "",
     brandId: "",
     categoryName: "",
     categoryId: "",
     threshold: 0,
+    productId: "",
   }
   onResetValue = () => {
     this.setState(() => this.productDetail)
   }
   componentDidMount() {
-    this.loadImage();
-    this.getBrands();
-    this.getCategories();
+    this.loadImage()
+    this.getBrands()
+    this.getCategories()
   }
   getCategories = () => {
     this.props.getCategories().catch(() => {
@@ -119,9 +117,9 @@ export class ProductEditorModal extends Component {
   }
 
   componentDidUpdate = (prevProps, prevState) => {
-    this.manageModalVisible(prevProps, prevState);
-    this.manageBrandsResponse(prevProps, prevState);
-    this.manageCategoryResponse(prevProps, prevState);
+    this.manageModalVisible(prevProps, prevState)
+    this.manageBrandsResponse(prevProps, prevState)
+    this.manageCategoryResponse(prevProps, prevState)
   }
   manageBrandsResponse = (prevProps, prevState) => {
     if (prevProps.brandResponse !== this.props.brandResponse) {
@@ -158,7 +156,17 @@ export class ProductEditorModal extends Component {
         })
       } else if (action === "Edit") {
         let { product, action, visible, icon } = this.props.modalVisibleResponse
-        let { productName, productDescription, barcode, productPrice, brand, category, fileImages } = product;
+        let {
+          productName,
+          productDescription,
+          barcode,
+          productPrice,
+          brand,
+          category,
+          fileImages,
+          id,
+        } = product
+
         this.setState({
           visible: visible,
           action: action,
@@ -168,12 +176,14 @@ export class ProductEditorModal extends Component {
           barcode: barcode,
           brandName: brand && brand.brand,
           categoryName: category && category.name,
+          productId: id,
           editorState: productDescription
             ? EditorState.createWithContent(
-              convertFromRaw(JSON.parse(productDescription)),
-            )
+                convertFromRaw(JSON.parse(productDescription)),
+              )
             : EditorState.createEmpty(),
         })
+
         this.getImages(fileImages)
       } else if (action === "close") {
         this.props.clearMessage()
@@ -181,9 +191,9 @@ export class ProductEditorModal extends Component {
           visible: this.props.modalVisibleResponse.visible,
           productName: "",
           productPrice: "",
-          barcode: '',
-          brandName: '',
-          categoryName: '',
+          barcode: "",
+          brandName: "",
+          categoryName: "",
           editorState: EditorState.createEmpty(),
           productImage: [],
         })
@@ -191,8 +201,7 @@ export class ProductEditorModal extends Component {
     }
   }
   async getImages(fileImages) {
-    for (let i = 0;i < fileImages.length;i++) {
-
+    for (let i = 0; i < fileImages.length; i++) {
       ProductApiService.getImage(fileImages[i].path, fileImages[i].fileName)
         .then((response) => {
           this.loadImage(response.data, fileImages[i].fileName)
@@ -218,7 +227,6 @@ export class ProductEditorModal extends Component {
           })
         })
     }
-
   }
 
   loadImage = (image, fileName) => {
@@ -272,63 +280,138 @@ export class ProductEditorModal extends Component {
   handleSubmit = (event) => {
     event.preventDefault()
 
+    let { action } = this.state
+
+    this.setState({
+      loading: true,
+    })
+
+    if (action === "Add") {
+      this.saveProduct()
+    } else if (action === "Edit") {
+      this.editProduct()
+    } else {
+      this.setState({
+        visible: this.props.modalVisibleResponse.visible,
+      })
+    }
+  }
+
+  saveProduct = () => {
     let {
       productName,
       productPrice,
       productImage,
-      action,
-      removedImages,
       barcode,
       editorState,
       categoryName,
       brandName,
     } = this.state
-    console.log(removedImages)
     let productData = new FormData()
-    if (productImage) {
-      if (productImage.length > 0) {
-        this.setState({
-          loading: true,
-        })
 
-        for (let i = 0;i < productImage.length;i++) {
-          if (productImage[i].file) {
-            productData.append("productImages[]", productImage[i].file)
-          }
-        }
-        productData.append("removedImages", removedImages)
-        productData.append("barcode", barcode)
-        productData.append("productName", productName)
-        productData.append("productPrice", productPrice)
-        productData.append("brandName", brandName)
-        productData.append("categoryName", categoryName)
-        productData.append(
-          "productDescription",
-          JSON.stringify(convertToRaw(editorState.getCurrentContent())),
-        )
-
-        if (action === "Add") {
-          this.saveProduct(productData)
-        } else if (action === "Edit") {
-          this.editProduct(productData)
-        } else {
-          this.setState({
-            visible: this.props.modalVisibleResponse.visible,
-          })
+    if (productImage.length > 0) {
+      for (let i = 0; i < productImage.length; i++) {
+        if (productImage[i].file) {
+          productData.append("productImages[]", productImage[i].file)
         }
       }
     } else {
-      console.log("Select images")
+      productData.append("productImages[]", productImage)
     }
-  }
 
-  saveProduct = (productData) => {
+    productData.append("barcode", barcode)
+    productData.append("productName", productName)
+    productData.append("productPrice", productPrice)
+    productData.append("brandName", brandName)
+    productData.append("categoryName", categoryName)
+    productData.append(
+      "productDescription",
+      JSON.stringify(convertToRaw(editorState.getCurrentContent())),
+    )
     this.props
       .saveProduct(productData)
       .then(() => {
         this.onResetValue()
         const successMessage = this.props.messageResponse
         if (successMessage.status === 200) {
+          this.setState({
+            loading: false,
+            successFully: true,
+            toast: this.toastComponent(),
+            editorState: EditorState.createEmpty(),
+            productImage: [],
+          })
+        } else {
+          this.setState({
+            loading: false,
+            productImage: [],
+            successFully: false,
+            editorState: EditorState.createEmpty(),
+          })
+        }
+      })
+      .catch(() => {
+        this.onResetValue()
+        let { status, data } = this.props.messageResponse
+
+        if (status > 400 && status <= 403) {
+          this.props.logout()
+          this.props.clearMessage()
+          this.setState({
+            loading: false,
+            toast: this.toastComponent(),
+            productImage: [],
+            editorState: EditorState.createEmpty(),
+          })
+        }
+        this.setState({
+          loading: false,
+          productImage: [],
+          toast: this.toastComponent(),
+          editorState: EditorState.createEmpty(),
+        })
+      })
+  }
+
+  editProduct = () => {
+    let {
+      productName,
+      productPrice,
+      productImage,
+      barcode,
+      editorState,
+      categoryName,
+      brandName,
+      productId,
+      removedImages,
+    } = this.state
+    let productData = new FormData()
+
+    if (productImage.length > 0) {
+      for (let i = 0; i < productImage.length; i++) {
+        if (productImage[i].file) {
+          productData.append("productImages[]", productImage[i].file)
+        }
+      }
+    } else {
+      productData.append("productImages[]", productImage)
+    }
+
+    productData.append("removedImages[]", removedImages)
+    productData.append("barcode", barcode)
+    productData.append("productName", productName)
+    productData.append("productPrice", productPrice)
+    productData.append("brandName", brandName)
+    productData.append("categoryName", categoryName)
+    productData.append(
+      "productDescription",
+      JSON.stringify(convertToRaw(editorState.getCurrentContent())),
+    )
+    this.props
+      .updateProduct(productId, productData)
+      .then(() => {
+        const { status } = this.props.messageResponse
+        if (status === 200) {
           this.setState({
             loading: false,
             successFully: true,
@@ -344,7 +427,6 @@ export class ProductEditorModal extends Component {
         }
       })
       .catch(() => {
-        this.onResetValue()
         let { status, data } = this.props.messageResponse
 
         if (status > 400 && status <= 403) {
@@ -363,8 +445,6 @@ export class ProductEditorModal extends Component {
         })
       })
   }
-
-  editProduct = (productData, token) => { }
 
   removeImage(index) {
     let { productImage, removedImages } = this.state
@@ -419,11 +499,11 @@ export class ProductEditorModal extends Component {
       threshold,
       autoGenerateBarcode,
       brands,
-      categories
+      categories,
     } = this.state
     const styleOption = {
       fontWeight: "600",
-      fontSize: "16px"
+      fontSize: "16px",
     }
     return (
       <>
@@ -484,21 +564,22 @@ export class ProductEditorModal extends Component {
                   // write your building UI
                   <div className="upload__image-wrapper">
                     <CContainer className="upload-container">
-                      <button
+                      <CButton
+                        color="secondary"
                         className="upload-btn"
                         style={
                           isDragging
                             ? {
-                              backgroundColor: "#8E9293",
-                              border: "4px dashed #ffffff",
-                            }
+                                backgroundColor: "#8E9293",
+                                border: "4px dashed #ffffff",
+                              }
                             : undefined
                         }
                         onClick={onImageUpload}
                         {...dragProps}
                       >
                         Select Image or Drag Here
-                      </button>
+                      </CButton>
                     </CContainer>
                     <CRow className=" images-contianer shadow ">
                       {imageList.map((image, index) => (
@@ -571,7 +652,7 @@ export class ProductEditorModal extends Component {
                       onChange={this.handleOnChange}
                       required
                       disabled={action === "Edit" ? true : false}
-                    // disabled={autoGenerateBarcode}
+                      // disabled={autoGenerateBarcode}
                     />
                     <CFormLabel htmlFor="floatingBarcode">
                       Product Barcode
@@ -636,12 +717,18 @@ export class ProductEditorModal extends Component {
                       aria-label="Brand Names"
                     >
                       <option value="">Choose Brand</option>
-                      {brands && brands.map((brand, index) => {
-                        return (
-                          <option key={index} value={brand.brandName} style={{ ...styleOption }}>{brand.brandName}</option>
-
-                        )
-                      })}
+                      {brands &&
+                        brands.map((brand, index) => {
+                          return (
+                            <option
+                              key={index}
+                              value={brand.brandName}
+                              style={{ ...styleOption }}
+                            >
+                              {brand.brandName}
+                            </option>
+                          )
+                        })}
                     </CFormSelect>
                     <CFormLabel htmlFor="floatingSelectBrand">Brand</CFormLabel>
                   </CFormFloating>
@@ -656,11 +743,18 @@ export class ProductEditorModal extends Component {
                       aria-label="Categories"
                     >
                       <option value="">Choose Category</option>
-                      {categories && categories.map((category, index) => {
-                        return (
-                          <option key={index} value={category.categoryName} style={{ ...styleOption }}>{category.categoryName}</option>
-                        )
-                      })}
+                      {categories &&
+                        categories.map((category, index) => {
+                          return (
+                            <option
+                              key={index}
+                              value={category.categoryName}
+                              style={{ ...styleOption }}
+                            >
+                              {category.categoryName}
+                            </option>
+                          )
+                        })}
                     </CFormSelect>
                     <CFormLabel htmlFor="floatingSelectCategory">
                       Category
@@ -734,7 +828,6 @@ const mapStateToProps = (state) => {
     productResponse: state.productResponser,
     brandResponse: state.brandResponse,
     categoryResponse: state.categoryResponse,
-
   }
 }
 export default connect(mapStateToProps, {
@@ -744,5 +837,6 @@ export default connect(mapStateToProps, {
   clearMessage,
   getImage,
   getCategories,
-  getBrands
+  getBrands,
+  updateProduct,
 })(ProductEditorModal)

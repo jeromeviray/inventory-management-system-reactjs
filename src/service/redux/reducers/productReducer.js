@@ -5,6 +5,7 @@ import {
   // GET_PRODUCT,
   GET_PRODUCTS,
   GET_PRODUCT_DETAILS,
+  UPDATE_PRODUCT,
   // UPDATE_PRODUCT,
   // DELETE_PRODUCT,
 } from "../constants"
@@ -56,6 +57,14 @@ const productReducer = (state = {}, action) => {
         action: "DETAILS",
         data: {
           product: action.payload.data.product
+        }
+      }
+    case UPDATE_PRODUCT:
+      return {
+        status: action.payload.status,
+        action: action.payload.action,
+        data: {
+          updatedProduct: action.payload.updatedProduct
         }
       }
     // case GET_IMAGE:
