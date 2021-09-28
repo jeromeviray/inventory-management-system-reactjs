@@ -13,8 +13,11 @@ export class ProductApiService {
             headers: { Authorization: token }
         })
     }
-    getImage(image, token) {
-        return axios.get("/products/getImages/bytesArrays/" + image, {
+    getImage(path, image) {
+        console.log()
+        let getPath = path ? path : "null/"
+
+        return axios.get("/products/getImages/bytesArrays/" + getPath + image, {
             responseType: 'blob'
         })
     }

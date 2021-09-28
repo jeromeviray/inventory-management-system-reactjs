@@ -11,6 +11,8 @@ import {
     CToastBody, CToastClose, CToaster,
     CSpinner
 } from '@coreui/react';
+import { DotLoader } from 'react-spinners';
+
 // import Checkout from './checkout/Checkout'
 // import CustomerAddress from './customerAddress/CustomerAddress';
 // import PaymentMethod from './payment/PaymentMethod';
@@ -252,7 +254,11 @@ export class Cart extends Component {
                 <CToaster push={toast} placement="top-end" />
 
 
-                <Suspense fallback={<CSpinner color="primary" />}>
+                <Suspense fallback={
+                    <div className="d-flex justify-content-center align-items-center  position-fixed ">
+                        <DotLoader color="#36D7B7" size={100} />
+                    </div>
+                }>
                     <CRow>
                         <h3 className="mt-2 mb-4">{this.renderHeader()}</h3>
                     </CRow>

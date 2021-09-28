@@ -102,6 +102,7 @@ export const GET_PAYMENT_METHODS = "GET_PAYMENT_METHODS"
 export const GET_PAYMENT_METHOD = "GET_PAYMENT_METHOD"
 
 //inventory
+export const GET_INVENTORIES = "GET_INVENTORIES"
 export const GET_INVENTORY = "GET_INVENTORY"
 
 // supplier

@@ -138,15 +138,6 @@ export class ProductDetialsModal extends Component {
           <>
             <LoginModal />
             <CToaster push={toast} placement="top-end" />
-            {/* <CModal
-              backdrop={false}
-              scrollable={true}
-              size="xl"
-              visible={visible}
-              onDismiss={() =>
-                this.props.setProductDetailsModal(false, "close", "")
-              }
-            > */}
             <CModal
               size="xl"
               visible={visible}

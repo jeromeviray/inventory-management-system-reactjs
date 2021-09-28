@@ -1,5 +1,9 @@
 import React, { Component, Suspense } from 'react'
-import { CContainer, CSpinner } from '@coreui/react'
+import {
+    CContainer
+} from '@coreui/react'
+import { DotLoader } from 'react-spinners';
+
 import { Route, Switch, Redirect } from 'react-router'
 import { publicRoutes } from 'src/router/privateRouter/routes'
 import { connect } from 'react-redux'
@@ -49,7 +53,11 @@ export class PublicContent extends Component {
         return (
             <>
                 <CContainer>
-                    <Suspense fallback={<CSpinner color="primary" />}>
+                    <Suspense fallback={
+                        <div className="d-flex justify-content-center align-items-center  position-fixed ">
+                            <DotLoader color="#36D7B7" size={100} />
+                        </div>
+                    }>
                         <Switch>
 
                             {publicRoutes.map((route, idx) => {

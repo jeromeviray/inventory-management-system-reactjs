@@ -305,3 +305,15 @@ body{
 .pagination > li:last-child > span {
   border-radius: unset;
 }
+.spinner {
+  // display: block;
+  // position: fixed;
+  // z-index: 1031; /* High z-index so it is on top of the page */
+  // top: 50%;
+  // right: 50%; /* or: left: 50%; */
+  // transform: translate(-50%, -50%);
+   left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}

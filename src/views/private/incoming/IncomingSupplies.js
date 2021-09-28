@@ -3,12 +3,13 @@ import {
      CNav,
      CNavItem,
      CNavLink, CTabContent,
-     CTabPane, CSpinner,
+     CTabPane,
      CButton,
      CForm,
      CInputGroup,
      CFormControl,
 } from "@coreui/react"
+import { DotLoader } from 'react-spinners';
 import * as FaIcons from "react-icons/fa"
 import { connect } from 'react-redux';
 //action
@@ -139,7 +140,11 @@ export class IncomingSupplies extends Component {
                               aria-labelledby="ship-tab"
                               visible={activeKey === 1}
                          >
-                              <Suspense fallback={<CSpinner color="primary" />}>
+                              <Suspense fallback={
+                                   <div className="d-flex justify-content-center align-items-center  position-fixed ">
+                                        <DotLoader color="#36D7B7" size={100} />
+                                   </div>
+                              }>
                                    <IncomingSuppliesByShipStatus />
                               </Suspense>
                          </CTabPane>

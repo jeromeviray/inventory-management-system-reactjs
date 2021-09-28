@@ -13,7 +13,7 @@ import {
 } from '@coreui/react'
 import { connect } from 'react-redux'
 //action
-import { getInventory } from 'src/service/apiActions/inventoryAction/inventoryAction'
+import { getInventories } from 'src/service/apiActions/inventoryAction/inventoryAction'
 import { logout } from 'src/service/apiActions/userAction/userAction'
 import { clearMessage } from 'src/service/apiActions/messageAction/messageAction'
 // barcode
@@ -23,14 +23,14 @@ import ReactPaginate from 'react-paginate';
 export class Inventory extends Component {
     state = {
         message: '',
-        inventory: [],
+        inventories: [],
         page: 0,
         limit: 10,
         query: ""
     }
     componentDidMount() {
         const { page, limit, query } = this.state;
-        this.props.getInventory(query, page, limit).catch(() => {
+        this.props.getInventories(query, page, limit).catch(() => {
             let { status, data } = this.props.messageResponse;
             if (status > 400 && status <= 403) {
                 setInterval(() => {
@@ -49,10 +49,10 @@ export class Inventory extends Component {
     manageInventoryResponse = (prevPros, prevState) => {
         if (prevPros.inventoryResponse !== this.props.inventoryResponse) {
             let { status, action, data } = this.props.inventoryResponse;
-            console.log(data);
-            if (status === 200 && action === 'GETINVENTORY') {
+            console.log(this.props.inventoryResponse)
+            if (status === 200 && action === 'GETINVENTORIES') {
                 this.setState({
-                    inventory: data.inventory.data
+                    inventories: data.inventories.data
                 })
             }
         }
@@ -80,7 +80,7 @@ export class Inventory extends Component {
     handleSearch = (query) => {
         this.setState({ query: query }, () => {
             const { page, limit, query } = this.state;
-            this.props.getInventory(query, page, limit);
+            this.props.getInventories(query, page, limit);
         });
     };
 
@@ -88,12 +88,13 @@ export class Inventory extends Component {
         let page = data.selected;
         this.setState({ page: page }, () => {
             const { page, limit, query } = this.state;
-            this.props.getInventory(query, page, limit);
+            this.props.getInventories(query, page, limit);
         });
     };
 
     render() {
-        let { inventory, message } = this.state;
+        let { inventories, message } = this.state;
+        console.log(inventories)
         const barcodeStyle = {
             height: "50%"
         }
@@ -106,7 +107,7 @@ export class Inventory extends Component {
                     responsive="md"
                     bordered
                     align="middle" >
-                    <CTableCaption>List of Branch: <b>{inventory.length}</b></CTableCaption>
+                    <CTableCaption>List of Branch: <b>{inventories.length}</b></CTableCaption>
                     <CTableHead color="dark">
 
                         <CTableRow className="text-center">
@@ -181,7 +182,7 @@ export class Inventory extends Component {
                     nextLabel={'next'}
                     breakLabel={'...'}
                     breakClassName={'break-me'}
-                    pageCount={inventory.totalPages}
+                    pageCount={inventories.totalPages}
                     marginPagesDisplayed={2}
                     pageRangeDisplayed={5}
                     onPageChange={this.handlePageClick}
@@ -199,7 +200,7 @@ const mapStateToProps = (state) => {
     }
 }
 export default connect(mapStateToProps, {
-    getInventory,
+    getInventories,
     logout,
     clearMessage
 })(Inventory)

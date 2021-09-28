@@ -39,12 +39,11 @@ export class Brand extends Component {
   }
   componentDidMount() {
     let { type, accessToken, roles } = this.props.userResponse.credentials
-    let token = type + accessToken
 
     this.setState({
       permission: roles && roles.roleName,
     })
-    this.props.getBrands(token).catch(() => {
+    this.props.getBrands().catch(() => {
       let failMessage = this.props.messageResponse
       if (failMessage.status > 400 && failMessage.status <= 403) {
         this.props.logout()

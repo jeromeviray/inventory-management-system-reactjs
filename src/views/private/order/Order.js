@@ -9,6 +9,8 @@ import {
   CFormControl,
   CButton
 } from '@coreui/react'
+import { DotLoader } from 'react-spinners';
+
 
 // icon
 // import * as FiIcons from 'react-icons/fi'
@@ -115,7 +117,11 @@ export class Order extends Component {
             aria-labelledby="home-tab"
             visible={activeKey === 1}
           >
-            <Suspense fallback={<CSpinner color="primary" />}>
+            <Suspense fallback={
+              <div className="d-flex justify-content-center align-items-center  position-fixed ">
+                <DotLoader color="#36D7B7" size={100} />
+              </div>
+            }>
               <PendingOrder />
             </Suspense>
           </CTabPane>
@@ -124,7 +130,11 @@ export class Order extends Component {
             aria-labelledby="profile-tab"
             visible={activeKey === 2}
           >
-            <Suspense fallback={<CSpinner color="primary" />}>
+            <Suspense fallback={
+              <div className="d-flex justify-content-center align-items-center  position-fixed ">
+                <DotLoader color="#36D7B7" size={100} />
+              </div>
+            }>
               <ConfirmedOrder />
             </Suspense>
           </CTabPane>
@@ -133,7 +143,11 @@ export class Order extends Component {
             aria-labelledby="contact-tab"
             visible={activeKey === 3}
           >
-            <Suspense fallback={<CSpinner color="primary" />}>
+            <Suspense fallback={
+              <div className="d-flex justify-content-center align-items-center  position-fixed ">
+                <DotLoader color="#36D7B7" size={100} />
+              </div>
+            }>
               <DeliveryOrder />
             </Suspense>
           </CTabPane>
@@ -142,7 +156,11 @@ export class Order extends Component {
             aria-labelledby="contact-tab"
             visible={activeKey === 4}
           >
-            <Suspense fallback={<CSpinner color="primary" />}>
+            <Suspense fallback={
+              <div className="d-flex justify-content-center align-items-center  position-fixed ">
+                <DotLoader color="#36D7B7" size={100} />
+              </div>
+            }>
               <CompletedOrder />
             </Suspense>
           </CTabPane>

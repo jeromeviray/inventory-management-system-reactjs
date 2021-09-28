@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { CCard, CCardBody, CCardTitle } from "@coreui/react"
+import { CCard, CCardBody, CCardTitle, CBadge } from "@coreui/react"
 import ReactStars from "react-rating-stars-component"
 import * as FaIcons from "react-icons/fa"
 import * as BsIcons from "react-icons/bs"
@@ -91,6 +91,34 @@ export class ProductCard extends Component {
         })
       })
   }
+  manageStatus = (status) => {
+    switch (status) {
+      case "OK":
+        return (
+          <CBadge color="success" shape="rounded-pill">
+            {status}
+          </CBadge>
+        )
+      case "LOW":
+        return (
+          <CBadge color="warning" shape="rounded-pill">
+            {status}
+          </CBadge>
+        )
+      case "OUT_OF_STOCK":
+        return (
+          <CBadge color="danger" shape="rounded-pill">
+            OUT OF STOCK
+          </CBadge>
+        )
+      default:
+        return (
+          <CBadge color="danger" shape="rounded-pill">
+            {status}
+          </CBadge>
+        )
+    }
+  }
   renderProductModal = () => {
     <ProductEditorModal />
   }
@@ -150,10 +178,11 @@ export class ProductCard extends Component {
               </CCardTitle>
               <div className="product-stock-container">
                 <span className="stock-label">Stock: </span>
-                {product.stock ? (
-                  <span className="stock-label-value">{product.stock}</span>
+                {product.inventory.totalStock > 0 ? (
+                  <span className="stock-label-value">{product.inventory.totalStock}</span>
                 ) : (
-                  <span className="sold-out-label">Sold Out</span>
+                  // <span className="sold-out-label">Sold Out</span>
+                  this.manageStatus(product.inventory.status)
                 )}
               </div>
             </div>

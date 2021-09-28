@@ -2,7 +2,7 @@ import authHeader from '../auth/authHeader';
 import axios from './RestApi';
 
 export class InventoryApiService {
-    getInventory(query, page, limit) {
+    getInventories(query, page, limit) {
         return axios.get("/inventory", {
             headers: authHeader(),
             params: {
@@ -10,6 +10,11 @@ export class InventoryApiService {
                 page: page,
                 limit: limit
             }
+        })
+    }
+    getInventory(id) {
+        return axios.get("/inventory/" + id, {
+            headers: authHeader()
         })
     }
 

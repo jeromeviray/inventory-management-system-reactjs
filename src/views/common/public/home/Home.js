@@ -1,5 +1,7 @@
 import React, { Component, Suspense } from 'react'
 import { CContainer, CSpinner } from '@coreui/react'
+import { DotLoader } from 'react-spinners';
+
 // import { HeroCarousel } from 'src/components/carousel/index'
 
 import { connect } from 'react-redux'
@@ -34,7 +36,11 @@ export class Home extends Component {
         let { message } = this.state;
         return (
             <>
-                <Suspense fallback={<CSpinner color="primary" />}>
+                <Suspense fallback={
+                    <div className="d-flex justify-content-center align-items-center  position-fixed ">
+                        <DotLoader color="#36D7B7" size={100} />
+                    </div>
+                }>
                     <ProductDetialsModal />
 
                     <CContainer>

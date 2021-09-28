@@ -1,9 +1,9 @@
 import axios from './RestApi'
-
+import authHeader from '../auth/authHeader';
 export class BrandApiService {
-    getBrands(token) {
+    getBrands() {
         return axios.get("/brands", {
-            headers: { Authorization: token }
+            headers: authHeader()
         })
     }
     getBrand(id, token) {

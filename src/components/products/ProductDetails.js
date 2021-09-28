@@ -10,8 +10,7 @@ import {
 import * as IoIcons from "react-icons/io";
 import { Carousel } from 'react-responsive-carousel';
 import ReactStars from "react-rating-stars-component"
-
-
+import { NO_IMAGE_BASE64 } from 'src/service/redux/constants';
 export class ProductDetails extends Component {
     state = {
         product: this.props.product
@@ -51,13 +50,22 @@ export class ProductDetails extends Component {
                                     </button>
                                 )
                             }>
-                            {product.fileImages && (product.fileImages.map((image, index) => {
+                            {product.fileImages.length > 0 ? (product.fileImages.map((image, index) => {
+                                console.log(image)
                                 return (
                                     <div key={index}>
-                                        <img src={"/images/products/" + image.fileName} />
+                                        <img
+                                            src={
+                                                image.path ? "/images/products/" + image.path + image.fileName : "/images/products/" + image.fileName
+                                            }
+                                        />
                                     </div>
                                 )
-                            }))}
+                            })) :
+                                <img
+                                    src={NO_IMAGE_BASE64}
+                                />
+                            }
                         </Carousel>
                     </CCol>
                     <CCol sm="12" md='7' lg="7">

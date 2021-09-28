@@ -1,14 +1,16 @@
-import { GET_INVENTORY } from "../constants";
+import { GET_INVENTORIES } from "../constants";
 
 const inventoryReducer = (state = {}, action) => {
     const { type, payload } = action;
     switch (type) {
-        case GET_INVENTORY:
+        case GET_INVENTORIES:
+            console.log(payload.data.inventories)
+
             return {
                 status: payload.status,
                 action: payload.action,
                 data: {
-                    inventory: payload.data.inventory
+                    inventories: payload.data.inventories
                 }
             }
         default:

@@ -3,8 +3,8 @@ import { DELETE_BRAND, FAIL_BRAND, GET_BRANDS, SAVE_BRAND, UPDATE_BRAND } from "
 import BrandApiService from "src/service/restAPI/BrandApiService";
 
 
-export const getBrands = (token) => async (dispatch) => {
-    return BrandApiService.getBrands(token).then(
+export const getBrands = () => async (dispatch) => {
+    return BrandApiService.getBrands().then(
         (response) => {
             dispatch({
                 type: GET_BRANDS,

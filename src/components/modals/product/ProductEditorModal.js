@@ -42,6 +42,8 @@ import { setProductModal } from "../../../service/apiActions/modalAction/modalAc
 import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { getImage } from "src/service/apiActions/productAction/productAction"
+import { getCategories } from "src/service/apiActions/categoryAction/categoryAction"
+import { getBrands } from "src/service/apiActions/brandAction/brandAction"
 //api
 import ProductApiService from "src/service/restAPI/ProductApiService"
 
@@ -67,6 +69,8 @@ export class ProductEditorModal extends Component {
       toast: "",
       editorState: EditorState.createEmpty(),
       autoGenerateBarcode: false,
+      brands: [],
+      categories: []
     }
   }
 
@@ -86,10 +90,62 @@ export class ProductEditorModal extends Component {
     this.setState(() => this.productDetail)
   }
   componentDidMount() {
-    this.loadImage()
+    this.loadImage();
+    this.getBrands();
+    this.getCategories();
   }
+  getCategories = () => {
+    this.props.getCategories().catch(() => {
+      let { status, data } = this.props.messageResponse
+      if (status > 400 && status <= 403) {
+        this.props.logout()
+        this.props.clearMessage()
+      }
+      this.setState({
+        message: data.message,
+      })
+    })
+  }
+  getBrands = () => {
+    this.props.getBrands().catch(() => {
+      let failMessage = this.props.messageResponse
+      if (failMessage.status > 400 && failMessage.status <= 403) {
+        this.props.logout()
+      }
+      this.setState({
+        message: failMessage.data.message,
+      })
+    })
+  }
+
   componentDidUpdate = (prevProps, prevState) => {
-    this.manageModalVisible(prevProps, prevState)
+    this.manageModalVisible(prevProps, prevState);
+    this.manageBrandsResponse(prevProps, prevState);
+    this.manageCategoryResponse(prevProps, prevState);
+  }
+  manageBrandsResponse = (prevProps, prevState) => {
+    if (prevProps.brandResponse !== this.props.brandResponse) {
+      let { status, action, data } = this.props.brandResponse
+      if (status === 200 && action === "GETBRANDS") {
+        this.setState({
+          brands: data.brands,
+        })
+      } else if (status > 400 && status <= 403) {
+        this.props.clearMessage()
+
+        this.props.logout()
+      }
+    }
+  }
+  manageCategoryResponse = (prevProps, prevState) => {
+    if (prevProps.categoryResponse !== this.props.categoryResponse) {
+      let { action, data, status } = this.props.categoryResponse
+      if (action === "GET_CATEGORIES" && status === 200) {
+        this.setState({
+          categories: data.categories,
+        })
+      }
+    }
   }
   manageModalVisible = (prevProps, prevState) => {
     if (prevProps.modalVisibleResponse !== this.props.modalVisibleResponse) {
@@ -102,25 +158,32 @@ export class ProductEditorModal extends Component {
         })
       } else if (action === "Edit") {
         let { product, action, visible, icon } = this.props.modalVisibleResponse
+        let { productName, productDescription, barcode, productPrice, brand, category, fileImages } = product;
         this.setState({
           visible: visible,
           action: action,
           icon: icon,
-          productName: product.productName,
-          productPrice: product.productPrice,
-          editorState: product.productDescription
+          productName: productName,
+          productPrice: productPrice,
+          barcode: barcode,
+          brandName: brand && brand.brand,
+          categoryName: category && category.name,
+          editorState: productDescription
             ? EditorState.createWithContent(
-                convertFromRaw(JSON.parse(product.productDescription)),
-              )
+              convertFromRaw(JSON.parse(productDescription)),
+            )
             : EditorState.createEmpty(),
         })
-        this.getImages(product.fileImages)
+        this.getImages(fileImages)
       } else if (action === "close") {
         this.props.clearMessage()
         this.setState({
           visible: this.props.modalVisibleResponse.visible,
           productName: "",
           productPrice: "",
+          barcode: '',
+          brandName: '',
+          categoryName: '',
           editorState: EditorState.createEmpty(),
           productImage: [],
         })
@@ -128,10 +191,9 @@ export class ProductEditorModal extends Component {
     }
   }
   async getImages(fileImages) {
-    let { accessToken, type } = this.props.credentials
-    let token = type + accessToken
-    for (let i = 0; i < fileImages.length; i++) {
-      ProductApiService.getImage(fileImages[i].fileName, token)
+    for (let i = 0;i < fileImages.length;i++) {
+
+      ProductApiService.getImage(fileImages[i].path, fileImages[i].fileName)
         .then((response) => {
           this.loadImage(response.data, fileImages[i].fileName)
         })
@@ -156,6 +218,7 @@ export class ProductEditorModal extends Component {
           })
         })
     }
+
   }
 
   loadImage = (image, fileName) => {
@@ -217,7 +280,10 @@ export class ProductEditorModal extends Component {
       removedImages,
       barcode,
       editorState,
+      categoryName,
+      brandName,
     } = this.state
+    console.log(removedImages)
     let productData = new FormData()
     if (productImage) {
       if (productImage.length > 0) {
@@ -225,7 +291,7 @@ export class ProductEditorModal extends Component {
           loading: true,
         })
 
-        for (let i = 0; i < productImage.length; i++) {
+        for (let i = 0;i < productImage.length;i++) {
           if (productImage[i].file) {
             productData.append("productImages[]", productImage[i].file)
           }
@@ -234,20 +300,22 @@ export class ProductEditorModal extends Component {
         productData.append("barcode", barcode)
         productData.append("productName", productName)
         productData.append("productPrice", productPrice)
+        productData.append("brandName", brandName)
+        productData.append("categoryName", categoryName)
         productData.append(
           "productDescription",
           JSON.stringify(convertToRaw(editorState.getCurrentContent())),
         )
 
-        // if (action === "Add") {
-        //   this.saveProduct(productData)
-        // } else if (action === "Edit") {
-        //   this.editProduct(productData)
-        // } else {
-        //   this.setState({
-        //     visible: this.props.modalVisibleResponse.visible,
-        //   })
-        // }
+        if (action === "Add") {
+          this.saveProduct(productData)
+        } else if (action === "Edit") {
+          this.editProduct(productData)
+        } else {
+          this.setState({
+            visible: this.props.modalVisibleResponse.visible,
+          })
+        }
       }
     } else {
       console.log("Select images")
@@ -296,7 +364,7 @@ export class ProductEditorModal extends Component {
       })
   }
 
-  editProduct = (productData, token) => {}
+  editProduct = (productData, token) => { }
 
   removeImage(index) {
     let { productImage, removedImages } = this.state
@@ -350,7 +418,13 @@ export class ProductEditorModal extends Component {
       brandId,
       threshold,
       autoGenerateBarcode,
+      brands,
+      categories
     } = this.state
+    const styleOption = {
+      fontWeight: "600",
+      fontSize: "16px"
+    }
     return (
       <>
         <CToaster push={toast} placement="top-end" />
@@ -415,9 +489,9 @@ export class ProductEditorModal extends Component {
                         style={
                           isDragging
                             ? {
-                                backgroundColor: "#8E9293",
-                                border: "4px dashed #ffffff",
-                              }
+                              backgroundColor: "#8E9293",
+                              border: "4px dashed #ffffff",
+                            }
                             : undefined
                         }
                         onClick={onImageUpload}
@@ -487,7 +561,23 @@ export class ProductEditorModal extends Component {
                   </CFormFloating>
                 </CCol>
                 <CCol sm="12" md="6" lg>
-                  <CRow className="align-items-end">
+                  <CFormFloating className="mb-3">
+                    <CFormControl
+                      type="number"
+                      id="floatingBarcode"
+                      placeholder="Product Barcode"
+                      name="barcode"
+                      value={barcode}
+                      onChange={this.handleOnChange}
+                      required
+                      disabled={action === "Edit" ? true : false}
+                    // disabled={autoGenerateBarcode}
+                    />
+                    <CFormLabel htmlFor="floatingBarcode">
+                      Product Barcode
+                    </CFormLabel>
+                  </CFormFloating>
+                  {/* <CRow className="align-items-end">
                     <CCol sm="8" md="8" lg="8">
                       <CFormFloating className="mb-3">
                         <CFormControl
@@ -519,7 +609,7 @@ export class ProductEditorModal extends Component {
                         label="Generate Barcode"
                       />
                     </CCol>
-                  </CRow>
+                  </CRow> */}
                 </CCol>
                 <CCol sm="12" md="6" lg>
                   <CFormFloating className="mb-3">
@@ -530,7 +620,6 @@ export class ProductEditorModal extends Component {
                       name="threshold"
                       value={threshold}
                       onChange={this.handleOnChange}
-                      required
                     />
                     <CFormLabel htmlFor="floatingThreshold">
                       Product Threshold
@@ -546,7 +635,13 @@ export class ProductEditorModal extends Component {
                       id="floatingSelectBrand"
                       aria-label="Brand Names"
                     >
-                      <option>Choose Brand</option>
+                      <option value="">Choose Brand</option>
+                      {brands && brands.map((brand, index) => {
+                        return (
+                          <option key={index} value={brand.brandName} style={{ ...styleOption }}>{brand.brandName}</option>
+
+                        )
+                      })}
                     </CFormSelect>
                     <CFormLabel htmlFor="floatingSelectBrand">Brand</CFormLabel>
                   </CFormFloating>
@@ -556,11 +651,16 @@ export class ProductEditorModal extends Component {
                     <CFormSelect
                       value={categoryName}
                       onChange={this.handleOnChange}
-                      name="branch"
+                      name="categoryName"
                       id="floatingSelectCategory"
                       aria-label="Categories"
                     >
-                      <option>Choose Category</option>
+                      <option value="">Choose Category</option>
+                      {categories && categories.map((category, index) => {
+                        return (
+                          <option key={index} value={category.categoryName} style={{ ...styleOption }}>{category.categoryName}</option>
+                        )
+                      })}
                     </CFormSelect>
                     <CFormLabel htmlFor="floatingSelectCategory">
                       Category
@@ -632,6 +732,9 @@ const mapStateToProps = (state) => {
     messageResponse: state.messageResponse,
     credentials: state.userResponse.credentials,
     productResponse: state.productResponser,
+    brandResponse: state.brandResponse,
+    categoryResponse: state.categoryResponse,
+
   }
 }
 export default connect(mapStateToProps, {
@@ -640,4 +743,6 @@ export default connect(mapStateToProps, {
   logout,
   clearMessage,
   getImage,
+  getCategories,
+  getBrands
 })(ProductEditorModal)

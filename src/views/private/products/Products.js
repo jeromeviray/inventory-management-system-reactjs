@@ -7,9 +7,9 @@ import {
   setProductDetailsModal,
   editProductModal,
 } from "../../../service/apiActions/modalAction/modalAction"
-import { getInventory } from "src/service/apiActions/inventoryAction/inventoryAction"
+import { getInventories } from "src/service/apiActions/inventoryAction/inventoryAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
-import { getProduct } from "../../../service/apiActions/productAction/productAction"
+import { getProduct } from "src/service/apiActions/productAction/productAction"
 import {
   CTable,
   CTableHead,
@@ -44,7 +44,7 @@ class Products extends Component {
     products: [],
     keyword: "",
     visible: false,
-    inventory: {
+    inventories: {
       data: [],
       totalPages: 0,
     },
@@ -55,11 +55,11 @@ class Products extends Component {
 
   componentDidMount() {
     const { page, limit, query } = this.state
-    this.getInventory(page, limit, query)
+    this.getInventories(page, limit, query)
   }
 
-  getInventory(page, limit, query) {
-    this.props.getInventory(query, page, limit).catch(() => {
+  getInventories(page, limit, query) {
+    this.props.getInventories(query, page, limit).catch(() => {
       let { status, data } = this.props.messageResponse
       if (status > 400 && status <= 403) {
         setInterval(() => {
@@ -87,16 +87,16 @@ class Products extends Component {
       })
       if (response.action === "close") {
         const { page, limit, query } = this.state
-        this.getInventory(page, limit, query)
+        this.getInventories(page, limit, query)
       }
     }
   }
   manageInventoryResponse = (prevPros, prevState) => {
     if (prevPros.inventoryResponse !== this.props.inventoryResponse) {
       let { status, action, data } = this.props.inventoryResponse
-      if (status === 200 && action === "GETINVENTORY") {
+      if (status === 200 && action === "GETINVENTORIES") {
         this.setState({
-          inventory: data.inventory,
+          inventories: data.inventories,
         })
       }
     }
@@ -152,7 +152,7 @@ class Products extends Component {
 
   handleSearch = (event) => {
     const { page, limit } = this.state
-    this.props.getInventory(event.target.value, page, limit)
+    this.props.getInventories(event.target.value, page, limit)
     this.setState({ query: event.target.value })
   }
 
@@ -160,7 +160,7 @@ class Products extends Component {
     let page = data.selected
     this.setState({ page: page })
     const { limit, query } = this.state
-    this.props.getInventory(query, page, limit)
+    this.props.getInventories(query, page, limit)
   }
   handleGetProduct = (id) => {
     const { accessToken, type } = this.props.userResponse.credentials
@@ -180,8 +180,7 @@ class Products extends Component {
     })
   }
   render() {
-    let { visible, message, inventory } = this.state
-
+    let { visible, message, inventories } = this.state
     return (
       <>
         {this.renderProductEditorModal()}
@@ -234,7 +233,7 @@ class Products extends Component {
           align="middle"
         >
           <CTableCaption>
-            List of Products: <b>{inventory.totalItems}</b>
+            List of Products: <b>{inventories.totalItems}</b>
           </CTableCaption>
 
           <CTableHead color="dark">
@@ -259,8 +258,8 @@ class Products extends Component {
                 </CTableDataCell>
               </CTableRow>
             )}
-            {inventory.data.length > 0 ? (
-              inventory.data.map((item, index) => {
+            {inventories.data.length > 0 ? (
+              inventories.data.map((item, index) => {
                 let { product, threshold, totalStock, status } = item
                 return (
                   <CTableRow className="text-center" key={index}>
@@ -320,7 +319,7 @@ class Products extends Component {
           nextLabel={"next"}
           breakLabel={"..."}
           breakClassName={"break-me"}
-          pageCount={inventory.totalPages}
+          pageCount={inventories.totalPages}
           marginPagesDisplayed={2}
           pageRangeDisplayed={5}
           onPageChange={this.handlePageClick}
@@ -347,7 +346,7 @@ export default withRouter(
     setProductModal,
     getProducts,
     logout,
-    getInventory,
+    getInventories,
     clearMessage,
     setProductDetailsModal,
     getProduct,

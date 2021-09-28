@@ -1,6 +1,7 @@
 import React, { Suspense, Component } from "react"
 import { Redirect, Route, Switch } from "react-router-dom"
 import { CContainer, CSpinner } from "@coreui/react"
+import { DotLoader } from "react-spinners"
 
 // routes config
 import { routes } from "src/router/privateRouter/routes"
@@ -45,7 +46,12 @@ class AppContent extends Component {
     // console.log(this.props.userResponse.credentials.roles.roleName)
     return (
       <CContainer lg>
-        <Suspense fallback={<CSpinner color="primary" />}>
+
+        <Suspense fallback={
+          <div className="d-flex justify-content-center align-items-center  position-fixed ">
+            <DotLoader color="#36D7B7" size={100} />
+          </div>
+        }>
           <Switch>
             {getRoutes.map((route, idx) => {
               return (
@@ -65,7 +71,7 @@ class AppContent extends Component {
               )
             })}
             {this.props.userResponse.credentials.roles.roleName ===
-            Roles.SUPER_ADMIN ? (
+              Roles.SUPER_ADMIN ? (
               <Route
                 path="/app"
                 exact
@@ -89,7 +95,7 @@ class AppContent extends Component {
             )}
           </Switch>
         </Suspense>
-      </CContainer>
+      </CContainer >
     )
   }
 }
