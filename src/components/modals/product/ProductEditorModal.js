@@ -196,6 +196,7 @@ export class ProductEditorModal extends Component {
           categoryName: "",
           editorState: EditorState.createEmpty(),
           productImage: [],
+          removedImages: [],
         })
       }
     }
@@ -416,13 +417,11 @@ export class ProductEditorModal extends Component {
             loading: false,
             successFully: true,
             toast: this.toastComponent(),
-            editorState: EditorState.createEmpty(),
           })
         } else {
           this.setState({
             loading: false,
             successFully: false,
-            editorState: EditorState.createEmpty(),
           })
         }
       })
@@ -435,13 +434,11 @@ export class ProductEditorModal extends Component {
           this.setState({
             loading: false,
             toast: this.toastComponent(),
-            editorState: EditorState.createEmpty(),
           })
         }
         this.setState({
           loading: false,
           toast: this.toastComponent(),
-          editorState: EditorState.createEmpty(),
         })
       })
   }
