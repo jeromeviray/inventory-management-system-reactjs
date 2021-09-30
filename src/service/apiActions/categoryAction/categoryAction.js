@@ -57,8 +57,8 @@ export const saveCategory = (categoryName) => async (dispatch) => {
     },
   )
 }
-export const getCategories = () => async (dispatch) => {
-  return CategoriesApiService.getCategories().then(
+export const getCategories = (query, page, limit) => async (dispatch) => {
+  return CategoriesApiService.getCategories(query, page, limit).then(
     (response) => {
       dispatch({
         type: GET_CATEGORIES,

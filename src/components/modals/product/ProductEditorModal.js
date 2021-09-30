@@ -178,8 +178,8 @@ export class ProductEditorModal extends Component {
           productId: id,
           editorState: productDescription
             ? EditorState.createWithContent(
-              convertFromRaw(JSON.parse(productDescription)),
-            )
+                convertFromRaw(JSON.parse(productDescription)),
+              )
             : EditorState.createEmpty(),
         })
 
@@ -201,7 +201,7 @@ export class ProductEditorModal extends Component {
     }
   }
   async getImages(fileImages) {
-    for (let i = 0;i < fileImages.length;i++) {
+    for (let i = 0; i < fileImages.length; i++) {
       ProductApiService.getImage(fileImages[i].path, fileImages[i].fileName)
         .then((response) => {
           this.loadImage(response.data, fileImages[i].fileName)
@@ -310,7 +310,7 @@ export class ProductEditorModal extends Component {
     let productData = new FormData()
 
     if (productImage.length > 0) {
-      for (let i = 0;i < productImage.length;i++) {
+      for (let i = 0; i < productImage.length; i++) {
         if (productImage[i].file) {
           productData.append("productImages[]", productImage[i].file)
         }
@@ -388,7 +388,7 @@ export class ProductEditorModal extends Component {
     let productData = new FormData()
 
     if (productImage.length > 0) {
-      for (let i = 0;i < productImage.length;i++) {
+      for (let i = 0; i < productImage.length; i++) {
         if (productImage[i].file) {
           productData.append("productImages[]", productImage[i].file)
         }
@@ -566,9 +566,9 @@ export class ProductEditorModal extends Component {
                         style={
                           isDragging
                             ? {
-                              backgroundColor: "#8E9293",
-                              border: "4px dashed #ffffff",
-                            }
+                                backgroundColor: "#8E9293",
+                                border: "4px dashed #ffffff",
+                              }
                             : undefined
                         }
                         onClick={onImageUpload}
@@ -648,7 +648,7 @@ export class ProductEditorModal extends Component {
                       onChange={this.handleOnChange}
                       required
                       disabled={action === "Edit" ? true : false}
-                    // disabled={autoGenerateBarcode}
+                      // disabled={autoGenerateBarcode}
                     />
                     <CFormLabel htmlFor="floatingBarcode">
                       Product Barcode
@@ -713,8 +713,8 @@ export class ProductEditorModal extends Component {
                       aria-label="Brand Names"
                     >
                       <option value="">Choose Brand</option>
-                      {brands &&
-                        brands.map((brand, index) => {
+                      {brands.data &&
+                        brands.data.map((brand, index) => {
                           return (
                             <option
                               key={index}
@@ -739,8 +739,8 @@ export class ProductEditorModal extends Component {
                       aria-label="Categories"
                     >
                       <option value="">Choose Category</option>
-                      {categories &&
-                        categories.map((category, index) => {
+                      {categories.data &&
+                        categories.data.map((category, index) => {
                           return (
                             <option
                               key={index}

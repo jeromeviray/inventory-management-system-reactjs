@@ -25,6 +25,7 @@ import { setSupplierModal } from "src/service/apiActions/modalAction/modalAction
 //modal
 import SupplierModal from "src/components/modals/supplier/SupplierModal"
 import AlertModal from "src/components/modals/alert/AlertModal"
+import ReactPaginate from "react-paginate"
 
 export class Supplier extends Component {
   state = {
@@ -220,6 +221,18 @@ export class Supplier extends Component {
             )}
           </CTableBody>
         </CTable>
+        <ReactPaginate
+          previousLabel={"previous"}
+          nextLabel={"next"}
+          breakLabel={"..."}
+          breakClassName={"break-me"}
+          // pageCount={inventories.totalPages}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          // onPageChange={this.handlePageClick}
+          containerClassName={"pagination"}
+          activeClassName={"active"}
+        />
       </>
     )
   }

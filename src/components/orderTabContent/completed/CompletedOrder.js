@@ -9,6 +9,8 @@ import {
 //action
 import { getCompletedOrder } from 'src/service/apiActions/orderAction/orderAction'
 import OrderCard from '../OrderCard'
+import ReactPaginate from 'react-paginate'
+
 export class CompletedOrder extends Component {
     state = {
         message: '',
@@ -54,76 +56,117 @@ export class CompletedOrder extends Component {
             fontWeight: "400"
         }
         return (
-            <>
-                {message && (
-                    <CCard className="mb-3">
+          <>
+            {message && (
+              <CCard className="mb-3">
+                <CCardBody>
+                  {/* <div className="form-group d-flex justify-content-center align-items-center"> */}
+                  <div className="alert alert-danger" role="alert">
+                    {message}
+                  </div>
+                  {/* </div> */}
+                </CCardBody>
+              </CCard>
+            )}
+            {completedOrder.length === 0 ? (
+              <CCard>
+                <CCardBody>
+                  <div className="text-center">No Order Completed</div>
+                </CCardBody>
+              </CCard>
+            ) : (
+              completedOrder.map((order, index) => {
+                const {
+                  firstName,
+                  lastName,
+                  street,
+                  barangay,
+                  province,
+                  region,
+                  city,
+                  postalCode,
+                } = order.customerAddress
 
-                        <CCardBody>
-                            {/* <div className="form-group d-flex justify-content-center align-items-center"> */}
-                            <div className="alert alert-danger" role="alert">
-                                {message}
-                            </div>
-                            {/* </div> */}
-                        </CCardBody>
-                    </CCard>
-                )}
-                {completedOrder.length === 0 ?
-                    <CCard>
-                        <CCardBody>
-                            <div className="text-center">No Order Completed</div>
-                        </CCardBody>
-                    </CCard> :
-                    completedOrder.map((order, index) => {
-                        const { firstName, lastName, street, barangay, province, region, city, postalCode } = order.customerAddress;
-
-                        return (
-                            <CCard className="mb-3" key={index}>
-                                <CCardHeader>
-                                    <CRow className="p-2">
-                                        <span style={{ fontSize: "14px", fontWeight: "400" }} className="text-black-50">
-                                            Order ID: {order.orderId}
-                                        </span>
-                                    </CRow>
-                                </CCardHeader>
-                                <CCardBody>
-                                    <CContainer>
-                                        {order.orderItems.map((item, index) => {
-                                            return (
-                                                <OrderCard item={item} key={index} />
-                                            )
-                                        })}
-
-                                    </CContainer>
-
-                                </CCardBody>
-                                <CCardFooter className="p-4">
-                                    <CRow>
-                                        <CCol sm="8" md="8" lg="8">
-                                            <span style={fontStyle} >
-                                                <h6 className="text-black-50 mb-3">Customer Address</h6>
-                                                <span style={{
-                                                    fontSize: "14px",
-                                                    fontWeight: "500",
-                                                    color: "black"
-                                                }}> {firstName + " " + lastName}</span><br />
-                                                <span className="mb-2">
-                                                    {"#" + street + "," + barangay + "," + province + "," + region + "," + city + "," + postalCode}
-                                                </span>
-
-                                            </span>
-                                        </CCol>
-                                        <CCol sm="4" md="4" lg="4">
-                                            <span style={fontStyle} className="text-black-50">
-                                                Order Status: <span className="text-danger">{order.orderStatus}</span>
-                                            </span>
-                                        </CCol>
-                                    </CRow>
-                                </CCardFooter>
-                            </CCard>
-                        )
-                    })
-                }
-            </>
+                return (
+                  <CCard className="mb-3" key={index}>
+                    <CCardHeader>
+                      <CRow className="p-2">
+                        <span
+                          style={{ fontSize: "14px", fontWeight: "400" }}
+                          className="text-black-50"
+                        >
+                          Order ID: {order.orderId}
+                        </span>
+                      </CRow>
+                    </CCardHeader>
+                    <CCardBody>
+                      <CContainer>
+                        {order.orderItems.map((item, index) => {
+                          return <OrderCard item={item} key={index} />
+                        })}
+                      </CContainer>
+                    </CCardBody>
+                    <CCardFooter className="p-4">
+                      <CRow>
+                        <CCol sm="8" md="8" lg="8">
+                          <span style={fontStyle}>
+                            <h6 className="text-black-50 mb-3">
+                              Customer Address
+                            </h6>
+                            <span
+                              style={{
+                                fontSize: "14px",
+                                fontWeight: "500",
+                                color: "black",
+                              }}
+                            >
+                              {" "}
+                              {firstName + " " + lastName}
+                            </span>
+                            <br />
+                            <span className="mb-2">
+                              {"#" +
+                                street +
+                                "," +
+                                barangay +
+                                "," +
+                                province +
+                                "," +
+                                region +
+                                "," +
+                                city +
+                                "," +
+                                postalCode}
+                            </span>
+                          </span>
+                        </CCol>
+                        <CCol sm="4" md="4" lg="4">
+                          <span style={fontStyle} className="text-black-50">
+                            Order Status:{" "}
+                            <span className="text-danger">
+                              {order.orderStatus}
+                            </span>
+                          </span>
+                        </CCol>
+                      </CRow>
+                    </CCardFooter>
+                  </CCard>
+                )
+              })
+            )}
+            <ReactPaginate
+              previousLabel={"previous"}
+              nextLabel={"next"}
+              breakLabel={"..."}
+              breakClassName={"break-me"}
+              // pageCount={inventories.totalPages}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={5}
+              // onPageChange={this.handlePageClick}
+              containerClassName={"pagination"}
+              activeClassName={"active"}
+            />
+          </>
         )
     }
 }

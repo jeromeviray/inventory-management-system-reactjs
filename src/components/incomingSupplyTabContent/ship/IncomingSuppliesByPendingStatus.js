@@ -6,6 +6,8 @@ import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { getIncomingSuppliesByPendingStatus } from "src/service/apiActions/incomingSupplyAction/incomingSupplyAction"
 import IncomingSuppliesCard from "../IncomingSuppliesCard"
+import ReactPaginate from "react-paginate"
+
 export class IncomingSuppliesByPendingStatus extends Component {
   state = {
     incomingSuppliesByPendingStatus: [],
@@ -57,16 +59,18 @@ export class IncomingSuppliesByPendingStatus extends Component {
           </CCard>
         )}
         <IncomingSuppliesCard supplies={incomingSuppliesByPendingStatus} />
-        <CPagination
-          className="justify-content-end"
-          aria-label="Page navigation example"
-        >
-          <CPaginationItem disabled>Previous</CPaginationItem>
-          <CPaginationItem>1</CPaginationItem>
-          <CPaginationItem>2</CPaginationItem>
-          <CPaginationItem>3</CPaginationItem>
-          <CPaginationItem>Next</CPaginationItem>
-        </CPagination>
+        <ReactPaginate
+          previousLabel={"previous"}
+          nextLabel={"next"}
+          breakLabel={"..."}
+          breakClassName={"break-me"}
+          // pageCount={inventories.totalPages}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          // onPageChange={this.handlePageClick}
+          containerClassName={"pagination"}
+          activeClassName={"active"}
+        />
       </>
     )
   }

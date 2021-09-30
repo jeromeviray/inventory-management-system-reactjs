@@ -1,38 +1,46 @@
-import React, { Component, Suspense } from 'react'
+import React, { Component, Suspense } from "react"
 import {
   CNav,
   CNavItem,
-  CNavLink, CTabContent,
-  CTabPane, CSpinner,
+  CNavLink,
+  CTabContent,
+  CTabPane,
+  CSpinner,
   CForm,
   CInputGroup,
   CFormControl,
-  CButton
-} from '@coreui/react'
-import { DotLoader } from 'react-spinners';
-
+  CButton,
+} from "@coreui/react"
+import { DotLoader } from "react-spinners"
 
 // icon
 // import * as FiIcons from 'react-icons/fi'
 //component tab
 import * as FaIcons from "react-icons/fa"
 
-const PendingOrder = React.lazy(() => import('src/components/orderTabContent/pending/PendingOrder'))
-const ConfirmedOrder = React.lazy(() => import('src/components/orderTabContent/confirmed/ConfirmedOrder'));
-const CompletedOrder = React.lazy(() => import('src/components/orderTabContent/completed/CompletedOrder'))
-const DeliveryOrder = React.lazy(() => import("src/components/orderTabContent/delivery/DeliveryOrder"))
+const PendingOrder = React.lazy(() =>
+  import("src/components/orderTabContent/pending/PendingOrder"),
+)
+const ConfirmedOrder = React.lazy(() =>
+  import("src/components/orderTabContent/confirmed/ConfirmedOrder"),
+)
+const CompletedOrder = React.lazy(() =>
+  import("src/components/orderTabContent/completed/CompletedOrder"),
+)
+const DeliveryOrder = React.lazy(() =>
+  import("src/components/orderTabContent/delivery/DeliveryOrder"),
+)
 
 export class Order extends Component {
   state = {
     activeKey: 1,
   }
   render() {
-    let { activeKey, } = this.state;
+    let { activeKey } = this.state
     const tabStyle = {
-
       margin: "10px 0",
       padding: "12px 16px",
-      overflow: "hidden"
+      overflow: "hidden",
     }
 
     return (
@@ -63,7 +71,7 @@ export class Order extends Component {
           role="tablist"
           layout="fill"
 
-        // className="flex-column flex-sm-row"
+          // className="flex-column flex-sm-row"
         >
           <CNavItem>
             <CNavLink
@@ -111,17 +119,19 @@ export class Order extends Component {
           </CNavItem>
         </CNav>
 
-        <CTabContent className="border" style={tabStyle}>
+        <CTabContent style={tabStyle}>
           <CTabPane
             role="tabpanel"
             aria-labelledby="home-tab"
             visible={activeKey === 1}
           >
-            <Suspense fallback={
-              <div className="d-flex justify-content-center align-items-center  position-fixed ">
-                <DotLoader color="#36D7B7" size={100} />
-              </div>
-            }>
+            <Suspense
+              fallback={
+                <div className="d-flex justify-content-center align-items-center  position-fixed ">
+                  <DotLoader color="#36D7B7" size={100} />
+                </div>
+              }
+            >
               <PendingOrder />
             </Suspense>
           </CTabPane>
@@ -130,11 +140,13 @@ export class Order extends Component {
             aria-labelledby="profile-tab"
             visible={activeKey === 2}
           >
-            <Suspense fallback={
-              <div className="d-flex justify-content-center align-items-center  position-fixed ">
-                <DotLoader color="#36D7B7" size={100} />
-              </div>
-            }>
+            <Suspense
+              fallback={
+                <div className="d-flex justify-content-center align-items-center  position-fixed ">
+                  <DotLoader color="#36D7B7" size={100} />
+                </div>
+              }
+            >
               <ConfirmedOrder />
             </Suspense>
           </CTabPane>
@@ -143,11 +155,13 @@ export class Order extends Component {
             aria-labelledby="contact-tab"
             visible={activeKey === 3}
           >
-            <Suspense fallback={
-              <div className="d-flex justify-content-center align-items-center  position-fixed ">
-                <DotLoader color="#36D7B7" size={100} />
-              </div>
-            }>
+            <Suspense
+              fallback={
+                <div className="d-flex justify-content-center align-items-center  position-fixed ">
+                  <DotLoader color="#36D7B7" size={100} />
+                </div>
+              }
+            >
               <DeliveryOrder />
             </Suspense>
           </CTabPane>
@@ -156,11 +170,13 @@ export class Order extends Component {
             aria-labelledby="contact-tab"
             visible={activeKey === 4}
           >
-            <Suspense fallback={
-              <div className="d-flex justify-content-center align-items-center  position-fixed ">
-                <DotLoader color="#36D7B7" size={100} />
-              </div>
-            }>
+            <Suspense
+              fallback={
+                <div className="d-flex justify-content-center align-items-center  position-fixed ">
+                  <DotLoader color="#36D7B7" size={100} />
+                </div>
+              }
+            >
               <CompletedOrder />
             </Suspense>
           </CTabPane>

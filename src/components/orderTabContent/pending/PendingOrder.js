@@ -14,6 +14,8 @@ import { clearMessage } from 'src/service/apiActions/messageAction/messageAction
 import { connect } from 'react-redux'
 import OrderCard from '../OrderCard'
 import Roles from 'src/router/config'
+import ReactPaginate from 'react-paginate'
+
 export class PendingOrder extends Component {
     state = {
         message: '',
@@ -80,118 +82,138 @@ export class PendingOrder extends Component {
         }
 
         return (
-            <>
-                {message && (
-                    <CCard className="mb-3">
-
-                        <CCardBody>
-                            {/* <div className="form-group d-flex justify-content-center align-items-center"> */}
-                            <div className="alert alert-danger" role="alert">
-                                {message}
-                            </div>
-                            {/* </div> */}
-                        </CCardBody>
-                    </CCard>
-                )}
-                {pendingOrders.length === 0 ?
-                    <CCard>
-                        <CCardBody>
-                            <div className="text-center">No Order Pending</div>
-                        </CCardBody>
-                    </CCard> :
-                    pendingOrders.map((pendingOrder, index) => {
-                        // const { firstName, lastName, street, barangay, province, region, city, postalCode } = pendingOrder.customerAddress;
-                        return (
-                            <CCard className="mb-3" key={index}>
-                                <CCardHeader>
-                                    <CRow className="p-2">
-                                        <span style={{ fontSize: "14px", fontWeight: "400" }} className="text-black-50">
-                                            Order ID: {pendingOrder.orderId}
-                                        </span>
-                                    </CRow>
-                                </CCardHeader>
-                                <CCardBody>
-                                    <CContainer>
-                                        {pendingOrder.orderItems.map((item, index) => {
-
-                                            return (
-                                                <OrderCard item={item} key={index} />
-                                            )
-                                        })}
-
-                                    </CContainer>
-
-                                </CCardBody>
-                                <CCardFooter className="p-4">
-                                    <div className="d-flex justify-content-between align-items-end">
-
-                                        <div className="d-flex align-items-bottom">
-                                            {/* {pendingOrder.orderItems.map((item, index) => {
+          <>
+            {message && (
+              <CCard className="mb-3">
+                <CCardBody>
+                  {/* <div className="form-group d-flex justify-content-center align-items-center"> */}
+                  <div className="alert alert-danger" role="alert">
+                    {message}
+                  </div>
+                  {/* </div> */}
+                </CCardBody>
+              </CCard>
+            )}
+            {pendingOrders.length === 0 ? (
+              <CCard>
+                <CCardBody>
+                  <div className="text-center">No Order Pending</div>
+                </CCardBody>
+              </CCard>
+            ) : (
+              pendingOrders.map((pendingOrder, index) => {
+                // const { firstName, lastName, street, barangay, province, region, city, postalCode } = pendingOrder.customerAddress;
+                return (
+                  <CCard className="mb-3" key={index}>
+                    <CCardHeader>
+                      <CRow className="p-2">
+                        <span
+                          style={{ fontSize: "14px", fontWeight: "400" }}
+                          className="text-black-50"
+                        >
+                          Order ID: {pendingOrder.orderId}
+                        </span>
+                      </CRow>
+                    </CCardHeader>
+                    <CCardBody>
+                      <CContainer>
+                        {pendingOrder.orderItems.map((item, index) => {
+                          return <OrderCard item={item} key={index} />
+                        })}
+                      </CContainer>
+                    </CCardBody>
+                    <CCardFooter className="p-4">
+                      <div className="d-flex justify-content-between align-items-end">
+                        <div className="d-flex align-items-bottom">
+                          {/* {pendingOrder.orderItems.map((item, index) => {
                                                 return (
 
                                                 )
 
                                             })} */}
-                                            <Link
-                                                to={{
-                                                    pathname: path + pendingOrder.orderId,
-                                                    state: pendingOrder.orderId
-                                                }}
-                                                className="m-2"
-                                            >
-                                                View More
-                                            </Link>
+                          <Link
+                            to={{
+                              pathname: path + pendingOrder.orderId,
+                              state: pendingOrder.orderId,
+                            }}
+                            className="m-2"
+                          >
+                            View More
+                          </Link>
 
-                                            {permission === Roles.SUPER_ADMIN ||
-                                                permission === Roles.ADMIN ?
-                                                <CButton>Confirm Order</CButton> :
-                                                <></>
-                                            }
-                                        </div>
-                                        <div className="d-flex flex-column">
-                                            <div style={fontStyle} className="mt-2">
-                                                <span className="text-black-50 me-2">
-                                                    Date of Ordered:
-                                                </span>
-                                                <span style={{ fontWeight: "500" }}>{pendingOrder.orderedAt}</span>
-                                            </div>
+                          {permission === Roles.SUPER_ADMIN ||
+                          permission === Roles.ADMIN ? (
+                            <CButton>Confirm Order</CButton>
+                          ) : (
+                            <></>
+                          )}
+                        </div>
+                        <div className="d-flex flex-column">
+                          <div style={fontStyle} className="mt-2">
+                            <span className="text-black-50 me-2">
+                              Date of Ordered:
+                            </span>
+                            <span style={{ fontWeight: "500" }}>
+                              {pendingOrder.orderedAt}
+                            </span>
+                          </div>
 
-                                            <div style={fontStyle} className="mt-2">
-                                                <span style={fontStyle} className="text-black-50 me-2">
-                                                    Payment Method:
-                                                </span>
-                                                <span style={{ fontWeight: "500" }}>{pendingOrder.paymentMethod.paymentMethod}</span>
-
-                                            </div>
-                                            <div style={fontStyle} className="mt-2">
-                                                <span style={fontStyle} className="text-black-50 me-2">
-                                                    Order Status:
-                                                </span>
-                                                <span className="text-danger" style={{ fontWeight: "500" }}>{pendingOrder.orderStatus}</span>
-
-                                            </div>
-                                            <div className="mt-2">
-                                                <span style={fontStyle} className="text-black-50 me-2">
-                                                    Total Amount
-                                                </span>
-                                                <span style={{ fontWeight: "500" }}>
-                                                    &#8369;{pendingOrder.totalAmount.toFixed(2)}
-                                                </span>
-                                            </div>
-
-
-
-                                        </div>
-                                    </div>
-                                </CCardFooter>
-                            </CCard>
-                        )
-                    })
-
-                }
-
-            </>
-
+                          <div style={fontStyle} className="mt-2">
+                            <span
+                              style={fontStyle}
+                              className="text-black-50 me-2"
+                            >
+                              Payment Method:
+                            </span>
+                            <span style={{ fontWeight: "500" }}>
+                              {pendingOrder.paymentMethod.paymentMethod}
+                            </span>
+                          </div>
+                          <div style={fontStyle} className="mt-2">
+                            <span
+                              style={fontStyle}
+                              className="text-black-50 me-2"
+                            >
+                              Order Status:
+                            </span>
+                            <span
+                              className="text-danger"
+                              style={{ fontWeight: "500" }}
+                            >
+                              {pendingOrder.orderStatus}
+                            </span>
+                          </div>
+                          <div className="mt-2">
+                            <span
+                              style={fontStyle}
+                              className="text-black-50 me-2"
+                            >
+                              Total Amount
+                            </span>
+                            <span style={{ fontWeight: "500" }}>
+                              &#8369;{pendingOrder.totalAmount.toFixed(2)}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </CCardFooter>
+                  </CCard>
+                )
+              })
+            )}
+            <ReactPaginate
+              previousLabel={"previous"}
+              nextLabel={"next"}
+              breakLabel={"..."}
+              breakClassName={"break-me"}
+              // pageCount={inventories.totalPages}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={5}
+              // onPageChange={this.handlePageClick}
+              containerClassName={"pagination"}
+              activeClassName={"active"}
+            />
+          </>
         )
     }
 }

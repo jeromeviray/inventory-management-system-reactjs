@@ -10,14 +10,16 @@ const Profile = React.lazy(() => import("../../views/common/profile/Profile"))
 
 // SUPER ADMIN has access
 const Employee = React.lazy(() =>
-  import("../../views/private/employee/Employee"),
+  import("../../views/private/accounts/employee/Employee"),
 )
 const Reports = React.lazy(() => import("../../views/private/reports/Reports"))
 const ProductReport = React.lazy(() =>
   import("../../views/private/reports/ProductReport"),
 )
 // const Company = React.lazy(() => import("../../views/private/company/Company"))
-const Customer = React.lazy(() => import("src/views/private/customer/Customer"))
+const Customer = React.lazy(() =>
+  import("src/views/private/accounts/customer/Customer"),
+)
 // SUPER ADMIN and ADMIN has access
 const Products = React.lazy(() =>
   import("../../views/private/products/Products"),

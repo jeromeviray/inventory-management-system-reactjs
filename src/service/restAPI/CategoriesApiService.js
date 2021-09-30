@@ -31,9 +31,14 @@ export class CategoriesApiService {
       headers: authHeader(),
     })
   }
-  getCategories() {
+  getCategories(query, page, limit) {
     return axios.get("/categories", {
       headers: authHeader(),
+      params: {
+        query,
+        page,
+        limit,
+      },
     })
   }
   getCategory(id) {

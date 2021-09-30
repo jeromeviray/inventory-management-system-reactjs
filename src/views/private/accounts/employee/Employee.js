@@ -10,7 +10,7 @@ import {
   CButton,
   CInputGroup,
   CFormControl,
-  CForm
+  CForm,
 } from "@coreui/react"
 //icons
 import * as MdIcons from "react-icons/md"
@@ -28,6 +28,7 @@ import { logout } from "src/service/apiActions/userAction/userAction"
 //component modal
 import AlertModal from "src/components/modals/alert/AlertModal"
 import AccountModal from "src/components/modals/account/AccountModal"
+import ReactPaginate from "react-paginate"
 
 export class Employee extends Component {
   state = {
@@ -216,6 +217,18 @@ export class Employee extends Component {
             )}
           </CTableBody>
         </CTable>
+        <ReactPaginate
+          previousLabel={"previous"}
+          nextLabel={"next"}
+          breakLabel={"..."}
+          breakClassName={"break-me"}
+          // pageCount={inventories.totalPages}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          // onPageChange={this.handlePageClick}
+          containerClassName={"pagination"}
+          activeClassName={"active"}
+        />
       </div>
     )
   }

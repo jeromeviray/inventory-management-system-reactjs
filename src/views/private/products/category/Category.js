@@ -26,17 +26,26 @@ import { clearMessage } from "src/service/apiActions/messageAction/messageAction
 //component modal
 import AlertModal from "src/components/modals/alert/AlertModal"
 import CategoryModal from "src/components/modals/category/CategoryModal"
+import ReactPaginate from "react-paginate"
+
 export class Category extends Component {
   state = {
     visible: false,
-    categories: [],
+    categories: {
+      data: [],
+      totalPages: 0,
+    },
+    query: "",
+    page: 0,
+    limit: 10,
   }
 
   componentDidMount() {
-    this.getCategories()
+    let { query, page, limit } = this.state
+    this.getCategories(query, page, limit)
   }
-  getCategories = () => {
-    this.props.getCategories().catch(() => {
+  getCategories = (query, page, limit) => {
+    this.props.getCategories(query, page, limit).catch(() => {
       let { status, data } = this.props.messageResponse
       if (status > 400 && status <= 403) {
         this.props.logout()
@@ -54,6 +63,7 @@ export class Category extends Component {
   manageCategoryResponse = (prevProps, prevState) => {
     if (prevProps.categoryResponse !== this.props.categoryResponse) {
       let { action, data, status } = this.props.categoryResponse
+      console.log(data)
       if (action === "GET_CATEGORIES" && status === 200) {
         this.setState({
           categories: data.categories,
@@ -69,6 +79,21 @@ export class Category extends Component {
       }
     }
   }
+  handleOnSearch = (event) => {
+    const { page, limit } = this.state
+    this.setState({
+      query: event.target.value,
+    })
+    this.getCategories(event.target.value, page, limit)
+  }
+  handlePageClick = (data) => {
+    let page = data.selected
+    this.setState({
+      page: page,
+    })
+    const { query, limit } = this.state
+    this.getCategories(query, page, limit)
+  }
   renderAlerModal() {
     return <AlertModal />
   }
@@ -76,7 +101,7 @@ export class Category extends Component {
     return <CategoryModal />
   }
   render() {
-    let { visible, categories } = this.state
+    let { visible, categories, query, page, limit } = this.state
     return (
       <div>
         {this.renderCatergoryModal()}
@@ -106,6 +131,8 @@ export class Category extends Component {
                 id="floatingInput"
                 placeholder="Search"
                 className="p-2"
+                value={query}
+                onChange={this.handleOnSearch}
               />
               <CButton
                 type="button"
@@ -128,7 +155,7 @@ export class Category extends Component {
           align="middle"
         >
           <CTableCaption>
-            List of Category: <b>{categories.length}</b>
+            List of Category: <b>{categories.data.length}</b>
           </CTableCaption>
 
           <CTableHead color="dark">
@@ -140,60 +167,51 @@ export class Category extends Component {
             </CTableRow>
           </CTableHead>
           <CTableBody className="text-center" color="light">
-            {categories.length > 0 ? (
+            {categories.data.length > 0 ? (
               <>
-                {categories &&
-                  categories.map((category, index) => {
-                    return (
-                      <CTableRow className="text-center" key={index}>
-                        <CTableDataCell>{category.categoryName}</CTableDataCell>
-                        <CTableDataCell>
-                          {category.totalProducts}
-                        </CTableDataCell>
-                        <CTableDataCell>{category.createdAt}</CTableDataCell>
-                        <CTableDataCell
-                          className="text-center w-25"
-                          colSpan="1"
+                {categories.data.map((category, index) => {
+                  return (
+                    <CTableRow className="text-center" key={index}>
+                      <CTableDataCell>{category.categoryName}</CTableDataCell>
+                      <CTableDataCell>{category.totalProducts}</CTableDataCell>
+                      <CTableDataCell>{category.createdAt}</CTableDataCell>
+                      <CTableDataCell className="text-center w-25" colSpan="1">
+                        <CButton
+                          color="info"
+                          className="me-2"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() =>
+                            this.props.addCategoryModal(
+                              !visible,
+                              "Edit",
+                              category,
+                              <MdIcons.MdModeEdit size="20" className="me-2" />,
+                            )
+                          }
                         >
-                          <CButton
-                            color="info"
-                            className="me-2"
-                            variant="ghost"
-                            size="sm"
-                            onClick={() =>
-                              this.props.addCategoryModal(
-                                !visible,
-                                "Edit",
-                                category,
-                                <MdIcons.MdModeEdit
-                                  size="20"
-                                  className="me-2"
-                                />,
-                              )
-                            }
-                          >
-                            <MdIcons.MdModeEdit size="20" />
-                          </CButton>
-                          <CButton
-                            color="danger"
-                            className="ms-2"
-                            variant="ghost"
-                            onClick={() =>
-                              this.props.setAlertModal(
-                                !visible,
-                                "DELETECATEGORY",
-                                "CATEGORY",
-                                category.id,
-                              )
-                            }
-                            size="sm"
-                          >
-                            <MdIcons.MdDelete size="20" />
-                          </CButton>
-                        </CTableDataCell>
-                      </CTableRow>
-                    )
-                  })}
+                          <MdIcons.MdModeEdit size="20" />
+                        </CButton>
+                        <CButton
+                          color="danger"
+                          className="ms-2"
+                          variant="ghost"
+                          onClick={() =>
+                            this.props.setAlertModal(
+                              !visible,
+                              "DELETECATEGORY",
+                              "CATEGORY",
+                              category.id,
+                            )
+                          }
+                          size="sm"
+                        >
+                          <MdIcons.MdDelete size="20" />
+                        </CButton>
+                      </CTableDataCell>
+                    </CTableRow>
+                  )
+                })}
               </>
             ) : (
               <CTableRow>
@@ -202,6 +220,18 @@ export class Category extends Component {
             )}
           </CTableBody>
         </CTable>
+        <ReactPaginate
+          previousLabel={"previous"}
+          nextLabel={"next"}
+          breakLabel={"..."}
+          breakClassName={"break-me"}
+          pageCount={categories.totalPages}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          onPageChange={this.handlePageClick}
+          containerClassName={"pagination"}
+          activeClassName={"active"}
+        />
       </div>
     )
   }

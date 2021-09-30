@@ -28,22 +28,33 @@ import { getBrands } from "src/service/apiActions/brandAction/brandAction"
 import AlertModal from "src/components/modals/alert/AlertModal"
 import BrandModal from "src/components/modals/brand/BrandModal"
 import Roles from "src/router/config"
+import ReactPaginate from "react-paginate"
 
 export class Brand extends Component {
   state = {
     visible: false,
-    brands: [],
+    brands: {
+      data: [],
+      totalPages: 0,
+    },
     message: "",
     status: "",
     permission: "",
+    page: 0,
+    limit: 10,
+    query: "",
   }
   componentDidMount() {
-    let { type, accessToken, roles } = this.props.userResponse.credentials
-
+    let { roles } = this.props.userResponse.credentials
+    let { page, query, limit } = this.state
     this.setState({
       permission: roles && roles.roleName,
     })
-    this.props.getBrands().catch(() => {
+    this.getBrands(query, page, limit)
+  }
+
+  getBrands = (query, page, limit) => {
+    this.props.getBrands(query, page, limit).catch(() => {
       let failMessage = this.props.messageResponse
       if (failMessage.status > 400 && failMessage.status <= 403) {
         this.props.logout()
@@ -55,6 +66,7 @@ export class Brand extends Component {
   }
   componentDidUpdate(prevProps, prevState) {
     this.manageBrandsResponse(prevProps, prevState)
+    this.manageModalResponse(prevProps, prevState)
   }
   componentWillUnmount() {
     this.setState({
@@ -65,6 +77,18 @@ export class Brand extends Component {
       permission: "",
     })
     this.props.addBrandModal(null, null, null, null)
+  }
+  manageModalResponse(prevProps, prevState) {
+    if (prevProps.modalVisibleResponse !== this.props.modalVisibleResponse) {
+      let { action, visible } = this.props.modalVisibleResponse
+      this.setState({
+        visible: visible,
+      })
+      if (action === "close") {
+        const { page, limit, query } = this.state
+        this.getBrands(page, limit, query)
+      }
+    }
   }
   manageBrandsResponse = (prevProps, prevState) => {
     if (prevProps.brandResponse !== this.props.brandResponse) {
@@ -80,6 +104,18 @@ export class Brand extends Component {
       }
     }
   }
+  handleSearch = (event) => {
+    const { page, limit } = this.state
+    this.props.getBrands(event.target.value, page, limit)
+    this.setState({ query: event.target.value })
+  }
+
+  handlePageClick = (data) => {
+    let page = data.selected
+    this.setState({ page: page })
+    const { limit, query } = this.state
+    this.props.getBrands(query, page, limit)
+  }
   renderAlertModal() {
     return <AlertModal />
   }
@@ -87,54 +123,8 @@ export class Brand extends Component {
     return <BrandModal />
   }
   render() {
-    const { visible, brands, message, permission } = this.state
-    let rowBrand =
-      brands.length > 0 &&
-      brands.map((brand, index) => {
-        return (
-          <CTableRow className="text-center" key={index}>
-            <CTableDataCell>{brand.brandName}</CTableDataCell>
-            <CTableDataCell>{brand.totalProducts}</CTableDataCell>
-            <CTableDataCell>{brand.createdAt}</CTableDataCell>
-            <CTableDataCell className="text-center w-25" colSpan="1">
-              <CButton
-                color="info"
-                className="me-2"
-                variant="ghost"
-                size="sm"
-                onClick={() =>
-                  this.props.addBrandModal(
-                    !visible,
-                    "Edit",
-                    brand,
-                    <MdIcons.MdModeEdit size="20" className="me-2" />,
-                  )
-                }
-              >
-                <MdIcons.MdModeEdit size="20" />
-              </CButton>
-              {/* {permission === Roles.SUPER_ADMIN ? ( */}
-              <CButton
-                color="danger"
-                className="ms-2"
-                variant="ghost"
-                onClick={() =>
-                  this.props.setAlertModal(
-                    !visible,
-                    "DELETEBRAND",
-                    "BRAND",
-                    brand.id,
-                  )
-                }
-                size="sm"
-              >
-                <MdIcons.MdDelete size="20" />
-              </CButton>
-              {/* ) : null} */}
-            </CTableDataCell>
-          </CTableRow>
-        )
-      })
+    const { visible, brands, message, permission, query, limit, page } =
+      this.state
     return (
       <div>
         {this.renderBrandModal()}
@@ -164,6 +154,8 @@ export class Brand extends Component {
                 id="floatingInput"
                 placeholder="Search"
                 className="p-2"
+                value={query}
+                onChange={this.handleSearch}
               />
               <CButton
                 type="button"
@@ -186,7 +178,7 @@ export class Brand extends Component {
           align="middle"
         >
           <CTableCaption>
-            List of Brand: <b>{brands.length}</b>
+            List of Brand: <b>{brands.data.length}</b>
           </CTableCaption>
           <CTableHead color="dark">
             <CTableRow className="text-center">
@@ -197,13 +189,59 @@ export class Brand extends Component {
             </CTableRow>
           </CTableHead>
           <CTableBody className="text-center" color="light">
-            {brands.length > 0 ? (
-              rowBrand
+            {brands.data.length > 0 ? (
+              brands.data.map((brand, index) => {
+                return (
+                  <CTableRow className="text-center" key={index}>
+                    <CTableDataCell>{brand.brandName}</CTableDataCell>
+                    <CTableDataCell>{brand.totalProducts}</CTableDataCell>
+                    <CTableDataCell>{brand.createdAt}</CTableDataCell>
+                    <CTableDataCell className="text-center w-25" colSpan="1">
+                      <CButton
+                        color="info"
+                        className="me-2"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() =>
+                          this.props.addBrandModal(
+                            !visible,
+                            "Edit",
+                            brand,
+                            <MdIcons.MdModeEdit size="20" className="me-2" />,
+                          )
+                        }
+                      >
+                        <MdIcons.MdModeEdit size="20" />
+                      </CButton>
+                      {/* {permission === Roles.SUPER_ADMIN ? ( */}
+                      <CButton
+                        color="danger"
+                        className="ms-2"
+                        variant="ghost"
+                        onClick={() =>
+                          this.props.setAlertModal(
+                            !visible,
+                            "DELETEBRAND",
+                            "BRAND",
+                            brand.id,
+                          )
+                        }
+                        size="sm"
+                      >
+                        <MdIcons.MdDelete size="20" />
+                      </CButton>
+                      {/* ) : null} */}
+                    </CTableDataCell>
+                  </CTableRow>
+                )
+              })
             ) : (
               <CTableRow>
                 <CTableDataCell colSpan="4">No data</CTableDataCell>
               </CTableRow>
             )}
+            {/* {brands.data.length > 0 &&
+              } */}
             {message && (
               <CTableRow className="text-center">
                 <CTableDataCell colSpan="4">
@@ -215,6 +253,18 @@ export class Brand extends Component {
             )}
           </CTableBody>
         </CTable>
+        <ReactPaginate
+          previousLabel={"previous"}
+          nextLabel={"next"}
+          breakLabel={"..."}
+          breakClassName={"break-me"}
+          pageCount={brands.totalPages}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          onPageChange={this.handlePageClick}
+          containerClassName={"pagination"}
+          activeClassName={"active"}
+        />
       </div>
     )
   }

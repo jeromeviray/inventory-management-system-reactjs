@@ -22,6 +22,8 @@ import SupplyModal from 'src/components/modals/supply/SupplyModal';
 
 // lazy fetch
 const IncomingSuppliesByShipStatus = React.lazy(() => import('src/components/incomingSupplyTabContent/ship/IncomingSuppliesByPendingStatus'))
+const IncomingSuppliesByDeliveredStatus = React.lazy(() => import('src/components/incomingSupplyTabContent/delivered/IncomingSuppliesByDeliveredStatus'))
+
 export class IncomingSupplies extends Component {
      state = {
           incomingSupplies: [],
@@ -63,99 +65,111 @@ export class IncomingSupplies extends Component {
                overflow: "hidden"
           }
           return (
-               <>
-                    <SupplyModal />
-                    <div className="d-flex justify-content-between mb-4">
-                         <CButton
-                              shape="rounded-pill"
-                              color="primary"
-                              variant="ghost"
-                              className="d-flex justify-content-center align-items-center"
-                              onClick={() =>
-                                   this.props.setSupplyModal(
-                                        !visible,
-                                        "Add",
-                                        '',
-                                        <FaIcons.FaPlus size={20} />,
-                                   )
-                              }
-                         >
-                              <FaIcons.FaPlus size={20} />
-                              <span style={{ marginLeft: "10px" }}>Add Incoming Supply</span>
-                         </CButton>
-                         <CForm className="w-50">
-                              <CInputGroup>
-                                   <CFormControl
-                                        type="text"
-                                        id="floatingInput"
-                                        placeholder="Search"
-                                        className="p-2"
-                                   />
-                                   <CButton
-                                        type="button"
-                                        color="info"
-                                        variant="outline"
-                                        id="button-addon2"
-                                        className=""
-                                   >
-                                        <FaIcons.FaSearch />
-                                   </CButton>
-                              </CInputGroup>
-                         </CForm>
-                    </div>
-                    <CNav
-                         variant="pills"
-                         role="tablist"
-                         layout="fill"
-
-                    // className="flex-column flex-sm-row"
+            <>
+              <SupplyModal />
+              <div className="d-flex justify-content-between mb-4">
+                <CButton
+                  shape="rounded-pill"
+                  color="primary"
+                  variant="ghost"
+                  className="d-flex justify-content-center align-items-center"
+                  onClick={() =>
+                    this.props.setSupplyModal(
+                      !visible,
+                      "Add",
+                      "",
+                      <FaIcons.FaPlus size={20} />,
+                    )
+                  }
+                >
+                  <FaIcons.FaPlus size={20} />
+                  <span style={{ marginLeft: "10px" }}>
+                    Add Incoming Supply
+                  </span>
+                </CButton>
+                <CForm className="w-50">
+                  <CInputGroup>
+                    <CFormControl
+                      type="text"
+                      id="floatingInput"
+                      placeholder="Search"
+                      className="p-2"
+                    />
+                    <CButton
+                      type="button"
+                      color="info"
+                      variant="outline"
+                      id="button-addon2"
+                      className=""
                     >
-                         <CNavItem>
-                              <CNavLink
-                                   href="#pending"
-                                   active={activeKey === 1}
-                                   onClick={() => {
-                                        this.setState({ activeKey: 1 })
-                                   }}
-                              >
-                                   Pending Supplies
-                              </CNavLink>
-                         </CNavItem>
-                         <CNavItem>
-                              <CNavLink
-                                   href="#delivered"
-                                   active={activeKey === 2}
-                                   onClick={() => {
-                                        this.setState({ activeKey: 2 })
-                                   }}
-                              >
-                                   Delivered Supplies
-                              </CNavLink>
-                         </CNavItem>
+                      <FaIcons.FaSearch />
+                    </CButton>
+                  </CInputGroup>
+                </CForm>
+              </div>
+              <CNav
+                variant="pills"
+                role="tablist"
+                layout="fill"
 
-                    </CNav>
-                    <CTabContent style={tabStyle}>
-                         <CTabPane
-                              role="tabpanel"
-                              aria-labelledby="ship-tab"
-                              visible={activeKey === 1}
-                         >
-                              <Suspense fallback={
-                                   <div className="d-flex justify-content-center align-items-center  position-fixed ">
-                                        <DotLoader color="#36D7B7" size={100} />
-                                   </div>
-                              }>
-                                   <IncomingSuppliesByShipStatus />
-                              </Suspense>
-                         </CTabPane>
-                         <CTabPane
-                              role="tabpanel"
-                              aria-labelledby="delivered-tab"
-                              visible={activeKey === 2}
-                         >
-                         </CTabPane>
-                    </CTabContent>
-               </>
+                // className="flex-column flex-sm-row"
+              >
+                <CNavItem>
+                  <CNavLink
+                    href="#pending"
+                    active={activeKey === 1}
+                    onClick={() => {
+                      this.setState({ activeKey: 1 })
+                    }}
+                  >
+                    Pending Supplies
+                  </CNavLink>
+                </CNavItem>
+                <CNavItem>
+                  <CNavLink
+                    href="#delivered"
+                    active={activeKey === 2}
+                    onClick={() => {
+                      this.setState({ activeKey: 2 })
+                    }}
+                  >
+                    Delivered Supplies
+                  </CNavLink>
+                </CNavItem>
+              </CNav>
+              <CTabContent style={tabStyle}>
+                <CTabPane
+                  role="tabpanel"
+                  aria-labelledby="ship-tab"
+                  visible={activeKey === 1}
+                >
+                  <Suspense
+                    fallback={
+                      <div className="d-flex justify-content-center align-items-center  position-fixed ">
+                        <DotLoader color="#36D7B7" size={100} />
+                      </div>
+                    }
+                  >
+                    <IncomingSuppliesByShipStatus />
+                  </Suspense>
+                </CTabPane>
+                <CTabPane
+                  role="tabpanel"
+                  aria-labelledby="delivered-tab"
+                  visible={activeKey === 2}
+                >
+                  <Suspense
+                    fallback={
+                      <div className="d-flex justify-content-center align-items-center  position-fixed ">
+                        <DotLoader color="#36D7B7" size={100} />
+                      </div>
+                    }
+                  >
+                    <IncomingSuppliesByDeliveredStatus />
+                  </Suspense>
+                </CTabPane>
+              </CTabContent>
+            </>
           )
      }
 }

@@ -51,7 +51,7 @@ class Products extends Component {
     products: [],
     keyword: "",
     visible: false,
-    toast: '',
+    toast: "",
     inventories: {
       data: [],
       totalPages: 0,
@@ -183,7 +183,7 @@ class Products extends Component {
         window.location.reload()
       }
       this.setState({
-        toast: this.toastComponent()
+        toast: this.toastComponent(),
       })
     })
   }
@@ -214,7 +214,7 @@ class Products extends Component {
   }
   render() {
     let { visible, message, inventories, toast } = this.state
-    console.log(this.props);
+    // console.log(this.props);
     return (
       <>
         {this.renderProductEditorModal()}
@@ -358,11 +358,8 @@ class Products extends Component {
                           )
                         }
                       >
-                        <MdIcons.MdDelete
-                          size="20"
-                        />
+                        <MdIcons.MdDelete size="20" />
                       </CButton>
-
                     </CTableDataCell>
                   </CTableRow>
                 )
@@ -412,6 +409,6 @@ export default withRouter(
     getProduct,
     editProductModal,
     clearMessage,
-    setAlertModal
+    setAlertModal,
   })(Products),
 )
