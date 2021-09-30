@@ -26,7 +26,6 @@ import {
 //icons
 // import * as FaIcons from 'react-icons/fa'
 import { MdDelete } from "react-icons/md"
-import { RiEdit2Line } from "react-icons/ri"
 
 // npm packages
 import ImageUploading from "react-images-uploading"
@@ -179,8 +178,8 @@ export class ProductEditorModal extends Component {
           productId: id,
           editorState: productDescription
             ? EditorState.createWithContent(
-                convertFromRaw(JSON.parse(productDescription)),
-              )
+              convertFromRaw(JSON.parse(productDescription)),
+            )
             : EditorState.createEmpty(),
         })
 
@@ -202,7 +201,7 @@ export class ProductEditorModal extends Component {
     }
   }
   async getImages(fileImages) {
-    for (let i = 0; i < fileImages.length; i++) {
+    for (let i = 0;i < fileImages.length;i++) {
       ProductApiService.getImage(fileImages[i].path, fileImages[i].fileName)
         .then((response) => {
           this.loadImage(response.data, fileImages[i].fileName)
@@ -311,7 +310,7 @@ export class ProductEditorModal extends Component {
     let productData = new FormData()
 
     if (productImage.length > 0) {
-      for (let i = 0; i < productImage.length; i++) {
+      for (let i = 0;i < productImage.length;i++) {
         if (productImage[i].file) {
           productData.append("productImages[]", productImage[i].file)
         }
@@ -389,7 +388,7 @@ export class ProductEditorModal extends Component {
     let productData = new FormData()
 
     if (productImage.length > 0) {
-      for (let i = 0; i < productImage.length; i++) {
+      for (let i = 0;i < productImage.length;i++) {
         if (productImage[i].file) {
           productData.append("productImages[]", productImage[i].file)
         }
@@ -553,7 +552,7 @@ export class ProductEditorModal extends Component {
                 {({
                   imageList,
                   onImageUpload,
-                  onImageUpdate,
+                  // onImageUpdate,
                   onImageRemove,
                   isDragging,
                   dragProps,
@@ -567,9 +566,9 @@ export class ProductEditorModal extends Component {
                         style={
                           isDragging
                             ? {
-                                backgroundColor: "#8E9293",
-                                border: "4px dashed #ffffff",
-                              }
+                              backgroundColor: "#8E9293",
+                              border: "4px dashed #ffffff",
+                            }
                             : undefined
                         }
                         onClick={onImageUpload}
@@ -584,11 +583,11 @@ export class ProductEditorModal extends Component {
                           <div className="image-item d-flex ">
                             <img src={image["data_url"]} alt="" width="100" />
                             <div className="image-item__btn-wrapper">
-                              <RiEdit2Line
+                              {/* <RiEdit2Line
                                 size={30}
                                 color="#007CFF"
                                 onClick={() => onImageUpdate(index)}
-                              />
+                              /> */}
                               <MdDelete
                                 size={30}
                                 color="#FF0000"
@@ -649,7 +648,7 @@ export class ProductEditorModal extends Component {
                       onChange={this.handleOnChange}
                       required
                       disabled={action === "Edit" ? true : false}
-                      // disabled={autoGenerateBarcode}
+                    // disabled={autoGenerateBarcode}
                     />
                     <CFormLabel htmlFor="floatingBarcode">
                       Product Barcode

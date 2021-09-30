@@ -1,15 +1,4 @@
 import React, { Component, lazy } from "react"
-import { connect } from "react-redux"
-import { withRouter } from "react-router-dom"
-import { getProducts } from "../../../service/apiActions/productAction/productAction"
-import { setProductModal } from "../../../service/apiActions/modalAction/modalAction"
-import {
-  setProductDetailsModal,
-  editProductModal,
-} from "../../../service/apiActions/modalAction/modalAction"
-import { getInventories } from "src/service/apiActions/inventoryAction/inventoryAction"
-import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
-import { getProduct } from "src/service/apiActions/productAction/productAction"
 import {
   CTable,
   CTableHead,
@@ -23,15 +12,33 @@ import {
   CInputGroup,
   CFormControl,
   CBadge,
+  CToast,
+  CToastBody,
+  CToastClose,
+  CToaster,
 } from "@coreui/react"
 import * as FaIcons from "react-icons/fa"
-import * as IoIcons from "react-icons/io"
+import * as MdIcons from "react-icons/md"
 
 import Barcode from "react-barcode"
 import ReactPaginate from "react-paginate"
-
+//action
+import { connect } from "react-redux"
+import { withRouter } from "react-router-dom"
+import { getProducts } from "../../../service/apiActions/productAction/productAction"
+import { setProductModal } from "../../../service/apiActions/modalAction/modalAction"
+import {
+  setProductDetailsModal,
+  editProductModal,
+} from "../../../service/apiActions/modalAction/modalAction"
+import { getInventories } from "src/service/apiActions/inventoryAction/inventoryAction"
+import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
+import { getProduct } from "src/service/apiActions/productAction/productAction"
 import { logout } from "src/service/apiActions/userAction/userAction"
-// import ProductDetialsModal from "src/components/modals/product/ProductDetialsModal"
+import { setAlertModal } from "../../../service/apiActions/modalAction/modalAction"
+
+import AlertModal from "src/components/modals/alert/AlertModal"
+
 const ProductDetialsModal = lazy(() =>
   import("src/components/modals/product/ProductDetialsModal"),
 )
@@ -44,6 +51,7 @@ class Products extends Component {
     products: [],
     keyword: "",
     visible: false,
+    toast: '',
     inventories: {
       data: [],
       totalPages: 0,
@@ -175,15 +183,43 @@ class Products extends Component {
         window.location.reload()
       }
       this.setState({
-        message: message,
+        toast: this.toastComponent()
       })
     })
   }
+  toastComponent() {
+    let { data, status } = this.props.messageResponse
+    let color = ""
+    if (status === 200) {
+      color = "success"
+    } else if (status > 400 && status <= 403) {
+      color = "danger"
+    } else if (status > 405 && status <= 500) {
+      color = "warning"
+    } else {
+      color = "primary"
+    }
+    return (
+      <CToast
+        color={color}
+        className="text-white align-items-center"
+        delay={3000}
+      >
+        <div className="d-flex">
+          <CToastBody>{data.message}</CToastBody>
+          <CToastClose className="me-2 m-auto" white />
+        </div>
+      </CToast>
+    )
+  }
   render() {
-    let { visible, message, inventories } = this.state
+    let { visible, message, inventories, toast } = this.state
+    console.log(this.props);
     return (
       <>
         {this.renderProductEditorModal()}
+        <AlertModal />
+        <CToaster push={toast} placement="top-end" />
         <ProductDetialsModal />
         <div className="d-flex justify-content-between mb-2">
           <CButton
@@ -303,6 +339,30 @@ class Products extends Component {
                       >
                         <FaIcons.FaEdit size="20" />
                       </CButton>
+                      <CButton
+                        color="danger"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() =>
+                          // this.props.setAlertModal(
+                          //   !visible,
+                          //   "DELETEPRODUCT",
+                          //   "PRODUCT",
+                          //   product.id,
+                          // )
+                          this.props.setAlertModal(
+                            !visible,
+                            "DELETEPRODUCT",
+                            "PRODUCT",
+                            product.id,
+                          )
+                        }
+                      >
+                        <MdIcons.MdDelete
+                          size="20"
+                        />
+                      </CButton>
+
                     </CTableDataCell>
                   </CTableRow>
                 )
@@ -351,5 +411,7 @@ export default withRouter(
     setProductDetailsModal,
     getProduct,
     editProductModal,
+    clearMessage,
+    setAlertModal
   })(Products),
 )

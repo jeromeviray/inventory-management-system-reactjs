@@ -1,4 +1,5 @@
 import {
+  DELETE_PRODUCT,
   GET_DISCOVER_PRODUCT,
   // GET_IMAGE,
   GET_PRODUCT,
@@ -67,16 +68,14 @@ const productReducer = (state = {}, action) => {
           updatedProduct: action.payload.updatedProduct
         }
       }
-    // case GET_IMAGE:
-    //   return response = {
-    //     type: GET_IMAGE,
-    //     status: action.payload.status,
-    //     action: "IMAGES",
-    //     data: {
-    //       images: action.payload.data.image
-    //     }
-    //   }
-    //   break
+    case DELETE_PRODUCT:
+      return {
+        status: action.payload.status,
+        action: action.payload.actin,
+        data: {
+
+        }
+      }
     default:
       return state
   }

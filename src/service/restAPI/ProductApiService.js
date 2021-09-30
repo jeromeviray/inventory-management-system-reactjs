@@ -6,9 +6,13 @@ export class ProductApiService {
     return axios.post("/products/save", formData, { headers: authHeader() })
   }
   updateProduct(productId, formData) {
-    console.log(productId)
     return axios.put("/products/update/" + productId, formData, {
       headers: authHeader(),
+    })
+  }
+  deleteProduct(id) {
+    return axios.delete("/products/delete/" + id, {
+      headers: authHeader()
     })
   }
   getProducts(token) {

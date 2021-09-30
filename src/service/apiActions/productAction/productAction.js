@@ -2,6 +2,7 @@
 import { SET_MESSAGE } from "src/constants/userConstants"
 import ProductApiService from "src/service/restAPI/ProductApiService"
 import {
+  DELETE_PRODUCT,
   FAIL_GET_IMAGE,
   GET_DISCOVER_PRODUCT,
   GET_IMAGE,
@@ -271,7 +272,57 @@ export const getProductDetails = (id) => async (dispatch) => {
     },
   )
 }
-export function deleteProduct() {}
+export const deleteProduct = (id) => async (dispatch) => {
+  return ProductApiService.deleteProduct(id).then(
+    (response) => {
+      dispatch({
+        type: DELETE_PRODUCT,
+        payload: {
+          status: 200,
+          action: DELETE_PRODUCT,
+          data: {
+
+          }
+        }
+      })
+      dispatch({
+        type: SET_MESSAGE,
+        payload: {
+          status: 200,
+          data: {
+            message: "Successfully Deleted",
+          },
+        },
+      })
+      return Promise.resolve();
+    },
+    (error) => {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.error_message ||
+        error.toString()
+
+      const status =
+        (error.response && error.response.data && error.response.data.code) ||
+        error.status ||
+        error.toString()
+
+      dispatch({
+        type: SET_MESSAGE,
+        payload: {
+          status: status,
+          data: {
+            message: message,
+          },
+        },
+      })
+      return Promise.reject();
+    }
+  )
+}
 
 export const updateProduct = (productId, formData) => async (dispatch) => {
   return ProductApiService.updateProduct(productId, formData).then(
