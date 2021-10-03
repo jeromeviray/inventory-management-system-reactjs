@@ -19,6 +19,7 @@ import {
 } from "@coreui/react"
 import * as FaIcons from "react-icons/fa"
 import * as MdIcons from "react-icons/md"
+import * as BiIcons from "react-icons/bi"
 
 import Barcode from "react-barcode"
 import ReactPaginate from "react-paginate"
@@ -38,7 +39,7 @@ import { logout } from "src/service/apiActions/userAction/userAction"
 import { setAlertModal } from "../../../service/apiActions/modalAction/modalAction"
 
 import AlertModal from "src/components/modals/alert/AlertModal"
-
+import ScanBarcodeModal from "src/components/modals/scanBarcode/ScanBarcodeModal"
 const ProductDetialsModal = lazy(() =>
   import("src/components/modals/product/ProductDetialsModal"),
 )
@@ -121,6 +122,7 @@ class Products extends Component {
   renderProductEditorModal() {
     return <ProductEditorModal />
   }
+
   manageStatus = (status) => {
     switch (status) {
       case "OK":
@@ -155,7 +157,14 @@ class Products extends Component {
     this.props.getProducts(event.target.value, page, limit)
     this.setState({ query: event.target.value })
   }
-
+  handleOnSubmitSearch = (event) => {
+    event.preventDefault()
+    const { query, page, limit } = this.state
+    this.props.getProducts(query, page, limit)
+    this.setState({
+      query: event.target.value,
+    })
+  }
   handlePageClick = (data) => {
     let page = data.selected
     this.setState({ page: page })
@@ -203,52 +212,81 @@ class Products extends Component {
       </CToast>
     )
   }
+  renderScanBarcodeModal = (visible) => {
+    console.log(visible)
+    return <ScanBarcodeModal visible={visible} />
+  }
   render() {
     let { visible, message, toast, products } = this.state
     return (
       <>
         {this.renderProductEditorModal()}
+        {this.renderScanBarcodeModal(visible)}
         <AlertModal />
         <CToaster push={toast} placement="top-end" />
         <ProductDetialsModal />
         <div className="d-flex justify-content-between mb-2">
-          <CButton
-            shape="rounded-pill"
-            color="primary"
-            variant="ghost"
-            className="d-flex justify-content-center align-items-center mb-3"
-            onClick={() =>
-              this.props.setProductModal(
-                !visible,
-                "Add",
-                <FaIcons.FaPlus size={20} />,
-              )
-            }
-          >
-            <FaIcons.FaPlus size={20} />
-            <span style={{ marginLeft: "10px" }}>Add Product</span>
-          </CButton>
-          <CForm className="w-50">
-            <CInputGroup>
-              <CFormControl
-                type="text"
-                id="floatingInput"
-                placeholder="Search"
-                className="p-2"
-                value={this.state.query}
-                onChange={this.handleSearch}
-              />
+          <div className="w-100">
+            <CButton
+              shape="rounded-pill"
+              color="primary"
+              variant="ghost"
+              className="d-flex justify-content-center align-items-center mb-3"
+              onClick={() =>
+                this.props.setProductModal(
+                  !visible,
+                  "Add",
+                  <FaIcons.FaPlus size={20} />,
+                )
+              }
+            >
+              <FaIcons.FaPlus size={20} />
+              <span style={{ marginLeft: "10px" }}>Add Product</span>
+            </CButton>
+          </div>
+
+          <div className="w-100 d-flex justify-content-end align-items-center">
+            <CForm
+              onSubmit={this.handleOnSubmitSearch}
+              id="search-form"
+              className="w-75"
+            >
+              <CInputGroup>
+                <CFormControl
+                  type="text"
+                  id="floatingInput"
+                  placeholder="Search"
+                  className="p-2"
+                  value={this.state.query}
+                  onChange={this.handleSearch}
+                />
+                <CButton
+                  form="search-form"
+                  type="submit"
+                  color="info"
+                  variant="outline"
+                  id="btn-search"
+                  className=""
+                >
+                  <FaIcons.FaSearch />
+                </CButton>
+              </CInputGroup>
+            </CForm>
+            <div className="text-center">
               <CButton
+                className="pt-2 pb-2 ms-2"
                 type="button"
                 color="info"
                 variant="outline"
-                id="button-addon2"
-                className=""
+                id="btn-scan-barcode"
+                onClick={() => {
+                  return this.renderScanBarcodeModal(true)
+                }}
               >
-                <FaIcons.FaSearch />
+                <BiIcons.BiBarcodeReader size="24" />
               </CButton>
-            </CInputGroup>
-          </CForm>
+            </div>
+          </div>
         </div>
         <CTable
           striped
