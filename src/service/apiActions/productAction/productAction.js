@@ -64,8 +64,8 @@ export const saveProduct = (formData) => async (dispatch) => {
     },
   )
 }
-export const getProducts = (token) => async (dispatch) => {
-  return ProductApiService.getProducts(token).then(
+export const getProducts = (query, page, limit) => async (dispatch) => {
+  return ProductApiService.getProducts(query, page, limit).then(
     (response) => {
       dispatch({
         type: GET_PRODUCTS,
@@ -105,8 +105,8 @@ export const getProducts = (token) => async (dispatch) => {
     },
   )
 }
-export const getDiscoverProducts = (token) => async (dispatch) => {
-  return ProductApiService.getDiscoverProducts(token).then(
+export const getDiscoverProducts = (query, page, limit) => async (dispatch) => {
+  return ProductApiService.getDiscoverProducts(query, page, limit).then(
     (response) => {
       dispatch({
         type: GET_DISCOVER_PRODUCT,
@@ -280,10 +280,8 @@ export const deleteProduct = (id) => async (dispatch) => {
         payload: {
           status: 200,
           action: DELETE_PRODUCT,
-          data: {
-
-          }
-        }
+          data: {},
+        },
       })
       dispatch({
         type: SET_MESSAGE,
@@ -294,7 +292,7 @@ export const deleteProduct = (id) => async (dispatch) => {
           },
         },
       })
-      return Promise.resolve();
+      return Promise.resolve()
     },
     (error) => {
       const message =
@@ -319,8 +317,8 @@ export const deleteProduct = (id) => async (dispatch) => {
           },
         },
       })
-      return Promise.reject();
-    }
+      return Promise.reject()
+    },
   )
 }
 

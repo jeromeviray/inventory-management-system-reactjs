@@ -60,6 +60,23 @@ export class SupplyModal extends Component {
     productItems: [],
   }
 
+  componentDidMount() {
+    
+  }
+  // getInventories(page, limit, query) {
+  //   this.props.getInventories(query, page, limit).catch(() => {
+  //     let { status, data } = this.props.messageResponse
+  //     if (status > 400 && status <= 403) {
+  //       setInterval(() => {
+  //         this.props.logout()
+  //         this.props.clearMessage()
+  //       }, 1000)
+  //       this.setState({
+  //         message: data.message,
+  //       })
+  //     }
+  //   })
+  // }
   getSuppliers = () => {
     this.props.getSuppliers().catch(() => {
       let { status, data } = this.props.messageResponse
@@ -378,6 +395,7 @@ const mapStateToProps = (state) => {
     modalVisible: state.modalVisibleResponse,
     messageResponse: state.messageResponse,
     supplierResponse: state.supplierResponse,
+    productResponse: state.productResponser,
   }
 }
 export default connect(mapStateToProps, {

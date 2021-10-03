@@ -12,12 +12,17 @@ export class ProductApiService {
   }
   deleteProduct(id) {
     return axios.delete("/products/delete/" + id, {
-      headers: authHeader()
+      headers: authHeader(),
     })
   }
-  getProducts(token) {
+  getProducts(query, page, limit) {
     return axios.get("/products", {
-      headers: { Authorization: token },
+      headers: authHeader(),
+      params: {
+        query: query,
+        page: page,
+        limit: limit,
+      },
     })
   }
   getImage(path, image) {
@@ -28,16 +33,22 @@ export class ProductApiService {
       responseType: "blob",
     })
   }
-  getProduct(id, token) {
+  getProduct(id) {
     return axios.get("/products/" + id, {
-      headers: { Authorization: token },
+      headers: authHeader(),
     })
   }
   getProductDetails(id) {
     return axios.get("/products/details/" + id)
   }
-  getDiscoverProducts() {
-    return axios.get("/products/discover")
+  getDiscoverProducts(query, page, limit) {
+    return axios.get("/products/discover", {
+      params: {
+        query: query,
+        page: page,
+        limit: limit,
+      },
+    })
   }
 }
 

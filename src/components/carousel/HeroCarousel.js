@@ -1,9 +1,4 @@
 import React, { Component } from 'react'
-import {
-    CCarousel,
-    CCarouselItem,
-
-} from '@coreui/react'
 import { getCarouselImages } from '../../service/apiActions/carouselAction/carouselAction'
 import { connect } from 'react-redux'
 import { Carousel } from 'react-responsive-carousel'
@@ -49,44 +44,12 @@ export class HeroCarousel extends Component {
         return (
 
             <>
-                {/* <CCarousel
-                    controls
-                    indicators
-                    dark
-                    interval={4000}
-                    className="carousel-container" >
-
-                    {carouselImages && (carouselImages.map((image, index) => {
-                        return (
-                            <CCarouselItem key={index} className="carousel-item">
-                                <img className="d-block carousel-image" src={image.fileName} alt={image.fileName} />
-                            </CCarouselItem>
-                        )
-                    }
-                    ))}
-                </CCarousel> */}
                 <Carousel
                     showArrows={true}
                     autoPlay={true}
                     showThumbs={false}
                     infiniteLoop={true}
                     dynamicHeight={false}
-                    // renderArrowPrev={(onClickHandler, hasPrev, label) =>
-                    //     hasPrev && (
-                    //         <button type="button" onClick={onClickHandler} title={label} className="arrow-style">
-                    //             <IoIcons.IoIosArrowBack size="40" style={{ color: "white" }} />
-                    //         </button>
-                    //     )
-                    // }
-                    // renderArrowNext={(onClickHandler, hasNext, label) =>
-                    //     hasNext && (
-                    //         <button type="button" onClick={onClickHandler} title={label} >
-                    //             <IoIcons.IoIosArrowForward size="40" style={{
-                    //                 color: "white"
-                    //             }} />
-                    //         </button>
-                    //     )
-                    // }
                     renderArrowPrev={(onClickHandler, hasPrev, label) =>
                         hasPrev && (
                             <button type="button" onClick={onClickHandler} title={label} className="arrow-style" style={{ ...arrowStyles, left: 0 }}>

@@ -48,14 +48,13 @@ const ProductEditorModal = lazy(() =>
 //action
 class Products extends Component {
   state = {
-    products: [],
-    keyword: "",
-    visible: false,
-    toast: "",
-    inventories: {
+    products: {
       data: [],
       totalPages: 0,
     },
+    keyword: "",
+    visible: false,
+    toast: "",
     page: 0,
     limit: 10,
     query: "",
@@ -63,11 +62,11 @@ class Products extends Component {
 
   componentDidMount() {
     const { page, limit, query } = this.state
-    this.getInventories(page, limit, query)
+    this.getProducts(page, limit, query)
   }
 
-  getInventories(page, limit, query) {
-    this.props.getInventories(query, page, limit).catch(() => {
+  getProducts(page, limit, query) {
+    this.props.getProducts(query, page, limit).catch(() => {
       let { status, data } = this.props.messageResponse
       if (status > 400 && status <= 403) {
         setInterval(() => {
@@ -82,7 +81,6 @@ class Products extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    this.manageInventoryResponse(prevProps, prevState)
     this.manageModalResponse(prevProps, prevProps)
     this.manageProductResponse(prevProps, prevState)
   }
@@ -95,17 +93,7 @@ class Products extends Component {
       })
       if (response.action === "close") {
         const { page, limit, query } = this.state
-        this.getInventories(page, limit, query)
-      }
-    }
-  }
-  manageInventoryResponse = (prevPros, prevState) => {
-    if (prevPros.inventoryResponse !== this.props.inventoryResponse) {
-      let { status, action, data } = this.props.inventoryResponse
-      if (status === 200 && action === "GETINVENTORIES") {
-        this.setState({
-          inventories: data.inventories,
-        })
+        this.getProducts(page, limit, query)
       }
     }
   }
@@ -119,10 +107,14 @@ class Products extends Component {
           this.props.editProductModal(
             !visible,
             "Edit",
-            data.product,
+            data.product.product,
             <FaIcons.FaEdit size={20} />,
           )
         }
+      } else if (status === 200 && action === "LIST") {
+        this.setState({
+          products: data,
+        })
       }
     }
   }
@@ -160,7 +152,7 @@ class Products extends Component {
 
   handleSearch = (event) => {
     const { page, limit } = this.state
-    this.props.getInventories(event.target.value, page, limit)
+    this.props.getProducts(event.target.value, page, limit)
     this.setState({ query: event.target.value })
   }
 
@@ -168,14 +160,13 @@ class Products extends Component {
     let page = data.selected
     this.setState({ page: page })
     const { limit, query } = this.state
-    this.props.getInventories(query, page, limit)
+    this.props.getProducts(query, page, limit)
   }
   handleGetProduct = (id) => {
     const { accessToken, type } = this.props.userResponse.credentials
     const token = type + accessToken
 
     this.props.getProduct(id, token).catch(() => {
-      console.log(this.props.messageResponse)
       const { status, message } = this.props.messageResponse
       // const message = this.props.messaegResponse.data.message
       if (status > 400 && status <= 403) {
@@ -213,8 +204,7 @@ class Products extends Component {
     )
   }
   render() {
-    let { visible, message, inventories, toast } = this.state
-    // console.log(this.props);
+    let { visible, message, toast, products } = this.state
     return (
       <>
         {this.renderProductEditorModal()}
@@ -269,7 +259,7 @@ class Products extends Component {
           align="middle"
         >
           <CTableCaption>
-            List of Products: <b>{inventories.totalItems}</b>
+            List of Products: <b>{products.totalItems}</b>
           </CTableCaption>
 
           <CTableHead color="dark">
@@ -294,14 +284,16 @@ class Products extends Component {
                 </CTableDataCell>
               </CTableRow>
             )}
-            {inventories.data.length > 0 ? (
-              inventories.data.map((item, index) => {
-                let { product, threshold, totalStock, status } = item
+            {products.data.length > 0 ? (
+              products.data.map((product, index) => {
+                const { id, barcode, productName, productPrice } =
+                  product.product
+                const { threshold, status, totalStock } = product.inventory
                 return (
                   <CTableRow className="text-center" key={index}>
                     <CTableDataCell>
                       <Barcode
-                        value={String(product.barcode)}
+                        value={String(barcode)}
                         height={50}
                         width={1}
                         fontSize={14}
@@ -309,9 +301,9 @@ class Products extends Component {
                         background="#f5f5f548"
                       />
                     </CTableDataCell>
-                    <CTableDataCell>{product.productName}</CTableDataCell>
+                    <CTableDataCell>{productName}</CTableDataCell>
                     <CTableDataCell>
-                      &#8369;{product.productPrice.toFixed(2)}
+                      &#8369;{productPrice.toFixed(2)}
                     </CTableDataCell>
                     <CTableDataCell>{threshold}</CTableDataCell>
                     <CTableDataCell>{totalStock}</CTableDataCell>
@@ -335,7 +327,7 @@ class Products extends Component {
                         color="info"
                         variant="ghost"
                         size="sm"
-                        onClick={() => this.handleGetProduct(product.id)}
+                        onClick={() => this.handleGetProduct(id)}
                       >
                         <FaIcons.FaEdit size="20" />
                       </CButton>
@@ -354,7 +346,7 @@ class Products extends Component {
                             !visible,
                             "DELETEPRODUCT",
                             "PRODUCT",
-                            product.id,
+                            id,
                           )
                         }
                       >
@@ -376,7 +368,7 @@ class Products extends Component {
           nextLabel={"next"}
           breakLabel={"..."}
           breakClassName={"break-me"}
-          pageCount={inventories.totalPages}
+          pageCount={products.totalPages}
           marginPagesDisplayed={2}
           pageRangeDisplayed={5}
           onPageChange={this.handlePageClick}

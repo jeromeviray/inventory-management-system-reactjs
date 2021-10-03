@@ -2,14 +2,24 @@ import authHeader from "../auth/authHeader"
 import axios from "./RestApi"
 
 export class AccountApiService {
-  getAccountEmployees(token) {
+  getAccountEmployees(query, page, limit) {
     return axios.get("/users/account", {
-      headers: { Authorization: token },
+      headers: authHeader(),
+      params: {
+        query: query,
+        page: page,
+        limit: limit,
+      },
     })
   }
-  getAccountCustomers(token) {
+  getAccountCustomers(query, page, limit) {
     return axios.get("/users/account/customers", {
       headers: authHeader(),
+      params: {
+        query: query,
+        page: page,
+        limit: limit,
+      },
     })
   }
 
@@ -39,21 +49,25 @@ export class AccountApiService {
       },
     )
   }
-  deleteAccount(id, token) {
+  deleteAccount(id) {
     return axios.delete("/users/account/delete/" + id, {
-      headers: { Authorization: token },
+      headers: authHeader(),
     })
   }
   changePassword(id, currentPassword, newPassword, confirmPassword) {
-    let password = newPassword;
-    return axios.post("/users/account/change/password", {
-      id,
-      currentPassword,
-      password,
-      confirmPassword
-    }, {
-      headers: authHeader()
-    })
+    let password = newPassword
+    return axios.post(
+      "/users/account/change/password",
+      {
+        id,
+        currentPassword,
+        password,
+        confirmPassword,
+      },
+      {
+        headers: authHeader(),
+      },
+    )
   }
 }
 export default new AccountApiService()

@@ -1,5 +1,14 @@
 import React, { Component } from "react"
-import { CCard, CCardBody, CPagination, CPaginationItem } from "@coreui/react"
+import {
+  CCard,
+  CCardBody,
+  CButton,
+  CForm,
+  CInputGroup,
+  CFormControl,
+} from "@coreui/react"
+import * as FaIcons from "react-icons/fa"
+
 import { connect } from "react-redux"
 //action
 import { logout } from "src/service/apiActions/userAction/userAction"
@@ -9,21 +18,49 @@ import IncomingSuppliesCard from "../IncomingSuppliesCard"
 import ReactPaginate from "react-paginate"
 
 export class IncomingSuppliesByPendingStatus extends Component {
+  // state = {
+  //   incomingSuppliesByPendingStatus: [],
+  //   message: "",
+  // }
+  // componentDidMount() {
+  //   this.props.getIncomingSuppliesByPendingStatus().catch(() => {
+  //     let { status, data } = this.props.messageResponse
+  //     if (status > 400 && status <= 403) {
+  //       this.props.logout()
+  //       this.props.clearMessage()
+  //     }
+  //     this.setState({
+  //       message: data.message,
+  //     })
+  //   })
+  // }
   state = {
-    incomingSuppliesByPendingStatus: [],
+    incomingSuppliesByPendingStatus: {
+      data: [],
+      totalPages: 0,
+    },
     message: "",
+    query: "",
+    page: 0,
+    limit: 10,
   }
   componentDidMount() {
-    this.props.getIncomingSuppliesByPendingStatus().catch(() => {
-      let { status, data } = this.props.messageResponse
-      if (status > 400 && status <= 403) {
-        this.props.logout()
-        this.props.clearMessage()
-      }
-      this.setState({
-        message: data.message,
+    const { query, page, limit } = this.state
+    this.getIncomingSupplies(query, page, limit)
+  }
+  getIncomingSupplies = (query, page, limit) => {
+    this.props
+      .getIncomingSuppliesByPendingStatus(query, page, limit)
+      .catch(() => {
+        let { status, data } = this.props.messageResponse
+        if (status > 400 && status <= 403) {
+          this.props.logout()
+          this.props.clearMessage()
+        }
+        this.setState({
+          message: data.message,
+        })
       })
-    })
   }
   componentDidUpdate(prevProps, prevState) {
     this.manageIncomingSuppliesByShipStatus(prevProps, prevState)
@@ -43,8 +80,30 @@ export class IncomingSuppliesByPendingStatus extends Component {
       }
     }
   }
+  handleOnChange = (event) => {
+    this.setState({
+      query: event.target.value,
+    })
+  }
+  handleSearch = (event) => {
+    event.preventDefault()
+    const { page, limit } = this.state
+    this.props.getIncomingSuppliesByPendingStatus(
+      event.target.value,
+      page,
+      limit,
+    )
+    this.setState({ query: event.target.value })
+  }
+
+  handlePageClick = (data) => {
+    let page = data.selected
+    this.setState({ page: page })
+    const { limit, query } = this.state
+    this.props.getIncomingSuppliesByPendingStatus(query, page, limit)
+  }
   render() {
-    let { message, incomingSuppliesByPendingStatus } = this.state
+    let { message, incomingSuppliesByPendingStatus, query } = this.state
     return (
       <>
         {message && (
@@ -58,16 +117,40 @@ export class IncomingSuppliesByPendingStatus extends Component {
             </CCardBody>
           </CCard>
         )}
-        <IncomingSuppliesCard supplies={incomingSuppliesByPendingStatus} />
+        <div className="d-flex justify-content-end mb-4">
+          <CForm className="w-50">
+            <CInputGroup>
+              <CFormControl
+                type="text"
+                id="floatingInput"
+                placeholder="Search Pending Supply (e.g: IS-FEF-1000000)"
+                className="p-2"
+                value={query}
+                onChange={this.handleSearch}
+              />
+              <CButton
+                type="button"
+                color="info"
+                variant="outline"
+                id="button-addon2"
+                className=""
+              >
+                <FaIcons.FaSearch />
+              </CButton>
+            </CInputGroup>
+          </CForm>
+        </div>
+
+        <IncomingSuppliesCard supplies={incomingSuppliesByPendingStatus.data} />
         <ReactPaginate
           previousLabel={"previous"}
           nextLabel={"next"}
           breakLabel={"..."}
           breakClassName={"break-me"}
-          // pageCount={inventories.totalPages}
+          pageCount={incomingSuppliesByPendingStatus.totalPages}
           marginPagesDisplayed={2}
           pageRangeDisplayed={5}
-          // onPageChange={this.handlePageClick}
+          onPageChange={this.handlePageClick}
           containerClassName={"pagination"}
           activeClassName={"active"}
         />

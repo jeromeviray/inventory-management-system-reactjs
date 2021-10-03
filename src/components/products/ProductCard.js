@@ -4,9 +4,16 @@ import ReactStars from "react-rating-stars-component"
 import * as FaIcons from "react-icons/fa"
 import * as BsIcons from "react-icons/bs"
 import { connect } from "react-redux"
-import { setProductModal, editProductModal, setProductDetailsModal } from "src/service/apiActions/modalAction/modalAction"
-import ProductEditorModal from "../modals/product/ProductEditorModal"
-import { getProduct, getProductDetails } from "src/service/apiActions/productAction/productAction"
+import {
+  setProductModal,
+  editProductModal,
+  setProductDetailsModal,
+} from "src/service/apiActions/modalAction/modalAction"
+import ProductDetialsModal from "../modals/product/ProductDetialsModal"
+import {
+  getProduct,
+  getProductDetails,
+} from "src/service/apiActions/productAction/productAction"
 import { logout } from "src/service/apiActions/userAction/userAction"
 
 import { NO_IMAGE_BASE64 } from "src/service/redux/constants"
@@ -18,13 +25,12 @@ export class ProductCard extends Component {
     fileImage: this.props.fileImage,
     imageLink: false,
     visible: false,
-    action: '',
-    message: '',
+    action: "",
+    message: "",
   }
   componentDidMount = () => {
     this.handleIconModal()
     this.handleImageLink()
-
   }
   componentDidUpdate(prevProps, prevState) {
     this.manageProductResponse(prevProps, prevState)
@@ -42,54 +48,57 @@ export class ProductCard extends Component {
   }
 
   manageProductResponse(prevProps, prevState) {
-    const { visible, } = this.state;
+    const { visible } = this.state
 
     if (prevProps.productResponse !== this.props.productResponse) {
-      let response = this.props.productResponse;
+      let response = this.props.productResponse
 
       if (response.action === "GETBYID") {
         if (response.status >= 200 && response.status <= 300) {
-          this.props.editProductModal(!visible, "Edit", response.data.product, <FaIcons.FaEdit size={20} />)
+          this.props.editProductModal(
+            !visible,
+            "Edit",
+            response.data.product,
+            <FaIcons.FaEdit size={20} />,
+          )
         }
       } else if (response.action === "DETAILS") {
         if (response.status === 200) {
-          this.props.setProductDetailsModal(!visible, "PRODUCTDETAILS", response.data.product);
+          this.props.setProductDetailsModal(
+            !visible,
+            "PRODUCTDETAILS",
+            response.data.product,
+          )
         }
       } else if (response.status < 400) {
-        this.props.logout();
-        window.location.reload();
+        this.props.logout()
+        window.location.reload()
       }
     }
   }
   handleGetProduct = (id) => {
-    const { accessToken, type } = this.props.userResponse.credentials
-    const token = type + accessToken
-
-    this.props.getProduct(id, token)
-      .catch(() => {
-        console.log(this.props.messageResponse)
-        const { status, message } = this.props.messageResponse;
-        // const message = this.props.messaegResponse.data.message
-        console.log(status > 400 && status <= 403);
-        if (status > 400 && status <= 403) {
-          this.props.logout();
-          window.location.reload();
-        }
-        this.setState({
-          message: message
-        })
+    this.props.getProduct(id).catch(() => {
+      console.log(this.props.messageResponse)
+      const { status, message } = this.props.messageResponse
+      // const message = this.props.messaegResponse.data.message
+      console.log(status > 400 && status <= 403)
+      if (status > 400 && status <= 403) {
+        this.props.logout()
+        window.location.reload()
+      }
+      this.setState({
+        message: message,
       })
+    })
   }
   handleProductDetails = (id) => {
-    this.props.getProductDetails(id)
-      .catch(() => {
-
-        const { status, message } = this.props.messageResponse;
-        // const message = this.props.messaegResponse.data.message
-        this.setState({
-          message: message
-        })
+    this.props.getProductDetails(id).catch(() => {
+      const { status, message } = this.props.messageResponse
+      // const message = this.props.messaegResponse.data.message
+      this.setState({
+        message: message,
       })
+    })
   }
   manageStatus = (status) => {
     switch (status) {
@@ -119,18 +128,14 @@ export class ProductCard extends Component {
         )
     }
   }
-  renderProductModal = () => {
-    <ProductEditorModal />
-  }
-  renderAlert = () => {
 
-  }
+  renderAlert = () => {}
   render() {
-    let { iconModal, product, imageLink, fileImage, visible, } = this.state
-
+    let { iconModal, product, imageLink, fileImage, visible } = this.state
+    const { productName, productPrice, id } = product.product
     return (
       <>
-        {this.renderProductModal()}
+        <ProductDetialsModal />
         <CCard className="inner-card-container shadow-sm">
           <div className="img-container">
             {imageLink ? (
@@ -139,7 +144,13 @@ export class ProductCard extends Component {
                   <img
                     className="border"
                     variant="top"
-                    src={fileImage.length > 0 ? "/images/products/" + fileImage[0].fileName : NO_IMAGE_BASE64}
+                    src={
+                      fileImage.length > 0
+                        ? "/images/products/" +
+                          fileImage[0].path +
+                          fileImage[0].fileName
+                        : NO_IMAGE_BASE64
+                    }
                     alt="product"
                   />
                 </div>
@@ -149,14 +160,23 @@ export class ProductCard extends Component {
                 <img
                   className="border"
                   variant="top"
-                  src={fileImage.length > 0 ? "/images/products/" + fileImage[0].fileName : NO_IMAGE_BASE64}
+                  src={
+                    fileImage.length > 0
+                      ? "/images/products/" +
+                        fileImage[0].path +
+                        fileImage[0].fileName
+                      : NO_IMAGE_BASE64
+                  }
                   alt="product"
                 />
               </div>
             )}
             <div className="eye-btn">
-              {iconModal === "eye" ? (
-                <span onClick={() => this.handleProductDetails(product.id)}>
+              <span onClick={() => this.handleProductDetails(id)}>
+                <BsIcons.BsEye />
+              </span>
+              {/* {iconModal === "eye" ? (
+                <span onClick={() => this.handleProductDetails(id)}>
                   <BsIcons.BsEye />
                 </span>
               ) : (
@@ -164,24 +184,24 @@ export class ProductCard extends Component {
                   <FaIcons.FaEdit
                     size={14}
                     onClick={() => {
-                      this.handleGetProduct(product.id);
-                    }} />
+                      this.handleGetProduct(product.id)
+                    }}
+                  />
                 </span>
-              )}
+              )} */}
             </div>
           </div>
           <CCardBody>
-            <CCardTitle>{product.productName}</CCardTitle>
+            <CCardTitle>{productName}</CCardTitle>
             <div className="card-label-price">
-              <CCardTitle>
-                <h5 className="peso-price text-dark">&#8369;{product.productPrice.toFixed(2)}</h5>
-              </CCardTitle>
+              <CCardTitle>&#8369;{productPrice.toFixed(2)}</CCardTitle>
               <div className="product-stock-container">
                 <span className="stock-label">Stock: </span>
                 {product.inventory.totalStock > 0 ? (
-                  <span className="stock-label-value">{product.inventory.totalStock}</span>
+                  <span className="stock-label-value">
+                    {product.inventory.totalStock}
+                  </span>
                 ) : (
-                  // <span className="sold-out-label">Sold Out</span>
                   this.manageStatus(product.inventory.status)
                 )}
               </div>
@@ -198,7 +218,6 @@ export class ProductCard extends Component {
       </>
     )
   }
-
 }
 
 const mapStateToProps = (state) => {
@@ -206,7 +225,7 @@ const mapStateToProps = (state) => {
     productResponse: state.productResponser,
     userResponse: state.userResponse,
     modalVisibleResponse: state.modalVisibleResponse,
-    messageResponse: state.messageResponse
+    messageResponse: state.messageResponse,
   }
 }
 export default connect(mapStateToProps, {
@@ -215,5 +234,5 @@ export default connect(mapStateToProps, {
   editProductModal,
   getProduct,
   getProductDetails,
-  logout
+  logout,
 })(ProductCard)

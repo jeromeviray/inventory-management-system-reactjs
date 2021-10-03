@@ -4,6 +4,7 @@ const {
   GET_CATEGORY,
   UPDATE_CATEGORY,
   DELETE_CATEGORY,
+  GET_CATEGORIES_LIST,
 } = require("../constants")
 
 const categoryReducer = (state = {}, action) => {
@@ -44,8 +45,14 @@ const categoryReducer = (state = {}, action) => {
       return {
         action: payload.action,
         status: payload.status,
+        data: {},
+      }
+    case GET_CATEGORIES_LIST:
+      return {
+        action: payload.action,
+        status: payload.status,
         data: {
-         
+          categoriesList: payload.data.categoriesList,
         },
       }
     default:

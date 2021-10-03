@@ -30,9 +30,14 @@ export class SupplierApiService {
       headers: authHeader(),
     })
   }
-  getSuppliers() {
+  getSuppliers(query, page, limit) {
     return axios.get("/suppliers", {
       headers: authHeader(),
+      params: {
+        query: query,
+        page: page,
+        limit: limit,
+      },
     })
   }
   getSupplier(id) {

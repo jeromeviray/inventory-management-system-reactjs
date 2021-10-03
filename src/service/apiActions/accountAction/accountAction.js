@@ -8,8 +8,8 @@ import {
 import AccountApiService from "src/service/restAPI/AccountApiService"
 import { SET_MESSAGE } from "src/constants/userConstants"
 
-export const getEmployees = (token) => async (dispatch) => {
-  return AccountApiService.getAccountEmployees(token).then(
+export const getEmployees = (query, page, limit) => async (dispatch) => {
+  return AccountApiService.getAccountEmployees(query, page, limit).then(
     (response) => {
       dispatch({
         type: GET_EMPLOYEES,
@@ -48,8 +48,8 @@ export const getEmployees = (token) => async (dispatch) => {
     },
   )
 }
-export const getCustomers = () => async (dispatch) => {
-  return AccountApiService.getAccountCustomers().then(
+export const getCustomers = (query, page, limit) => async (dispatch) => {
+  return AccountApiService.getAccountCustomers(query, page, limit).then(
     (response) => {
       dispatch({
         type: GET_CUSTOMERS,
@@ -145,8 +145,8 @@ export const saveEmployee =
       },
     )
   }
-export const deleteEmployee = (id, token) => async (dispatch) => {
-  return AccountApiService.deleteAccount(id, token).then(
+export const deleteEmployee = (id) => async (dispatch) => {
+  return AccountApiService.deleteAccount(id).then(
     (response) => {
       dispatch({
         type: DELETE_ACCOUNT,

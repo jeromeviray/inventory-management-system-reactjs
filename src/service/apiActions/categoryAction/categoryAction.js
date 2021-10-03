@@ -2,6 +2,7 @@ import { SET_MESSAGE } from "src/constants/userConstants"
 import {
   DELETE_CATEGORY,
   GET_CATEGORIES,
+  GET_CATEGORIES_LIST,
   GET_CATEGORY,
   SAVE_CATEGORY,
   UPDATE_CATEGORY,
@@ -67,6 +68,49 @@ export const getCategories = (query, page, limit) => async (dispatch) => {
           action: GET_CATEGORIES,
           data: {
             categories: response.data,
+          },
+        },
+      })
+
+      return Promise.resolve()
+    },
+
+    (error) => {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.error_message ||
+        error.toString()
+
+      const status =
+        (error.response && error.response.data && error.response.data.code) ||
+        error.toString()
+
+      dispatch({
+        type: SET_MESSAGE,
+        payload: {
+          status: status,
+          data: {
+            message: message,
+          },
+        },
+      })
+      return Promise.reject()
+    },
+  )
+}
+export const getCategoriesList = () => async (dispatch) => {
+  return CategoriesApiService.getCategoriesList().then(
+    (response) => {
+      dispatch({
+        type: GET_CATEGORIES_LIST,
+        payload: {
+          status: 200,
+          action: GET_CATEGORIES_LIST,
+          data: {
+            categoriesList: response.data,
           },
         },
       })

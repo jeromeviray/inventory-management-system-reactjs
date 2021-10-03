@@ -32,11 +32,21 @@ import ReactPaginate from "react-paginate"
 export class Customer extends Component {
   state = {
     message: "",
-    customers: [],
+    customers: {
+      data: [],
+      totalPages: 0,
+    },
     visible: false,
+    query: "",
+    page: 0,
+    limit: 10,
   }
   componentDidMount() {
-    this.props.getCustomers().catch(() => {
+    const { query, page, limit } = this.state
+    this.getCustomers(query, page, limit)
+  }
+  getCustomers = (query, page, limit) => {
+    this.props.getCustomers(query, page, limit).catch(() => {
       let failMessage = this.props.messageResponse
       if (failMessage.status > 400 && failMessage.status <= 403) {
         this.props.logout()
@@ -65,9 +75,20 @@ export class Customer extends Component {
   renderEmployeeModal() {
     return <AccountModal />
   }
+  handleSearch = (event) => {
+    const { page, limit } = this.state
+    this.getCustomers(event.target.value, page, limit)
+    this.setState({ query: event.target.value })
+  }
+
+  handlePageClick = (data) => {
+    let page = data.selected
+    this.setState({ page: page })
+    const { limit, query } = this.state
+    this.getCustomers(query, page, limit)
+  }
   render() {
-    let { customers, message, visible } = this.state
-    console.log(message)
+    let { customers, message, visible, query } = this.state
     return (
       <>
         {this.renderAlerModal()}
@@ -80,6 +101,8 @@ export class Customer extends Component {
                 id="floatingInput"
                 placeholder="Search"
                 className="p-2"
+                value={query}
+                onChange={this.handleSearch}
               />
               <CButton
                 type="button"
@@ -102,7 +125,7 @@ export class Customer extends Component {
           align="middle"
         >
           <CTableCaption>
-            List of Brand: <b>{customers.length}</b>
+            List of Brand: <b>{customers.totalItems}</b>
           </CTableCaption>
 
           <CTableHead color="dark">
@@ -126,9 +149,9 @@ export class Customer extends Component {
                 </CTableDataCell>
               </CTableRow>
             )}
-            {customers.length > 0 ? (
+            {customers.data.length > 0 ? (
               <>
-                {customers.map((customer, index) => {
+                {customers.data.map((customer, index) => {
                   let { firstName, lastName, phoneNumber, account } = customer
                   return (
                     <CTableRow className="text-center" key={index}>
@@ -192,10 +215,10 @@ export class Customer extends Component {
           nextLabel={"next"}
           breakLabel={"..."}
           breakClassName={"break-me"}
-          // pageCount={inventories.totalPages}
+          pageCount={customers.totalPages}
           marginPagesDisplayed={2}
           pageRangeDisplayed={5}
-          // onPageChange={this.handlePageClick}
+          onPageChange={this.handlePageClick}
           containerClassName={"pagination"}
           activeClassName={"active"}
         />

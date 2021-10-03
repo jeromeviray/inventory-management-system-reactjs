@@ -66,6 +66,13 @@ export class AlertModal extends Component {
             module: module,
             action: action,
           })
+        case "DELETECUSTOMER":
+          this.setState({
+            visible: alert,
+            id: id,
+            module: module,
+            action: action,
+          })
         case "DELETESUPPLIER":
           this.setState({
             visible: alert,
@@ -109,14 +116,16 @@ export class AlertModal extends Component {
     this.setState({
       loading: true,
     })
-    // console.log(action + " " + module)
+    console.log(action + " " + module)
     if (action === "DELETEBRANCH" && module === "BRANCH") {
       this.branchDelete(id, token)
       console.log("BRANCH")
     } else if (action === "DELETEBRAND" && module === "BRAND") {
       this.handleDeleteBrand(id, token)
     } else if (action === "DELETEEMPLOYEE" && module === "EMPLOYEE") {
-      this.handleEmployeeDelete(id, token)
+      this.handleEmployeeDelete(id)
+    } else if (action === "DELETECUSTOMER" && module === "CUSTOMER") {
+      this.handleEmployeeDelete(id)
     } else if (action === "DELETESUPPLIER" && module === "SUPPLIER") {
       this.handleSupplierDelete(id)
     } else if (action === "DELETECATEGORY" && module === "CATEGORY") {
@@ -203,9 +212,9 @@ export class AlertModal extends Component {
         }
       })
   }
-  handleEmployeeDelete = (id, token) => {
+  handleEmployeeDelete = (id) => {
     this.props
-      .deleteEmployee(id, token)
+      .deleteEmployee(id)
       .then(() => {
         let { data } = this.props.messageResponse
         this.setState({
@@ -427,5 +436,5 @@ export default connect(mapStateToProps, {
   deleteEmployee,
   deleteSupplier,
   deleteCategory,
-  deleteProduct
+  deleteProduct,
 })(AlertModal)

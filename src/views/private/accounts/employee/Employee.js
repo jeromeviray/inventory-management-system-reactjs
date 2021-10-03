@@ -32,12 +32,18 @@ import ReactPaginate from "react-paginate"
 
 export class Employee extends Component {
   state = {
-    employee: [],
+    employee: {
+      data: [],
+      totalPages: 0,
+    },
     visible: false,
     token: "",
     message: "",
     action: "",
     status: "",
+    query: "",
+    page: 0,
+    limit: 10,
   }
   componentDidMount() {
     let { type, accessToken } = this.props.userResponse.credentials
@@ -45,7 +51,11 @@ export class Employee extends Component {
     this.setState({
       token: token,
     })
-    this.props.getEmployees(token).catch(() => {
+    const { query, page, limit } = this.state
+    this.getEmployees(query, page, limit)
+  }
+  getEmployees = (query, page, limit) => {
+    this.props.getEmployees(query, page, limit).catch(() => {
       let failMessage = this.props.messageResponse
       if (failMessage.status > 400 && failMessage.status <= 403) {
         this.props.logout()
@@ -78,8 +88,20 @@ export class Employee extends Component {
   renderEmployeeModal() {
     return <AccountModal />
   }
+  handleSearch = (event) => {
+    const { page, limit } = this.state
+    this.getEmployees(event.target.value, page, limit)
+    this.setState({ query: event.target.value })
+  }
+
+  handlePageClick = (data) => {
+    let page = data.selected
+    this.setState({ page: page })
+    const { limit, query } = this.state
+    this.getEmployees(query, page, limit)
+  }
   render() {
-    let { employee, visible, message } = this.state
+    let { employee, visible, message, query } = this.state
     return (
       <div>
         {this.renderAlerModal()}
@@ -109,6 +131,8 @@ export class Employee extends Component {
                 id="floatingInput"
                 placeholder="Search"
                 className="p-2"
+                value={query}
+                onChange={this.handleSearch}
               />
               <CButton
                 type="button"
@@ -132,7 +156,7 @@ export class Employee extends Component {
           align="middle"
         >
           <CTableCaption>
-            List of Brand: <b>{employee.length}</b>
+            List of Brand: <b>{employee.totalItems}</b>
           </CTableCaption>
 
           <CTableHead color="dark">
@@ -156,9 +180,9 @@ export class Employee extends Component {
                 </CTableDataCell>
               </CTableRow>
             )}
-            {employee.length > 0 ? (
+            {employee.data.length > 0 ? (
               <>
-                {employee.map((employee, index) => {
+                {employee.data.map((employee, index) => {
                   let { firstName, lastName, phoneNumber, account } = employee
                   return (
                     <CTableRow className="text-center" key={index}>
@@ -222,10 +246,10 @@ export class Employee extends Component {
           nextLabel={"next"}
           breakLabel={"..."}
           breakClassName={"break-me"}
-          // pageCount={inventories.totalPages}
+          pageCount={employee.totalPages}
           marginPagesDisplayed={2}
           pageRangeDisplayed={5}
-          // onPageChange={this.handlePageClick}
+          onPageChange={this.handlePageClick}
           containerClassName={"pagination"}
           activeClassName={"active"}
         />

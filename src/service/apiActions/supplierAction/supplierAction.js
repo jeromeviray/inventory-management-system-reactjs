@@ -199,8 +199,8 @@ export const deleteSupplier = (id) => async (dispatch) => {
     },
   )
 }
-export const getSuppliers = () => async (dispatch) => {
-  return SupplierApiService.getSuppliers().then(
+export const getSuppliers = (query, page, limit) => async (dispatch) => {
+  return SupplierApiService.getSuppliers(query, page, limit).then(
     (response) => {
       dispatch({
         type: GET_SUPPLIERS,

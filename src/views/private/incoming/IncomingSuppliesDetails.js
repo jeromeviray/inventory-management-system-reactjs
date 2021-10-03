@@ -25,10 +25,9 @@ export class IncomingSuppliesDetails extends Component {
     message: "",
     hasError: false,
     incomingSupply: [],
-    status: ''
+    status: "",
   }
   componentDidMount() {
-
     let supplyId = this.props.location.state
     this.props.getIncomingSupply(supplyId).catch(() => {
       let { status, data } = this.props.messageResponse
@@ -41,7 +40,7 @@ export class IncomingSuppliesDetails extends Component {
       this.setState({
         message: data.message,
         hasError: true,
-        status: status
+        status: status,
       })
     })
   }
@@ -70,7 +69,8 @@ export class IncomingSuppliesDetails extends Component {
       incomingSupplyStatus,
       supplier,
       updatedAt,
-    } = incomingSupply;
+      supplyReference,
+    } = incomingSupply
     const fontStyle = {
       fontSize: "14px",
       fontWeight: "500",
@@ -112,6 +112,12 @@ export class IncomingSuppliesDetails extends Component {
                 <div className="d-flex flex-column p-3">
                   <div className="d-flex  align-items-center ">
                     <span style={fontStyle} className="text-black-50">
+                      Supply Reference #:
+                    </span>
+                    <h6 className="ps-2 m-0">{supplier && supplyReference}</h6>
+                  </div>
+                  <div className="d-flex  align-items-center mt-2">
+                    <span style={fontStyle} className="text-black-50">
                       Supply Name:
                     </span>
                     <h6 className="ps-2 m-0">{supplier && supplier.name}</h6>
@@ -132,7 +138,10 @@ export class IncomingSuppliesDetails extends Component {
                       <span style={fontStyle} className="text-black-50 me-2">
                         Delivered Date:
                       </span>
-                      <span className="text-danger" style={{ fontWeight: "500" }}>
+                      <span
+                        className="text-danger"
+                        style={{ fontWeight: "500" }}
+                      >
                         {deliveredAt}
                       </span>
                     </div>
@@ -162,7 +171,9 @@ export class IncomingSuppliesDetails extends Component {
                 </CTableCaption>
                 <CTableHead color="dark">
                   <CTableRow className="text-center">
-                    <CTableHeaderCell scope="col">Product Name</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">
+                      Product Name
+                    </CTableHeaderCell>
                     <CTableHeaderCell scope="col">
                       Product Barcode
                     </CTableHeaderCell>
@@ -196,7 +207,6 @@ export class IncomingSuppliesDetails extends Component {
             </div>
           )}
         </div>
-
       </>
     )
   }

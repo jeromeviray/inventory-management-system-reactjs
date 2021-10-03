@@ -1,68 +1,70 @@
-import React, { Component } from 'react'
-import { CRow, CCol } from '@coreui/react'
-import { connect } from 'react-redux'
+import React, { Component } from "react"
+import { CRow, CCol } from "@coreui/react"
+import { connect } from "react-redux"
 //action
-import { getDiscoverProducts } from 'src/service/apiActions/productAction/productAction'
-import ProductCard from 'src/components/products/ProductCard'
+import { getDiscoverProducts } from "src/service/apiActions/productAction/productAction"
+import ProductCard from "src/components/products/ProductCard"
 
 export class NewArrivalProducts extends Component {
-    state = {
-        message: '',
-        products: [],
-
+  state = {
+    message: "",
+    products: {
+      data: [],
+      totalPages: 0,
+    },
+  }
+  // componentDidMount() {
+  //     this.props.getDiscoverProducts().catch(() => {
+  //         let failMessage = this.props.messageResponse
+  //         this.setState({
+  //             loading: false,
+  //             message: failMessage.data.message
+  //         })
+  //     })
+  // }
+  componentDidUpdate(prevProps, prevState) {
+    this.manageProductResponse(prevProps, prevState)
+  }
+  manageProductResponse = (prevProps, prevState) => {
+    if (prevProps.productResponser !== this.props.productResponser) {
+      let { status, action, data } = this.props.productResponser
+      if (status === 200 && action === "DISCOVER") {
+        this.setState({
+          products: data.products,
+        })
+      }
     }
-    // componentDidMount() {
-    //     this.props.getDiscoverProducts().catch(() => {
-    //         let failMessage = this.props.messageResponse
-    //         this.setState({
-    //             loading: false,
-    //             message: failMessage.data.message
-    //         })
-    //     })
-    // }
-    componentDidUpdate(prevProps, prevState) {
-        this.manageProductResponse(prevProps, prevState);
-    }
-    manageProductResponse = (prevProps, prevState) => {
-        if (prevProps.productResponser !== this.props.productResponser) {
-            let { status, action, data } = this.props.productResponser;
-            if (status === 200 && action === "DISCOVER") {
-                this.setState({
-                    products: data.products
-                })
-            }
-        }
-    }
-    render() {
-        let { message, products } = this.state;
+  }
+  render() {
+    let { message, products } = this.state
 
-        return (
-            <>
-
-
-                <CRow className=" pt-2 pb-2 mb-4">
-                    <h4>New Arrival</h4>
-                    {products.map((product, index) => {
-                        return (
-                            <CCol xs="6" sm="6" md="4" lg="3" key={index}>
-                                <ProductCard product={product} fileImage={product.fileImages} iconModal="eye" imageLink={true} />
-
-                            </CCol>
-
-                        )
-                    })}
-                </CRow>
-            </>
-        )
-    }
+    return (
+      <>
+        <CRow className=" pt-2 pb-2 mb-4">
+          <h4>Popular Product</h4>
+          {products.data.slice(0, 8).map((product, index) => {
+            return (
+              <CCol xs="6" sm="6" md="4" lg="3" key={index}>
+                <ProductCard
+                  product={product}
+                  fileImage={product.product.fileImages}
+                  iconModal="eye"
+                  imageLink={true}
+                />
+              </CCol>
+            )
+          })}
+        </CRow>
+      </>
+    )
+  }
 }
 const mapStateToProps = (state) => {
-    return {
-        productResponser: state.productResponser,
-        messageResponse: state.messageResponse
-    }
+  return {
+    productResponser: state.productResponser,
+    messageResponse: state.messageResponse,
+  }
 }
 export default connect(mapStateToProps, {
-    getDiscoverProducts
-
+  getDiscoverProducts,
 })(NewArrivalProducts)

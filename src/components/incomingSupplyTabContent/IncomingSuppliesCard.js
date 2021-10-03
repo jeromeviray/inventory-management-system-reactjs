@@ -4,11 +4,6 @@ import {
   CCardBody,
   CCardHeader,
   CCardFooter,
-  CRow,
-  CCol,
-  CContainer,
-  CImage,
-  CButton,
   CTable,
   CTableHead,
   CTableRow,
@@ -44,6 +39,7 @@ export class IncomingSuppliesCard extends Component {
               incomingSupplyStatus,
               supplier,
               updatedAt,
+              supplyReference,
             } = supply
             return (
               <CCard className="mb-3" key={index}>
@@ -57,7 +53,7 @@ export class IncomingSuppliesCard extends Component {
                           fontWeight: "400",
                         }}
                       >
-                        Supplier Name:
+                        Supply Reference #:
                       </span>
                       <span
                         style={{
@@ -66,7 +62,7 @@ export class IncomingSuppliesCard extends Component {
                         }}
                         className="text-bold ms-2"
                       >
-                        {supplier.name}
+                        {supplyReference}
                       </span>
                     </div>
                     <div className="p-2">
@@ -161,6 +157,14 @@ export class IncomingSuppliesCard extends Component {
                 <CCardFooter className="p-4">
                   <div className="d-flex justify-content-between align-items-end">
                     <div className="d-flex flex-column">
+                      <div style={fontStyle} className="mt-2">
+                        <span className="text-black-50 me-2">
+                          Supplier Name:
+                        </span>
+                        <span style={{ fontWeight: "500" }}>
+                          {supplier.name}
+                        </span>
+                      </div>
                       <div style={fontStyle} className="mt-2">
                         <span className="text-black-50 me-2">
                           Purchased Date:

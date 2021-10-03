@@ -30,14 +30,21 @@ import ReactPaginate from "react-paginate"
 export class Supplier extends Component {
   state = {
     message: "",
-    suppliers: [],
+    suppliers: {
+      data: [],
+      totalPages: 0,
+    },
     visible: false,
+    query: "",
+    page: 0,
+    limit: 10,
   }
   componentDidMount() {
-    this.getSuppliers()
+    const { query, page, limit } = this.state
+    this.getSuppliers(query, page, limit)
   }
-  getSuppliers = () => {
-    this.props.getSuppliers().catch(() => {
+  getSuppliers = (query, page, limit) => {
+    this.props.getSuppliers(query, page, limit).catch(() => {
       let { status, data } = this.props.messageResponse
       if (status > 400 && status <= 403) {
         this.props.logout()
@@ -62,8 +69,20 @@ export class Supplier extends Component {
       }
     }
   }
+  handleSearch = (event) => {
+    const { page, limit } = this.state
+    this.props.getSuppliers(event.target.value, page, limit)
+    this.setState({ query: event.target.value })
+  }
+
+  handlePageClick = (data) => {
+    let page = data.selected
+    this.setState({ page: page })
+    const { limit, query } = this.state
+    this.props.getSuppliers(query, page, limit)
+  }
   render() {
-    let { suppliers, message, visible } = this.state
+    let { suppliers, message, visible, query } = this.state
     return (
       <>
         <SupplierModal />
@@ -93,6 +112,8 @@ export class Supplier extends Component {
                 id="floatingInput"
                 placeholder="Search"
                 className="p-2"
+                value={query}
+                onChange={this.handleSearch}
               />
               <CButton
                 type="button"
@@ -115,7 +136,7 @@ export class Supplier extends Component {
           align="middle"
         >
           <CTableCaption>
-            List of Brand: <b>{suppliers.length}</b>
+            List of Suppliers: <b>{suppliers.data.length}</b>
           </CTableCaption>
           <CTableHead color="dark">
             <CTableRow className="text-center">
@@ -125,8 +146,8 @@ export class Supplier extends Component {
             </CTableRow>
           </CTableHead>
           <CTableBody className="text-center" color="light">
-            {suppliers.length > 0 ? (
-              suppliers.map((supplier, index) => {
+            {suppliers.data.length > 0 ? (
+              suppliers.data.map((supplier, index) => {
                 return (
                   <CTableRow className="text-center" key={index}>
                     <CTableDataCell>{supplier.name}</CTableDataCell>
@@ -148,7 +169,6 @@ export class Supplier extends Component {
                       >
                         <MdIcons.MdModeEdit size="20" />
                       </CButton>
-                      {/* {permission === Roles.SUPER_ADMIN ? ( */}
                       <CButton
                         color="danger"
                         className="ms-2"
@@ -166,42 +186,6 @@ export class Supplier extends Component {
                         <MdIcons.MdDelete size="20" />
                       </CButton>
                     </CTableDataCell>
-                    {/* <CTableDataCell className="text-center w-25" colSpan="1">
-                      <CButton
-                        color="info"
-                        className="me-2"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() =>
-                          this.props.addBrandModal(
-                            !visible,
-                            "Edit",
-                            brand,
-                            <MdIcons.MdModeEdit size="20" className="me-2" />,
-                          )
-                        }
-                      >
-                        <MdIcons.MdModeEdit size="20" />
-                      </CButton>
-                      {permission === Roles.SUPER_ADMIN ? (
-                        <CButton
-                          color="danger"
-                          className="ms-2"
-                          variant="ghost"
-                          onClick={() =>
-                            this.props.setAlertModal(
-                              !visible,
-                              "DELETEBRAND",
-                              "BRAND",
-                              brand.id,
-                            )
-                          }
-                          size="sm"
-                        >
-                          <MdIcons.MdDelete size="20" />
-                        </CButton>
-                      ) : null}
-                    </CTableDataCell> */}
                   </CTableRow>
                 )
               })
@@ -226,10 +210,10 @@ export class Supplier extends Component {
           nextLabel={"next"}
           breakLabel={"..."}
           breakClassName={"break-me"}
-          // pageCount={inventories.totalPages}
+          pageCount={suppliers.totalPages}
           marginPagesDisplayed={2}
           pageRangeDisplayed={5}
-          // onPageChange={this.handlePageClick}
+          onPageChange={this.handlePageClick}
           containerClassName={"pagination"}
           activeClassName={"active"}
         />

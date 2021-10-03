@@ -63,9 +63,8 @@ export class ProductDetialsModal extends Component {
     }
   }
   handleAddToCart = (event) => {
-    let { product } = this.state
+    let { product } = this.state.product
     let { isLoggedIn, credentials } = this.props.userResponse
-
     this.setState({
       loading: true,
     })
@@ -86,7 +85,6 @@ export class ProductDetialsModal extends Component {
           })
         })
         .catch(() => {
-          console.log(this.props.messageResponse)
           let { status, action } = this.props.messageResponse
           if (status > 400 && status <= 403) {
             this.setState({
@@ -158,7 +156,9 @@ export class ProductDetialsModal extends Component {
                 <div className=" p-2">
                   <h4 className="mb-4">Product Description</h4>
                   <ProductDescriptions
-                    productDescription={product.productDescription}
+                    productDescription={
+                      product.product && product.product.productDescription
+                    }
                   />
                 </div>
               </CModalBody>

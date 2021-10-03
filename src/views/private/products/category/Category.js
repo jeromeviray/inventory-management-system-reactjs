@@ -155,7 +155,7 @@ export class Category extends Component {
           align="middle"
         >
           <CTableCaption>
-            List of Category: <b>{categories.data.length}</b>
+            List of Category: <b>{categories.totalItems}</b>
           </CTableCaption>
 
           <CTableHead color="dark">

@@ -178,7 +178,7 @@ export class Brand extends Component {
           align="middle"
         >
           <CTableCaption>
-            List of Brand: <b>{brands.data.length}</b>
+            List of Brand: <b>{brands.totalItems}</b>
           </CTableCaption>
           <CTableHead color="dark">
             <CTableRow className="text-center">
