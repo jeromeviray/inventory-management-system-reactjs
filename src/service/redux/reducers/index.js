@@ -19,6 +19,7 @@ import supplierReducer from "./supplierReducer"
 import incomingSupplyReducer from "./incomingSupplyReducer"
 import categoryReducer from "./categoryReducer"
 import promoReducer from "./promoReducer"
+import scannerReducer from "./scannerReducer"
 
 export default combineReducers({
   //modals
@@ -61,4 +62,6 @@ export default combineReducers({
   categoryResponse: categoryReducer,
   //promotion
   promoResponse: promoReducer,
+  //scanner
+  scannerResponse: scannerReducer
 })

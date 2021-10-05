@@ -10,10 +10,11 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css"
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { connect } from "react-redux";
 import PrivateRouter from "./router/privateRouter/PrivateRouter";
+import { DotLoader } from "react-spinners";
 
 const loading = (
-  <div className="pt-3 text-center">
-    <div className="sk-spinner sk-spinner-pulse"></div>
+  <div className="d-flex justify-content-center align-items-center  position-fixed ">
+    <DotLoader color="#36D7B7" size={100} />
   </div>
 )
 

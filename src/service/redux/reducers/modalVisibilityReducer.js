@@ -9,6 +9,7 @@ import {
   SET_ADDRESS_MODAL,
   SET_PRODUCTEDITMODAL_VISIBILIT,
   SET_PRODUCT_DETAILS_MODAL,
+  SET_SCAN_MODAL,
   SET_SUPPLIER_MODAL,
   SET_SUPPLY_MODAL
 } from "../constants"
@@ -100,6 +101,11 @@ const modalVisibilityReducer = (state = {}, action) => {
         action: action.payload.action,
         supply: action.payload.data.supply,
         icon: action.payload.data.icon,
+      }
+    case SET_SCAN_MODAL:
+      return {
+        visible: action.payload.data.visible,
+        action: action.payload.action
       }
     default:
       return state

@@ -36,7 +36,7 @@ import { getInventories } from "src/service/apiActions/inventoryAction/inventory
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { getProduct } from "src/service/apiActions/productAction/productAction"
 import { logout } from "src/service/apiActions/userAction/userAction"
-import { setAlertModal } from "../../../service/apiActions/modalAction/modalAction"
+import { setAlertModal, setScanModal } from "../../../service/apiActions/modalAction/modalAction"
 
 import AlertModal from "src/components/modals/alert/AlertModal"
 import ScanBarcodeModal from "src/components/modals/scanBarcode/ScanBarcodeModal"
@@ -84,6 +84,7 @@ class Products extends Component {
   componentDidUpdate(prevProps, prevState) {
     this.manageModalResponse(prevProps, prevProps)
     this.manageProductResponse(prevProps, prevState)
+    this.manageScannerResponse(prevProps, prevState)
   }
 
   manageModalResponse(prevProps, prevState) {
@@ -116,6 +117,16 @@ class Products extends Component {
         this.setState({
           products: data,
         })
+      }
+    }
+  }
+  manageScannerResponse = (prevProps, prevState) => {
+    if (prevProps.scannerResponse !== this.props.scannerResponse) {
+      let { action, decoded } = this.props.scannerResponse;
+      if (action === "DECODEDBARCODE") {
+        const { page, limit } = this.state
+        this.props.getProducts(decoded, page, limit)
+        this.setState({ query: decoded })
       }
     }
   }
@@ -212,16 +223,15 @@ class Products extends Component {
       </CToast>
     )
   }
-  renderScanBarcodeModal = (visible) => {
-    console.log(visible)
-    return <ScanBarcodeModal visible={visible} />
+  renderScanBarcodeModal = () => {
+    return <ScanBarcodeModal />
   }
   render() {
     let { visible, message, toast, products } = this.state
     return (
       <>
         {this.renderProductEditorModal()}
-        {this.renderScanBarcodeModal(visible)}
+        {this.renderScanBarcodeModal()}
         <AlertModal />
         <CToaster push={toast} placement="top-end" />
         <ProductDetialsModal />
@@ -279,9 +289,7 @@ class Products extends Component {
                 color="info"
                 variant="outline"
                 id="btn-scan-barcode"
-                onClick={() => {
-                  return this.renderScanBarcodeModal(true)
-                }}
+                onClick={() => this.props.setScanModal(!visible, 'barcode')}
               >
                 <BiIcons.BiBarcodeReader size="24" />
               </CButton>
@@ -425,6 +433,7 @@ const mapStateToProps = (state) => {
     userResponse: state.userResponse,
     messageResponse: state.messageResponse,
     inventoryResponse: state.inventoryResponse,
+    scannerResponse: state.scannerResponse
   }
 }
 
@@ -440,5 +449,6 @@ export default withRouter(
     editProductModal,
     clearMessage,
     setAlertModal,
+    setScanModal
   })(Products),
 )

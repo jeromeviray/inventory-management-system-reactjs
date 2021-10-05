@@ -41,7 +41,7 @@ export class NewArrivalProducts extends Component {
     return (
       <>
         <CRow className=" pt-2 pb-2 mb-4">
-          <h4>Popular Product</h4>
+          <h4>Product Sale</h4>
           {products.data.slice(0, 8).map((product, index) => {
             return (
               <CCol xs="6" sm="6" md="4" lg="3" key={index}>
