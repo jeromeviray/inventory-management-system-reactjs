@@ -134,3 +134,10 @@ export const DELETE_CATEGORY = "DELETE_CATEGORY"
 export const GET_CATEGORIES = "GET_CATEGORIES"
 export const GET_CATEGORY = "GET_CATEGORY"
 export const GET_CATEGORIES_LIST = "GET_CATEGORIES_LIST"
+
+//promo
+export const GET_PROMOS = "GET_PROMOS"
+export const GET_PROMO = "GET_PROMO"
+export const SAVE_PROMO = "SAVE_PROMO"
+export const UPDATE_PROMO = "UPDATE_PROMO"
+export const DELETE_PROMO = "DELETE_PROMO"

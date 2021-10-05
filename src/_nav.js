@@ -100,6 +100,14 @@ const _nav = [
       {
         _component: "CNavItem",
         as: NavLink,
+        anchor: "Promo",
+        to: "/app/products/promo",
+        icon: <FaIcons.FaPercent size={20} style={iconMargin} />,
+        permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
+      },
+      {
+        _component: "CNavItem",
+        as: NavLink,
         anchor: "Incoming Supply",
         to: "/app/supply",
         icon: <FaIcons.FaCartArrowDown size={20} style={iconMargin} />,

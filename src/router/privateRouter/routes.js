@@ -24,6 +24,7 @@ const Customer = React.lazy(() =>
 const Products = React.lazy(() =>
   import("../../views/private/products/Products"),
 )
+const Promo = React.lazy(() => import("src/views/private/products/promo/Promo"))
 // const Inventory = React.lazy(() =>
 //   import("../../views/private/inventory/Inventory"),
 // )
@@ -134,6 +135,12 @@ export const routes = [
     path: "/app/products/categories",
     name: "Categories",
     component: Category,
+    permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
+  },
+  {
+    path: "/app/products/promo",
+    name: "Promo",
+    component: Promo,
     permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
   },
   {
