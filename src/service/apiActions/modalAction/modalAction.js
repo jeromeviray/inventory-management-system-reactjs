@@ -8,7 +8,8 @@ import {
     LOGIN_MODAL,
     SET_ADDRESS_MODAL,
     SET_SUPPLIER_MODAL,
-    SET_SUPPLY_MODAL
+    SET_SUPPLY_MODAL,
+    SET_SCAN_MODAL
 } from "src/service/redux/constants";
 
 export const setProductModal = (visible, action, icon) => async (dispatch) => {
@@ -174,5 +175,17 @@ export const setSupplyModal = (visible, action, supply, icon,) => async (dispatc
                 supply: supply,
             },
         },
+    })
+}
+
+export const setScanModal = (visible, action) => async (dispatch) => {
+    dispatch({
+        type: SET_SCAN_MODAL,
+        payload: {
+            action: action,
+            data: {
+                visible: visible
+            }
+        }
     })
 }

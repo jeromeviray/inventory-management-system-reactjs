@@ -1,16 +1,22 @@
-import React, { Component } from "react"
+import React, { Component, Suspense } from "react"
 import {
+  CContainer,
   CModal,
   CModalHeader,
   CModalBody,
   CModalFooter,
   CButton,
   CModalTitle,
-  CToaster,
-  CToast,
-  CToastBody,
-  CToastClose,
+  CAlert
 } from "@coreui/react"
+import { connect } from "react-redux"
+//action
+import { setScanModal } from "src/service/apiActions/modalAction/modalAction"
+import { getDecodedBarcode } from "src/service/apiActions/scannerAction/scannerAction"
+import { DotLoader } from "react-spinners"
+import * as FaIcons from "react-icons/fa"
+
+const BarcodeScannerComponent = React.lazy(() => import('react-qr-barcode-scanner'))
 
 export class ScanBarcodeModal extends Component {
   constructor(props) {
@@ -18,66 +24,116 @@ export class ScanBarcodeModal extends Component {
     this.state = {
       visible: false,
       toast: "",
+      decodeBarcode: '',
+      stopStreaming: false
     }
   }
-  componentDidMount() {
-    this.setState({
-      visible: this.props.visible,
-    })
+  componentDidUpdate(prevProps, prevState) {
+    this.manageModalVisible(prevProps, prevState)
   }
-  toastComponent() {
-    let { data, status } = this.props.messageResponse
-    let color = ""
-    if (status === 200) {
-      color = "success"
-    } else if (status > 400 && status <= 403) {
-      color = "danger"
-    } else if (status > 405 && status <= 500) {
-      color = "warning"
-    } else {
-      color = "primary"
+  manageModalVisible = (prevProps, prevState) => {
+    if (prevProps.modalVisible !== this.props.modalVisible) {
+      const { action, visible } = this.props.modalVisible;
+      if (action === "barcode") {
+        this.setState({
+          visible: visible,
+          stopStreaming: false,
+          decodeBarcode: ''
+        })
+      } else if (action === "close") {
+        this.setState({
+          visible: visible,
+          stopStreaming: false,
+          decodeBarcode: ''
+        })
+      }
     }
-    return (
-      <CToast
-        color={color}
-        className="text-white align-items-center"
-        delay={3000}
-      >
-        <div className="d-flex">
-          <CToastBody>{data.message}</CToastBody>
-          <CToastClose className="me-2 m-auto" white />
-        </div>
-      </CToast>
-    )
   }
+  handleDecodeBarcode = (decoded) => {
+    if (decoded) {
+      this.setState({
+        decodeBarcode: decoded,
+        stopStreaming: true,
+      })
+      // this.props.getDecodedBarcode(decoded, "DECODEDBARCODE");
+      // this.props.setScanModal(false, "close")
+    }
+
+  }
+
   render() {
-    let { toast, visible } = this.state
+    let { toast, visible, decodeBarcode, stopStreaming } = this.state
     console.log(visible)
     return (
       <div>
-        <CToaster push={toast} placement="top-end" />
 
-        <CModal visible={visible} size="lg">
+        <CModal
+          visible={visible}
+          alignment="center"
+          onDismiss={() =>
+            this.props.setScanModal(false, "close")
+          }
+        >
           <CModalHeader
             onDismiss={() =>
-              this.setState({
-                visible: false,
-              })
+              this.props.setScanModal(false, "close")
             }
           >
             <CModalTitle>
-              <div className="d-flex align-items-center"></div>
+              <div className="d-flex align-items-center">Scanner</div>
             </CModalTitle>
           </CModalHeader>
-          <CModalBody></CModalBody>
+          <CModalBody>
+            <CContainer className="text-center">
+              <Suspense fallback={
+                <div className="d-flex justify-content-center align-items-center  position-fixed ">
+                  <DotLoader color="#36D7B7" size={100} />
+                </div>
+              }>
+                <CAlert color="info" dismissible>
+                  <strong>Scan Product Barcode to Search</strong>
+
+                </CAlert>
+                <BarcodeScannerComponent
+                  className="w-25"
+                  delay={500}
+                  facingMode
+                  stopStream={stopStreaming}
+                  torch="true"
+                  onUpdate={(err, result) => {
+                    if (result) this.handleDecodeBarcode(result.text);
+                  }}
+                />
+              </Suspense>
+
+
+              <div>
+                <h4>{decodeBarcode}</h4>
+                {decodeBarcode && <CButton
+                  onClick={() => {
+                    this.props.getDecodedBarcode(decodeBarcode, "DECODEDBARCODE");
+                    this.setState({
+                      visible: false
+                    })
+                  }}
+                  color="info"
+                  variant="outline"
+                  className=""
+                >
+                  <FaIcons.FaSearch />
+                  <span className="ms-2">Search</span>
+                </CButton>}
+              </div>
+
+
+            </CContainer>
+          </CModalBody>
           <CModalFooter>
             <CButton
               color="dark"
               variant="ghost"
               onClick={() =>
-                this.setState({
-                  visible: false,
-                })
+                this.props.setScanModal(false, "close")
               }
             >
               Close
@@ -88,5 +144,12 @@ export class ScanBarcodeModal extends Component {
     )
   }
 }
-
-export default ScanBarcodeModal
+const mapStateToProps = (state) => {
+  return {
+    modalVisible: state.modalVisibleResponse
+  }
+}
+export default connect(mapStateToProps, {
+  setScanModal,
+  getDecodedBarcode
+})(ScanBarcodeModal)

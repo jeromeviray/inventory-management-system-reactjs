@@ -33,7 +33,7 @@ export const LOGIN_MODAL = "LOGIN_MODAL"
 export const SET_ADDRESS_MODAL = "SET_ADDRESS_MODAL"
 export const SET_SUPPLIER_MODAL = "SET_SUPPLIER_MODAL"
 export const SET_SUPPLY_MODAL = "SET_SUPPLY_MODAL"
-
+export const SET_SCAN_MODAL = "SET_SCAN_MODAL"
 // endpoint constalnts
 export const API_BASE_URL = "http://localhost:4480"
 export const FRONT_END_BASED_URL = "http://localhost:4000"
@@ -134,3 +134,5 @@ export const DELETE_CATEGORY = "DELETE_CATEGORY"
 export const GET_CATEGORIES = "GET_CATEGORIES"
 export const GET_CATEGORY = "GET_CATEGORY"
 export const GET_CATEGORIES_LIST = "GET_CATEGORIES_LIST"
+
+export const GET_DECODED_BARCODE = "GET_DECODED_BARCODE"
