@@ -19,6 +19,7 @@ import { getPromos } from "src/service/apiActions/promoAction/promoAction"
 import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { setPromoModal } from "src/service/apiActions/modalAction/modalAction"
+import { setAlertModal } from "src/service/apiActions/modalAction/modalAction"
 //icons
 import * as MdIcons from "react-icons/md"
 import * as FaIcons from "react-icons/fa"
@@ -26,6 +27,8 @@ import * as FaIcons from "react-icons/fa"
 import ReactPaginate from "react-paginate"
 import Barcode from "react-barcode"
 import PromoModal from "src/components/modals/promo/PromoModal"
+import AlertModal from "src/components/modals/alert/AlertModal"
+
 export class Promo extends Component {
   state = {
     productsWithPromo: [],
@@ -49,6 +52,7 @@ export class Promo extends Component {
   }
   componentDidUpdate(prevProps, prevState) {
     this.managePromoResponse(prevProps, prevState)
+    this.manageModalResponse(prevProps, prevState)
   }
   managePromoResponse = (prevProps, prevState) => {
     if (prevProps.promoResponse !== this.props.promoResponse) {
@@ -57,6 +61,15 @@ export class Promo extends Component {
         this.setState({
           productsWithPromo: data.productsWithPromo,
         })
+      }
+    }
+  }
+  manageModalResponse = (prevProps, prevState) => {
+    if (prevProps.modalVisible !== this.props.modalVisible) {
+      let { action } = this.props.modalVisible
+      // const { query, page, limit } = this.state
+      if (action === "close") {
+        this.getPromos()
       }
     }
   }
@@ -91,9 +104,9 @@ export class Promo extends Component {
   render() {
     const { productsWithPromo, message, visible } = this.state
     return (
-
       <div>
         <PromoModal />
+        <AlertModal />
         <div className="d-flex justify-content-between mb-2">
           <CButton
             shape="rounded-pill"
@@ -119,8 +132,8 @@ export class Promo extends Component {
                 id="floatingInput"
                 placeholder="Search"
                 className="p-2"
-              //  value={query}
-              //  onChange={this.handleOnSearch}
+                //  value={query}
+                //  onChange={this.handleOnSearch}
               />
               <CButton
                 type="button"
@@ -200,14 +213,14 @@ export class Promo extends Component {
                           className="me-2"
                           variant="ghost"
                           size="sm"
-                        //  onClick={() =>
-                        //    this.props.addCategoryModal(
-                        //      !visible,
-                        //      "Edit",
-                        //      category,
-                        //      <MdIcons.MdModeEdit size="20" className="me-2" />,
-                        //    )
-                        //  }
+                          onClick={() =>
+                            this.props.setPromoModal(
+                              !visible,
+                              "Edit",
+                              promo,
+                              <MdIcons.MdModeEdit size="20" className="me-2" />,
+                            )
+                          }
                         >
                           <MdIcons.MdModeEdit size="20" />
                         </CButton>
@@ -215,14 +228,14 @@ export class Promo extends Component {
                           color="danger"
                           className="ms-2"
                           variant="ghost"
-                          //  onClick={() =>
-                          //    this.props.setAlertModal(
-                          //      !visible,
-                          //      "DELETECATEGORY",
-                          //      "CATEGORY",
-                          //      category.id,
-                          //    )
-                          //  }
+                          onClick={() =>
+                            this.props.setAlertModal(
+                              !visible,
+                              "DELETEPROMO",
+                              "PROMO",
+                              promo.id,
+                            )
+                          }
                           size="sm"
                         >
                           <MdIcons.MdDelete size="20" />
@@ -259,12 +272,13 @@ const mapStateToProps = (state) => {
   return {
     promoResponse: state.promoResponse,
     messageResponse: state.messageResponse,
-    modalVisible: state.modalVisibleResponse
+    modalVisible: state.modalVisibleResponse,
   }
 }
 export default connect(mapStateToProps, {
   getPromos,
   logout,
   clearMessage,
-  setPromoModal
+  setPromoModal,
+  setAlertModal,
 })(Promo)

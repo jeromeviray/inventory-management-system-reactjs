@@ -23,7 +23,7 @@ import { deleteEmployee } from "src/service/apiActions/accountAction/accountActi
 import { deleteSupplier } from "src/service/apiActions/supplierAction/supplierAction"
 import { deleteCategory } from "src/service/apiActions/categoryAction/categoryAction"
 import { deleteProduct } from "src/service/apiActions/productAction/productAction"
-
+import { deletePromo } from "src/service/apiActions/promoAction/promoAction"
 export class AlertModal extends Component {
   state = {
     visible: false,
@@ -94,6 +94,13 @@ export class AlertModal extends Component {
             module: module,
             action: action,
           })
+        case "DELETEPROMO":
+          this.setState({
+            visible: alert,
+            id: id,
+            module: module,
+            action: action,
+          })
         default:
           this.setState({
             visible: alert,
@@ -132,6 +139,8 @@ export class AlertModal extends Component {
       this.handleDeleteCategory(id)
     } else if (action === "DELETEPRODUCT" && module === "PRODUCT") {
       this.handleDeleteProduct(id)
+    } else if (action === "DELETEPROMO" && module === "PROMO") {
+      this.handleDeletePromo(id)
     } else {
       console.log("ERRPR")
     }
@@ -353,6 +362,41 @@ export class AlertModal extends Component {
         }
       })
   }
+  handleDeletePromo = (id) => {
+    this.props
+      .deletePromo(id)
+      .then(() => {
+        this.setState({
+          loading: false,
+          toast: this.toastComponent(),
+        })
+        setInterval(function () {
+          window.location.reload()
+        }, 1000)
+      })
+      .catch(() => {
+        let { status, data } = this.props.messageResponse
+        if (status > 400 && status <= 403) {
+          this.setState({
+            message: data && data.message,
+            successFully: false,
+            loading: false,
+            toast: this.toastComponent(),
+          })
+          setInterval(() => {
+            this.props.logout()
+            this.props.clearMessage()
+          }, 1000)
+        } else {
+          this.setState({
+            message: data && data.message,
+            successFully: false,
+            loading: false,
+            toast: this.toastComponent(),
+          })
+        }
+      })
+  }
   toastComponent() {
     let { data, status } = this.props.messageResponse
     let color = ""
@@ -437,4 +481,5 @@ export default connect(mapStateToProps, {
   deleteSupplier,
   deleteCategory,
   deleteProduct,
+  deletePromo,
 })(AlertModal)
