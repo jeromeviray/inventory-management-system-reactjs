@@ -6,6 +6,7 @@ import {
   // GET_PRODUCT,
   GET_PRODUCTS,
   GET_PRODUCT_DETAILS,
+  SEARCH_PRODUCT,
   UPDATE_PRODUCT,
   // UPDATE_PRODUCT,
   // DELETE_PRODUCT,
@@ -74,6 +75,14 @@ const productReducer = (state = {}, action) => {
         action: action.payload.actin,
         data: {
 
+        }
+      }
+    case SEARCH_PRODUCT:
+      return {
+        status: action.payload.status,
+        action: action.payload.action,
+        data: {
+          products: action.payload.data.products
         }
       }
     default:

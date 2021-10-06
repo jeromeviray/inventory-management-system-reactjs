@@ -18,17 +18,19 @@ import { connect } from "react-redux"
 import { getPromos } from "src/service/apiActions/promoAction/promoAction"
 import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
+import { setPromoModal } from "src/service/apiActions/modalAction/modalAction"
 //icons
 import * as MdIcons from "react-icons/md"
 import * as FaIcons from "react-icons/fa"
 
 import ReactPaginate from "react-paginate"
 import Barcode from "react-barcode"
-
+import PromoModal from "src/components/modals/promo/PromoModal"
 export class Promo extends Component {
   state = {
     productsWithPromo: [],
     message: "",
+    visible: false,
   }
   componentDidMount() {
     this.getPromos()
@@ -49,10 +51,8 @@ export class Promo extends Component {
     this.managePromoResponse(prevProps, prevState)
   }
   managePromoResponse = (prevProps, prevState) => {
-    console.log("haks")
     if (prevProps.promoResponse !== this.props.promoResponse) {
       const { action, status, data } = this.props.promoResponse
-      console.log(this.props.promoResponse)
       if (action === "GET_PROMOS" && status === 200) {
         this.setState({
           productsWithPromo: data.productsWithPromo,
@@ -89,24 +89,25 @@ export class Promo extends Component {
     }
   }
   render() {
-    const { productsWithPromo, message } = this.state
-    console.log(productsWithPromo)
+    const { productsWithPromo, message, visible } = this.state
     return (
+
       <div>
+        <PromoModal />
         <div className="d-flex justify-content-between mb-2">
           <CButton
             shape="rounded-pill"
             color="primary"
             variant="ghost"
             className="d-flex justify-content-center align-items-center mb-3"
-            //   onClick={() =>
-            //     this.props.addCategoryModal(
-            //       !visible,
-            //       "Add",
-            //       "",
-            //       <FaIcons.FaPlus size={20} className="me-2" />,
-            //     )
-            //   }
+            onClick={() =>
+              this.props.setPromoModal(
+                !visible,
+                "Add",
+                "",
+                <FaIcons.FaPlus size={20} className="me-2" />,
+              )
+            }
           >
             <FaIcons.FaPlus size={20} />
             <span style={{ marginLeft: "10px" }}>Add Promo</span>
@@ -118,8 +119,8 @@ export class Promo extends Component {
                 id="floatingInput"
                 placeholder="Search"
                 className="p-2"
-                //  value={query}
-                //  onChange={this.handleOnSearch}
+              //  value={query}
+              //  onChange={this.handleOnSearch}
               />
               <CButton
                 type="button"
@@ -137,7 +138,7 @@ export class Promo extends Component {
           striped
           hover
           className="shadow-sm "
-          responsive="md"
+          responsive="lg"
           bordered
           align="middle"
         >
@@ -165,7 +166,6 @@ export class Promo extends Component {
                   let discount =
                     (promo.product.productPrice * promo.percentage) / 100
                   let price = promo.product.productPrice - discount
-                  console.log(promo.product.productPrice)
                   return (
                     <CTableRow className="text-center" key={index}>
                       <CTableDataCell>
@@ -200,14 +200,14 @@ export class Promo extends Component {
                           className="me-2"
                           variant="ghost"
                           size="sm"
-                          //  onClick={() =>
-                          //    this.props.addCategoryModal(
-                          //      !visible,
-                          //      "Edit",
-                          //      category,
-                          //      <MdIcons.MdModeEdit size="20" className="me-2" />,
-                          //    )
-                          //  }
+                        //  onClick={() =>
+                        //    this.props.addCategoryModal(
+                        //      !visible,
+                        //      "Edit",
+                        //      category,
+                        //      <MdIcons.MdModeEdit size="20" className="me-2" />,
+                        //    )
+                        //  }
                         >
                           <MdIcons.MdModeEdit size="20" />
                         </CButton>
@@ -259,10 +259,12 @@ const mapStateToProps = (state) => {
   return {
     promoResponse: state.promoResponse,
     messageResponse: state.messageResponse,
+    modalVisible: state.modalVisibleResponse
   }
 }
 export default connect(mapStateToProps, {
   getPromos,
   logout,
   clearMessage,
+  setPromoModal
 })(Promo)

@@ -50,6 +50,15 @@ export class ProductApiService {
       },
     })
   }
+  searchProductByBarcodeOrName(query, page, limit) {
+    return axios.get("/products/search", {
+      params: {
+        query: query,
+        page: page,
+        limit: limit,
+      },
+    })
+  }
 }
 
 export default new ProductApiService()

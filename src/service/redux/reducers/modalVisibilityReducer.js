@@ -9,6 +9,7 @@ import {
   SET_ADDRESS_MODAL,
   SET_PRODUCTEDITMODAL_VISIBILIT,
   SET_PRODUCT_DETAILS_MODAL,
+  SET_PROMO_MODAL,
   SET_SCAN_MODAL,
   SET_SUPPLIER_MODAL,
   SET_SUPPLY_MODAL
@@ -106,6 +107,13 @@ const modalVisibilityReducer = (state = {}, action) => {
       return {
         visible: action.payload.data.visible,
         action: action.payload.action
+      }
+    case SET_PROMO_MODAL:
+      return {
+        visible: action.payload.data.visible,
+        action: action.payload.action,
+        promo: action.payload.data.promo,
+        icon: action.payload.data.icon,
       }
     default:
       return state

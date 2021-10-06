@@ -34,6 +34,8 @@ export const SET_ADDRESS_MODAL = "SET_ADDRESS_MODAL"
 export const SET_SUPPLIER_MODAL = "SET_SUPPLIER_MODAL"
 export const SET_SUPPLY_MODAL = "SET_SUPPLY_MODAL"
 export const SET_SCAN_MODAL = "SET_SCAN_MODAL"
+export const SET_PROMO_MODAL = "SET_PROMO_MODAL"
+
 // endpoint constalnts
 export const API_BASE_URL = "http://localhost:4480"
 export const FRONT_END_BASED_URL = "http://localhost:4000"
@@ -54,6 +56,7 @@ export const UPDATE_BRANCH = "UPDATE_BRANCH"
 export const DELETE_BRANCH = "DELETE_BRANCH"
 export const GET_DISCOVER_PRODUCT = "GET_DISCOVER_PRODUCT"
 export const GET_PUBLIC_PRODUCT = "GET_PUBLIC_PRODUCT"
+export const SEARCH_PRODUCT = "SEARCH_PRODUCT"
 
 // brand
 export const GET_BRANDS = "GET_BRANDS"

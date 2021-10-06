@@ -1,7 +1,6 @@
 import { GET_PROMOS } from "../constants"
 const promoReducer = (state = {}, action) => {
   let { type, payload } = action
-  console.log(action)
   switch (type) {
     case GET_PROMOS:
       return {

@@ -13,6 +13,7 @@ import {
   // UPDATE_PRODUCT,
   // DELETE_PRODUCT
   SAVE_PRODUCT,
+  SEARCH_PRODUCT,
   SET_PRODUCT_MESSAGE,
   UPDATE_PRODUCT,
 } from "../../redux/constants"
@@ -371,5 +372,47 @@ export const updateProduct = (productId, formData) => async (dispatch) => {
       })
       return Promise.reject()
     },
+  )
+}
+export const searchProductByBarcodeOrName = (query, page, limit) => async (dispatch) => {
+  return ProductApiService.searchProductByBarcodeOrName(query, page, limit).then(
+    (response) => {
+      dispatch({
+        type: SEARCH_PRODUCT,
+        payload: {
+          status: 200,
+          action: SEARCH_PRODUCT,
+          data: {
+            products: response.data
+          }
+        }
+      })
+      return Promise.resolve();
+    },
+    (error) => {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.error_message ||
+        error.toString()
+
+      const status =
+        (error.response && error.response.data && error.response.data.code) ||
+        error.status ||
+        error.toString()
+
+      dispatch({
+        type: SET_MESSAGE,
+        payload: {
+          status: status,
+          data: {
+            message: message,
+          },
+        },
+      })
+      return Promise.reject();
+    }
   )
 }

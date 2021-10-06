@@ -384,3 +384,8 @@ body {
 .drop-list-item:first-child > .list-item-link {
   border-top: none !important;
 }
+.search-bar{
+  &::placeholder{
+    color:rgba(0, 0, 0, 0.3)
+  }
+}
