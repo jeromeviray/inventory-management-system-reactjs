@@ -50,14 +50,15 @@ const Home = React.lazy(() => import("../../views/common/public/home/Home"))
 const DiscoverProducts = React.lazy(() =>
   import("../../views/common/productFeatures/discover/DiscoverProducts"),
 )
-const SaleProducts = React.lazy(() =>
-  import("../../views/common/productFeatures/sale/SaleProducts"),
+const PromoProducts = React.lazy(() =>
+  import("../../views/common/productFeatures/promo/PromoProducts"),
 )
 const About = React.lazy(() => import("../../views/common/public/about/About"))
 // const Checkout = React.lazy(() => import('src/views/common/cart/Checkout'))
 // const CustomerAddress = React.lazy(() => import('src/views/common/cart/customerAddress/CustomerAddress'))
 const Cart = React.lazy(() => import("src/views/common/cart/Cart"))
-
+const ProductsCategory = React.lazy(() => import("src/views/common/productFeatures/productsCategory/ProductsCategory"))
+const ProductsSearchResult = React.lazy(() => import("src/views/common/productFeatures/ProductsSearchResult"))
 //common
 const OrderDetails = React.lazy(() =>
   import("src/components/orderTabContent/OrderDetails"),
@@ -214,15 +215,30 @@ export const publicRoutes = [
     name: "Home",
     component: Home,
   },
+
   {
-    path: "/discover",
+    exact: true,
+    path: "/products",
     name: "Discover",
     component: DiscoverProducts,
   },
   {
-    path: "/sale",
-    name: "Sale",
-    component: SaleProducts,
+    exact: true,
+    path: "/products/:query",
+    name: "Product Search Result",
+    component: ProductsSearchResult,
+  },
+  {
+    exact: true,
+    path: "/products/promo",
+    name: "Promo Products",
+    component: PromoProducts,
+  },
+  {
+    exact: true,
+    path: "/products/category/:categoryName",
+    name: "Products By Category",
+    component: ProductsCategory,
   },
   {
     path: "/about",

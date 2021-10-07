@@ -5,6 +5,7 @@ import {
   GET_PRODUCT,
   // GET_PRODUCT,
   GET_PRODUCTS,
+  GET_PRODUCT_BY_CATEGORY_NAME,
   GET_PRODUCT_DETAILS,
   SEARCH_PRODUCT,
   UPDATE_PRODUCT,
@@ -78,6 +79,14 @@ const productReducer = (state = {}, action) => {
         }
       }
     case SEARCH_PRODUCT:
+      return {
+        status: action.payload.status,
+        action: action.payload.action,
+        data: {
+          products: action.payload.data.products
+        }
+      }
+    case GET_PRODUCT_BY_CATEGORY_NAME:
       return {
         status: action.payload.status,
         action: action.payload.action,

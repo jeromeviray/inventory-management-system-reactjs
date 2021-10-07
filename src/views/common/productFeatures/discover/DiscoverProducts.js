@@ -9,7 +9,10 @@ import ProductDetialsModal from "src/components/modals/product/ProductDetialsMod
 export class DiscoverProducts extends Component {
   state = {
     message: "",
-
+    products: {
+      data: [],
+      totalPages: 0,
+    },
     page: 0,
     limit: 10,
     query: "",

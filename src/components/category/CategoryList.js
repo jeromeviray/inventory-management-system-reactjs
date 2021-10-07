@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
+import { Link } from "react-router-dom"
 //action
 import { getCategoriesList } from "src/service/apiActions/categoryAction/categoryAction"
 export class CategoryList extends Component {
@@ -51,13 +52,16 @@ export class CategoryList extends Component {
           </div>
           <div className="list-container">
             <ul>
-              {categoriesList > 0 ? (
+              {categoriesList.length > 0 ? (
                 categoriesList.map((category, index) => {
                   return (
                     <li className="drop-list-item  text-break" key={index}>
-                      <a href="product" className="list-item-link">
+                      <Link to={{
+                        pathname: "/products/category/" + category.categoryName,
+                        state: category.categoryName
+                      }} className="list-item-link">
                         {category.categoryName}
-                      </a>
+                      </Link>
                     </li>
                   )
                 })

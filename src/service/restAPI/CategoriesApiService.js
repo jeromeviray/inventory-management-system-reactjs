@@ -47,9 +47,7 @@ export class CategoriesApiService {
     })
   }
   getCategoriesList() {
-    return axios.get("/categories/list", {
-      headers: authHeader(),
-    })
+    return axios.get("/categories/list")
   }
 }
 export default new CategoriesApiService()

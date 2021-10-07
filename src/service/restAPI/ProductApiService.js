@@ -59,6 +59,15 @@ export class ProductApiService {
       },
     })
   }
+  getProductsByCategoryName(categoryName, query, page, limit) {
+    return axios.get("/products/category/" + categoryName, {
+      params: {
+        query: query,
+        page: page,
+        limit: limit
+      }
+    })
+  }
 }
 
 export default new ProductApiService()

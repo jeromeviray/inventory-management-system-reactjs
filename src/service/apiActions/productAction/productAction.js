@@ -8,6 +8,7 @@ import {
   GET_IMAGE,
   GET_PRODUCT,
   GET_PRODUCTS,
+  GET_PRODUCT_BY_CATEGORY_NAME,
   GET_PRODUCT_DETAILS,
   SAVE_FAIL,
   // UPDATE_PRODUCT,
@@ -382,6 +383,49 @@ export const searchProductByBarcodeOrName = (query, page, limit) => async (dispa
         payload: {
           status: 200,
           action: SEARCH_PRODUCT,
+          data: {
+            products: response.data
+          }
+        }
+      })
+      return Promise.resolve();
+    },
+    (error) => {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.error_message ||
+        error.toString()
+
+      const status =
+        (error.response && error.response.data && error.response.data.code) ||
+        error.status ||
+        error.toString()
+
+      dispatch({
+        type: SET_MESSAGE,
+        payload: {
+          status: status,
+          data: {
+            message: message,
+          },
+        },
+      })
+      return Promise.reject();
+    }
+  )
+}
+
+export const getProductsByCategoryName = (categoryName, query, page, limit) => async (dispatch) => {
+  return ProductApiService.getProductsByCategoryName(categoryName, query, page, limit).then(
+    (response) => {
+      dispatch({
+        type: GET_PRODUCT_BY_CATEGORY_NAME,
+        payload: {
+          status: 200,
+          action: GET_PRODUCT_BY_CATEGORY_NAME,
           data: {
             products: response.data
           }

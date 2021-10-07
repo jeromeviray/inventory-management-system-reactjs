@@ -307,12 +307,6 @@ export class PromoModal extends Component {
     startDate,
     endDate,
   ) => {
-    console.log(promoId)
-    console.log(quantity)
-    console.log(percentage)
-    console.log(productId)
-    console.log(startDate)
-    console.log(endDate)
     this.props
       .updatePromo(promoId, quantity, percentage, productId, startDate, endDate)
       .then(() => {
