@@ -57,13 +57,19 @@ const About = React.lazy(() => import("../../views/common/public/about/About"))
 // const Checkout = React.lazy(() => import('src/views/common/cart/Checkout'))
 // const CustomerAddress = React.lazy(() => import('src/views/common/cart/customerAddress/CustomerAddress'))
 const Cart = React.lazy(() => import("src/views/common/cart/Cart"))
-const ProductsCategory = React.lazy(() => import("src/views/common/productFeatures/productsCategory/ProductsCategory"))
-const ProductsSearchResult = React.lazy(() => import("src/views/common/productFeatures/ProductsSearchResult"))
+const ProductsCategory = React.lazy(() =>
+  import("src/views/common/productFeatures/productsCategory/ProductsCategory"),
+)
+const ProductsSearchResult = React.lazy(() =>
+  import("src/views/common/productFeatures/ProductsSearchResult"),
+)
 //common
 const OrderDetails = React.lazy(() =>
   import("src/components/orderTabContent/OrderDetails"),
 )
-
+const ProductDetails = React.lazy(() =>
+  import("src/views/common/productFeatures/details/ProductDetails"),
+)
 export const routes = [
   {
     path: "/app",
@@ -223,7 +229,11 @@ export const publicRoutes = [
     component: DiscoverProducts,
   },
   {
-    exact: true,
+    path: "/products/product/:query",
+    name: "Product Details",
+    component: ProductDetails,
+  },
+  {
     path: "/products/:query",
     name: "Product Search Result",
     component: ProductsSearchResult,

@@ -41,6 +41,7 @@
     "react-responsive-carousel": "^3.2.20",
     "react-router-dom": "^5.2.0",
     "react-search-autocomplete": "^5.4.2",
+    "react-search-field": "^2.0.1",
     "react-spinners": "^0.11.0",
     "react-to-print": "^2.13.0",
     "react-validation": "^3.0.7",

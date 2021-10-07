@@ -36,7 +36,10 @@ import { getInventories } from "src/service/apiActions/inventoryAction/inventory
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { getProduct } from "src/service/apiActions/productAction/productAction"
 import { logout } from "src/service/apiActions/userAction/userAction"
-import { setAlertModal, setScanModal } from "../../../service/apiActions/modalAction/modalAction"
+import {
+  setAlertModal,
+  setScanModal,
+} from "../../../service/apiActions/modalAction/modalAction"
 
 import AlertModal from "src/components/modals/alert/AlertModal"
 import ScanBarcodeModal from "src/components/modals/scanBarcode/ScanBarcodeModal"
@@ -122,7 +125,7 @@ class Products extends Component {
   }
   manageScannerResponse = (prevProps, prevState) => {
     if (prevProps.scannerResponse !== this.props.scannerResponse) {
-      let { action, decoded } = this.props.scannerResponse;
+      let { action, decoded } = this.props.scannerResponse
       if (action === "DECODEDBARCODE") {
         const { page, limit } = this.state
         this.props.getProducts(decoded, page, limit)
@@ -289,7 +292,7 @@ class Products extends Component {
                 color="info"
                 variant="outline"
                 id="btn-scan-barcode"
-                onClick={() => this.props.setScanModal(!visible, 'barcode')}
+                onClick={() => this.props.setScanModal(!visible, "barcode")}
               >
                 <BiIcons.BiBarcodeReader size="24" />
               </CButton>
@@ -433,7 +436,7 @@ const mapStateToProps = (state) => {
     userResponse: state.userResponse,
     messageResponse: state.messageResponse,
     inventoryResponse: state.inventoryResponse,
-    scannerResponse: state.scannerResponse
+    scannerResponse: state.scannerResponse,
   }
 }
 
@@ -449,6 +452,6 @@ export default withRouter(
     editProductModal,
     clearMessage,
     setAlertModal,
-    setScanModal
+    setScanModal,
   })(Products),
 )

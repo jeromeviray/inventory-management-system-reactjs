@@ -23,7 +23,7 @@ import { logout } from "src/service/apiActions/userAction/userAction"
 //icons
 // import { FaCartPlus, FaShoppingCart } from "react-icons/fa";
 import * as FaIcons from "react-icons/fa"
-import ProductDetails from "../../products/ProductDetails"
+import ProductSummaryDetails from "../../products/ProductSummaryDetails"
 import LoginModal from "../shortcut/LoginModal"
 import ProductDescriptions from "src/components/products/ProductDescriptions"
 export class ProductDetialsModal extends Component {
@@ -152,7 +152,7 @@ export class ProductDetialsModal extends Component {
                 <CModalTitle>Product Details</CModalTitle>
               </CModalHeader>
               <CModalBody>
-                <ProductDetails product={product} />
+                <ProductSummaryDetails product={product} />
                 <div className=" p-2">
                   <h4 className="mb-4">Product Description</h4>
                   <ProductDescriptions

@@ -14,7 +14,7 @@ import {
   CCardBody,
   CInputGroup,
   CFormFeedback,
-  CSpinner
+  CSpinner,
 } from "@coreui/react"
 import { connect } from "react-redux"
 import { authenticateUser } from "src/service/apiActions/userAction/userAction.js"
@@ -28,7 +28,7 @@ import * as FiIcons from "react-icons/fi"
 import { Redirect } from "react-router-dom"
 import { history } from "src/_helper/history.js"
 
-// clear message 
+// clear message
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction.js"
 import Roles from "src/router/config/Roles.js"
 
@@ -37,7 +37,7 @@ import Roles from "src/router/config/Roles.js"
 // import Form from "react-validation"
 
 const RightFormCard = lazy(() =>
-  import("../../../../components/public/RightFormCard.js")
+  import("../../../../components/public/RightFormCard.js"),
 )
 
 export class Login extends Component {
@@ -47,15 +47,15 @@ export class Login extends Component {
     password: "",
     loading: false,
     validation: false,
-    message: '',
-    permission: '',
-    isLoggedIn: false
+    message: "",
+    permission: "",
+    isLoggedIn: false,
   }
   constructor(props) {
-    super(props);
+    super(props)
     history.listen((location) => {
-      clearMessage();  // clear message when changing location
-    });
+      clearMessage() // clear message when changing location
+    })
   }
   handleOnChange = (event) => {
     const name = event.target.name
@@ -72,55 +72,67 @@ export class Login extends Component {
   }
   handleSubmit = (event) => {
     // const { history } = this.props;
-    const { username, password } = this.state;
+    const { username, password } = this.state
     // const form = event.currentTarget
     event.preventDefault()
     this.setState({
       validation: true,
-      loading: true
+      loading: true,
     })
     if (username.length !== 0 && password.length !== 0) {
-      this.props.authenticateUser(username, password)
+      this.props
+        .authenticateUser(username, password)
         .then(() => {
           // history.push("/home");
-          window.location.reload();
+          window.location.reload()
         })
         .catch(() => {
-          const message = this.props.messageResponse;
+          const message = this.props.messageResponse
           if (message.action === "SET_MESSAGE") {
             console.log(message)
 
             this.setState({
-              message: message.data.message
+              message: message.data.message,
             })
           }
           this.setState({
-            loading: false
-          });
-        });
+            loading: false,
+          })
+        })
     } else {
       this.setState({
         loading: false,
-      });
+      })
     }
   }
   componentDidMount() {
-    this.redirectSuccessAuthentication();
+    this.redirectSuccessAuthentication()
   }
   redirectSuccessAuthentication() {
-    const isLoggedIn = this.props.userResponse.isLoggedIn;
+    const isLoggedIn = this.props.userResponse.isLoggedIn
     if (isLoggedIn) {
-      let roleName = this.props.userResponse.credentials.roles.roleName;
-      let permission = roleName ? roleName : this.props.userResponse.credentials.roles;
+      let roleName = this.props.userResponse.credentials.roles.roleName
+      let permission = roleName
+        ? roleName
+        : this.props.userResponse.credentials.roles
 
       this.setState({
         isLoggedIn: isLoggedIn,
-        permission: permission
+        permission: permission,
       })
     }
   }
   render() {
-    let { type, username, password, validation, loading, message, permission, isLoggedIn } = this.state
+    let {
+      type,
+      username,
+      password,
+      validation,
+      loading,
+      message,
+      permission,
+      isLoggedIn,
+    } = this.state
     if (isLoggedIn) {
       if (permission === Roles.SUPER_ADMIN || permission === Roles.ADMIN) {
         return <Redirect to="/app" />
@@ -130,14 +142,13 @@ export class Login extends Component {
     }
     return (
       <>
-
         <CNavbar colorScheme="dark" className="bg-dark" placement="sticky-top">
           <CContainer fluid className="ps-3 pe-3">
             <CNavbarBrand href="/">Navbar</CNavbarBrand>
           </CContainer>
         </CNavbar>
         <div className="min-vh-100 d-flex flex-row align-items-center text-dark ">
-          <CContainer >
+          <CContainer>
             <CRow className="justify-content-center ">
               <CCol md="12" lg="8">
                 <CCardGroup className="shadow-lg ">
@@ -177,7 +188,9 @@ export class Login extends Component {
                                 <FaIcons.FaUserCircle size={18} />
                                 <span className="ps-2">Username</span>
                               </CFormLabel>
-                              <CFormFeedback invalid>Please provide a valid username</CFormFeedback>
+                              <CFormFeedback invalid>
+                                Please provide a valid username
+                              </CFormFeedback>
                             </CFormFloating>
                           </CCol>
                         </CInputGroup>
@@ -193,7 +206,6 @@ export class Login extends Component {
                                 onChange={this.handleOnChange}
                                 value={password}
                                 required
-
                                 className="rounded-pill ps-4 pe-4"
                               />
                               <CFormLabel
@@ -213,12 +225,12 @@ export class Login extends Component {
                                   <FaIcons.FaEye size={20} />
                                 )}
                               </span>
-                              <CFormFeedback invalid>Please provide a valid password</CFormFeedback>
+                              <CFormFeedback invalid>
+                                Please provide a valid password
+                              </CFormFeedback>
                             </CFormFloating>
                           </CCol>
-                          <CCol xs="12" sm="12" md="12" lg="12">
-
-                          </CCol>
+                          <CCol xs="12" sm="12" md="12" lg="12"></CCol>
                         </CInputGroup>
 
                         <CCol
@@ -235,11 +247,13 @@ export class Login extends Component {
                             className="d-flex justify-content-center align-items-center position-relative overflow-hidden login-btn"
                             disabled={loading}
                           >
-                            {loading ? <CSpinner size="sm" /> :
+                            {loading ? (
+                              <CSpinner size="sm" />
+                            ) : (
                               <span className="d-flex align-items-center login-icon me-2">
                                 <FiIcons.FiLogIn size={20} />
                               </span>
-                            }
+                            )}
 
                             <span className="label-btn ">Login</span>
                           </CButton>
@@ -261,7 +275,6 @@ export class Login extends Component {
                   <RightFormCard button="register" />
                 </CCardGroup>
               </CCol>
-
             </CRow>
           </CContainer>
         </div>
@@ -272,7 +285,9 @@ export class Login extends Component {
 const mapStateToProps = (state) => {
   return {
     userResponse: state.userResponse,
-    messageResponse: state.messageResponse
+    messageResponse: state.messageResponse,
   }
 }
-export default connect(mapStateToProps, { authenticateUser, clearMessage })(Login)
+export default connect(mapStateToProps, { authenticateUser, clearMessage })(
+  Login,
+)

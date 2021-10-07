@@ -146,3 +146,6 @@ export const SAVE_PROMO = "SAVE_PROMO"
 export const UPDATE_PROMO = "UPDATE_PROMO"
 export const DELETE_PROMO = "DELETE_PROMO"
 export const GET_DECODED_BARCODE = "GET_DECODED_BARCODE"
+
+///common
+export const SEARCH_PRODUCT_TEXT = "SEARCH_PRODUCT_TEXT"

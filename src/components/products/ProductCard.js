@@ -17,6 +17,7 @@ import {
 import { logout } from "src/service/apiActions/userAction/userAction"
 
 import { NO_IMAGE_BASE64 } from "src/service/redux/constants"
+import { Link } from "react-router-dom"
 
 export class ProductCard extends Component {
   state = {
@@ -70,17 +71,16 @@ export class ProductCard extends Component {
             response.data.product,
           )
         }
-      } else if (response.status < 400) {
+      } else if (response.status > 400) {
+        console.log(response)
         this.props.logout()
-        window.location.reload()
+        //window.location.reload()
       }
     }
   }
   handleGetProduct = (id) => {
     this.props.getProduct(id).catch(() => {
-      console.log(this.props.messageResponse)
       const { status, message } = this.props.messageResponse
-      // const message = this.props.messaegResponse.data.message
       console.log(status > 400 && status <= 403)
       if (status > 400 && status <= 403) {
         this.props.logout()
@@ -138,24 +138,13 @@ export class ProductCard extends Component {
         <ProductDetialsModal />
         <CCard className="inner-card-container shadow-sm">
           <div className="img-container">
-            {imageLink ? (
-              <a href="/#" className="link-product-content">
-                <div className="inner-img-container">
-                  <img
-                    className="border"
-                    variant="top"
-                    src={
-                      fileImage.length > 0
-                        ? "/images/products/" +
-                          fileImage[0].path +
-                          fileImage[0].fileName
-                        : NO_IMAGE_BASE64
-                    }
-                    alt="product"
-                  />
-                </div>
-              </a>
-            ) : (
+            <Link
+              to={{
+                pathname: "/products/product/" + productName,
+                state: id,
+              }}
+              className="link-product-content"
+            >
               <div className="inner-img-container">
                 <img
                   className="border"
@@ -170,29 +159,19 @@ export class ProductCard extends Component {
                   alt="product"
                 />
               </div>
-            )}
-            <div className="eye-btn">
-              <span onClick={() => this.handleProductDetails(id)}>
-                <BsIcons.BsEye />
-              </span>
-              {/* {iconModal === "eye" ? (
-                <span onClick={() => this.handleProductDetails(id)}>
-                  <BsIcons.BsEye />
-                </span>
-              ) : (
-                <span>
-                  <FaIcons.FaEdit
-                    size={14}
-                    onClick={() => {
-                      this.handleGetProduct(product.id)
-                    }}
-                  />
-                </span>
-              )} */}
-            </div>
+            </Link>
           </div>
           <CCardBody>
-            <CCardTitle>{productName}</CCardTitle>
+            <Link
+              to={{
+                pathname: "/products/product/" + productName,
+                state: id,
+              }}
+              className="nav-link text-dark p-0"
+            >
+              <CCardTitle>{productName}</CCardTitle>
+            </Link>
+
             <div className="card-label-price">
               <CCardTitle>&#8369;{productPrice.toFixed(2)}</CCardTitle>
               <div className="product-stock-container">

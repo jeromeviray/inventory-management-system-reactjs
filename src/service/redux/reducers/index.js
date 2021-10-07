@@ -63,5 +63,5 @@ export default combineReducers({
   //promotion
   promoResponse: promoReducer,
   //scanner
-  scannerResponse: scannerReducer
+  scannerResponse: scannerReducer,
 })

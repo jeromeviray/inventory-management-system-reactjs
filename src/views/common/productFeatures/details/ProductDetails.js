@@ -1,39 +1,56 @@
 import React, { Component } from "react"
-import {
-  CRow,
-  CCol,
-  CCard,
-  CCardHeader,
-  CCardTitle,
-  CCardBody,
-} from "@coreui/react"
-import * as IoIcons from "react-icons/io"
-import { Carousel } from "react-responsive-carousel"
-import ReactStars from "react-rating-stars-component"
-import { NO_IMAGE_BASE64 } from "src/service/redux/constants"
+import { CButton } from "@coreui/react"
+import * as IoIcons from "react-icons/io5"
+
+//helper
+import { history } from "src/_helper/history"
+import { connect } from "react-redux"
+//action
+import { getProductDetails } from "src/service/apiActions/productAction/productAction"
+import ProductSummaryDetails from "src/components/products/ProductSummaryDetails"
 export class ProductDetails extends Component {
   state = {
-    product: this.props.product,
+    message: "",
+    product: [],
+  }
+  componentDidMount() {
+    const id = this.props.location.state
+    this.props.getProductDetails(id).catch(() => {
+      const { status, message } = this.props.messageResponse
+      this.setState({
+        message: message,
+      })
+    })
+  }
+  componentDidUpdate(prevProps, prevState) {
+    this.manageProductResponse(prevProps, prevState)
+  }
+  manageProductResponse = (prevProps, prevState) => {
+    if (prevProps.productResponse !== this.props.productResponse) {
+      let { status, action, data } = this.props.productResponse
+      if (action === "DETAILS" && status === 200) {
+        this.setState({
+          product: data.product,
+        })
+      }
+    }
   }
   render() {
-    const { product, inventory } = this.state.product
+    const { product, message } = this.state
     console.log(product)
-    const arrowStyles = {
-      position: "absolute",
-      zIndex: "2",
-      top: "calc(4% - 16px)",
-      // width: "30",
-      height: "100%",
-      cursor: "pointer",
-      border: "none",
-    }
-    const fontStyle = {
-      fontSize: "14px",
-      fontWeight: "500",
-    }
     return (
-      <div>
-        <CRow>
+      <>
+        <CButton
+          onClick={() => history.goBack()}
+          variant="ghost"
+          color="secondary"
+          className="d-flex align-items-center"
+        >
+          <IoIcons.IoChevronBack size={20} />
+          <span className="ms-2">back</span>
+        </CButton>
+
+        {/* <CRow>
           <CCol sm="12" md="5" lg="5">
             <Carousel
               showArrows={true}
@@ -73,7 +90,6 @@ export class ProductDetails extends Component {
             >
               {product.fileImages.length > 0 ? (
                 product.fileImages.map((image, index) => {
-                  console.log(image)
                   return (
                     <div key={index}>
                       <img
@@ -123,10 +139,15 @@ export class ProductDetails extends Component {
               </CCardBody>
             </CCard>
           </CCol>
-        </CRow>
-      </div>
+        </CRow> */}
+      </>
     )
   }
 }
-
-export default ProductDetails
+const mapStateToProps = (state) => {
+  return {
+    productResponse: state.productResponser,
+    messageResponse: state.messageResponse,
+  }
+}
+export default connect(mapStateToProps, { getProductDetails })(ProductDetails)

@@ -58,7 +58,7 @@ export class DefaultLayout extends Component {
         permission === Roles.ROLE_USER
       ) {
         return <Redirect to="/400" />
-      } 
+      }
     } else if (!this.props.userResponse.isLoggedIn) {
       return <Redirect to="/login" />
     }

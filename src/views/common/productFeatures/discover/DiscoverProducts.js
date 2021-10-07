@@ -1,11 +1,14 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import ProductCard from "src/components/products/ProductCard"
-import { CRow, CCol } from "@coreui/react"
+import { CRow, CCol, CContainer } from "@coreui/react"
 //action
 import { getDiscoverProducts } from "src/service/apiActions/productAction/productAction"
 //modal
 import ProductDetialsModal from "src/components/modals/product/ProductDetialsModal"
+import ReactPaginate from "react-paginate"
+import ReactSearchAutocomplete from "react-search-autocomplete/dist/components/ReactSearchAutocomplete"
+import { withRouter } from "react-router"
 export class DiscoverProducts extends Component {
   state = {
     message: "",
@@ -14,14 +17,14 @@ export class DiscoverProducts extends Component {
       totalPages: 0,
     },
     page: 0,
-    limit: 10,
+    limit: 12,
     query: "",
   }
   componentDidMount() {
-    this.getDiscoverProducts()
-  }
-  getDiscoverProducts = () => {
     let { page, limit, query } = this.state
+    this.getDiscoverProducts(query, page, limit)
+  }
+  getDiscoverProducts = (query, page, limit) => {
     this.props.getDiscoverProducts(query, page, limit).catch(() => {
       let { data } = this.props.messageResponse
       if (data) {
@@ -35,9 +38,11 @@ export class DiscoverProducts extends Component {
   componentDidUpdate(prevProps, prevState) {
     this.manageProductResponse(prevProps, prevState)
   }
+
   manageProductResponse = (prevProps, prevState) => {
     if (prevProps.productResponser !== this.props.productResponser) {
       let { status, action, data } = this.props.productResponser
+
       if (status === 200 && action === "DISCOVER") {
         this.setState({
           products: data.products,
@@ -45,7 +50,12 @@ export class DiscoverProducts extends Component {
       }
     }
   }
-
+  handlePageClick = (data) => {
+    let page = data.selected
+    const { limit, query, categoryName } = this.state
+    this.setState({ page: page })
+    this.getDiscoverProducts(query, page, limit)
+  }
   render() {
     let { message, products } = this.state
     return (
@@ -57,12 +67,11 @@ export class DiscoverProducts extends Component {
             </div>
           </div>
         )}
-        <ProductDetialsModal />
-        <CRow>
+        <CRow className="mb-4" key={new Date()}>
           {products &&
             products.data.map((item, index) => {
               return (
-                <CCol xs="6" sm="6" md="4" lg="3" key={index}>
+                <CCol xs="6" sm="6" md="4" lg="3" key={item.product.id}>
                   <ProductCard
                     product={item}
                     fileImage={item.product.fileImages}
@@ -73,6 +82,18 @@ export class DiscoverProducts extends Component {
               )
             })}
         </CRow>
+        <ReactPaginate
+          previousLabel={"previous"}
+          nextLabel={"next"}
+          breakLabel={"..."}
+          breakClassName={"break-me"}
+          pageCount={products.totalPages}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          onPageChange={this.handlePageClick}
+          containerClassName={"pagination"}
+          activeClassName={"active"}
+        />
       </>
     )
   }
@@ -85,4 +106,4 @@ const mapStateToProps = (state) => {
 }
 export default connect(mapStateToProps, {
   getDiscoverProducts,
-})(DiscoverProducts)
+})(withRouter(DiscoverProducts))

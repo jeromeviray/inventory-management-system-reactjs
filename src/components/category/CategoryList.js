@@ -36,7 +36,6 @@ export class CategoryList extends Component {
   }
   render() {
     let { message, categoriesList } = this.state
-    console.log(categoriesList)
     return (
       <>
         {message && (
@@ -56,10 +55,14 @@ export class CategoryList extends Component {
                 categoriesList.map((category, index) => {
                   return (
                     <li className="drop-list-item  text-break" key={index}>
-                      <Link to={{
-                        pathname: "/products/category/" + category.categoryName,
-                        state: category.categoryName
-                      }} className="list-item-link">
+                      <Link
+                        to={{
+                          pathname:
+                            "/products/category/" + category.categoryName,
+                          state: category.categoryName,
+                        }}
+                        className="list-item-link"
+                      >
                         {category.categoryName}
                       </Link>
                     </li>
