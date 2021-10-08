@@ -77,9 +77,9 @@ export class Sidenav extends Component {
                             </li>
                             <li className="side-nav-list mb-2">
 
-                                <Link to="/user/order" className="side-nav-item d-flex align-items-center">
+                                <Link to="/user/wishlist" className="side-nav-item d-flex align-items-center">
                                     <BiIcons.BiHistory size={20} />
-                                    <span className="ms-2">My History</span>
+                                    <span className="ms-2">Wishlist</span>
                                 </Link>
                             </li>
                         </ul>

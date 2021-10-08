@@ -1,30 +1,15 @@
-import { GET_COMPLETED_ORDER, GET_CONFIRMED_ORDER, GET_ORDER_BY_ID, GET_PENDING_ORDER, ORDER_ITEMS, PLACE_ORDER } from "../constants";
+import { GET_ORDERS, GET_ORDER_BY_ID, ORDER_ITEMS, PLACE_ORDER } from "../constants";
 
 const orderReducer = (state = {}, action) => {
     const { type, payload } = action;
     switch (type) {
-        case GET_PENDING_ORDER:
+        case GET_ORDERS:
             return {
                 status: payload.status,
                 action: payload.action,
                 data: {
-                    pendingOrder: payload.data.pendingOrder
-                }
-            }
-        case GET_CONFIRMED_ORDER:
-            return {
-                status: payload.status,
-                action: payload.action,
-                data: {
-                    confirmedOrder: payload.data.confirmedOrder
-                }
-            }
-        case GET_COMPLETED_ORDER:
-            return {
-                status: payload.status,
-                action: payload.action,
-                data: {
-                    completedOrder: payload.data.completedOrder
+                    orders: payload.data.orders,
+                    orderStatusCount: payload.data.orderStatusCount
                 }
             }
         case ORDER_ITEMS:

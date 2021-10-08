@@ -1,4 +1,6 @@
 import React, { Component, Suspense } from "react"
+import { connect } from 'react-redux'
+
 import {
   CNav,
   CNavItem,
@@ -10,6 +12,7 @@ import {
   CInputGroup,
   CFormControl,
   CButton,
+  CBadge,
 } from "@coreui/react"
 import { DotLoader } from "react-spinners"
 
@@ -18,30 +21,45 @@ import { DotLoader } from "react-spinners"
 //component tab
 import * as FaIcons from "react-icons/fa"
 
-const PendingOrder = React.lazy(() =>
-  import("src/components/orderTabContent/pending/PendingOrder"),
-)
-const ConfirmedOrder = React.lazy(() =>
-  import("src/components/orderTabContent/confirmed/ConfirmedOrder"),
-)
-const CompletedOrder = React.lazy(() =>
-  import("src/components/orderTabContent/completed/CompletedOrder"),
-)
-const DeliveryOrder = React.lazy(() =>
-  import("src/components/orderTabContent/delivery/DeliveryOrder"),
+const Orders = React.lazy(() =>
+  import("src/components/orderTabContent/Orders"),
 )
 
 export class Order extends Component {
   state = {
+    orderStatus: 'pending',
     activeKey: 1,
+    totalCounts: {
+      PENDING: 0,
+      CONFIRMED: 0,
+      SHIPPED: 0,
+      COMPLETED: 0,
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    this.manageorderRepsonse(prevProps, prevState);
+  }
+
+  manageorderRepsonse = (prevProps, prevState) => {
+    if (prevProps.orderResponse !== this.props.orderResponse) {
+      let { status, action, data } = this.props.orderResponse;
+      if (status === 200 && action === "GET_ORDERS") {
+        this.setState({
+          totalCounts: data.orderStatusCount
+        });
+      }
+    }
   }
   render() {
-    let { activeKey } = this.state
+    const { orderStatus, activeKey, totalCounts } = this.state;
     const tabStyle = {
       margin: "10px 0",
       padding: "12px 16px",
       overflow: "hidden",
     }
+
+    console.log(orderStatus)
 
     return (
       <>
@@ -71,17 +89,17 @@ export class Order extends Component {
           role="tablist"
           layout="fill"
 
-          // className="flex-column flex-sm-row"
+        // className="flex-column flex-sm-row"
         >
           <CNavItem>
             <CNavLink
               href="#pending"
               active={activeKey === 1}
               onClick={() => {
-                this.setState({ activeKey: 1 })
+                this.setState({ activeKey: 1, orderStatus: 'pending' })
               }}
             >
-              Pending
+              Pending <CBadge color="warning">{totalCounts.PENDING ? totalCounts.PENDING : 0}</CBadge>
             </CNavLink>
           </CNavItem>
           <CNavItem>
@@ -89,21 +107,21 @@ export class Order extends Component {
               href="#confirmed"
               active={activeKey === 2}
               onClick={() => {
-                this.setState({ activeKey: 2 })
+                this.setState({ activeKey: 2, orderStatus: 'confirmed' })
               }}
             >
-              Confirmed
+              Confirmed <CBadge color="warning">{totalCounts.CONFIRMED ? totalCounts.CONFIRMED : 0}</CBadge>
             </CNavLink>
           </CNavItem>
           <CNavItem>
             <CNavLink
-              href="#delivery"
+              href="#shipped"
               active={activeKey === 3}
               onClick={() => {
-                this.setState({ activeKey: 3 })
+                this.setState({ activeKey: 3, orderStatus: 'shipped' })
               }}
             >
-              Delivery
+              Shipped <CBadge color="warning">{totalCounts.SHIPPED ? totalCounts.SHIPPED : 0}</CBadge>
             </CNavLink>
           </CNavItem>
           <CNavItem>
@@ -111,10 +129,10 @@ export class Order extends Component {
               href="#completed"
               active={activeKey === 4}
               onClick={() => {
-                this.setState({ activeKey: 4 })
+                this.setState({ activeKey: 4, orderStatus: 'completed' })
               }}
             >
-              Completed
+              Completed <CBadge color="warning">{totalCounts.COMPLETED ? totalCounts.COMPLETED : 0}</CBadge>
             </CNavLink>
           </CNavItem>
         </CNav>
@@ -122,38 +140,8 @@ export class Order extends Component {
         <CTabContent style={tabStyle}>
           <CTabPane
             role="tabpanel"
-            aria-labelledby="home-tab"
-            visible={activeKey === 1}
-          >
-            <Suspense
-              fallback={
-                <div className="d-flex justify-content-center align-items-center  position-fixed ">
-                  <DotLoader color="#36D7B7" size={100} />
-                </div>
-              }
-            >
-              <PendingOrder />
-            </Suspense>
-          </CTabPane>
-          <CTabPane
-            role="tabpanel"
-            aria-labelledby="profile-tab"
-            visible={activeKey === 2}
-          >
-            <Suspense
-              fallback={
-                <div className="d-flex justify-content-center align-items-center  position-fixed ">
-                  <DotLoader color="#36D7B7" size={100} />
-                </div>
-              }
-            >
-              <ConfirmedOrder />
-            </Suspense>
-          </CTabPane>
-          <CTabPane
-            role="tabpanel"
             aria-labelledby="contact-tab"
-            visible={activeKey === 3}
+            visible={true}
           >
             <Suspense
               fallback={
@@ -162,22 +150,10 @@ export class Order extends Component {
                 </div>
               }
             >
-              <DeliveryOrder />
-            </Suspense>
-          </CTabPane>
-          <CTabPane
-            role="tabpanel"
-            aria-labelledby="contact-tab"
-            visible={activeKey === 4}
-          >
-            <Suspense
-              fallback={
-                <div className="d-flex justify-content-center align-items-center  position-fixed ">
-                  <DotLoader color="#36D7B7" size={100} />
-                </div>
-              }
-            >
-              <CompletedOrder />
+              <Orders
+                key={orderStatus}
+                status={orderStatus}
+              />
             </Suspense>
           </CTabPane>
         </CTabContent>
@@ -187,5 +163,10 @@ export class Order extends Component {
     )
   }
 }
-
-export default Order
+const mapStateToProps = (state) => {
+  return {
+    orderResponse: state.orderResponse,
+  }
+}
+export default connect(mapStateToProps, {
+})(Order)

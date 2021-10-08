@@ -4,7 +4,7 @@ export class DeliveryOrder extends Component {
     render() {
         return (
             <div>
-                delivery
+                shipped
             </div>
         )
     }

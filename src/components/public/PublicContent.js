@@ -93,6 +93,7 @@ export class PublicContent extends Component {
                   return <Redirect to="/user/order" />
                 }}
               />
+
               <Route
                 path="*"
                 name="Page 404"

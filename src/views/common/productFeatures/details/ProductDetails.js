@@ -19,6 +19,7 @@ import { connect } from "react-redux"
 import { getProductDetails } from "src/service/apiActions/productAction/productAction"
 import ProductSummaryDetails from "src/components/products/ProductSummaryDetails"
 import ProductDescriptions from "src/components/products/ProductDescriptions"
+import ProductComments from "src/components/products/ProductComments"
 export class ProductDetails extends Component {
   state = {
     message: "",
@@ -88,6 +89,14 @@ export class ProductDetails extends Component {
             />) :
               <></>
             }
+          </CCardBody>
+        </CCard>
+        <CCard className="mt-2 mb-5  p-3">
+          <h4 className="mb-4">Product Review</h4>
+          <CCardBody className=" ps-0">
+            <ProductComments
+              productComments={[]}
+            />
           </CCardBody>
         </CCard>
       </>

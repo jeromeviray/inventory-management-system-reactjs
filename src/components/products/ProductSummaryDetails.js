@@ -189,10 +189,12 @@ export class ProductSummaryDetails extends Component {
                   />
                   <span className="text-black-50 ms-3">4.4</span>
                 </div>
-                <div className="mt-2 mb-2" style={{ ...fontStyle }}>
-                  <span className="text-black-50 me-3 ">SKU</span>
-                  <span className="text-black-50 me-3 ">112354879</span>
-                </div>
+                {product.sku &&
+                  <div className="mt-2 mb-2" style={{ ...fontStyle }}>
+                    <span className="text-black-50 me-3 ">SKU</span>
+                    <span className="text-black-50 me-3 ">112354879</span>
+                  </div>
+                }
                 <div className="mt-2 mb-2" style={{ ...fontStyle }}>
                   <span className="me-3 text-black-50">Brand</span>
                   <span className="me-3">
@@ -204,7 +206,7 @@ export class ProductSummaryDetails extends Component {
                     &#8369;{product.productPrice.toFixed(2)}
                   </h5>
                   <span style={{ ...fontStyle }} className="peso-price">
-                    21k <span className="text-muted">sold</span>
+                    {inventory.totalSold ? inventory.totalSold : 0} <span className="text-muted">sold</span>
                   </span>
                 </div>
                 <hr />
@@ -213,22 +215,43 @@ export class ProductSummaryDetails extends Component {
               {button ?
                 <CCardFooter className="bg-transparent">
                   <div className="d-flex justify-content-end ">
-                    <CButton
-                      type="button"
-                      color="info"
-                      className="d-flex justify-content-center align-items-center w-50"
-                      onClick={this.handleAddToCart}
-                      disabled={loading}
-                    >
-                      {loading ? (
-                        <CSpinner size="sm" />
-                      ) : (
-                        <span className="d-flex align-items-center login-icon me-2">
-                          <FaIcons.FaCartPlus />
-                        </span>
-                      )}
-                      <span className="ms-2">Add To Cart</span>
-                    </CButton>
+                    {inventory.status != 'OUT_OF_STOCK' ?
+                      <CButton
+                        type="button"
+                        color="info"
+                        className="d-flex justify-content-center align-items-center w-100"
+                        onClick={this.handleAddToCart}
+                        disabled={loading}
+                      >
+                        {loading ? (
+                          <CSpinner size="sm" />
+                        ) : (
+                          <span className="d-flex align-items-center login-icon me-2">
+                            <FaIcons.FaCartPlus />
+                          </span>
+                        )}
+                        <span className="ms-2">Add To Cart</span>
+                      </CButton>
+                      :
+                      <CButton
+                        type="button"
+                        color="info"
+                        className="d-flex justify-content-center align-items-center w-100"
+                        onClick={this.handleAddToWishlist}
+                        disabled={loading}
+                        style={{ background: "pink" }}
+                      >
+                        {loading ? (
+                          <CSpinner size="sm" />
+                        ) : (
+                          <span className="d-flex align-items-center login-icon me-2">
+                            <FaIcons.FaHeart />
+                          </span>
+                        )}
+                        <span className="ms-2">Add To Wishlist</span>
+                      </CButton>
+                    }
+
                   </div>
 
                 </CCardFooter> : <></>}
