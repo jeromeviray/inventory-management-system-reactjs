@@ -7,14 +7,13 @@ import {
   CInputGroup,
   CFormControl,
 } from "@coreui/react"
-import * as FaIcons from "react-icons/fa"
-
+import * as IoIcons from 'react-icons/io5'
 import ProductCard from "src/components/products/ProductCard"
 import ProductDetialsModal from "src/components/modals/product/ProductDetialsModal"
 import { connect } from "react-redux"
 import { getProductsByCategoryName } from "src/service/apiActions/productAction/productAction"
 import ReactPaginate from "react-paginate"
-
+import { history } from "src/_helper/history"
 export class ProductsCategory extends Component {
   state = {
     products: {
@@ -77,11 +76,6 @@ export class ProductsCategory extends Component {
     const { limit, query, categoryName } = this.state
     this.getProductsByCategoryName(categoryName, query, page, limit)
   }
-  handleOnSearchSubmit = (event) => {
-    event.preventDefault()
-    const { page, limit, categoryName, query } = this.state
-    this.getProductsByCategoryName(categoryName, query, page, limit)
-  }
   render() {
     const { products, hasError, message, query } = this.state
     console.log(products)
@@ -96,6 +90,15 @@ export class ProductsCategory extends Component {
           </div>
         )}
         <ProductDetialsModal />
+        <CButton
+          onClick={() => history.goBack()}
+          variant="ghost"
+          color="secondary"
+          className="d-flex align-items-center"
+        >
+          <IoIcons.IoChevronBack size={20} />
+          <span className="ms-2">back</span>
+        </CButton>
         <CRow className="mb-4">
           {products &&
             products.data.map((item, index) => {

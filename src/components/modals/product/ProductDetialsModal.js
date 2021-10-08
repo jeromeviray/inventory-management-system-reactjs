@@ -152,7 +152,7 @@ export class ProductDetialsModal extends Component {
                 <CModalTitle>Product Details</CModalTitle>
               </CModalHeader>
               <CModalBody>
-                <ProductSummaryDetails product={product} />
+                <ProductSummaryDetails product={product} button={false} />
                 <div className=" p-2">
                   <h4 className="mb-4">Product Description</h4>
                   <ProductDescriptions

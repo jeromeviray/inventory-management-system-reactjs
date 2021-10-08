@@ -229,11 +229,13 @@ export const publicRoutes = [
     component: DiscoverProducts,
   },
   {
+    exact: true,
     path: "/products/product/:query",
     name: "Product Details",
     component: ProductDetails,
   },
   {
+    exact: true,
     path: "/products/:query",
     name: "Product Search Result",
     component: ProductsSearchResult,

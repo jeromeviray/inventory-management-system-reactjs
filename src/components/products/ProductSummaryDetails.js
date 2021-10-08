@@ -6,19 +6,103 @@ import {
   CCardHeader,
   CCardTitle,
   CCardBody,
+  CButton,
+  CCardFooter,
+  CSpinner,
+  CToast,
+  CToastBody,
+  CToastClose,
+  CToaster,
 } from "@coreui/react"
 import * as IoIcons from "react-icons/io"
 import { Carousel } from "react-responsive-carousel"
 import ReactStars from "react-rating-stars-component"
 import { NO_IMAGE_BASE64 } from "src/service/redux/constants"
+import * as FaIcons from "react-icons/fa"
+import { addToCart } from "src/service/apiActions/cartAction/cartAction"
+import { connect } from "react-redux"
+import { setLoginModal } from "src/service/apiActions/modalAction/modalAction"
+import { logout } from "src/service/apiActions/userAction/userAction"
+import LoginModal from "../modals/shortcut/LoginModal"
+export class ProductSummaryDetails extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      product: this.props.product,
+      loading: false,
+      toast: '',
+      button: this.props.button
+    }
+  }
 
-export class ProductDetails extends Component {
-  state = {
-    product: this.props.product,
+  handleAddToCart = (event) => {
+    let { product } = this.state.product
+    let { isLoggedIn, credentials } = this.props.userResponse
+    this.setState({
+      loading: true,
+    })
+    if (!isLoggedIn) {
+      this.setState({
+        loading: false,
+      })
+      this.props.setLoginModal(true, "LOGIN")
+    } else {
+      let token = credentials.type + credentials.accessToken
+      this.props
+        .addToCart(product.id, token)
+        .then(() => {
+          this.setState({
+            toast: this.toastComponent(),
+            loading: false,
+          })
+        })
+        .catch(() => {
+          let { status, action } = this.props.messageResponse
+          if (status > 400 && status <= 403) {
+            this.setState({
+              toast: this.toastComponent(),
+              loading: false,
+            })
+            setInterval(() => {
+              this.props.logout()
+              window.location.reload()
+            }, 1000)
+          }
+          this.setState({
+            toast: this.toastComponent(),
+            loading: false,
+          })
+        })
+    }
+  }
+  toastComponent() {
+    let { data, status } = this.props.messageResponse
+    let color = ""
+    if (status === 200) {
+      color = "success"
+    } else if (status > 400 && status <= 403) {
+      color = "danger"
+    } else if (status > 405 && status <= 500) {
+      color = "warning"
+    } else {
+      color = "warning"
+    }
+    return (
+      <CToast
+        color={color}
+        className="text-white align-items-center"
+        delay={3000}
+      >
+        <div className="d-flex">
+          <CToastBody>{data && data.message}</CToastBody>
+          <CToastClose className="me-2 m-auto" white />
+        </div>
+      </CToast>
+    )
   }
   render() {
     const { product, inventory } = this.state.product
-    console.log(product)
+    const { loading, toast, button } = this.state
     const arrowStyles = {
       position: "absolute",
       zIndex: "2",
@@ -33,8 +117,12 @@ export class ProductDetails extends Component {
       fontWeight: "500",
     }
     return (
-      <div>
+      <>
+        <LoginModal />
+        <CToaster push={toast} placement="top-end" />
+
         <CRow>
+
           <CCol sm="12" md="5" lg="5">
             <Carousel
               showArrows={true}
@@ -88,7 +176,7 @@ export class ProductDetails extends Component {
             </Carousel>
           </CCol>
           <CCol sm="12" md="7" lg="7">
-            <CCard className="border-0">
+            <CCard className="border-0 p-3">
               <CCardTitle>{product.productName}</CCardTitle>
               <CCardBody className=" ps-0">
                 <div className="d-flex justify-content-start align-items-center">
@@ -120,13 +208,46 @@ export class ProductDetails extends Component {
                   </span>
                 </div>
                 <hr />
+
               </CCardBody>
+              {button ?
+                <CCardFooter className="bg-transparent">
+                  <div className="d-flex justify-content-end ">
+                    <CButton
+                      type="button"
+                      color="info"
+                      className="d-flex justify-content-center align-items-center w-50"
+                      onClick={this.handleAddToCart}
+                      disabled={loading}
+                    >
+                      {loading ? (
+                        <CSpinner size="sm" />
+                      ) : (
+                        <span className="d-flex align-items-center login-icon me-2">
+                          <FaIcons.FaCartPlus />
+                        </span>
+                      )}
+                      <span className="ms-2">Add To Cart</span>
+                    </CButton>
+                  </div>
+
+                </CCardFooter> : <></>}
             </CCard>
           </CCol>
         </CRow>
-      </div>
+      </>
     )
   }
 }
-
-export default ProductDetails
+const mapStateToProps = (state) => {
+  return {
+    modalVisibleResponse: state.modalVisibleResponse,
+    userResponse: state.userResponse,
+    messageResponse: state.messageResponse,
+  }
+}
+export default connect(mapStateToProps, {
+  setLoginModal,
+  logout,
+  addToCart,
+})(ProductSummaryDetails)

@@ -1,33 +1,35 @@
-import React, { Component } from "react"
-import { connect } from "react-redux"
-import { CRow, CCol } from "@coreui/react"
-import ProductCard from "src/components/products/ProductCard"
-import { withRouter } from "react-router-dom"
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { CRow, CCol, CButton } from "@coreui/react"
+import ProductCard from 'src/components/products/ProductCard'
+import { withRouter } from 'react-router-dom'
 //action
 import { getDiscoverProducts } from "src/service/apiActions/productAction/productAction"
 //modal
 import ProductDetialsModal from "src/components/modals/product/ProductDetialsModal"
-import ReactPaginate from "react-paginate"
+
+import ReactPaginate from 'react-paginate'
+import { history } from 'src/_helper/history'
+import * as IoIcons from 'react-icons/io5'
 export class ProductsSearchResult extends Component {
   state = {
     products: {
       data: [],
       totalPages: 0,
     },
-    categoryName: "",
-    message: "",
-    query: "",
+    categoryName: '',
+    message: '',
+    query: '',
     page: 0,
-    limit: 12,
-    hasError: false,
+    limit: 10,
+    hasError: false
   }
   componentDidMount() {
     this.setState({ query: this.props.location.state })
-    const { page, limit } = this.state
+    const { query, page, limit } = this.state
     this.getDiscoverProducts(this.props.location.state, page, limit)
   }
   getDiscoverProducts = (query, page, limit) => {
-    console.log(query)
     this.props.getDiscoverProducts(query, page, limit).catch(() => {
       let { data } = this.props.messageResponse
       if (data) {
@@ -51,15 +53,15 @@ export class ProductsSearchResult extends Component {
       }
     }
   }
-
   handlePageClick = (data) => {
     let page = data.selected
-    const { limit, query, categoryName } = this.state
     this.setState({ page: page })
-    this.getDiscoverProducts(query, page, limit)
+    const { limit, query, categoryName } = this.state
+    this.getProductsByCategoryName(categoryName, query, page, limit)
   }
   render() {
     let { message, products } = this.state
+    console.log(products)
     return (
       <>
         {message && (
@@ -70,11 +72,20 @@ export class ProductsSearchResult extends Component {
           </div>
         )}
         <ProductDetialsModal />
-        <CRow className="mb-4">
+        <CButton
+          onClick={() => history.goBack()}
+          variant="ghost"
+          color="secondary"
+          className="d-flex align-items-center"
+        >
+          <IoIcons.IoChevronBack size={20} />
+          <span className="ms-2">back</span>
+        </CButton>
+        <CRow>
           {products &&
             products.data.map((item, index) => {
               return (
-                <CCol xs="6" sm="6" md="4" lg="3" key={item.product.id}>
+                <CCol xs="6" sm="6" md="4" lg="3" key={index}>
                   <ProductCard
                     product={item}
                     fileImage={item.product.fileImages}
@@ -104,9 +115,9 @@ export class ProductsSearchResult extends Component {
 const mapStateToProps = (state) => {
   return {
     productResponse: state.productResponser,
-    messageResponse: state.messageResponse,
+    messageResponse: state.messageResponse
   }
 }
 export default connect(mapStateToProps, {
-  getDiscoverProducts,
+  getDiscoverProducts
 })(withRouter(ProductsSearchResult))

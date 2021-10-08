@@ -6,8 +6,6 @@ export const addToCart = (id) => async (dispatch) => {
     return CartApiService.addToCart(id)
         .then(
             (response) => {
-                console.log(response)
-
                 dispatch({
                     type: ADD_TO_CART,
                     payload: {
