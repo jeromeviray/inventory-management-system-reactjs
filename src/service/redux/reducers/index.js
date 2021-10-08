@@ -62,6 +62,6 @@ export default combineReducers({
   categoryResponse: categoryReducer,
   //promotion
   promoResponse: promoReducer,
-  //scanner
+  //scannera
   scannerResponse: scannerReducer,
 })

@@ -1,28 +1,28 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, { Component } from "react"
+import { connect } from "react-redux"
 import { CRow, CCol, CButton } from "@coreui/react"
-import ProductCard from 'src/components/products/ProductCard'
-import { withRouter } from 'react-router-dom'
+import ProductCard from "src/components/products/ProductCard"
+import { withRouter } from "react-router-dom"
 //action
 import { getDiscoverProducts } from "src/service/apiActions/productAction/productAction"
 //modal
 import ProductDetialsModal from "src/components/modals/product/ProductDetialsModal"
 
-import ReactPaginate from 'react-paginate'
-import { history } from 'src/_helper/history'
-import * as IoIcons from 'react-icons/io5'
+import ReactPaginate from "react-paginate"
+import { history } from "src/_helper/history"
+import * as IoIcons from "react-icons/io5"
 export class ProductsSearchResult extends Component {
   state = {
     products: {
       data: [],
       totalPages: 0,
     },
-    categoryName: '',
-    message: '',
-    query: '',
+    categoryName: "",
+    message: "",
+    query: "",
     page: 0,
     limit: 10,
-    hasError: false
+    hasError: false,
   }
   componentDidMount() {
     this.setState({ query: this.props.location.state })
@@ -61,7 +61,6 @@ export class ProductsSearchResult extends Component {
   }
   render() {
     let { message, products } = this.state
-    console.log(products)
     return (
       <>
         {message && (
@@ -85,7 +84,7 @@ export class ProductsSearchResult extends Component {
           {products &&
             products.data.map((item, index) => {
               return (
-                <CCol xs="6" sm="6" md="4" lg="3" key={index}>
+                <CCol xs="6" sm="6" md="4" lg="3" key={item.product.id}>
                   <ProductCard
                     product={item}
                     fileImage={item.product.fileImages}
@@ -115,9 +114,9 @@ export class ProductsSearchResult extends Component {
 const mapStateToProps = (state) => {
   return {
     productResponse: state.productResponser,
-    messageResponse: state.messageResponse
+    messageResponse: state.messageResponse,
   }
 }
 export default connect(mapStateToProps, {
-  getDiscoverProducts
+  getDiscoverProducts,
 })(withRouter(ProductsSearchResult))

@@ -1,7 +1,6 @@
 import React, { Component, lazy } from "react"
 import {
-  CNavbar,
-  CNavbarBrand,
+  CHeader,
   CContainer,
   CCol,
   CRow,
@@ -16,7 +15,7 @@ import {
   CFormControl,
   CFormLabel,
   CSpinner,
-  CFormFeedback
+  CFormFeedback,
 } from "@coreui/react"
 import * as FaIcons from "react-icons/fa"
 import * as BsIcons from "react-icons/bs"
@@ -26,14 +25,18 @@ import { createAccount } from "src/service/apiActions/userAction/userAction"
 import { history } from "src/_helper/history"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import Roles from "src/router/config"
-const RightFormCard = lazy(() => import("../../../../components/public/RightFormCard"))
+import { Link } from "react-router-dom"
+
+const RightFormCard = lazy(() =>
+  import("../../../../components/public/RightFormCard"),
+)
 
 export class Register extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     history.listen((location) => {
-      clearMessage();  // clear message when changing location
-    });
+      clearMessage() // clear message when changing location
+    })
   }
   state = {
     userCredentials: this.userCredentials,
@@ -41,9 +44,9 @@ export class Register extends Component {
     validated: false,
     loading: false,
     successful: false,
-    message: '',
+    message: "",
     isLoggedIn: false,
-    permission: ''
+    permission: "",
   }
   userCredentials = {
     username: "",
@@ -57,10 +60,10 @@ export class Register extends Component {
     this.setState(() => this.userCredentials)
   }
   handleOnChange = (event) => {
-    const name = event.target.name;
+    const name = event.target.name
 
     this.setState({
-      [name]: event.target.value
+      [name]: event.target.value,
     })
   }
 
@@ -72,56 +75,79 @@ export class Register extends Component {
     })
   }
   handleSubmit = (event) => {
-    const { username, password, email, firstName, lastName, phoneNumber } = this.state;
+    const { username, password, email, firstName, lastName, phoneNumber } =
+      this.state
     event.preventDefault()
 
     this.setState({
       validation: true,
       loading: true,
-      successful: false
+      successful: false,
     })
     if (username.length !== 0 && password.length !== 0 && email.length !== 0) {
-      this.props.createAccount(username, password, email, firstName, lastName, phoneNumber)
+      this.props
+        .createAccount(
+          username,
+          password,
+          email,
+          firstName,
+          lastName,
+          phoneNumber,
+        )
         .then(() => {
-          const successResponse = this.props.messageResponse.data.message;
+          const successResponse = this.props.messageResponse.data.message
           console.log(successResponse)
           this.setState({
             loading: false,
             successful: true,
-            message: successResponse
+            message: successResponse,
           })
           this.onResetValue()
         })
         .catch(() => {
-          const errorResponse = this.props.messageResponse.data.message;
-          console.log(errorResponse);
+          const errorResponse = this.props.messageResponse.data.message
+          console.log(errorResponse)
           this.setState({
             loading: false,
             successful: false,
-            message: errorResponse
+            message: errorResponse,
           })
           this.onResetValue()
-
         })
     }
   }
   componentDidMount() {
-    this.redirectAuthenticated();
+    this.redirectAuthenticated()
   }
   redirectAuthenticated() {
-    const isLoggedIn = this.props.userResponse.isLoggedIn;
+    const isLoggedIn = this.props.userResponse.isLoggedIn
     if (isLoggedIn) {
-      let roleName = this.props.userResponse.credentials.roles.roleName;
-      let permission = roleName ? roleName : this.props.userResponse.credentials.roles;
+      let roleName = this.props.userResponse.credentials.roles.roleName
+      let permission = roleName
+        ? roleName
+        : this.props.userResponse.credentials.roles
 
       this.setState({
         isLoggedIn: isLoggedIn,
-        permission: permission
+        permission: permission,
       })
     }
   }
   render() {
-    let { username, password, email, firstName, lastName, phoneNumber, type, loading, successful, message, isLoggedIn, permission } = this.state;
+    let {
+      username,
+      password,
+      email,
+      firstName,
+      lastName,
+      phoneNumber,
+      type,
+      loading,
+      successful,
+      message,
+      isLoggedIn,
+      permission,
+    } = this.state
 
     if (isLoggedIn) {
       if (permission === Roles.SUPER_ADMIN || permission === Roles.ADMIN) {
@@ -132,24 +158,22 @@ export class Register extends Component {
     }
     return (
       <>
-        <CNavbar colorScheme="dark" className="bg-dark" placement="sticky-top">
-          <CContainer fluid className="ps-3 pe-3">
-            <CNavbarBrand href="/">Navbar</CNavbarBrand>
+        <CHeader position="sticky">
+          <CContainer>
+            <Link className="nav-link" to="/home" style={{ cursor: "pointer" }}>
+              <h2 className="nav-item">Logo</h2>
+            </Link>
           </CContainer>
-        </CNavbar>
-        <div
-          className="min-vh-100 d-flex flex-row align-items-center text-dark ">
+        </CHeader>
+        <div className="min-vh-100 d-flex flex-row align-items-center text-dark ">
           <CContainer>
             <CRow className="justify-content-center align-items-center">
               <CCol>
                 <CCardGroup className="shadow-lg">
                   <CCard className="p-4 m-0 left-to-right form-container border-0">
                     <CCardBody>
-                      {!loading ?
-                        <CForm
-
-                          onSubmit={this.handleSubmit}
-                        >
+                      {!loading ? (
+                        <CForm onSubmit={this.handleSubmit}>
                           <CCol
                             sm="12"
                             md="12"
@@ -261,11 +285,11 @@ export class Register extends Component {
                                       <FaIcons.FaEnvelope size={18} />
                                       <span className="ps-2">Email</span>
                                     </CFormLabel>
-                                    <CFormFeedback invalid>Please provide a valid username</CFormFeedback>
-
+                                    <CFormFeedback invalid>
+                                      Please provide a valid username
+                                    </CFormFeedback>
                                   </CFormFloating>
                                 </CCol>
-
                               </CInputGroup>
                             </CCol>
                           </CRow>
@@ -328,8 +352,9 @@ export class Register extends Component {
                                         <FaIcons.FaEye size={20} />
                                       )}
                                     </span>
-                                    <CFormFeedback invalid>Please provide a valid username</CFormFeedback>
-
+                                    <CFormFeedback invalid>
+                                      Please provide a valid username
+                                    </CFormFeedback>
                                   </CFormFloating>
                                 </CCol>
                               </CInputGroup>
@@ -348,27 +373,34 @@ export class Register extends Component {
                               style={{ margin: "20px auto", width: "50%" }}
                               className="d-flex justify-content-center align-items-center position-relative overflow-hidden login-btn"
                             >
-                              {loading ? <CSpinner size="sm" /> :
+                              {loading ? (
+                                <CSpinner size="sm" />
+                              ) : (
                                 <span className="d-flex align-items-center login-icon me-2">
                                   <BsIcons.BsFillPersonPlusFill size={20} />
                                 </span>
-                              }
+                              )}
                               <span className="label-btn ">Register</span>
                             </CButton>
                           </CCol>
                           {message && (
                             <div className="form-group">
                               <div
-                                className={successful ?
-                                  "alert alert-success" :
-                                  "alert alert-danger"}
-                                role="alert">
+                                className={
+                                  successful
+                                    ? "alert alert-success"
+                                    : "alert alert-danger"
+                                }
+                                role="alert"
+                              >
                                 {message}
                               </div>
                             </div>
                           )}
-                        </CForm> :
-                        <CSpinner />}
+                        </CForm>
+                      ) : (
+                        <CSpinner />
+                      )}
                     </CCardBody>
                   </CCard>
                   <RightFormCard button="login" />
@@ -380,15 +412,14 @@ export class Register extends Component {
       </>
     )
   }
-
 }
 const mapStateToProps = (state) => {
   return {
     userResponse: state.userResponse,
-    messageResponse: state.messageResponse
+    messageResponse: state.messageResponse,
   }
 }
 export default connect(mapStateToProps, {
   createAccount,
-  clearMessage
+  clearMessage,
 })(Register)

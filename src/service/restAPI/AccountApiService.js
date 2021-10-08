@@ -69,5 +69,28 @@ export class AccountApiService {
       },
     )
   }
+  forgotPassword(email) {
+    console.log(email)
+    return axios.get("/account/password/forgot", {
+      params: {
+        email: email,
+      },
+    })
+  }
+  validateToken(token) {
+    return axios.get("/account/password/forgot/token", {
+      params: {
+        token: token,
+      },
+    })
+  }
+  resetPassword(accountId, token, password, confirmPassword) {
+    return axios.post("/users/account/reset/password", {
+      accountId: accountId,
+      token: token,
+      password: password,
+      confirmPassword: confirmPassword,
+    })
+  }
 }
 export default new AccountApiService()
