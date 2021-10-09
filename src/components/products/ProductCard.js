@@ -129,9 +129,10 @@ export class ProductCard extends Component {
     }
   }
 
-  renderAlert = () => {}
+  renderAlert = () => { }
   render() {
     let { iconModal, product, imageLink, fileImage, visible } = this.state
+    console.log(product.inventory)
     const { productName, productPrice, id } = product.product
     return (
       <>
@@ -152,8 +153,8 @@ export class ProductCard extends Component {
                   src={
                     fileImage.length > 0
                       ? "/images/products/" +
-                        fileImage[0].path +
-                        fileImage[0].fileName
+                      fileImage[0].path +
+                      fileImage[0].fileName
                       : NO_IMAGE_BASE64
                   }
                   alt="product"

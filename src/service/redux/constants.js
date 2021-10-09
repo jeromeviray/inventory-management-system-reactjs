@@ -146,3 +146,9 @@ export const GET_DECODED_BARCODE = "GET_DECODED_BARCODE"
 
 ///common
 export const SEARCH_PRODUCT_TEXT = "SEARCH_PRODUCT_TEXT"
+
+
+// wishlist
+export const GET_WISHLIST = "GET_WISHLIST"
+export const DELETE_WISHLIST = "DELETE_WISHLIST"
+export const ADD_WISHLIST = "ADD_WISHLIST"

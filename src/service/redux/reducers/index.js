@@ -20,6 +20,8 @@ import incomingSupplyReducer from "./incomingSupplyReducer"
 import categoryReducer from "./categoryReducer"
 import promoReducer from "./promoReducer"
 import scannerReducer from "./scannerReducer"
+import wishlistReducer from "./wishlistReducer"
+import wishlist from "src/components/wishlist/wishlist"
 
 export default combineReducers({
   //modals
@@ -64,4 +66,5 @@ export default combineReducers({
   promoResponse: promoReducer,
   //scanner
   scannerResponse: scannerReducer,
+  wishlistResponse: wishlistReducer,
 })
