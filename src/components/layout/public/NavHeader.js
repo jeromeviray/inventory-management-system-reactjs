@@ -44,16 +44,9 @@ export class NavHeader extends Component {
   }
   searchProduct(query, page, limit) {
     this.props.searchProductByBarcodeOrName(query, page, limit).catch(() => {
-      let { status, data } = this.props.messageResponse
-      if (status > 400 && status <= 403) {
-        setInterval(() => {
-          this.props.logout()
-          this.props.clearMessage()
-        }, 1000)
-        this.setState({
-          toast: this.toastComponent,
-        })
-      }
+      this.setState({
+        toast: this.toastComponent,
+      })
     })
   }
 
@@ -213,6 +206,7 @@ const mapStateToProps = (state) => {
     isLoggedIn,
     credentials,
     productResponse: state.productResponser,
+    messageResponse: state.messageResponse,
   }
 }
 export default connect(mapStateToProps, {

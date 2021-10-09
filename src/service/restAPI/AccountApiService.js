@@ -12,11 +12,12 @@ export class AccountApiService {
       },
     })
   }
-  getAccountCustomers(query, page, limit) {
-    return axios.get("/users/account/customers", {
+  getUsersAccount(query, role, page, limit) {
+    return axios.get("/users/account", {
       headers: authHeader(),
       params: {
         query: query,
+        role: role,
         page: page,
         limit: limit,
       },
@@ -30,9 +31,10 @@ export class AccountApiService {
     phoneNumber,
     username,
     password,
-    token,
+    birthday,
     role,
   ) {
+    console.log(birthday)
     return axios.post(
       "/users/account/create",
       {
@@ -42,15 +44,35 @@ export class AccountApiService {
         phoneNumber,
         username,
         password,
+        birthday,
         role,
       },
       {
-        headers: { Authorization: token },
+        headers: authHeader(),
       },
     )
   }
   deleteAccount(id) {
     return axios.delete("/users/account/delete/" + id, {
+      headers: authHeader(),
+    })
+  }
+  updateUser(id, firstName, lastName, phoneNumber, birthday) {
+    return axios.put(
+      "/users/account/update/" + id,
+      {
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
+        birthday: birthday,
+      },
+      {
+        headers: authHeader(),
+      },
+    )
+  }
+  banAccount(id) {
+    return axios.delete("/users/account/ban/" + id, {
       headers: authHeader(),
     })
   }
@@ -90,6 +112,11 @@ export class AccountApiService {
       token: token,
       password: password,
       confirmPassword: confirmPassword,
+    })
+  }
+  getMe() {
+    return axios.get("/users/account/me", {
+      headers: authHeader(),
     })
   }
 }

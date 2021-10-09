@@ -14,18 +14,17 @@ import {
   CForm,
 } from "@coreui/react"
 //action
-import { getCustomers } from "src/service/apiActions/accountAction/accountAction"
+import { getUsersAccount } from "src/service/apiActions/accountAction/accountAction"
 import { logout } from "src/service/apiActions/userAction/userAction"
-import { setAlertModal } from "src/service/apiActions/modalAction/modalAction"
+import { setAlertBanModal } from "src/service/apiActions/modalAction/modalAction"
 import { addAccountModal } from "src/service/apiActions/modalAction/modalAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 //icons
 import * as MdIcons from "react-icons/md"
-import * as BiIcons from "react-icons/bi"
 import * as FaIcons from "react-icons/fa"
 
 //modal
-import AlertModal from "src/components/modals/alert/AlertModal"
+import AlertBanModal from "src/components/modals/alert/AlertBanModal"
 import AccountModal from "src/components/modals/account/AccountModal"
 import ReactPaginate from "react-paginate"
 
@@ -40,13 +39,14 @@ export class Customer extends Component {
     query: "",
     page: 0,
     limit: 10,
+    role: "CUSTOMER",
   }
   componentDidMount() {
-    const { query, page, limit } = this.state
-    this.getCustomers(query, page, limit)
+    const { query, role, page, limit } = this.state
+    this.getUsersAccount(query, role, page, limit)
   }
-  getCustomers = (query, page, limit) => {
-    this.props.getCustomers(query, page, limit).catch(() => {
+  getUsersAccount = (query, role, page, limit) => {
+    this.props.getUsersAccount(query, role, page, limit).catch(() => {
       let failMessage = this.props.messageResponse
       if (failMessage.status > 400 && failMessage.status <= 403) {
         this.props.logout()
@@ -61,31 +61,31 @@ export class Customer extends Component {
   }
   manageCustomerResponse = (prevProps, prevState) => {
     if (prevProps.customerResponse !== this.props.customerResponse) {
-      let { status, action, customers } = this.props.customerResponse
-      if (status === 200 && action === "GETCUSTOMERS") {
+      let { status, action, data } = this.props.customerResponse
+      if (status === 200 && action === "USERSACCOUNT") {
         this.setState({
-          customers: customers,
+          customers: data.accounts,
         })
       }
     }
   }
   renderAlerModal() {
-    return <AlertModal />
+    return <AlertBanModal />
   }
   renderEmployeeModal() {
     return <AccountModal />
   }
   handleSearch = (event) => {
-    const { page, limit } = this.state
-    this.getCustomers(event.target.value, page, limit)
+    const { page, limit, role } = this.state
+    this.getUsersAccount(event.target.value, role, page, limit)
     this.setState({ query: event.target.value })
   }
 
   handlePageClick = (data) => {
     let page = data.selected
     this.setState({ page: page })
-    const { limit, query } = this.state
-    this.getCustomers(query, page, limit)
+    const { limit, query, role } = this.state
+    this.getUsersAccount(query, role, page, limit)
   }
   render() {
     let { customers, message, visible, query } = this.state
@@ -187,16 +187,16 @@ export class Customer extends Component {
                           className="ms-2"
                           variant="ghost"
                           onClick={() =>
-                            this.props.setAlertModal(
+                            this.props.setAlertBanModal(
                               !visible,
-                              "DELETECUSTOMER",
+                              "BANACCOUNT",
                               "CUSTOMER",
                               account.id,
                             )
                           }
                           size="sm"
                         >
-                          <MdIcons.MdDelete size="20" />
+                          <FaIcons.FaBan size="20" />
                         </CButton>
                       </CTableHeaderCell>
                     </CTableRow>
@@ -233,9 +233,9 @@ const mapStateToProps = (state) => {
   }
 }
 export default connect(mapStateToProps, {
-  getCustomers,
+  getUsersAccount,
   logout,
-  setAlertModal,
+  setAlertBanModal,
   addEmployeeModal: addAccountModal,
   clearMessage,
 })(Customer)
