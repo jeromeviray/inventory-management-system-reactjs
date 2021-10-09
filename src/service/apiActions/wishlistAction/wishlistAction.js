@@ -52,9 +52,7 @@ export const saveWishlist = (wishlistDetails) => async (dispatch) => {
                 payload: {
                     status: 200,
                     action: "ADD_WISHLIST",
-                    data: {
-
-                    }
+                    data: response.data
                 }
             })
             dispatch({
@@ -62,7 +60,7 @@ export const saveWishlist = (wishlistDetails) => async (dispatch) => {
                 payload: {
                     status: 200,
                     data: {
-                        message: "Successfully Place your Order",
+                        message: "Successfully added to wishlist",
                         order: response.data
                     }
                 }

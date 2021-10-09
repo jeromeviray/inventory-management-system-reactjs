@@ -24,6 +24,9 @@ import { connect } from "react-redux"
 import { setLoginModal } from "src/service/apiActions/modalAction/modalAction"
 import { logout } from "src/service/apiActions/userAction/userAction"
 import LoginModal from "../modals/shortcut/LoginModal"
+
+import { saveWishlist, deleteWishlist } from "src/service/apiActions/wishlistAction/wishlistAction"
+
 export class ProductSummaryDetails extends Component {
   constructor(props) {
     super(props)
@@ -31,7 +34,7 @@ export class ProductSummaryDetails extends Component {
       product: this.props.product,
       loading: false,
       toast: '',
-      button: this.props.button
+      button: this.props.button,
     }
   }
 
@@ -64,9 +67,36 @@ export class ProductSummaryDetails extends Component {
     }
   }
 
+  handleAddToWishlist(productId) {
+    let { product } = this.state
+    let { isLoggedIn, credentials } = this.props.userResponse
+    this.setState({
+      loading: true,
+    })
+    if (!isLoggedIn) {
+      this.setState({
+        loading: false,
+      })
+      this.props.setLoginModal(true, "LOGIN")
+      return;
+    }
+    const wishlist = product.wishlist;
+    if (wishlist && wishlist.id > 0) {
+      this.props.deleteWishlist(wishlist.id).then(() => {
+        product.wishlist = null;
+        this.setState({ product: product, loading: false })
+      })
+    } else {
+      this.props.saveWishlist({ id: productId }).then(() => {
+        product.wishlist = this.props.wishlistResponse.data;
+        this.setState({ product: product, loading: false })
+      })
+    }
+  }
   render() {
-    const { product, inventory } = this.state.product
-    const { loading, toast, button } = this.state
+    const { product, inventory, wishlist } = this.state.product
+    const { loading, toast, button } = this.state;
+
     const arrowStyles = {
       position: "absolute",
       zIndex: "2",
@@ -201,7 +231,7 @@ export class ProductSummaryDetails extends Component {
                         type="button"
                         color="info"
                         className="d-flex justify-content-center align-items-center w-100"
-                        onClick={this.handleAddToWishlist}
+                        onClick={() => { this.handleAddToWishlist(product.id) }}
                         disabled={loading}
                         style={{ background: "pink" }}
                       >
@@ -212,7 +242,7 @@ export class ProductSummaryDetails extends Component {
                             <FaIcons.FaHeart />
                           </span>
                         )}
-                        <span className="ms-2">Add To Wishlist</span>
+                        <span className="ms-2">{wishlist ? 'Remove Wishlist' : 'Add To Wishlist'}</span>
                       </CButton>
                     }
 
@@ -231,10 +261,13 @@ const mapStateToProps = (state) => {
     modalVisibleResponse: state.modalVisibleResponse,
     userResponse: state.userResponse,
     messageResponse: state.messageResponse,
+    wishlistResponse: state.wishlistResponse
   }
 }
 export default connect(mapStateToProps, {
   setLoginModal,
   logout,
   addToCart,
+  saveWishlist,
+  deleteWishlist
 })(ProductSummaryDetails)

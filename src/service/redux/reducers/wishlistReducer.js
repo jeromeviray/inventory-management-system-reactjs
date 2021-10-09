@@ -14,9 +14,7 @@ const wishlistReducer = (state = {}, action) => {
             return {
                 status: payload.status,
                 action: payload.action,
-                data: {
-                    order: payload.data
-                }
+                data: payload.data
             }
         default:
             return state

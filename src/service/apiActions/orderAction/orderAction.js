@@ -125,15 +125,6 @@ export const getOrderByOrderId = (orderId) => async (dispatch) => {
                     }
                 }
             })
-            dispatch({
-                type: SET_MESSAGE,
-                payload: {
-                    status: 200,
-                    data: {
-                        message: "Get Order By Id Success"
-                    }
-                }
-            })
             return Promise.resolve();
         },
         (error) => {

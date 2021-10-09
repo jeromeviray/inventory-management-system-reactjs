@@ -13,11 +13,7 @@ export class WishlistApiService {
         })
     }
     saveWishlist(wishlistDetails) {
-        return axios.post("/wishlist", {
-            customerAddressId: wishlistDetails.addressId,
-            paymentId: wishlistDetails.paymentMethodId,
-            cartItems: wishlistDetails.items
-        }, {
+        return axios.post("/wishlist", wishlistDetails, {
             headers: authHeader()
         })
     }

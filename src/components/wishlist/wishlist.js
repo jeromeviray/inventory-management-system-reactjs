@@ -88,8 +88,8 @@ export class Wishlist extends Component {
         }
     }
 
-    deleteWishlist = (productId) => {
-        this.props.deleteWishlist(productId);
+    deleteWishlist = (wishlistId) => {
+        this.props.deleteWishlist(wishlistId);
     }
 
 
@@ -156,97 +156,102 @@ export class Wishlist extends Component {
                         </CCardBody>
                     </CCard>
                 ) : (
-                    wishlist.map((data, index) => {
-                        const productName = data.product.name;
-                        const productPrice = data.product.price;
-                        const id = data.product.id;
-                        const fileImages = data.product.fileImages;
-                        const totalStock = 0;
-                        return (
-                            <>
-                                <CCol xs="6" sm="6" md="4" lg="3" key={index}>
-                                    <ProductDetialsModal />
-                                    <CCard className="inner-card-container shadow-sm">
-                                        <div className="img-container">
-                                            <Link
-                                                to={{
-                                                    pathname: "/products/product/" + productName,
-                                                    state: id,
-                                                }}
-                                                className="link-product-content"
-                                            >
-                                                <div className="inner-img-container">
-                                                    <img
-                                                        className="border"
-                                                        variant="top"
-                                                        src={
-                                                            fileImages.length > 0
-                                                                ? "/images/products/" +
-                                                                fileImages[0].path +
-                                                                fileImages[0].fileName
-                                                                : NO_IMAGE_BASE64
-                                                        }
-                                                        alt="product"
-                                                    />
-                                                </div>
-                                            </Link>
-                                            <div className="eye-btn">
-                                                <span onClick={() => this.deleteWishlist(id)}>
-                                                    <AiIcons.AiOutlineClose />
-                                                </span>
+                    <CRow className="mb-4" key={new Date()}>
+                        {wishlist.map((data, index) => {
+                            const productName = data.product.name;
+                            const productPrice = data.product.price;
+                            const id = data.product.id;
+                            const fileImages = data.product.fileImages;
+                            const totalStock = 0;
+                            return (
+                                <>
+                                    <CCol xs="6" sm="6" md="4" lg="3" key={index}>
+                                        <ProductDetialsModal />
+                                        <CCard className="inner-card-container shadow-sm">
+                                            <div className="img-container">
+                                                <Link
+                                                    to={{
+                                                        pathname: "/products/product/" + productName,
+                                                        state: id,
+                                                    }}
+                                                    className="link-product-content"
+                                                >
+                                                    <div className="inner-img-container">
+                                                        <img
+                                                            className="border"
+                                                            variant="top"
+                                                            src={
+                                                                fileImages.length > 0
+                                                                    ? "/images/products/" +
+                                                                    fileImages[0].path +
+                                                                    fileImages[0].fileName
+                                                                    : NO_IMAGE_BASE64
+                                                            }
+                                                            alt="product"
+                                                        />
+                                                    </div>
+                                                </Link>
+                                                <div className="eye-btn">
+                                                    <span onClick={() => this.deleteWishlist(data.id)}>
+                                                        <AiIcons.AiOutlineClose />
+                                                    </span>
 
-                                            </div>
-                                        </div>
-                                        <CCardBody>
-                                            <Link
-                                                to={{
-                                                    pathname: "/products/product/" + productName,
-                                                    state: id,
-                                                }}
-                                                className="nav-link text-dark p-0"
-                                            >
-                                                <CCardTitle>{productName}</CCardTitle>
-                                            </Link>
-
-                                            <div className="card-label-price">
-                                                <CCardTitle>&#8369;{productPrice.toFixed(2)}</CCardTitle>
-                                                <div className="product-stock-container">
-                                                    <span className="stock-label">Stock: </span>
-                                                    {totalStock > 0 ? (
-                                                        <span className="stock-label-value">
-                                                            {totalStock}
-                                                        </span>
-                                                    ) : (
-                                                        this.manageStatus(data.product.inventory.status)
-                                                    )}
                                                 </div>
                                             </div>
-                                            <ReactStars
-                                                count={5}
-                                                value={3.5}
-                                                size={24}
-                                                isHalf={true}
-                                                edit={false}
-                                            />
-                                        </CCardBody>
-                                    </CCard>
-                                </CCol>
-                            </>
-                        )
-                    })
+                                            <CCardBody>
+                                                <Link
+                                                    to={{
+                                                        pathname: "/products/product/" + productName,
+                                                        state: id,
+                                                    }}
+                                                    className="nav-link text-dark p-0"
+                                                >
+                                                    <CCardTitle>{productName}</CCardTitle>
+                                                </Link>
+
+                                                <div className="card-label-price">
+                                                    <CCardTitle>&#8369;{productPrice.toFixed(2)}</CCardTitle>
+                                                    <div className="product-stock-container">
+                                                        <span className="stock-label">Stock: </span>
+                                                        {totalStock > 0 ? (
+                                                            <span className="stock-label-value">
+                                                                {totalStock}
+                                                            </span>
+                                                        ) : (
+                                                            this.manageStatus(data.product.inventory.status)
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <ReactStars
+                                                    count={5}
+                                                    value={3.5}
+                                                    size={24}
+                                                    isHalf={true}
+                                                    edit={false}
+                                                />
+                                            </CCardBody>
+                                        </CCard>
+                                    </CCol>
+                                </>
+                            )
+                        })}
+                    </CRow>
                 )}
-                <ReactPaginate
-                    previousLabel={"previous"}
-                    nextLabel={"next"}
-                    breakLabel={"..."}
-                    breakClassName={"break-me"}
-                    pageCount={originalList.totalPages}
-                    marginPagesDisplayed={2}
-                    pageRangeDisplayed={5}
-                    onPageChange={this.handlePageClick}
-                    containerClassName={"pagination"}
-                    activeClassName={"active"}
-                />
+                <br></br>
+                {originalList.totalPages > 0 &&
+                    <ReactPaginate
+                        previousLabel={"previous"}
+                        nextLabel={"next"}
+                        breakLabel={"..."}
+                        breakClassName={"break-me"}
+                        pageCount={originalList.totalPages}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={5}
+                        onPageChange={this.handlePageClick}
+                        containerClassName={"pagination"}
+                        activeClassName={"active"}
+                    />
+                }
             </>
         )
     }

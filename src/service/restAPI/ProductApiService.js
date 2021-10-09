@@ -39,7 +39,9 @@ export class ProductApiService {
     })
   }
   getProductDetails(id) {
-    return axios.get("/products/details/" + id)
+    return axios.get("/products/details/" + id, {
+      headers: authHeader(),
+    })
   }
   getDiscoverProducts(query, page, limit) {
     return axios.get("/products/discover", {
