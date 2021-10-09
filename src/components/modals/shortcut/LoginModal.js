@@ -94,21 +94,9 @@ export class LoginModal extends Component {
             }, 1000)
           } else {
             this.props.setLoginModal(false, "loginclose")
-            this.setState({
-              toast: this.toastComponent(),
-            })
           }
         })
         .catch(() => {
-          const message = this.props.messageResponse
-          if (message.action === "SET_MESSAGE") {
-            console.log(message)
-
-            this.setState({
-              message: message.data.message,
-              toast: this.toastComponent(),
-            })
-          }
           this.setState({
             loading: false,
           })
@@ -119,31 +107,7 @@ export class LoginModal extends Component {
       })
     }
   }
-  toastComponent() {
-    let { data, status } = this.props.messageResponse
-    let color = ""
-    if (status === 200) {
-      color = "success"
-    } else if (status > 400 && status <= 403) {
-      color = "danger"
-    } else if (status > 405 && status <= 500) {
-      color = "warning"
-    } else {
-      color = "warning"
-    }
-    return (
-      <CToast
-        color={color}
-        className="text-white align-items-center"
-        delay={3000}
-      >
-        <div className="d-flex">
-          <CToastBody>{data.message}</CToastBody>
-          <CToastClose className="me-2 m-auto" white />
-        </div>
-      </CToast>
-    )
-  }
+
   render() {
     let { visible, username, password, type, loading, toast } = this.state
     return (

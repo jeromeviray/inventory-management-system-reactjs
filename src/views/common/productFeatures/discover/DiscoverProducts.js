@@ -30,7 +30,6 @@ export class DiscoverProducts extends Component {
       if (data) {
         this.setState({
           loading: false,
-          message: data.message,
         })
       }
     })

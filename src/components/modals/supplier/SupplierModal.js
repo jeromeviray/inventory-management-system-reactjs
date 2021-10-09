@@ -105,7 +105,6 @@ export class SupplierModal extends Component {
           this.setState({
             name: "",
             loading: false,
-            toast: this.toastComponent(),
           })
         }
         setInterval(() => {
@@ -116,20 +115,9 @@ export class SupplierModal extends Component {
       .catch(() => {
         let { status, data } = this.props.messageResponse
         this.setState({
-          message: data && data.message,
           loading: false,
+          successFully: false,
         })
-        if (status > 400 && status <= 403) {
-          this.props.logout()
-          this.props.clearMessage()
-        } else {
-          this.setState({
-            message: data && data.message,
-            successFully: false,
-            loading: false,
-            toast: this.toastComponent(),
-          })
-        }
       })
   }
   handleUpdateSupplier = (id, name) => {
@@ -142,7 +130,6 @@ export class SupplierModal extends Component {
             name: "",
             supplierId: "",
             loading: false,
-            toast: this.toastComponent(),
           })
         }
         setInterval(() => {
@@ -153,54 +140,12 @@ export class SupplierModal extends Component {
       .catch(() => {
         let { status, data } = this.props.messageResponse
         this.setState({
-          message: data && data.message,
           loading: false,
+          successFully: false,
         })
-        if (status > 400 && status <= 403) {
-          this.setState({
-            message: data && data.message,
-            successFully: false,
-            loading: false,
-            toast: this.toastComponent(),
-          })
-          setInterval(() => {
-            this.props.logout()
-            this.props.clearMessage()
-          }, 1000)
-        } else {
-          this.setState({
-            successFully: false,
-            loading: false,
-            toast: this.toastComponent(),
-          })
-        }
       })
   }
-  toastComponent() {
-    let { data, status } = this.props.messageResponse
-    let color = ""
-    if (status === 200) {
-      color = "success"
-    } else if (status > 400 && status <= 403) {
-      color = "danger"
-    } else if (status > 405 && status <= 500) {
-      color = "warning"
-    } else {
-      color = "primary"
-    }
-    return (
-      <CToast
-        color={color}
-        className="text-white align-items-center"
-        delay={3000}
-      >
-        <div className="d-flex">
-          <CToastBody>{data.message}</CToastBody>
-          <CToastClose className="me-2 m-auto" white />
-        </div>
-      </CToast>
-    )
-  }
+
   render() {
     let { action, toast, loading, icon, visible, name } = this.state
     return (

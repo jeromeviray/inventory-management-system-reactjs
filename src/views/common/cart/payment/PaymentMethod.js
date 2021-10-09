@@ -19,18 +19,9 @@ export class PaymentMethod extends Component {
     paymentMethods: [],
   }
   componentDidMount() {
-    this.props.getPaymentMethods().catch(() => {
-      this.handleLogout()
-    })
+    this.props.getPaymentMethods()
   }
-  handleLogout = () => {
-    let failMessage = this.props.messageResponse
-    if (failMessage.status > 400 && failMessage.status <= 403) {
-      this.props.logout()
-      this.props.clearMessage()
-      window.location.reload()
-    }
-  }
+
   componentDidUpdate(prevProps, prevState) {
     this.managePaymentMethodRespons(prevProps, prevState)
   }

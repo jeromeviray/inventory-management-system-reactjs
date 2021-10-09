@@ -149,37 +149,18 @@ export class AlertModal extends Component {
     this.props
       .deleteBranch(id, token)
       .then(() => {
-        let { data } = this.props.messageResponse
         this.setState({
           loading: false,
-          message: data && data.message,
-          toast: this.toastComponent(),
         })
         setInterval(function () {
           window.location.reload()
         }, 1000)
       })
       .catch(() => {
-        let { status, data } = this.props.messageResponse
-        if (status > 400 && status <= 403) {
-          this.setState({
-            message: data && data.message,
-            successFully: false,
-            loading: false,
-            toast: this.toastComponent(),
-          })
-          setInterval(() => {
-            this.props.logout()
-            this.props.clearMessage()
-          }, 1000)
-        } else {
-          this.setState({
-            message: data && data.message,
-            successFully: false,
-            loading: false,
-            toast: this.toastComponent(),
-          })
-        }
+        this.setState({
+          successFully: false,
+          loading: false,
+        })
       })
   }
   handleDeleteBrand = (id, token) => {
@@ -189,36 +170,16 @@ export class AlertModal extends Component {
         let { data } = this.props.messageResponse
         this.setState({
           loading: false,
-          message: data && data.message,
-          toast: this.toastComponent(),
         })
         setInterval(function () {
           window.location.reload()
         }, 1000)
       })
       .catch(() => {
-        let { status, data } = this.props.messageResponse
-        if (status > 400 && status <= 403) {
-          // this.props.logout();
-          // this.props.clearMessage();
-          this.setState({
-            message: data && data.message,
-            successFully: false,
-            loading: false,
-            toast: this.toastComponent(),
-          })
-          setInterval(() => {
-            this.props.logout()
-            this.props.clearMessage()
-          }, 1000)
-        } else {
-          this.setState({
-            message: data && data.message,
-            successFully: false,
-            loading: false,
-            toast: this.toastComponent(),
-          })
-        }
+        this.setState({
+          successFully: false,
+          loading: false,
+        })
       })
   }
   handleEmployeeDelete = (id) => {
@@ -228,33 +189,16 @@ export class AlertModal extends Component {
         let { data } = this.props.messageResponse
         this.setState({
           loading: false,
-          toast: this.toastComponent(),
         })
         setInterval(function () {
           window.location.reload()
         }, 1000)
       })
       .catch(() => {
-        let { status, data } = this.props.messageResponse
-        if (status > 400 && status <= 403) {
-          this.setState({
-            message: data && data.message,
-            successFully: false,
-            loading: false,
-            toast: this.toastComponent(),
-          })
-          setInterval(() => {
-            this.props.logout()
-            this.props.clearMessage()
-          }, 1000)
-        } else {
-          this.setState({
-            message: data && data.message,
-            successFully: false,
-            loading: false,
-            toast: this.toastComponent(),
-          })
-        }
+        this.setState({
+          successFully: false,
+          loading: false,
+        })
       })
   }
   handleSupplierDelete = (id) => {
@@ -263,33 +207,16 @@ export class AlertModal extends Component {
       .then(() => {
         this.setState({
           loading: false,
-          toast: this.toastComponent(),
         })
         setInterval(function () {
           window.location.reload()
         }, 1000)
       })
       .catch(() => {
-        let { status, data } = this.props.messageResponse
-        if (status > 400 && status <= 403) {
-          this.setState({
-            message: data && data.message,
-            successFully: false,
-            loading: false,
-            toast: this.toastComponent(),
-          })
-          setInterval(() => {
-            this.props.logout()
-            this.props.clearMessage()
-          }, 1000)
-        } else {
-          this.setState({
-            message: data && data.message,
-            successFully: false,
-            loading: false,
-            toast: this.toastComponent(),
-          })
-        }
+        this.setState({
+          successFully: false,
+          loading: false,
+        })
       })
   }
   handleDeleteCategory = (id) => {
@@ -298,33 +225,16 @@ export class AlertModal extends Component {
       .then(() => {
         this.setState({
           loading: false,
-          toast: this.toastComponent(),
         })
         setInterval(function () {
           window.location.reload()
         }, 1000)
       })
       .catch(() => {
-        let { status, data } = this.props.messageResponse
-        if (status > 400 && status <= 403) {
-          this.setState({
-            message: data && data.message,
-            successFully: false,
-            loading: false,
-            toast: this.toastComponent(),
-          })
-          setInterval(() => {
-            this.props.logout()
-            this.props.clearMessage()
-          }, 1000)
-        } else {
-          this.setState({
-            message: data && data.message,
-            successFully: false,
-            loading: false,
-            toast: this.toastComponent(),
-          })
-        }
+        this.setState({
+          successFully: false,
+          loading: false,
+        })
       })
   }
   handleDeleteProduct = (id) => {
@@ -333,33 +243,16 @@ export class AlertModal extends Component {
       .then(() => {
         this.setState({
           loading: false,
-          toast: this.toastComponent(),
         })
         setInterval(function () {
           window.location.reload()
         }, 1000)
       })
       .catch(() => {
-        let { status, data } = this.props.messageResponse
-        if (status > 400 && status <= 403) {
-          this.setState({
-            message: data && data.message,
-            successFully: false,
-            loading: false,
-            toast: this.toastComponent(),
-          })
-          setInterval(() => {
-            this.props.logout()
-            this.props.clearMessage()
-          }, 1000)
-        } else {
-          this.setState({
-            message: data && data.message,
-            successFully: false,
-            loading: false,
-            toast: this.toastComponent(),
-          })
-        }
+        this.setState({
+          successFully: false,
+          loading: false,
+        })
       })
   }
   handleDeletePromo = (id) => {
@@ -368,60 +261,19 @@ export class AlertModal extends Component {
       .then(() => {
         this.setState({
           loading: false,
-          toast: this.toastComponent(),
         })
         setInterval(function () {
           window.location.reload()
         }, 1000)
       })
       .catch(() => {
-        let { status, data } = this.props.messageResponse
-        if (status > 400 && status <= 403) {
-          this.setState({
-            message: data && data.message,
-            successFully: false,
-            loading: false,
-            toast: this.toastComponent(),
-          })
-          setInterval(() => {
-            this.props.logout()
-            this.props.clearMessage()
-          }, 1000)
-        } else {
-          this.setState({
-            message: data && data.message,
-            successFully: false,
-            loading: false,
-            toast: this.toastComponent(),
-          })
-        }
+        this.setState({
+          successFully: false,
+          loading: false,
+        })
       })
   }
-  toastComponent() {
-    let { data, status } = this.props.messageResponse
-    let color = ""
-    if (status === 200) {
-      color = "success"
-    } else if (status > 400 && status <= 403) {
-      color = "danger"
-    } else if (status > 405 && status <= 500) {
-      color = "warning"
-    } else {
-      color = "warning"
-    }
-    return (
-      <CToast
-        color={color}
-        className="text-white align-items-center"
-        delay={3000}
-      >
-        <div className="d-flex">
-          <CToastBody>{data.message}</CToastBody>
-          <CToastClose className="me-2 m-auto" white />
-        </div>
-      </CToast>
-    )
-  }
+
   render() {
     let { visible, toast, loading } = this.state
     return (

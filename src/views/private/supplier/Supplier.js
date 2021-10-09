@@ -44,16 +44,7 @@ export class Supplier extends Component {
     this.getSuppliers(query, page, limit)
   }
   getSuppliers = (query, page, limit) => {
-    this.props.getSuppliers(query, page, limit).catch(() => {
-      let { status, data } = this.props.messageResponse
-      if (status > 400 && status <= 403) {
-        this.props.logout()
-        this.props.clearMessage()
-      }
-      this.setState({
-        message: data.message,
-      })
-    })
+    this.props.getSuppliers(query, page, limit)
   }
   componentDidUpdate(prevProps, prevState) {
     this.manageSupplierResponse(prevProps, prevState)

@@ -80,54 +80,13 @@ export class ProductDetialsModal extends Component {
         .then(() => {
           console.log("success added")
           this.setState({
-            toast: this.toastComponent(),
             loading: false,
           })
         })
-        .catch(() => {
-          let { status, action } = this.props.messageResponse
-          if (status > 400 && status <= 403) {
-            this.setState({
-              toast: this.toastComponent(),
-              loading: false,
-            })
-            setInterval(() => {
-              this.props.logout()
-              window.location.reload()
-            }, 1000)
-          }
-          this.setState({
-            toast: this.toastComponent(),
-            loading: false,
-          })
-        })
+
     }
   }
-  toastComponent() {
-    let { data, status } = this.props.messageResponse
-    let color = ""
-    if (status === 200) {
-      color = "success"
-    } else if (status > 400 && status <= 403) {
-      color = "danger"
-    } else if (status > 405 && status <= 500) {
-      color = "warning"
-    } else {
-      color = "warning"
-    }
-    return (
-      <CToast
-        color={color}
-        className="text-white align-items-center"
-        delay={3000}
-      >
-        <div className="d-flex">
-          <CToastBody>{data && data.message}</CToastBody>
-          <CToastClose className="me-2 m-auto" white />
-        </div>
-      </CToast>
-    )
-  }
+
   render() {
     let { visible, product, loading, toast, footerDisplay } = this.state
     return (

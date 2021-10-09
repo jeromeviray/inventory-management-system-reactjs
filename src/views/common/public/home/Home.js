@@ -30,22 +30,6 @@ const CategoryList = React.lazy(() =>
 )
 
 export class Home extends Component {
-  // state = {
-  //   loading: false,
-  //   message: "",
-  // }
-  // componentDidMount() {
-  //   this.props.getDiscoverProducts().catch(() => {
-  //     let failMessage = this.props.messageResponse
-  //     console.log(failMessage)
-  //     if (failMessage.data && failMessage.data.message) {
-  //       this.setState({
-  //         loading: false,
-  //         message: failMessage.data.message,
-  //       })
-  //     }
-  //   })
-  // }
   state = {
     loading: false,
     message: "",
@@ -63,11 +47,8 @@ export class Home extends Component {
   getDiscoverProducts = () => {
     let { page, limit, query } = this.state
     this.props.getDiscoverProducts(query, page, limit).catch(() => {
-      let { status, data } = this.props.messageResponse
-      console.log(this.props.messageResponse)
       this.setState({
         loading: false,
-        message: data.message,
       })
     })
   }

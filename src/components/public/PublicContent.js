@@ -22,14 +22,7 @@ export class PublicContent extends Component {
   componentDidMount() {
     this.redirectUser()
   }
-  // handleLogout = () => {
-  //     let { status, data } = this.props.messageResponse
-  //     if (status > 400 && status <= 403) {
-  //         this.props.logout();
-  //         this.props.clearMessage();
-  //         window.location.reload();
-  //     }
-  // }
+
   redirectUser = () => {
     const isLoggedIn = this.props.userResponse.isLoggedIn
     if (isLoggedIn) {

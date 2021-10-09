@@ -51,16 +51,7 @@ export class IncomingSupplies extends Component {
   }
   getIncomingSupplies = () => {
     const { query, page, limit } = this.state
-    this.props.getIncomingSupplies(query, page, limit).catch(() => {
-      let { status, data } = this.props.messageResponse
-      if (status > 400 && status <= 403) {
-        this.props.logout()
-        this.props.clearMessage()
-      }
-      this.setState({
-        message: data.message,
-      })
-    })
+    this.props.getIncomingSupplies(query, page, limit)
   }
   componentDidUpdate(prevProps, prevState) {
     this.manageIncomingSupplies(prevProps, prevState)
@@ -111,7 +102,7 @@ export class IncomingSupplies extends Component {
           role="tablist"
           layout="fill"
 
-          // className="flex-column flex-sm-row"
+        // className="flex-column flex-sm-row"
         >
           <CNavItem>
             <CNavLink

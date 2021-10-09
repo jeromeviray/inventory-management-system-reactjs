@@ -24,17 +24,9 @@ export class DefaultLayout extends Component {
       history.push("/login")
     } else {
       this.redirectUser()
-      this.handleLogout()
     }
   }
-  handleLogout = () => {
-    let { status, data } = this.props.messageResponse
-    if (status > 400 && status <= 403) {
-      this.props.logout()
-      this.props.clearMessage()
-      window.location.reload()
-    }
-  }
+
   redirectUser = () => {
     const isLoggedIn = this.props.userResponse.isLoggedIn
     if (isLoggedIn) {

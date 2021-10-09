@@ -35,7 +35,6 @@ export class ProductsSearchResult extends Component {
       if (data) {
         this.setState({
           loading: false,
-          message: data.message,
         })
       }
     })

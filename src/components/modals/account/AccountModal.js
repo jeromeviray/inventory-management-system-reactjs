@@ -140,7 +140,6 @@ export class AccountModal extends Component {
         if (status === 200) {
           this.setState({
             loading: false,
-            toast: this.toastComponent(),
           })
         }
         setInterval(() => {
@@ -149,50 +148,12 @@ export class AccountModal extends Component {
         }, 1000)
       })
       .catch(() => {
-        let { status } = this.props.messageResponse
-
-        if (status > 400 && status <= 403) {
-          this.setState({
-            loading: false,
-            toast: this.toastComponent(),
-          })
-          setInterval(() => {
-            this.props.logout()
-            this.props.clearMessage()
-          }, 1000)
-        } else {
-          this.setState({
-            loading: false,
-            toast: this.toastComponent(),
-          })
-        }
+        this.setState({
+          loading: false,
+        })
       })
   }
-  toastComponent() {
-    let { data, status } = this.props.messageResponse
-    let color = ""
-    if (status === 200) {
-      color = "success"
-    } else if (status > 400 && status <= 403) {
-      color = "danger"
-    } else if (status > 405 && status <= 500) {
-      color = "warning"
-    } else {
-      color = "primary"
-    }
-    return (
-      <CToast
-        color={color}
-        className="text-white align-items-center"
-        delay={3000}
-      >
-        <div className="d-flex">
-          <CToastBody>{data.message}</CToastBody>
-          <CToastClose className="me-2 m-auto" white />
-        </div>
-      </CToast>
-    )
-  }
+
   handleOnChecked = () => {
     this.setState({
       checked: !this.state.checked,
@@ -212,7 +173,6 @@ export class AccountModal extends Component {
         if (status === 200) {
           this.setState({
             loading: false,
-            toast: this.toastComponent(),
           })
         }
         this.onResetChangePasswordValue()
@@ -222,22 +182,9 @@ export class AccountModal extends Component {
       })
       .catch(() => {
         let { status } = this.props.messageResponse
-
-        if (status > 400 && status <= 403) {
-          this.setState({
-            changePasswordLoading: false,
-            toast: this.toastComponent(),
-          })
-          setInterval(() => {
-            this.props.logout()
-            this.props.clearMessage()
-          }, 1000)
-        } else {
-          this.setState({
-            changePasswordLoading: false,
-            toast: this.toastComponent(),
-          })
-        }
+        this.setState({
+          changePasswordLoading: false,
+        })
       })
   }
   render() {

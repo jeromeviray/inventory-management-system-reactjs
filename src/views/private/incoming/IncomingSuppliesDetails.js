@@ -31,14 +31,7 @@ export class IncomingSuppliesDetails extends Component {
     let supplyId = this.props.location.state
     this.props.getIncomingSupply(supplyId).catch(() => {
       let { status, data } = this.props.messageResponse
-      if (status > 400 && status <= 403) {
-        this.props.clearMessage()
-        setInterval(() => {
-          this.props.logout()
-        }, 1000)
-      }
       this.setState({
-        message: data.message,
         hasError: true,
         status: status,
       })

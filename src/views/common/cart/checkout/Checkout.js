@@ -49,18 +49,9 @@ export class Checkout extends Component {
     this.retrieveCartItems()
   }
   retrieveCartItems = () => {
-    this.props.getCart().catch(() => {
-      this.handleLogout()
-    })
+    this.props.getCart()
   }
-  handleLogout = () => {
-    let failMessage = this.props.messageResponse
-    if (failMessage.status > 400 && failMessage.status <= 403) {
-      this.props.logout()
-      this.props.clearMessage()
-      window.location.reload()
-    }
-  }
+
   componentDidUpdate(prevProps, prevState) {
     this.manageCartItemsResponse(prevProps, prevState)
   }
@@ -81,17 +72,10 @@ export class Checkout extends Component {
     this.props
       .removeCartItem(id)
       .then(() => {
-        this.setState({
-          toast: this.toastComponent(),
-        })
         this.retrieveCartItems(token)
       })
       .catch(() => {
         this.handleLogout()
-
-        this.setState({
-          toast: this.toastComponent(),
-        })
       })
   }
   handleOnChange = (position) => {
@@ -127,31 +111,7 @@ export class Checkout extends Component {
     this.props.paymentDetailsOnChange(pendingItem, quantity, totalPrice)
   }
 
-  toastComponent() {
-    let { data, status } = this.props.messageResponse
-    let color = ""
-    if (status === 200) {
-      color = "success"
-    } else if (status > 400 && status <= 403) {
-      color = "danger"
-    } else if (status > 405 && status <= 500) {
-      color = "warning"
-    } else {
-      color = "warning"
-    }
-    return (
-      <CToast
-        color={color}
-        className="text-white align-items-center"
-        delay={3000}
-      >
-        <div className="d-flex">
-          <CToastBody>{data.message}</CToastBody>
-          <CToastClose className="me-2 m-auto" white />
-        </div>
-      </CToast>
-    )
-  }
+
   render() {
     let { cartItems, toast, checked } = this.state
     const headerStyle = {
@@ -209,7 +169,7 @@ export class Checkout extends Component {
                             src={
                               item.product.fileImages.length > 0
                                 ? "/images/products/" +
-                                  item.product.fileImages[0].fileName
+                                item.product.fileImages[0].fileName
                                 : NO_IMAGE_BASE64
                             }
                             width={100}

@@ -44,20 +44,7 @@ export class Orders extends Component {
             path: href
         })
 
-        this.props.getOrders(this.state.status).catch(() => {
-            let failMessage = this.props.messageResponse;
-            if (failMessage.status > 400 && failMessage.status <= 403) {
-                // this.props.clearMessage();
-                setInterval(() => {
-                    this.props.logout();
-                }, 1000)
-            }
-            if (failMessage.data && failMessage.data.message) {
-                this.setState({
-                    message: failMessage.data.message
-                })
-            }
-        })
+        this.props.getOrders(this.state.status)
     }
     componentDidUpdate(prevProps, prevState) {
         this.manageorderRepsonse(prevProps, prevState);

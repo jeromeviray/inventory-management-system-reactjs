@@ -10,7 +10,7 @@ import {
 import ReactStars from "react-rating-stars-component"
 import { Link } from 'react-router-dom'
 //action 
-import { getWishlist } from 'src/service/apiActions/wishlistAction/wishlistAction'
+import { getWishlist, deleteWishlist } from 'src/service/apiActions/wishlistAction/wishlistAction'
 import { logout } from 'src/service/apiActions/userAction/userAction'
 import { clearMessage } from 'src/service/apiActions/messageAction/messageAction'
 import { connect } from 'react-redux'
@@ -20,6 +20,7 @@ import ReactPaginate from 'react-paginate'
 import ProductCard from "src/components/products/ProductCard"
 import ProductDetialsModal from "../modals/product/ProductDetialsModal"
 import { NO_IMAGE_BASE64 } from "src/service/redux/constants"
+import * as AiIcons from "react-icons/ai"
 
 export class Wishlist extends Component {
     state = {
@@ -32,7 +33,8 @@ export class Wishlist extends Component {
         path: '',
         originalList: {
             totalPages: 0
-        }
+        },
+        visible: false
     }
 
     constructor(props) {
@@ -66,20 +68,7 @@ export class Wishlist extends Component {
 
     getWishlist(page = 0, limit = 10) {
         const { query } = this.state;
-        this.props.getWishlist(query, page, limit).catch(() => {
-            let failMessage = this.props.messageResponse;
-            if (failMessage.status > 400 && failMessage.status <= 403) {
-                // this.props.clearMessage();
-                setInterval(() => {
-                    this.props.logout();
-                }, 1000)
-            }
-            if (failMessage.data && failMessage.data.message) {
-                this.setState({
-                    message: failMessage.data.message
-                })
-            }
-        })
+        this.props.getWishlist(query, page, limit);
     }
     componentDidUpdate(prevProps, prevState) {
         this.manageorderRepsonse(prevProps, prevState);
@@ -88,15 +77,21 @@ export class Wishlist extends Component {
     manageorderRepsonse = (prevProps, prevState) => {
         if (prevProps.wishlistResponse !== this.props.wishlistResponse) {
             let { status, action, data } = this.props.wishlistResponse;
-            console.log(data);
             if (status === 200 && action === "GET_WISHLIST") {
                 this.setState({
                     wishlist: data.data,
                     originalList: data
                 })
+            } else if (status === 200 && action === 'DELETE_WISHLIST') {
+                this.getWishlist();
             }
         }
     }
+
+    deleteWishlist = (productId) => {
+        this.props.deleteWishlist(productId);
+    }
+
 
     manageStatus = (status) => {
         switch (status) {
@@ -135,7 +130,7 @@ export class Wishlist extends Component {
     }
 
     render() {
-        let { message, wishlist, permission, path, originalList } = this.state;
+        let { message, wishlist, permission, path, originalList, visible } = this.state;
         const fontStyle = {
             fontSize: "14px",
             fontWeight: "400"
@@ -195,6 +190,12 @@ export class Wishlist extends Component {
                                                     />
                                                 </div>
                                             </Link>
+                                            <div className="eye-btn">
+                                                <span onClick={() => this.deleteWishlist(id)}>
+                                                    <AiIcons.AiOutlineClose />
+                                                </span>
+
+                                            </div>
                                         </div>
                                         <CCardBody>
                                             <Link
@@ -259,6 +260,7 @@ const mapStateToProps = (state) => {
 }
 export default connect(mapStateToProps, {
     getWishlist,
+    deleteWishlist,
     logout,
     clearMessage
 })(Wishlist)

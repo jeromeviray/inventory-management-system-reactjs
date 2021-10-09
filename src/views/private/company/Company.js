@@ -44,16 +44,7 @@ export class Company extends Component {
         this.setState({
             permission: roles && roles.roleName
         })
-        this.props.getBranchesWithTotalProduct(token).catch(() => {
-            let failMessage = this.props.messageResponse
-            if (failMessage.status > 400 && failMessage.status <= 403) {
-                this.props.logout();
-
-            }
-            this.setState({
-                message: failMessage.data.message
-            })
-        })
+        this.props.getBranchesWithTotalProduct(token)
     }
     componentDidUpdate(prevProps, prevState) {
         this.manageGetBranchWithTotalProduct(prevProps, prevState);
@@ -66,10 +57,6 @@ export class Company extends Component {
                 this.setState({
                     branches: data.branches
                 })
-            } else if (status > 400 && status <= 403) {
-                this.props.clearMessage();
-
-                this.props.logout();
             }
         }
     }

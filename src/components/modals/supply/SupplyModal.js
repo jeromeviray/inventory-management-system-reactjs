@@ -61,36 +61,11 @@ export class SupplyModal extends Component {
   }
 
   componentDidMount() {
-    
+
   }
-  // getInventories(page, limit, query) {
-  //   this.props.getInventories(query, page, limit).catch(() => {
-  //     let { status, data } = this.props.messageResponse
-  //     if (status > 400 && status <= 403) {
-  //       setInterval(() => {
-  //         this.props.logout()
-  //         this.props.clearMessage()
-  //       }, 1000)
-  //       this.setState({
-  //         message: data.message,
-  //       })
-  //     }
-  //   })
-  // }
+
   getSuppliers = () => {
-    this.props.getSuppliers().catch(() => {
-      let { status, data } = this.props.messageResponse
-      if (status > 400 && status <= 403) {
-        setInterval(() => {
-          this.props.logout()
-          this.props.clearMessage()
-        }, 1000)
-      }
-      this.setState({
-        message: data.message,
-        toast: this.toastComponent(),
-      })
-    })
+    this.props.getSuppliers()
   }
   componentDidUpdate(prevProps, prevState) {
     this.manageSupplyModal(prevProps, prevState)
@@ -134,31 +109,7 @@ export class SupplyModal extends Component {
       }
     }
   }
-  toastComponent() {
-    let { data, status } = this.props.messageResponse
-    let color = ""
-    if (status === 200) {
-      color = "success"
-    } else if (status > 400 && status <= 403) {
-      color = "danger"
-    } else if (status > 405 && status <= 500) {
-      color = "warning"
-    } else {
-      color = "primary"
-    }
-    return (
-      <CToast
-        color={color}
-        className="text-white align-items-center"
-        delay={3000}
-      >
-        <div className="d-flex">
-          <CToastBody>{data.message}</CToastBody>
-          <CToastClose className="me-2 m-auto" white />
-        </div>
-      </CToast>
-    )
-  }
+
   handleTempProductItem = (index, item) => {
     let { product } = this.state
     const productItems = this.state.productItems.slice(0)

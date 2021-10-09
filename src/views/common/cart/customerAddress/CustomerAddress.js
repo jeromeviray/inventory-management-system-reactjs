@@ -46,18 +46,9 @@ export class CustomerAddress extends Component {
     }
   }
   retreiveAddressResponse = () => {
-    this.props.getAdress().catch(() => {
-      this.handleLogout()
-    })
+    this.props.getAdress()
   }
-  handleLogout = () => {
-    let failMessage = this.props.messageResponse
-    if (failMessage.status > 400 && failMessage.status <= 403) {
-      this.props.logout()
-      this.props.clearMessage()
-      window.location.reload()
-    }
-  }
+
   componentDidUpdate(prevProps, prevState) {
     this.manageAddressResponse(prevProps, prevState)
     this.manageModalVisible(prevProps, prevState)

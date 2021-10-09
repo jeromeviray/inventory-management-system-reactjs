@@ -121,64 +121,18 @@ export class AddressModal extends Component {
         if (status === 200) {
           this.setState({
             loading: false,
-            toast: this.toastComponent(),
           })
           this.onResetValue()
         }
       })
       .catch(() => {
         let { status, data } = this.props.messageResponse
-        console.log(this.props.messageResponse)
-        if (status > 400 && status <= 403) {
-          this.setState({
-            toast: this.toastComponent(),
-          })
-          setInterval(() => {
-            this.props.logout()
-            this.props.clearMessage()
-            window.location.reload()
-          }, 1000)
-        } else {
-          if (status >= 500) {
-            this.setState({
-              message: data && data.message,
-              toast: this.toastComponent(),
-              loading: false,
-            })
-          } else {
-            this.setState({
-              loading: false,
-              toast: this.toastComponent(),
-            })
-          }
-        }
+        this.setState({
+          loading: false,
+        })
       })
   }
-  toastComponent() {
-    let { data, status } = this.props.messageResponse
-    let color = ""
-    if (status === 200) {
-      color = "success"
-    } else if (status > 400 && status <= 403) {
-      color = "danger"
-    } else if (status > 405 && status <= 500) {
-      color = "warning"
-    } else {
-      color = "warning"
-    }
-    return (
-      <CToast
-        color={color}
-        className="text-white align-items-center"
-        delay={3000}
-      >
-        <div className="d-flex">
-          <CToastBody>{data.message}</CToastBody>
-          <CToastClose className="me-2 m-auto" white />
-        </div>
-      </CToast>
-    )
-  }
+
   render() {
     let {
       visible,

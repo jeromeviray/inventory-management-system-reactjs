@@ -13,14 +13,9 @@ export class CategoryList extends Component {
   }
 
   getCategoriesList = () => {
-    this.props.getCategoriesList().catch(() => {
-      let failMessage = this.props.messageResponse
-      this.setState({
-        loading: false,
-        message: failMessage.data.message,
-      })
-    })
+    this.props.getCategoriesList()
   }
+  
   componentDidUpdate(prevProps, prevState) {
     this.manageCategoriesListResponse(prevProps, prevState)
   }

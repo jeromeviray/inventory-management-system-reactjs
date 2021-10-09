@@ -39,16 +39,7 @@ export class Promo extends Component {
     this.getPromos()
   }
   getPromos = () => {
-    this.props.getPromos().catch(() => {
-      let { status, data } = this.props.messageResponse
-      if (status > 400 && status <= 403) {
-        this.props.logout()
-        this.props.clearMessage()
-      }
-      this.setState({
-        message: data.message,
-      })
-    })
+    this.props.getPromos()
   }
   componentDidUpdate(prevProps, prevState) {
     this.managePromoResponse(prevProps, prevState)
@@ -132,8 +123,8 @@ export class Promo extends Component {
                 id="floatingInput"
                 placeholder="Search"
                 className="p-2"
-                //  value={query}
-                //  onChange={this.handleOnSearch}
+              //  value={query}
+              //  onChange={this.handleOnSearch}
               />
               <CButton
                 type="button"

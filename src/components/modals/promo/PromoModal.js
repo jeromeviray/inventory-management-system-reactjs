@@ -93,18 +93,7 @@ export class PromoModal extends Component {
     this.searchProduct(query, page, limit)
   }
   searchProduct(query, page, limit) {
-    this.props.searchProductByBarcodeOrName(query, page, limit).catch(() => {
-      let { status, data } = this.props.messageResponse
-      if (status > 400 && status <= 403) {
-        setInterval(() => {
-          this.props.logout()
-          this.props.clearMessage()
-        }, 1000)
-        this.setState({
-          toast: this.toastComponent,
-        })
-      }
-    })
+    this.props.searchProductByBarcodeOrName(query, page, limit)
   }
   componentDidUpdate(prevProps, prevState) {
     this.managePromoModal(prevProps, prevState)
@@ -273,7 +262,6 @@ export class PromoModal extends Component {
             loading: false,
             validation: false,
             products: [],
-            toast: this.toastComponent(),
           })
         }
         this.onResetValue()
@@ -283,20 +271,10 @@ export class PromoModal extends Component {
         }, 1000)
       })
       .catch(() => {
-        let { status, data } = this.props.messageResponse
-
-        if (status > 400 && status <= 403) {
-          setInterval(() => {
-            this.props.logout()
-            this.props.clearMessage()
-          }, 1000)
-        } else {
-          this.setState({
-            toast: this.toastComponent(),
-            loading: false,
-            validation: false,
-          })
-        }
+        this.setState({
+          loading: false,
+          validation: false,
+        })
       })
   }
   handleUpdatePromo = (
@@ -316,7 +294,6 @@ export class PromoModal extends Component {
             loading: false,
             validation: false,
             products: [],
-            toast: this.toastComponent(),
           })
         }
         this.onResetValue()
@@ -326,47 +303,13 @@ export class PromoModal extends Component {
         }, 1000)
       })
       .catch(() => {
-        let { status, data } = this.props.messageResponse
-
-        if (status > 400 && status <= 403) {
-          setInterval(() => {
-            this.props.logout()
-            this.props.clearMessage()
-          }, 1000)
-        } else {
-          this.setState({
-            toast: this.toastComponent(),
-            loading: false,
-            validation: false,
-          })
-        }
+        this.setState({
+          loading: false,
+          validation: false,
+        })
       })
   }
-  toastComponent() {
-    let { data, status } = this.props.messageResponse
-    let color = ""
-    if (status === 200) {
-      color = "success"
-    } else if (status > 400 && status <= 403) {
-      color = "danger"
-    } else if (status > 405 && status <= 500) {
-      color = "warning"
-    } else {
-      color = "primary"
-    }
-    return (
-      <CToast
-        color={color}
-        className="text-white align-items-center"
-        delay={3000}
-      >
-        <div className="d-flex">
-          <CToastBody>{data.message}</CToastBody>
-          <CToastClose className="me-2 m-auto" white />
-        </div>
-      </CToast>
-    )
-  }
+
   render() {
     let {
       action,

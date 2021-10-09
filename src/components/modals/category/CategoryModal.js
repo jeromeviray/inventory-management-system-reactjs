@@ -94,7 +94,6 @@ export class CategoryModal extends Component {
           this.setState({
             categoryName: "",
             loading: false,
-            toast: this.toastComponent(),
           })
         }
         setInterval(() => {
@@ -102,22 +101,9 @@ export class CategoryModal extends Component {
         }, 1000)
       })
       .catch(() => {
-        let { status, data } = this.props.messageResponse
         this.setState({
-          toast: this.toastComponent(),
           loading: false,
         })
-        if (status > 400 && status <= 403) {
-          setInterval(() => {
-            this.props.logout()
-            this.props.clearMessage()
-          }, 1000)
-        } else {
-          this.setState({
-            toast: this.toastComponent(),
-            loading: false,
-          })
-        }
       })
   }
   handleOnUpdate = (id, name) => {
@@ -130,7 +116,6 @@ export class CategoryModal extends Component {
             categoryName: "",
             categoryId: "",
             loading: false,
-            toast: this.toastComponent(),
           })
         }
         setInterval(() => {
@@ -140,47 +125,11 @@ export class CategoryModal extends Component {
       .catch(() => {
         let { status, data } = this.props.messageResponse
         this.setState({
-          toast: this.toastComponent(),
           loading: false,
         })
-        if (status > 400 && status <= 403) {
-          setInterval(() => {
-            this.props.logout()
-            this.props.clearMessage()
-          }, 1000)
-        } else {
-          this.setState({
-            toast: this.toastComponent(),
-            loading: false,
-          })
-        }
       })
   }
-  toastComponent() {
-    let { data, status } = this.props.messageResponse
-    let color = ""
-    if (status === 200) {
-      color = "success"
-    } else if (status > 400 && status <= 403) {
-      color = "danger"
-    } else if (status > 405 && status <= 500) {
-      color = "warning"
-    } else {
-      color = "primary"
-    }
-    return (
-      <CToast
-        color={color}
-        className="text-white align-items-center"
-        delay={3000}
-      >
-        <div className="d-flex">
-          <CToastBody>{data.message}</CToastBody>
-          <CToastClose className="me-2 m-auto" white />
-        </div>
-      </CToast>
-    )
-  }
+
   render() {
     let { visible, categoryName, icon, action, loading, toast } = this.state
     return (

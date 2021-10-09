@@ -54,15 +54,7 @@ export class Brand extends Component {
   }
 
   getBrands = (query, page, limit) => {
-    this.props.getBrands(query, page, limit).catch(() => {
-      let failMessage = this.props.messageResponse
-      if (failMessage.status > 400 && failMessage.status <= 403) {
-        this.props.logout()
-      }
-      this.setState({
-        message: failMessage.data.message,
-      })
-    })
+    this.props.getBrands(query, page, limit)
   }
   componentDidUpdate(prevProps, prevState) {
     this.manageBrandsResponse(prevProps, prevState)
@@ -97,10 +89,6 @@ export class Brand extends Component {
         this.setState({
           brands: data.brands,
         })
-      } else if (status > 400 && status <= 403) {
-        this.props.clearMessage()
-
-        this.props.logout()
       }
     }
   }

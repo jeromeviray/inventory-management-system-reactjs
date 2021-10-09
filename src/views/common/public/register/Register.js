@@ -84,7 +84,6 @@ export class Register extends Component {
       this.props.createAccount(username, password, email, firstName, lastName, phoneNumber)
         .then(() => {
           const successResponse = this.props.messageResponse.data.message;
-          console.log(successResponse)
           this.setState({
             loading: false,
             successful: true,
@@ -93,15 +92,11 @@ export class Register extends Component {
           this.onResetValue()
         })
         .catch(() => {
-          const errorResponse = this.props.messageResponse.data.message;
-          console.log(errorResponse);
           this.setState({
             loading: false,
             successful: false,
-            message: errorResponse
           })
           this.onResetValue()
-
         })
     }
   }

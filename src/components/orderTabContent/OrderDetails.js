@@ -33,15 +33,7 @@ export class OrderDetails extends Component {
     componentDidMount() {
         let orderId = this.props.location.state;
         this.props.getOrderByOrderId(orderId).catch(() => {
-            let { status, data } = this.props.messageResponse;
-            if (status > 400 && status <= 403) {
-                this.props.clearMessage();
-                setInterval(() => {
-                    this.props.logout();
-                }, 1000)
-            }
             this.setState({
-                message: data.message,
                 hasError: true
             })
         })

@@ -46,15 +46,7 @@ export class Customer extends Component {
     this.getCustomers(query, page, limit)
   }
   getCustomers = (query, page, limit) => {
-    this.props.getCustomers(query, page, limit).catch(() => {
-      let failMessage = this.props.messageResponse
-      if (failMessage.status > 400 && failMessage.status <= 403) {
-        this.props.logout()
-      }
-      this.setState({
-        message: failMessage.data.message,
-      })
-    })
+    this.props.getCustomers(query, page, limit)
   }
   componentDidUpdate(prevProps, prevState) {
     this.manageCustomerResponse(prevProps, prevState)

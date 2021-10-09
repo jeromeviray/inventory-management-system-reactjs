@@ -13,6 +13,10 @@ import { connect } from "react-redux";
 import PrivateRouter from "./router/privateRouter/PrivateRouter";
 import { DotLoader } from "react-spinners";
 
+import { logout } from "src/service/apiActions/userAction/userAction"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const loading = (
   <div className="d-flex justify-content-center align-items-center  position-fixed ">
     <DotLoader color="#36D7B7" size={100} />
@@ -35,6 +39,25 @@ const RedirectSuccessHandler = lazy(() => import("./components/redirectSuccessHa
 const CustomerLayout = React.lazy(() => import("src/layout/CustomerLayout"))
 
 class App extends Component {
+
+  componentDidUpdate(prevProps, prevState) {
+    this.manageResponse(prevProps, prevState);
+  }
+
+  manageResponse(prevProps, prevState) {
+    if (this.props.messageResponse != prevProps.messageResponse) {
+      let failMessage = this.props.messageResponse;
+      console.log(failMessage)
+      if (failMessage.status > 400 && failMessage.status <= 403) {
+        setInterval(() => {
+          toast("Session Expired")
+          this.props.logout();
+        }, 1000)
+      } else if (failMessage.data && failMessage.data.message) {
+        toast(failMessage.data.message)
+      }
+    }
+  }
   render() {
     // const credentials = this.props.credentials;
     return (
@@ -89,6 +112,7 @@ class App extends Component {
             </Switch>
           </React.Suspense>
         </Router>
+        <ToastContainer />
         {/* </div> */}
       </>
 
@@ -101,7 +125,9 @@ const mapStateToProps = (state) => {
   return {
     isLoggedIn,
     credentials,
-
+    messageResponse: state.messageResponse,
   }
 }
-export default connect(mapStateToProps)(App)
+export default connect(mapStateToProps, {
+  logout,
+})(App)

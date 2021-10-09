@@ -43,18 +43,7 @@ export class NavHeader extends Component {
     this.searchProduct(query, page, limit)
   }
   searchProduct(query, page, limit) {
-    this.props.searchProductByBarcodeOrName(query, page, limit).catch(() => {
-      let { status, data } = this.props.messageResponse
-      if (status > 400 && status <= 403) {
-        setInterval(() => {
-          this.props.logout()
-          this.props.clearMessage()
-        }, 1000)
-        this.setState({
-          toast: this.toastComponent,
-        })
-      }
-    })
+    this.props.searchProductByBarcodeOrName(query, page, limit)
   }
 
   getDiscoverProducts = (query, page, limit) => {
@@ -63,7 +52,6 @@ export class NavHeader extends Component {
       if (data) {
         this.setState({
           loading: false,
-          message: data.message,
         })
       }
     })
@@ -72,9 +60,7 @@ export class NavHeader extends Component {
     this.props
       .getProductsByCategoryName(categoryName, query, page, limit)
       .catch(() => {
-        let { status, data } = this.props.messageResponse
         this.setState({
-          message: data.message,
           hasError: true,
         })
       })

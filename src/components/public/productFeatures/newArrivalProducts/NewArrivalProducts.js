@@ -13,15 +13,7 @@ export class NewArrivalProducts extends Component {
       totalPages: 0,
     },
   }
-  // componentDidMount() {
-  //     this.props.getDiscoverProducts().catch(() => {
-  //         let failMessage = this.props.messageResponse
-  //         this.setState({
-  //             loading: false,
-  //             message: failMessage.data.message
-  //         })
-  //     })
-  // }
+
   componentDidUpdate(prevProps, prevState) {
     this.manageProductResponse(prevProps, prevState)
   }

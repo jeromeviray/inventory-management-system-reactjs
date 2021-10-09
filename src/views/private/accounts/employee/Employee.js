@@ -55,15 +55,7 @@ export class Employee extends Component {
     this.getEmployees(query, page, limit)
   }
   getEmployees = (query, page, limit) => {
-    this.props.getEmployees(query, page, limit).catch(() => {
-      let failMessage = this.props.messageResponse
-      if (failMessage.status > 400 && failMessage.status <= 403) {
-        this.props.logout()
-      }
-      this.setState({
-        message: failMessage.data.message,
-      })
-    })
+    this.props.getEmployees(query, page, limit)
   }
   componentDidUpdate(prevProps, prevState) {
     this.manageEmployeeResponse(prevProps, prevState)
@@ -75,10 +67,6 @@ export class Employee extends Component {
         this.setState({
           employee: data.employees,
         })
-      } else if (status > 400 && status <= 403) {
-        this.props.clearMessage()
-
-        this.props.logout()
       }
     }
   }

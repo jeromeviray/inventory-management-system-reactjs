@@ -79,26 +79,10 @@ export class ProductCard extends Component {
     }
   }
   handleGetProduct = (id) => {
-    this.props.getProduct(id).catch(() => {
-      const { status, message } = this.props.messageResponse
-      console.log(status > 400 && status <= 403)
-      if (status > 400 && status <= 403) {
-        this.props.logout()
-        window.location.reload()
-      }
-      this.setState({
-        message: message,
-      })
-    })
+    this.props.getProduct(id)
   }
   handleProductDetails = (id) => {
-    this.props.getProductDetails(id).catch(() => {
-      const { status, message } = this.props.messageResponse
-      // const message = this.props.messaegResponse.data.message
-      this.setState({
-        message: message,
-      })
-    })
+    this.props.getProductDetails(id)
   }
   manageStatus = (status) => {
     switch (status) {
@@ -132,7 +116,6 @@ export class ProductCard extends Component {
   renderAlert = () => { }
   render() {
     let { iconModal, product, imageLink, fileImage, visible } = this.state
-    console.log(product.inventory)
     const { productName, productPrice, id } = product.product
     return (
       <>

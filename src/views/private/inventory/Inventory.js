@@ -30,18 +30,7 @@ export class Inventory extends Component {
     }
     componentDidMount() {
         const { page, limit, query } = this.state;
-        this.props.getInventories(query, page, limit).catch(() => {
-            let { status, data } = this.props.messageResponse;
-            if (status > 400 && status <= 403) {
-                setInterval(() => {
-                    this.props.logout();
-                    this.props.clearMessage();
-                }, 1000);
-            }
-            this.setState({
-                message: data.message
-            })
-        })
+        this.props.getInventories(query, page, limit)
     }
     componentDidUpdate(prevProps, prevState) {
         this.manageInventoryResponse(prevProps, prevState);

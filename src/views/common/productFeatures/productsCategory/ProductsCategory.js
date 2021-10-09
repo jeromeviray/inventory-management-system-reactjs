@@ -39,9 +39,7 @@ export class ProductsCategory extends Component {
     this.props
       .getProductsByCategoryName(categoryName, query, page, limit)
       .catch(() => {
-        let { status, data } = this.props.messageResponse
         this.setState({
-          message: data.message,
           hasError: true,
         })
       })

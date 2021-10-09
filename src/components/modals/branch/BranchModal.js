@@ -110,7 +110,6 @@ export class BranchModal extends Component {
         if (status === 200) {
           this.setState({
             loading: false,
-            toast: this.toastComponent(),
           })
         }
         setInterval(() => {
@@ -118,29 +117,7 @@ export class BranchModal extends Component {
           window.location.reload()
         }, 1000)
       })
-      .catch(() => {
-        let { status, data } = this.props.messageResponse
-        if (status > 400 && status <= 403) {
-          setInterval(() => {
-            this.props.logout()
-            this.props.clearMessage()
-          }, 1000)
-        } else {
-          if (status >= 500) {
-            this.setState({
-              message: data && data.message,
-              successFully: false,
-              loading: false,
-            })
-          } else {
-            this.setState({
-              message: data && data.message,
-              successFully: false,
-              loading: false,
-            })
-          }
-        }
-      })
+
   }
   handleUpdateBranch = (brandId, branchName, token) => {
     this.props
@@ -151,7 +128,6 @@ export class BranchModal extends Component {
         if (action === "UPDATEBRANCH" && status >= 200) {
           this.setState({
             loading: false,
-            toast: this.toastComponent(),
           })
           setInterval(function () {
             window.location.reload()
@@ -162,56 +138,9 @@ export class BranchModal extends Component {
           })
         }
       })
-      .catch(() => {
-        let { status, data } = this.props.messageResponse
-        if (status > 400 && status <= 403) {
-          setInterval(() => {
-            this.props.logout()
-            this.props.clearMessage()
-          }, 1000)
-        } else {
-          if (status >= 500) {
-            this.setState({
-              message: data && data.message,
-              successFully: false,
-              loading: false,
-            })
-          } else {
-            this.setState({
-              message: data && data.message,
-              successFully: false,
-              loading: false,
-            })
-          }
-        }
-      })
+
   }
 
-  toastComponent() {
-    let { data, status } = this.props.messageResponse
-    let color = ""
-    if (status === 200) {
-      color = "success"
-    } else if (status > 400 && status <= 403) {
-      color = "danger"
-    } else if (status > 405 && status <= 500) {
-      color = "warning"
-    } else {
-      color = "warning"
-    }
-    return (
-      <CToast
-        color={color}
-        className="text-white align-items-center"
-        delay={3000}
-      >
-        <div className="d-flex">
-          <CToastBody>{data.message}</CToastBody>
-          <CToastClose className="me-2 m-auto" white />
-        </div>
-      </CToast>
-    )
-  }
   render() {
     let {
       visible,

@@ -114,7 +114,7 @@ export const deleteWishlist = (wishlistId) => async (dispatch) => {
                 payload: {
                     status: 200,
                     data: {
-                        message: "Get Order By Id Success"
+                        message: "Successfully deleted wishlist"
                     }
                 }
             })
@@ -142,6 +142,7 @@ export const deleteWishlist = (wishlistId) => async (dispatch) => {
                     }
                 }
             })
+            console.log("JKOSLDFJ")
             return Promise.reject();
         }
     )

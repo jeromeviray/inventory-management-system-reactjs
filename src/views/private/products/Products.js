@@ -70,18 +70,7 @@ class Products extends Component {
   }
 
   getProducts(page, limit, query) {
-    this.props.getProducts(query, page, limit).catch(() => {
-      let { status, data } = this.props.messageResponse
-      if (status > 400 && status <= 403) {
-        setInterval(() => {
-          this.props.logout()
-          this.props.clearMessage()
-        }, 1000)
-        this.setState({
-          message: data.message,
-        })
-      }
-    })
+    this.props.getProducts(query, page, limit)
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -189,43 +178,9 @@ class Products extends Component {
     const { accessToken, type } = this.props.userResponse.credentials
     const token = type + accessToken
 
-    this.props.getProduct(id, token).catch(() => {
-      const { status, message } = this.props.messageResponse
-      // const message = this.props.messaegResponse.data.message
-      if (status > 400 && status <= 403) {
-        this.props.logout()
-        window.location.reload()
-      }
-      this.setState({
-        toast: this.toastComponent(),
-      })
-    })
+    this.props.getProduct(id, token)
   }
-  toastComponent() {
-    let { data, status } = this.props.messageResponse
-    let color = ""
-    if (status === 200) {
-      color = "success"
-    } else if (status > 400 && status <= 403) {
-      color = "danger"
-    } else if (status > 405 && status <= 500) {
-      color = "warning"
-    } else {
-      color = "primary"
-    }
-    return (
-      <CToast
-        color={color}
-        className="text-white align-items-center"
-        delay={3000}
-      >
-        <div className="d-flex">
-          <CToastBody>{data.message}</CToastBody>
-          <CToastClose className="me-2 m-auto" white />
-        </div>
-      </CToast>
-    )
-  }
+
   renderScanBarcodeModal = () => {
     return <ScanBarcodeModal />
   }

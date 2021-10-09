@@ -27,12 +27,7 @@ export class ProductDetails extends Component {
   }
   componentDidMount() {
     const id = this.props.location.state
-    this.props.getProductDetails(id).catch(() => {
-      const { status, message } = this.props.messageResponse
-      this.setState({
-        message: message,
-      })
-    })
+    this.props.getProductDetails(id)
   }
   componentDidUpdate(prevProps, prevState) {
     this.manageProductResponse(prevProps, prevState)

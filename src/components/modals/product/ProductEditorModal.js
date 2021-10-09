@@ -94,10 +94,6 @@ export class ProductEditorModal extends Component {
   getCategories = () => {
     this.props.getCategories().catch(() => {
       let { status, data } = this.props.messageResponse
-      if (status > 400 && status <= 403) {
-        this.props.logout()
-        this.props.clearMessage()
-      }
       this.setState({
         message: data.message,
       })
@@ -106,9 +102,6 @@ export class ProductEditorModal extends Component {
   getBrands = () => {
     this.props.getBrands().catch(() => {
       let failMessage = this.props.messageResponse
-      if (failMessage.status > 400 && failMessage.status <= 403) {
-        this.props.logout()
-      }
       this.setState({
         message: failMessage.data.message,
       })
@@ -127,10 +120,6 @@ export class ProductEditorModal extends Component {
         this.setState({
           brands: data.brands,
         })
-      } else if (status > 400 && status <= 403) {
-        this.props.clearMessage()
-
-        this.props.logout()
       }
     }
   }
@@ -178,8 +167,8 @@ export class ProductEditorModal extends Component {
           productId: id,
           editorState: productDescription
             ? EditorState.createWithContent(
-                convertFromRaw(JSON.parse(productDescription)),
-              )
+              convertFromRaw(JSON.parse(productDescription)),
+            )
             : EditorState.createEmpty(),
         })
 
@@ -201,7 +190,7 @@ export class ProductEditorModal extends Component {
     }
   }
   async getImages(fileImages) {
-    for (let i = 0; i < fileImages.length; i++) {
+    for (let i = 0;i < fileImages.length;i++) {
       ProductApiService.getImage(fileImages[i].path, fileImages[i].fileName)
         .then((response) => {
           this.loadImage(response.data, fileImages[i].fileName)
@@ -310,7 +299,7 @@ export class ProductEditorModal extends Component {
     let productData = new FormData()
 
     if (productImage.length > 0) {
-      for (let i = 0; i < productImage.length; i++) {
+      for (let i = 0;i < productImage.length;i++) {
         if (productImage[i].file) {
           productData.append("productImages[]", productImage[i].file)
         }
@@ -337,7 +326,6 @@ export class ProductEditorModal extends Component {
           this.setState({
             loading: false,
             successFully: true,
-            toast: this.toastComponent(),
             editorState: EditorState.createEmpty(),
             productImage: [],
           })
@@ -352,22 +340,9 @@ export class ProductEditorModal extends Component {
       })
       .catch(() => {
         this.onResetValue()
-        let { status, data } = this.props.messageResponse
-
-        if (status > 400 && status <= 403) {
-          this.props.logout()
-          this.props.clearMessage()
-          this.setState({
-            loading: false,
-            toast: this.toastComponent(),
-            productImage: [],
-            editorState: EditorState.createEmpty(),
-          })
-        }
         this.setState({
           loading: false,
           productImage: [],
-          toast: this.toastComponent(),
           editorState: EditorState.createEmpty(),
         })
       })
@@ -388,7 +363,7 @@ export class ProductEditorModal extends Component {
     let productData = new FormData()
 
     if (productImage.length > 0) {
-      for (let i = 0; i < productImage.length; i++) {
+      for (let i = 0;i < productImage.length;i++) {
         if (productImage[i].file) {
           productData.append("productImages[]", productImage[i].file)
         }
@@ -415,7 +390,6 @@ export class ProductEditorModal extends Component {
           this.setState({
             loading: false,
             successFully: true,
-            toast: this.toastComponent(),
           })
         } else {
           this.setState({
@@ -426,18 +400,8 @@ export class ProductEditorModal extends Component {
       })
       .catch(() => {
         let { status, data } = this.props.messageResponse
-
-        if (status > 400 && status <= 403) {
-          this.props.logout()
-          this.props.clearMessage()
-          this.setState({
-            loading: false,
-            toast: this.toastComponent(),
-          })
-        }
         this.setState({
           loading: false,
-          toast: this.toastComponent(),
         })
       })
   }
@@ -448,31 +412,7 @@ export class ProductEditorModal extends Component {
       removedImages.push(productImage[index].filename)
     }
   }
-  toastComponent() {
-    let { data, status } = this.props.messageResponse
-    let color = ""
-    if (status === 200) {
-      color = "success"
-    } else if (status > 400 && status <= 403) {
-      color = "danger"
-    } else if (status > 405 && status <= 500) {
-      color = "warning"
-    } else {
-      color = "primary"
-    }
-    return (
-      <CToast
-        color={color}
-        className="text-white align-items-center"
-        delay={3000}
-      >
-        <div className="d-flex">
-          <CToastBody>{data.message}</CToastBody>
-          <CToastClose className="me-2 m-auto" white />
-        </div>
-      </CToast>
-    )
-  }
+
   render() {
     let {
       visible,
@@ -566,9 +506,9 @@ export class ProductEditorModal extends Component {
                         style={
                           isDragging
                             ? {
-                                backgroundColor: "#8E9293",
-                                border: "4px dashed #ffffff",
-                              }
+                              backgroundColor: "#8E9293",
+                              border: "4px dashed #ffffff",
+                            }
                             : undefined
                         }
                         onClick={onImageUpload}
@@ -648,7 +588,7 @@ export class ProductEditorModal extends Component {
                       onChange={this.handleOnChange}
                       required
                       disabled={action === "Edit" ? true : false}
-                      // disabled={autoGenerateBarcode}
+                    // disabled={autoGenerateBarcode}
                     />
                     <CFormLabel htmlFor="floatingBarcode">
                       Product Barcode

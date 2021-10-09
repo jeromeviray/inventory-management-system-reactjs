@@ -61,7 +61,6 @@ export class Cart extends Component {
       history.push("/login")
     } else {
       this.redirectUser()
-      this.handleLogout()
     }
 
     if (this.props.userResponse.isLoggedIn) {
@@ -69,14 +68,7 @@ export class Cart extends Component {
       this.setState({ successfull: paymentStatus == "success" })
     }
   }
-  handleLogout = () => {
-    let { status, data } = this.props.messageResponse
-    if (status > 400 && status <= 403) {
-      this.props.logout()
-      this.props.clearMessage()
-      window.location.reload()
-    }
-  }
+
   redirectUser = () => {
     const isLoggedIn = this.props.userResponse.isLoggedIn
     if (isLoggedIn) {
@@ -187,55 +179,21 @@ export class Cart extends Component {
       .placeOrder(orderDetails)
       .then(() => {
         let { data } = this.props.messageResponse
-        console.log(data)
         this.setState({
           successfull: true,
-          toast: this.toastComponent(),
           loading: false,
           step: 4,
           redirectUrl: data.order.redirectUrl,
         })
       })
       .catch(() => {
-        let { status, data } = this.props.messageResponse
-        if (status > 400 && status <= 403) {
-          this.props.logout()
-          this.props.clearMessage()
-          window.location.reload()
-        } else {
-          this.setState({
-            toast: this.toastComponent(),
-            successfull: false,
-            loading: false,
-          })
-        }
+        this.setState({
+          successfull: false,
+          loading: false,
+        })
       })
   }
-  toastComponent() {
-    let { data, status } = this.props.messageResponse
-    let color = ""
-    if (status === 200) {
-      color = "success"
-    } else if (status > 400 && status <= 403) {
-      color = "danger"
-    } else if (status > 405 && status <= 500) {
-      color = "warning"
-    } else {
-      color = "warning"
-    }
-    return (
-      <CToast
-        color={color}
-        className="text-white align-items-center"
-        delay={3000}
-      >
-        <div className="d-flex">
-          <CToastBody>{data.message}</CToastBody>
-          <CToastClose className="me-2 m-auto" white />
-        </div>
-      </CToast>
-    )
-  }
+
   render() {
     let {
       step,

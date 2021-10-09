@@ -87,14 +87,6 @@ export class Login extends Component {
           window.location.reload()
         })
         .catch(() => {
-          const message = this.props.messageResponse
-          if (message.action === "SET_MESSAGE") {
-            console.log(message)
-
-            this.setState({
-              message: message.data.message,
-            })
-          }
           this.setState({
             loading: false,
           })

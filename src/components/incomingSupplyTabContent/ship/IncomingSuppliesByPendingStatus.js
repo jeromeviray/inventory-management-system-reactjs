@@ -18,22 +18,6 @@ import IncomingSuppliesCard from "../IncomingSuppliesCard"
 import ReactPaginate from "react-paginate"
 
 export class IncomingSuppliesByPendingStatus extends Component {
-  // state = {
-  //   incomingSuppliesByPendingStatus: [],
-  //   message: "",
-  // }
-  // componentDidMount() {
-  //   this.props.getIncomingSuppliesByPendingStatus().catch(() => {
-  //     let { status, data } = this.props.messageResponse
-  //     if (status > 400 && status <= 403) {
-  //       this.props.logout()
-  //       this.props.clearMessage()
-  //     }
-  //     this.setState({
-  //       message: data.message,
-  //     })
-  //   })
-  // }
   state = {
     incomingSuppliesByPendingStatus: {
       data: [],
@@ -51,16 +35,6 @@ export class IncomingSuppliesByPendingStatus extends Component {
   getIncomingSupplies = (query, page, limit) => {
     this.props
       .getIncomingSuppliesByPendingStatus(query, page, limit)
-      .catch(() => {
-        let { status, data } = this.props.messageResponse
-        if (status > 400 && status <= 403) {
-          this.props.logout()
-          this.props.clearMessage()
-        }
-        this.setState({
-          message: data.message,
-        })
-      })
   }
   componentDidUpdate(prevProps, prevState) {
     this.manageIncomingSuppliesByShipStatus(prevProps, prevState)
