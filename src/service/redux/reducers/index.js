@@ -21,7 +21,7 @@ import categoryReducer from "./categoryReducer"
 import promoReducer from "./promoReducer"
 import scannerReducer from "./scannerReducer"
 import wishlistReducer from "./wishlistReducer"
-import wishlist from "src/components/wishlist/wishlist"
+import commentReducer from "./commentReducer"
 
 export default combineReducers({
   //modals
@@ -67,4 +67,5 @@ export default combineReducers({
   //scanner
   scannerResponse: scannerReducer,
   wishlistResponse: wishlistReducer,
+  commentResponse: commentReducer,
 })

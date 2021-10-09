@@ -35,6 +35,7 @@ export class ProductSummaryDetails extends Component {
       loading: false,
       toast: '',
       button: this.props.button,
+
     }
   }
 
@@ -93,6 +94,7 @@ export class ProductSummaryDetails extends Component {
       })
     }
   }
+
   render() {
     const { product, inventory, wishlist } = this.state.product
     const { loading, toast, button } = this.state;
@@ -260,8 +262,7 @@ const mapStateToProps = (state) => {
   return {
     modalVisibleResponse: state.modalVisibleResponse,
     userResponse: state.userResponse,
-    messageResponse: state.messageResponse,
-    wishlistResponse: state.wishlistResponse
+    wishlistResponse: state.wishlistResponse,
   }
 }
 export default connect(mapStateToProps, {
@@ -269,5 +270,5 @@ export default connect(mapStateToProps, {
   logout,
   addToCart,
   saveWishlist,
-  deleteWishlist
+  deleteWishlist,
 })(ProductSummaryDetails)
