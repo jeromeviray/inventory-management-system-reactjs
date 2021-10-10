@@ -25,7 +25,6 @@ import Routings from "src/_helper/Routings"
 import { logout } from "src/service/apiActions/userAction/userAction"
 import eventBus from "src/_helper/EventBus"
 // import { history } from "src/_helper/history"
-import { AppSidebarNav } from './AppSidebarNav'
 class AppSidebar extends Component {
   state = {
     sidebarShow: false,
@@ -91,7 +90,7 @@ class AppSidebar extends Component {
         </CSidebarBrand>
         <CSidebarNav>
           <SimpleBar>
-            <AppSidebarNav items={nav} />
+            <CCreateNavItem items={nav} />
           </SimpleBar>
         </CSidebarNav>
         {/* <CSidebarToggler
