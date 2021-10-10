@@ -10,17 +10,84 @@ import {
   CTableHeaderCell,
   CTableDataCell,
   CTableBody,
+  CButton,
 } from "@coreui/react"
 import { Link } from "react-router-dom"
 import Barcode from "react-barcode"
+import { markIncomingSuppliesAsDelivered } from "src/service/apiActions/incomingSupplyAction/incomingSupplyAction"
+import { connect } from "react-redux"
+import { logout } from "src/service/apiActions/userAction/userAction"
+import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
+import { setSupplyModal } from "src/service/apiActions/modalAction/modalAction"
+
+import * as MdIcons from "react-icons/md"
+
 export class IncomingSuppliesCard extends Component {
+  markIncomingSuppliesAsDelivered = (id) => {
+    this.props
+      .markIncomingSuppliesAsDelivered(id)
+      .then(() => {
+        const { data, status } = this.props.messageResponse
+      })
+      .catch(() => {
+        let { status, data } = this.props.messageResponse
+
+        if (status > 400 && status <= 403) {
+          setInterval(() => {
+            this.props.logout()
+            this.props.clearMessage()
+          }, 1000)
+        }
+      })
+  }
+  renderIncomingAction(orderStatus, incomingSupply) {
+    let orderButton = <></>
+    switch (orderStatus.toLowerCase()) {
+      case "pending":
+        orderButton = (
+          <>
+            <CButton
+              color="info"
+              className="me-2"
+              variant="ghost"
+              // onClick={() =>
+              //   this.props.addBrandModal(
+              //     !visible,
+              //     "Edit",
+              //     brand,
+              //     <MdIcons.MdModeEdit size="20" className="me-2" />,
+              //   )
+              // }
+              onClick={() =>
+                this.props.setSupplyModal(
+                  !false,
+                  "Edit",
+                  incomingSupply,
+                  <MdIcons.MdModeEdit size="20" className="me-2" />,
+                )
+              }
+            >
+              <MdIcons.MdModeEdit size="20" />
+            </CButton>
+            <CButton
+              onClick={() => {
+                this.markIncomingSuppliesAsDelivered(incomingSupply.id)
+              }}
+            >
+              Mask as Delivered
+            </CButton>
+          </>
+        )
+        break
+    }
+    return orderButton
+  }
   render() {
     let supplies = this.props.supplies
     const fontStyle = {
       fontSize: "14px",
       fontWeight: "400",
     }
-
     return (
       <>
         {supplies.length === 0 ? (
@@ -41,6 +108,7 @@ export class IncomingSuppliesCard extends Component {
               updatedAt,
               supplyReference,
             } = supply
+
             return (
               <CCard className="mb-3" key={index}>
                 <CCardHeader>
@@ -138,19 +206,6 @@ export class IncomingSuppliesCard extends Component {
                           <CTableDataCell colSpan="4">No data</CTableDataCell>
                         </CTableRow>
                       )}
-
-                      {/*   {message && (
-                                    <CTableRow className="text-center">
-                                      <CTableDataCell colSpan="4">
-                                        <div
-                                          className="alert alert-danger"
-                                          role="alert"
-                                        >
-                                          {message}
-                                        </div>
-                                      </CTableDataCell>
-                                    </CTableRow>
-                                  )} */}
                     </CTableBody>
                   </CTable>
                 </CCardBody>
@@ -206,28 +261,25 @@ export class IncomingSuppliesCard extends Component {
                         </span>
                       </div>
                     </div>
-                    <div
-                      className={
-                        incomingSupplyItems.length > 2
-                          ? "d-flex align-items-bottom"
-                          : "d-none  "
-                      }
-                    >
-                      <Link
-                        to={{
-                          pathname: "/app/supply/" + id,
-                          state: id,
-                        }}
-                        className="m-2"
+                    <div className="d-flex justify-content-center align-items-center">
+                      <div
+                        className={
+                          incomingSupplyItems.length > 2
+                            ? "d-flex align-items-bottom"
+                            : "d-none  "
+                        }
                       >
-                        View More
-                      </Link>
-
-                      {/* {permission === Roles.SUPER_ADMIN ||
-                                                permission === Roles.ADMIN ?
-                                                <CButton>Confirm Order</CButton> :
-                                                <></>
-                                            } */}
+                        <Link
+                          to={{
+                            pathname: "/app/supply/" + id,
+                            state: id,
+                          }}
+                          className="m-2"
+                        >
+                          View More
+                        </Link>
+                      </div>
+                      {this.renderIncomingAction(this.props.status, supply)}
                     </div>
                   </div>
                 </CCardFooter>
@@ -239,5 +291,15 @@ export class IncomingSuppliesCard extends Component {
     )
   }
 }
-
-export default IncomingSuppliesCard
+const mapStateToProps = (state) => {
+  return {
+    incomingSupplyResponse: state.incomingSupplyResponse,
+    messageResponse: state.messageResponse,
+  }
+}
+export default connect(mapStateToProps, {
+  logout,
+  clearMessage,
+  markIncomingSuppliesAsDelivered,
+  setSupplyModal,
+})(IncomingSuppliesCard)

@@ -37,7 +37,7 @@ const Category = React.lazy(() =>
   import("../../views/private/products/category/Category"),
 )
 const IncomingSupplies = React.lazy(() =>
-  import("src/views/private/incoming/IncomingSupplies"),
+  import("src/views/private/incoming/IncomingSuppliesController"),
 )
 const IncomingSuppliesDetails = React.lazy(() =>
   import("src/views/private/incoming/IncomingSuppliesDetails"),
