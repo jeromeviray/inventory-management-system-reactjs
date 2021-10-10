@@ -1,4 +1,13 @@
-import { CHANGE_PASSWORD, DELETE_ACCOUNT, GET_CUSTOMERS, GET_EMPLOYEES, SAVE_EMPLOYEE } from "../constants"
+import {
+  CHANGE_PASSWORD,
+  DELETE_ACCOUNT,
+  FORGOT_PASSWORD,
+  GET_CUSTOMERS,
+  GET_EMPLOYEES,
+  RESET_PASSWORD,
+  SAVE_EMPLOYEE,
+  VALIDATE_TOKEN,
+} from "../constants"
 
 const accoutReducer = (state = {}, action) => {
   const { type, payload } = action
@@ -30,6 +39,24 @@ const accoutReducer = (state = {}, action) => {
         data: payload.data,
       }
     case CHANGE_PASSWORD:
+      return {
+        status: payload.status,
+        action: payload.action,
+        data: payload.data,
+      }
+    case FORGOT_PASSWORD:
+      return {
+        status: payload.status,
+        action: payload.action,
+        data: payload.data,
+      }
+    case VALIDATE_TOKEN:
+      return {
+        status: payload.status,
+        action: payload.action,
+        data: payload.data,
+      }
+    case RESET_PASSWORD:
       return {
         status: payload.status,
         action: payload.action,

@@ -5,8 +5,7 @@ import {
   CFormLabel,
   CRow,
   CCol,
-  CNavbar,
-  CNavbarBrand,
+  CHeader,
   CButton,
   CForm,
   CCard,
@@ -25,7 +24,7 @@ import React, { Component, lazy } from "react"
 import * as FaIcons from "react-icons/fa"
 import * as FiIcons from "react-icons/fi"
 
-import { Redirect } from "react-router-dom"
+import { Link, Redirect } from "react-router-dom"
 import { history } from "src/_helper/history.js"
 
 // clear message
@@ -39,7 +38,9 @@ import Roles from "src/router/config/Roles.js"
 const RightFormCard = lazy(() =>
   import("../../../../components/public/RightFormCard.js"),
 )
-
+const style = {
+  marginRight: "10px",
+}
 export class Login extends Component {
   state = {
     type: "password",
@@ -134,11 +135,13 @@ export class Login extends Component {
     }
     return (
       <>
-        <CNavbar colorScheme="dark" className="bg-dark" placement="sticky-top">
-          <CContainer fluid className="ps-3 pe-3">
-            <CNavbarBrand href="/">Navbar</CNavbarBrand>
+        <CHeader position="sticky">
+          <CContainer>
+            <Link className="nav-link" to="/home" style={{ cursor: "pointer" }}>
+              <h2 className="nav-item">Logo</h2>
+            </Link>
           </CContainer>
-        </CNavbar>
+        </CHeader>
         <div className="min-vh-100 d-flex flex-row align-items-center text-dark ">
           <CContainer>
             <CRow className="justify-content-center ">
@@ -222,7 +225,6 @@ export class Login extends Component {
                               </CFormFeedback>
                             </CFormFloating>
                           </CCol>
-                          <CCol xs="12" sm="12" md="12" lg="12"></CCol>
                         </CInputGroup>
 
                         <CCol
@@ -250,9 +252,7 @@ export class Login extends Component {
                             <span className="label-btn ">Login</span>
                           </CButton>
 
-                          <CButton color="link" shape="rounded-0">
-                            Forgot Password
-                          </CButton>
+                          <Link to="/password/forgot">Forgot Password</Link>
                         </CCol>
                         {message && (
                           <div className="form-group">

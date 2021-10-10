@@ -7,7 +7,7 @@ import {
   CInputGroup,
   CFormControl,
 } from "@coreui/react"
-import * as IoIcons from 'react-icons/io5'
+import * as IoIcons from "react-icons/io5"
 import ProductCard from "src/components/products/ProductCard"
 import ProductDetialsModal from "src/components/modals/product/ProductDetialsModal"
 import { connect } from "react-redux"
@@ -76,10 +76,8 @@ export class ProductsCategory extends Component {
   }
   render() {
     const { products, hasError, message, query } = this.state
-    console.log(products)
     return (
       <>
-        {" "}
         {message && (
           <div className="form-group d-flex justify-content-center align-items-center">
             <div className="alert alert-danger" role="alert">
