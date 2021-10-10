@@ -16,6 +16,11 @@ export class CommentApiService {
             headers: authHeader()
         })
     }
+    saveComments(commentDetails) {
+        return axios.post("/comments/bulk", commentDetails, {
+            headers: authHeader()
+        })
+    }
     deleteComment(commentId) {
         return axios.delete("/comments/" + commentId, {
             headers: authHeader()

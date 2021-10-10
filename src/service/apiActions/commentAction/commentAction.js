@@ -94,6 +94,56 @@ export const saveComment = (wishlistDetails) => async (dispatch) => {
     )
 }
 
+export const saveComments = (comments) => async (dispatch) => {
+    return CommentApiService.saveComments(comments).then(
+        (response) => {
+            dispatch({
+                type: ADD_COMMENT,
+                payload: {
+                    status: 200,
+                    action: "ADD_COMMENT",
+                    data: response.data
+                }
+            })
+            dispatch({
+                type: SET_MESSAGE,
+                payload: {
+                    status: 200,
+                    data: {
+                        message: "Successfully submitted order product review",
+                        order: response.data
+                    }
+                }
+            })
+            return Promise.resolve();
+        },
+        (error) => {
+            const errorMessage =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+
+            const status = (error.response &&
+                error.response.data &&
+                error.response.data.code) ||
+                error.toString();
+
+            dispatch({
+                type: SET_MESSAGE,
+                payload: {
+                    status: status,
+                    data: {
+                        message: errorMessage
+                    }
+                }
+            })
+            return Promise.reject();
+        }
+    )
+}
+
 export const deleteComment = (wishlistId) => async (dispatch) => {
     return CommentApiService.deleteComment(wishlistId).then(
         (response) => {
