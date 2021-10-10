@@ -18,7 +18,6 @@ import * as FaIcons from "react-icons/fa"
 import { connect } from "react-redux"
 //action
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
-import { logout } from "src/service/apiActions/userAction/userAction"
 import {
   setAlertModal,
   addBrandModal,
@@ -270,6 +269,5 @@ export default connect(mapStateToProps, {
   setAlertModal,
   addBrandModal,
   getBrands,
-  logout,
   clearMessage,
 })(Brand)

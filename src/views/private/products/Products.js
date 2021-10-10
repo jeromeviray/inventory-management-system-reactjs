@@ -35,7 +35,6 @@ import {
 import { getInventories } from "src/service/apiActions/inventoryAction/inventoryAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { getProduct } from "src/service/apiActions/productAction/productAction"
-import { logout } from "src/service/apiActions/userAction/userAction"
 import {
   setAlertModal,
   setScanModal,
@@ -399,7 +398,6 @@ export default withRouter(
   connect(mapStateToProps, {
     setProductModal,
     getProducts,
-    logout,
     getInventories,
     clearMessage,
     setProductDetailsModal,

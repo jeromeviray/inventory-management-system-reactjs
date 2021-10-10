@@ -19,7 +19,6 @@ import { connect } from "react-redux"
 import { setProductDetailsModal } from "src/service/apiActions/modalAction/modalAction"
 import { setLoginModal } from "src/service/apiActions/modalAction/modalAction"
 import { addToCart } from "src/service/apiActions/cartAction/cartAction"
-import { logout } from "src/service/apiActions/userAction/userAction"
 //icons
 // import { FaCartPlus, FaShoppingCart } from "react-icons/fa";
 import * as FaIcons from "react-icons/fa"
@@ -175,6 +174,5 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
   setProductDetailsModal,
   setLoginModal,
-  logout,
   addToCart,
 })(ProductDetialsModal)

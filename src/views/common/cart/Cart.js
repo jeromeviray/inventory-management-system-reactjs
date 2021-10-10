@@ -20,7 +20,6 @@ import { DotLoader } from "react-spinners"
 // import PaymentMethod from './payment/PaymentMethod';
 import { connect } from "react-redux"
 //action
-import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { placeOrder } from "src/service/apiActions/orderAction/orderAction"
 import { history } from "src/_helper/history"
@@ -378,7 +377,6 @@ const mapStateToProps = (state) => {
   }
 }
 export default connect(mapStateToProps, {
-  logout,
   clearMessage,
   placeOrder,
 })(Cart)

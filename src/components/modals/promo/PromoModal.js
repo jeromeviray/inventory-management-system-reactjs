@@ -29,7 +29,6 @@ import * as BsIcons from "react-icons/bs"
 import * as BiIcons from "react-icons/bi"
 import * as GrIcons from "react-icons/gr"
 //action
-import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { setPromoModal } from "src/service/apiActions/modalAction/modalAction"
 import { DateRange } from "react-date-range"
@@ -586,7 +585,6 @@ const mapStateToProps = (state) => {
   }
 }
 export default connect(mapStateToProps, {
-  logout,
   clearMessage,
   setPromoModal,
   searchProductByBarcodeOrName,

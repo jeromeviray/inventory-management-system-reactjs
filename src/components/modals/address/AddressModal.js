@@ -22,7 +22,6 @@ import { connect } from "react-redux"
 //action
 import { setAddressModal } from "src/service/apiActions/modalAction/modalAction"
 import { saveAddress } from "src/service/apiActions/addressAction/addressAction"
-import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 export class AddressModal extends Component {
   state = {
@@ -334,6 +333,5 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
   setAddressModal,
   saveAddress,
-  logout,
   clearMessage,
 })(AddressModal)

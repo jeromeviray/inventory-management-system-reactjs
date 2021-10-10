@@ -11,7 +11,6 @@ import ReactStars from "react-rating-stars-component"
 import { Link } from 'react-router-dom'
 //action 
 import { getWishlist, deleteWishlist } from 'src/service/apiActions/wishlistAction/wishlistAction'
-import { logout } from 'src/service/apiActions/userAction/userAction'
 import { clearMessage } from 'src/service/apiActions/messageAction/messageAction'
 import { connect } from 'react-redux'
 import OrderCard from '../orderTabContent/OrderCard'
@@ -266,6 +265,5 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
     getWishlist,
     deleteWishlist,
-    logout,
     clearMessage
 })(Wishlist)

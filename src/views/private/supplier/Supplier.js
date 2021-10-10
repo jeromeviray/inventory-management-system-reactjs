@@ -17,7 +17,6 @@ import { connect } from "react-redux"
 import * as MdIcons from "react-icons/md"
 import * as FaIcons from "react-icons/fa"
 //action
-import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { getSuppliers } from "src/service/apiActions/supplierAction/supplierAction"
 import { setAlertModal } from "src/service/apiActions/modalAction/modalAction"
@@ -220,7 +219,6 @@ const mapStateToProps = (state) => {
   }
 }
 export default connect(mapStateToProps, {
-  logout,
   clearMessage,
   getSuppliers,
   setSupplierModal,

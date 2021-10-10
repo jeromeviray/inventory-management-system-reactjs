@@ -22,7 +22,6 @@ import * as FaIcons from "react-icons/fa"
 import { addToCart } from "src/service/apiActions/cartAction/cartAction"
 import { connect } from "react-redux"
 import { setLoginModal } from "src/service/apiActions/modalAction/modalAction"
-import { logout } from "src/service/apiActions/userAction/userAction"
 import LoginModal from "../modals/shortcut/LoginModal"
 
 import { saveWishlist, deleteWishlist } from "src/service/apiActions/wishlistAction/wishlistAction"
@@ -267,7 +266,6 @@ const mapStateToProps = (state) => {
 }
 export default connect(mapStateToProps, {
   setLoginModal,
-  logout,
   addToCart,
   saveWishlist,
   deleteWishlist,

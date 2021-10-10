@@ -15,7 +15,6 @@ import {
 } from "@coreui/react"
 //action
 import { getCustomers } from "src/service/apiActions/accountAction/accountAction"
-import { logout } from "src/service/apiActions/userAction/userAction"
 import { setAlertModal } from "src/service/apiActions/modalAction/modalAction"
 import { addAccountModal } from "src/service/apiActions/modalAction/modalAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
@@ -226,7 +225,6 @@ const mapStateToProps = (state) => {
 }
 export default connect(mapStateToProps, {
   getCustomers,
-  logout,
   setAlertModal,
   addEmployeeModal: addAccountModal,
   clearMessage,

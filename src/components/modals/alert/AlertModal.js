@@ -17,7 +17,6 @@ import { connect } from "react-redux"
 import { deleteBranch } from "src/service/apiActions/branchAction/branchAction"
 import { setAlertModal } from "src/service/apiActions/modalAction/modalAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
-import { logout } from "src/service/apiActions/userAction/userAction"
 import { deleteBrand } from "src/service/apiActions/brandAction/brandAction"
 import { deleteEmployee } from "src/service/apiActions/accountAction/accountAction"
 import { deleteSupplier } from "src/service/apiActions/supplierAction/supplierAction"
@@ -327,7 +326,6 @@ export default connect(mapStateToProps, {
   setAlertModal,
   deleteBranch,
   clearMessage,
-  logout,
   deleteBrand,
   deleteEmployee,
   deleteSupplier,

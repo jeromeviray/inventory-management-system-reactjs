@@ -3,7 +3,6 @@ import { connect } from "react-redux"
 import { history } from "src/_helper/history"
 import Roles from "src/router/config"
 import { Redirect } from "react-router-dom"
-import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import {
   AppContent,
@@ -76,6 +75,5 @@ const mapStateToProps = (state) => {
   }
 }
 export default connect(mapStateToProps, {
-  logout,
   clearMessage,
 })(DefaultLayout)

@@ -11,7 +11,6 @@ import { Link } from 'react-router-dom'
 //action 
 import { saveComments } from 'src/service/apiActions/commentAction/commentAction'
 import { getOrders, updateOrderStatus } from 'src/service/apiActions/orderAction/orderAction'
-import { logout } from 'src/service/apiActions/userAction/userAction'
 import { clearMessage } from 'src/service/apiActions/messageAction/messageAction'
 import { connect } from 'react-redux'
 import OrderCard from './OrderCard'
@@ -363,7 +362,6 @@ const mapStateToProps = (state) => {
 }
 export default connect(mapStateToProps, {
     getOrders,
-    logout,
     clearMessage,
     updateOrderStatus,
     saveComments

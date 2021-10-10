@@ -24,7 +24,6 @@ import {
   addAccountModal,
 } from "src/service/apiActions/modalAction/modalAction"
 import { getEmployees } from "src/service/apiActions/accountAction/accountAction"
-import { logout } from "src/service/apiActions/userAction/userAction"
 //component modal
 import AlertModal from "src/components/modals/alert/AlertModal"
 import AccountModal from "src/components/modals/account/AccountModal"
@@ -257,6 +256,5 @@ export default connect(mapStateToProps, {
   setAlertModal,
   addEmployeeModal: addAccountModal,
   getEmployees,
-  logout,
   clearMessage,
 })(Employee)

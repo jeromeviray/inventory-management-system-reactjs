@@ -27,7 +27,6 @@ import {
   saveBranch,
   updateBranch,
 } from "src/service/apiActions/branchAction/branchAction"
-import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 
 export class BranchModal extends Component {
@@ -239,6 +238,5 @@ export default connect(mapStateToProps, {
   addBranchModal,
   saveBranch,
   updateBranch,
-  logout,
   clearMessage,
 })(BranchModal)

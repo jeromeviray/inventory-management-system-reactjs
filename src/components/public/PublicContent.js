@@ -6,7 +6,6 @@ import { Route, Switch, Redirect } from "react-router"
 import { publicRoutes } from "src/router/privateRouter/routes"
 import { connect } from "react-redux"
 //action
-import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import Roles from "src/router/config"
 
@@ -106,6 +105,5 @@ const mapStateToProps = (state) => {
   }
 }
 export default connect(mapStateToProps, {
-  logout,
   clearMessage,
 })(React.memo(PublicContent))

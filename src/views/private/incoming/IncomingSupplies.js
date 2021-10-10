@@ -14,7 +14,6 @@ import { DotLoader } from "react-spinners"
 import * as FaIcons from "react-icons/fa"
 import { connect } from "react-redux"
 //action
-import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { getIncomingSupplies } from "src/service/apiActions/incomingSupplyAction/incomingSupplyAction"
 import { setSupplyModal } from "src/service/apiActions/modalAction/modalAction"
@@ -171,7 +170,6 @@ const mapStateToProps = (state) => {
 }
 export default connect(mapStateToProps, {
   getIncomingSupplies,
-  logout,
   clearMessage,
   setSupplyModal,
 })(IncomingSupplies)

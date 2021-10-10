@@ -10,7 +10,6 @@ import {
 } from "@coreui/react"
 //action
 import { getPaymentMethods } from "src/service/apiActions/paymentAction/paymentAction"
-import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 export class PaymentMethod extends Component {
   state = {
@@ -96,6 +95,5 @@ const mapStateToProps = (state) => {
 }
 export default connect(mapStateToProps, {
   getPaymentMethods,
-  logout,
   clearMessage,
 })(PaymentMethod)

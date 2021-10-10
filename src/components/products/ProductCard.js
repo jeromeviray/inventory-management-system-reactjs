@@ -14,7 +14,6 @@ import {
   getProduct,
   getProductDetails,
 } from "src/service/apiActions/productAction/productAction"
-import { logout } from "src/service/apiActions/userAction/userAction"
 
 import { NO_IMAGE_BASE64 } from "src/service/redux/constants"
 import { Link } from "react-router-dom"
@@ -71,10 +70,6 @@ export class ProductCard extends Component {
             response.data.product,
           )
         }
-      } else if (response.status > 400) {
-        console.log(response)
-        this.props.logout()
-        //window.location.reload()
       }
     }
   }
@@ -197,5 +192,4 @@ export default connect(mapStateToProps, {
   editProductModal,
   getProduct,
   getProductDetails,
-  logout,
 })(ProductCard)

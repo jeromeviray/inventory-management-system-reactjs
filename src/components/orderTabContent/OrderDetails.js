@@ -9,7 +9,6 @@ import {
 } from '@coreui/react';
 import { connect } from 'react-redux';
 //action
-import { logout } from 'src/service/apiActions/userAction/userAction';
 import { clearMessage } from 'src/service/apiActions/messageAction/messageAction';
 import { getOrderByOrderId } from 'src/service/apiActions/orderAction/orderAction';
 
@@ -228,6 +227,5 @@ const mapStateToProps = (state) => {
 }
 export default connect(mapStateToProps, {
     getOrderByOrderId,
-    logout,
     clearMessage
 })(OrderDetails)

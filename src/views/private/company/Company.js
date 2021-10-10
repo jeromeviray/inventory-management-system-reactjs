@@ -19,7 +19,6 @@ import { connect } from 'react-redux'
 import { setAlertModal, addBranchModal } from 'src/service/apiActions/modalAction/modalAction'
 import { clearMessage, } from 'src/service/apiActions/messageAction/messageAction'
 import { getBranchesWithTotalProduct } from 'src/service/apiActions/branchAction/branchAction'
-import { logout } from 'src/service/apiActions/userAction/userAction'
 //modal alert
 import AlertModal from 'src/components/modals/alert/AlertModal'
 
@@ -185,6 +184,5 @@ export default withRouter(connect(mapStateToProps, {
     setAlertModal,
     addBranchModal,
     getBranchesWithTotalProduct,
-    logout,
     clearMessage
 })(Company))

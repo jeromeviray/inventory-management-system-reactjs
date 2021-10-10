@@ -32,7 +32,6 @@ import {
 } from "@coreui/react"
 import Barcode from "react-barcode"
 //action
-import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { setSupplyModal } from "src/service/apiActions/modalAction/modalAction"
 import { getSuppliers } from "src/service/apiActions/supplierAction/supplierAction"
@@ -350,7 +349,6 @@ const mapStateToProps = (state) => {
   }
 }
 export default connect(mapStateToProps, {
-  logout,
   clearMessage,
   setSupplyModal,
   getSuppliers,

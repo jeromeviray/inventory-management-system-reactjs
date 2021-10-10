@@ -21,7 +21,6 @@ import { connect } from "react-redux"
 import { setAlertModal } from "src/service/apiActions/modalAction/modalAction"
 import { addCategoryModal } from "src/service/apiActions/modalAction/modalAction"
 import { getCategories } from "src/service/apiActions/categoryAction/categoryAction"
-import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 //component modal
 import AlertModal from "src/components/modals/alert/AlertModal"
@@ -238,6 +237,5 @@ export default connect(mapStateToProps, {
   setAlertModal,
   addCategoryModal,
   getCategories,
-  logout,
   clearMessage,
 })(Category)

@@ -24,7 +24,6 @@ import * as FaIcons from "react-icons/fa"
 import AddressModal from "src/components/modals/address/AddressModal"
 //action
 import { getAdress } from "src/service/apiActions/addressAction/addressAction"
-import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { setAddressModal } from "src/service/apiActions/modalAction/modalAction"
 //history
@@ -166,7 +165,6 @@ const mapStateToProps = (state) => {
 }
 export default connect(mapStateToProps, {
   getAdress,
-  logout,
   clearMessage,
   setAddressModal,
 })(CustomerAddress)

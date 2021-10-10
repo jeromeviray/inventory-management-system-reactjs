@@ -26,7 +26,6 @@ import {
   saveEmployee,
   changePassword,
 } from "src/service/apiActions/accountAction/accountAction"
-import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 //icons
 import * as FaIcons from "react-icons/fa"
@@ -501,7 +500,6 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
   addEmployeeModal: addAccountModal,
   saveEmployee,
-  logout,
   clearMessage,
   changePassword,
 })(AccountModal)

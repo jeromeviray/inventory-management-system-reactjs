@@ -17,7 +17,6 @@ import { history } from "src/_helper/history"
 import * as IoIcons from "react-icons/io5"
 //action
 import { getIncomingSupply } from "src/service/apiActions/incomingSupplyAction/incomingSupplyAction"
-import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { connect } from "react-redux"
 export class IncomingSuppliesDetails extends Component {
@@ -211,7 +210,6 @@ const mapStateToProps = (state) => {
   }
 }
 export default connect(mapStateToProps, {
-  logout,
   clearMessage,
   getIncomingSupply,
 })(IncomingSuppliesDetails)

@@ -22,7 +22,6 @@ import {
   savingBrand,
   updateBrand,
 } from "src/service/apiActions/brandAction/brandAction"
-import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 
 export class BrandModal extends Component {
@@ -228,6 +227,5 @@ export default connect(mapStateToProps, {
   addBrandModal,
   savingBrand,
   updateBrand,
-  logout,
   clearMessage,
 })(BrandModal)

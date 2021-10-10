@@ -35,7 +35,6 @@ import { Editor } from "react-draft-wysiwyg"
 // action
 import { saveProduct } from "src/service/apiActions/productAction/productAction"
 import { setProductModal } from "../../../service/apiActions/modalAction/modalAction"
-import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { getImage } from "src/service/apiActions/productAction/productAction"
 import { getCategories } from "src/service/apiActions/categoryAction/categoryAction"
@@ -769,7 +768,6 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
   setProductModal,
   saveProduct,
-  logout,
   clearMessage,
   getImage,
   getCategories,

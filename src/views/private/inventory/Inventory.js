@@ -14,7 +14,6 @@ import {
 import { connect } from 'react-redux'
 //action
 import { getInventories } from 'src/service/apiActions/inventoryAction/inventoryAction'
-import { logout } from 'src/service/apiActions/userAction/userAction'
 import { clearMessage } from 'src/service/apiActions/messageAction/messageAction'
 // barcode
 import Barcode from "react-barcode"
@@ -190,6 +189,5 @@ const mapStateToProps = (state) => {
 }
 export default connect(mapStateToProps, {
     getInventories,
-    logout,
     clearMessage
 })(Inventory)

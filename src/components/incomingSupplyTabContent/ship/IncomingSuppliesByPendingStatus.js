@@ -11,7 +11,6 @@ import * as FaIcons from "react-icons/fa"
 
 import { connect } from "react-redux"
 //action
-import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { getIncomingSuppliesByPendingStatus } from "src/service/apiActions/incomingSupplyAction/incomingSupplyAction"
 import IncomingSuppliesCard from "../IncomingSuppliesCard"
@@ -139,7 +138,6 @@ const mapStateToProps = (state) => {
   }
 }
 export default connect(mapStateToProps, {
-  logout,
   clearMessage,
   getIncomingSuppliesByPendingStatus,
 })(IncomingSuppliesByPendingStatus)

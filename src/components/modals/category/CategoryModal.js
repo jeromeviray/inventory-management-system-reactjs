@@ -22,7 +22,6 @@ import {
   saveCategory,
   updateCategory,
 } from "src/service/apiActions/categoryAction/categoryAction"
-import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 export class CategoryModal extends Component {
   state = {
@@ -202,7 +201,6 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
   addCategoryModal,
   saveCategory,
-  logout,
   clearMessage,
   updateCategory,
 })(CategoryModal)

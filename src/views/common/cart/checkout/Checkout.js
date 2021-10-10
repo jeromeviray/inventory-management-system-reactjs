@@ -22,7 +22,6 @@ import {
   getCart,
   removeCartItem,
 } from "src/service/apiActions/cartAction/cartAction"
-import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { getOrderItems } from "src/service/apiActions/orderAction/orderAction"
 
@@ -73,9 +72,6 @@ export class Checkout extends Component {
       .removeCartItem(id)
       .then(() => {
         this.retrieveCartItems(token)
-      })
-      .catch(() => {
-        this.handleLogout()
       })
   }
   handleOnChange = (position) => {
@@ -247,7 +243,6 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
   getCart,
   removeCartItem,
-  logout,
   clearMessage,
   getOrderItems,
 })(Checkout)

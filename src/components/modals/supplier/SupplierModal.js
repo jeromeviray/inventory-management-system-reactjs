@@ -17,7 +17,6 @@ import {
   CToaster,
 } from "@coreui/react"
 import { connect } from "react-redux"
-import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import {
   createSupplier,
@@ -218,7 +217,6 @@ const mapStateToProps = (state) => {
   }
 }
 export default connect(mapStateToProps, {
-  logout,
   clearMessage,
   createSupplier,
   updateSupplier,

@@ -16,7 +16,6 @@ import {
 import { connect } from "react-redux"
 // action
 import { getPromos } from "src/service/apiActions/promoAction/promoAction"
-import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { setPromoModal } from "src/service/apiActions/modalAction/modalAction"
 import { setAlertModal } from "src/service/apiActions/modalAction/modalAction"
@@ -268,7 +267,6 @@ const mapStateToProps = (state) => {
 }
 export default connect(mapStateToProps, {
   getPromos,
-  logout,
   clearMessage,
   setPromoModal,
   setAlertModal,
