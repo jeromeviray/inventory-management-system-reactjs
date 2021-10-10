@@ -14,10 +14,8 @@ import {
   CFormLabel,
   CForm,
   CSpinner,
-  CToast,
-  CToastBody,
-  CToastClose,
-  CToaster,
+
+
   CFormSelect,
   CInputGroup,
   CFormFeedback,
@@ -68,7 +66,7 @@ export class PromoModal extends Component {
     items: [],
     stopStreaming: true,
     dateValidate: "",
-    toast: "",
+
   }
   promoState = {
     promoId: "",
@@ -324,7 +322,6 @@ export class PromoModal extends Component {
       showScanner,
       stopStreaming,
       dateValidate,
-      toast,
     } = this.state
     const fontStyle = {
       fontSize: "14px",
@@ -332,7 +329,7 @@ export class PromoModal extends Component {
     }
     return (
       <>
-        <CToaster push={toast} placement="top-end" />
+
         <CModal size="xl" visible={visible} fullscreen="lg" scrollable>
           <CModalHeader
             onDismiss={() => this.props.setPromoModal(false, "close")}

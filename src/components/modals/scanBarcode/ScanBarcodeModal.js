@@ -25,7 +25,7 @@ export class ScanBarcodeModal extends Component {
     super(props)
     this.state = {
       visible: false,
-      toast: "",
+
       decodeBarcode: "",
       stopStreaming: false,
     }
@@ -63,7 +63,7 @@ export class ScanBarcodeModal extends Component {
   }
 
   render() {
-    let { toast, visible, decodeBarcode, stopStreaming } = this.state
+    let { visible, decodeBarcode, stopStreaming } = this.state
     return (
       <div>
         <CModal

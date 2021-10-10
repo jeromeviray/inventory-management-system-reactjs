@@ -13,10 +13,6 @@ import {
   CModalTitle,
   CModalFooter,
   CSpinner,
-  CToast,
-  CToastBody,
-  CToastClose,
-  CToaster,
 } from "@coreui/react"
 import { connect } from "react-redux"
 //action
@@ -30,7 +26,6 @@ export class AddressModal extends Component {
     address: this.addressStates,
     loading: false,
     action: "",
-    toast: "",
   }
   addressStates = {
     firstName: "",
@@ -146,11 +141,10 @@ export class AddressModal extends Component {
       postalCode,
       loading,
       action,
-      toast,
     } = this.state
     return (
       <>
-        <CToaster push={toast} placement="top-end" />
+
         <CModal size="lg" visible={visible}>
           <CModalHeader
             onDismiss={() => this.props.setAddressModal(false, "close", "", "")}

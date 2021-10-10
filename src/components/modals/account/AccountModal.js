@@ -13,10 +13,6 @@ import {
   CFormLabel,
   CCol,
   CRow,
-  CToast,
-  CToastBody,
-  CToastClose,
-  CToaster,
   CFormSelect,
   CFormCheck,
 } from "@coreui/react"
@@ -25,6 +21,7 @@ import { addAccountModal } from "src/service/apiActions/modalAction/modalAction"
 import {
   saveEmployee,
   changePassword,
+  updateUser,
 } from "src/service/apiActions/accountAction/accountAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 //icons
@@ -39,11 +36,11 @@ export class AccountModal extends Component {
     employee: this.employeeState,
     loading: false,
     type: "password",
-    toast: "",
     edit: false,
     checked: false,
     changePassword: this.changePasswordState,
     changePasswordLoading: false,
+    id: "",
   }
   employeeState = {
     firstName: "",
@@ -53,6 +50,7 @@ export class AccountModal extends Component {
     username: "",
     phoneNumber: "",
     password: "",
+    birthday: "",
   }
   changePasswordState = {
     accountId: "",
@@ -77,7 +75,8 @@ export class AccountModal extends Component {
           edit: false,
         })
       } else if (action === "Edit") {
-        let { firstName, lastName, phoneNumber, account } = employee
+        let { firstName, lastName, phoneNumber, account, birthday, id } =
+          employee
         this.setState({
           visible: visible,
           action: action,
@@ -90,12 +89,15 @@ export class AccountModal extends Component {
           role: account.roles[0].roleName,
           email: account.email,
           accountId: account.id,
+          birthday: birthday,
+          id: id,
         })
-      } else {
+      } else if (action === "close") {
         this.setState({
           visible: visible,
           edit: false,
           checked: false,
+          loading: false,
         })
         this.onResetChangePasswordValue()
       }
@@ -108,7 +110,6 @@ export class AccountModal extends Component {
     })
   }
   handleShowPassword = (event) => {
-    console.log(event)
     const { type } = this.state
     this.setState({
       type: type === "password" ? "text" : "password",
@@ -116,13 +117,28 @@ export class AccountModal extends Component {
   }
   handleOnSubmit = (event) => {
     event.preventDefault()
-    let { firstName, lastName, email, phoneNumber, username, password, role } =
-      this.state
-    let { type, accessToken } = this.props.userResponse.credentials
-    let token = type + accessToken
+    let { action } = this.state
     this.setState({
       loading: true,
     })
+    if (action === "Add") {
+      this.handleSaveAccount()
+    } else if (action === "Edit") {
+      this.handleUpdateUser()
+    }
+  }
+  handleSaveAccount = () => {
+    let {
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      username,
+      password,
+      role,
+      birthday,
+    } = this.state
+
     this.props
       .saveEmployee(
         firstName,
@@ -131,9 +147,31 @@ export class AccountModal extends Component {
         phoneNumber,
         username,
         password,
-        token,
+        birthday,
         role,
       )
+      .then(() => {
+        let { status } = this.props.messageResponse
+        if (status === 200) {
+          this.setState({
+            loading: false,
+          })
+        }
+        setInterval(() => {
+          this.props.clearMessage()
+          window.location.reload()
+        }, 1000)
+      })
+      .catch(() => {
+        this.setState({
+          loading: false,
+        })
+      })
+  }
+  handleUpdateUser = () => {
+    let { firstName, lastName, phoneNumber, birthday, id } = this.state
+    this.props
+      .updateUser(id, firstName, lastName, phoneNumber, birthday)
       .then(() => {
         let { status } = this.props.messageResponse
         if (status === 200) {
@@ -199,7 +237,6 @@ export class AccountModal extends Component {
       icon,
       action,
       loading,
-      toast,
       edit,
       role,
       checked,
@@ -207,11 +244,10 @@ export class AccountModal extends Component {
       currentPassword,
       confirmPassword,
       changePasswordLoading,
+      birthday,
     } = this.state
     return (
       <div>
-        <CToaster push={toast} placement="top-end" />
-
         <CModal visible={visible} size="lg">
           <CModalHeader
             onDismiss={() =>
@@ -335,7 +371,7 @@ export class AccountModal extends Component {
                       </span>
                     </CFormFloating>
                   </CCol>
-                  <CCol sm="12" lg="12">
+                  <CCol sm="12" lg="6">
                     <CFormFloating className="mb-3">
                       <CFormControl
                         name="email"
@@ -348,6 +384,21 @@ export class AccountModal extends Component {
                       />
                       <CFormLabel htmlFor="floatingemailInput">
                         Email
+                      </CFormLabel>
+                    </CFormFloating>
+                  </CCol>
+                  <CCol sm="12" lg="6">
+                    <CFormFloating className="mb-3">
+                      <CFormControl
+                        name="birthday"
+                        value={birthday}
+                        onChange={this.handleOnChange}
+                        type="date"
+                        id="floatingBirthdayInput"
+                        placeholder="Enter Birtday"
+                      />
+                      <CFormLabel htmlFor="floatingBirthdayInput">
+                        Birthday
                       </CFormLabel>
                     </CFormFloating>
                   </CCol>
@@ -502,4 +553,5 @@ export default connect(mapStateToProps, {
   saveEmployee,
   clearMessage,
   changePassword,
+  updateUser,
 })(AccountModal)

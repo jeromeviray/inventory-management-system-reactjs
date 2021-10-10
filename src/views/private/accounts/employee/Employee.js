@@ -23,7 +23,7 @@ import {
   setAlertModal,
   addAccountModal,
 } from "src/service/apiActions/modalAction/modalAction"
-import { getEmployees } from "src/service/apiActions/accountAction/accountAction"
+import { getUsersAccount } from "src/service/apiActions/accountAction/accountAction"
 //component modal
 import AlertModal from "src/components/modals/alert/AlertModal"
 import AccountModal from "src/components/modals/account/AccountModal"
@@ -43,6 +43,7 @@ export class Employee extends Component {
     query: "",
     page: 0,
     limit: 10,
+    role: "ADMIN",
   }
   componentDidMount() {
     let { type, accessToken } = this.props.userResponse.credentials
@@ -50,45 +51,52 @@ export class Employee extends Component {
     this.setState({
       token: token,
     })
-    const { query, page, limit } = this.state
-    this.getEmployees(query, page, limit)
+    const { query, role, page, limit } = this.state
+    this.getUsersAccount(query, role, page, limit)
   }
-  getEmployees = (query, page, limit) => {
-    this.props.getEmployees(query, page, limit)
+
+  getUsersAccount = (query, role, page, limit) => {
+    this.props.getUsersAccount(query, role, page, limit)
   }
+
   componentDidUpdate(prevProps, prevState) {
     this.manageEmployeeResponse(prevProps, prevState)
   }
+
   manageEmployeeResponse = (prevProps, prevState) => {
     if (prevProps.employeeResponse !== this.props.employeeResponse) {
       let { status, action, data } = this.props.employeeResponse
-      if (status === 200 && action === "GETEMPLOYEES") {
+      if (status === 200 && action === "USERSACCOUNT") {
         this.setState({
-          employee: data.employees,
+          employee: data.accounts,
         })
       }
     }
   }
+
   renderAlerModal() {
     return <AlertModal />
   }
+
   renderEmployeeModal() {
     return <AccountModal />
   }
+
   handleSearch = (event) => {
-    const { page, limit } = this.state
-    this.getEmployees(event.target.value, page, limit)
+    const { page, limit, role } = this.state
+    this.getUsersAccount(event.target.value, role, page, limit)
     this.setState({ query: event.target.value })
   }
 
   handlePageClick = (data) => {
     let page = data.selected
     this.setState({ page: page })
-    const { limit, query } = this.state
-    this.getEmployees(query, page, limit)
+    const { limit, query, role } = this.state
+    this.getUsersAccount(query, role, page, limit)
   }
   render() {
     let { employee, visible, message, query } = this.state
+
     return (
       <div>
         {this.renderAlerModal()}
@@ -255,6 +263,6 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
   setAlertModal,
   addEmployeeModal: addAccountModal,
-  getEmployees,
+  getUsersAccount,
   clearMessage,
 })(Employee)

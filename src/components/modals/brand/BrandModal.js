@@ -11,10 +11,6 @@ import {
   CFormFloating,
   CFormControl,
   CFormLabel,
-  CToast,
-  CToastBody,
-  CToastClose,
-  CToaster,
 } from "@coreui/react"
 import { connect } from "react-redux"
 import { addBrandModal } from "src/service/apiActions/modalAction/modalAction"
@@ -30,7 +26,6 @@ export class BrandModal extends Component {
     icon: "",
     action: "",
     loading: false,
-    toast: "",
     brandName: "",
     brandId: "",
   }
@@ -152,10 +147,10 @@ export class BrandModal extends Component {
   }
 
   render() {
-    let { visible, icon, action, brandName, loading, toast } = this.state
+    let { visible, icon, action, brandName, loading } = this.state
     return (
       <div>
-        <CToaster push={toast} placement="top-end" />
+
         <CModal visible={visible}>
           <CModalHeader
             onDismiss={() => {

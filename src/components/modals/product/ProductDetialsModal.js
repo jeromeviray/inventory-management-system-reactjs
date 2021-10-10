@@ -9,10 +9,8 @@ import {
   CCol,
   CButton,
   CSpinner,
-  CToast,
-  CToastBody,
-  CToastClose,
-  CToaster,
+
+
 } from "@coreui/react"
 import { connect } from "react-redux"
 //action
@@ -31,7 +29,7 @@ export class ProductDetialsModal extends Component {
     product: [],
     loading: false,
     message: "",
-    toast: "",
+
     footerDisplay: false,
   }
   componentDidUpdate(prevProps, prevState) {
@@ -93,7 +91,7 @@ export class ProductDetialsModal extends Component {
         {product && (
           <>
             <LoginModal />
-            <CToaster push={toast} placement="top-end" />
+
             <CModal
               size="xl"
               visible={visible}

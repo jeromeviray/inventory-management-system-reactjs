@@ -1,30 +1,26 @@
 import {
+  BAN_ACCOUNT,
   CHANGE_PASSWORD,
   DELETE_ACCOUNT,
   FORGOT_PASSWORD,
-  GET_CUSTOMERS,
-  GET_EMPLOYEES,
+  GET_ME,
+  GET_USERS_ACCOUNT,
   RESET_PASSWORD,
   SAVE_EMPLOYEE,
+  UPDATE_USER,
   VALIDATE_TOKEN,
 } from "../constants"
 
 const accoutReducer = (state = {}, action) => {
   const { type, payload } = action
   switch (type) {
-    case GET_EMPLOYEES:
+    case GET_USERS_ACCOUNT:
       return {
         status: payload.status,
         action: payload.action,
         data: {
-          employees: payload.data.employees,
+          accounts: payload.data.accounts,
         },
-      }
-    case GET_CUSTOMERS:
-      return {
-        status: payload.status,
-        action: payload.action,
-        customers: payload.data.customers,
       }
     case SAVE_EMPLOYEE:
       return {
@@ -33,6 +29,12 @@ const accoutReducer = (state = {}, action) => {
         data: payload.data,
       }
     case DELETE_ACCOUNT:
+      return {
+        status: payload.status,
+        action: payload.action,
+        data: payload.data,
+      }
+    case BAN_ACCOUNT:
       return {
         status: payload.status,
         action: payload.action,
@@ -57,6 +59,18 @@ const accoutReducer = (state = {}, action) => {
         data: payload.data,
       }
     case RESET_PASSWORD:
+      return {
+        status: payload.status,
+        action: payload.action,
+        data: payload.data,
+      }
+    case GET_ME:
+      return {
+        status: payload.status,
+        action: payload.action,
+        data: payload.data,
+      }
+    case UPDATE_USER:
       return {
         status: payload.status,
         action: payload.action,

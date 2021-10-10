@@ -18,10 +18,8 @@ import {
   // CFormFloating,
   // CFormControl,
   // CFormLabel,
-  CToast,
-  CToastBody,
-  CToastClose,
-  CToaster,
+
+
   CFormSelect,
   CRow,
   CCol,
@@ -29,12 +27,18 @@ import {
   CInputGroup,
   CListGroup,
   CListGroupItem,
+  CContainer,
+  CCallout,
+  CAlert,
 } from "@coreui/react"
 import Barcode from "react-barcode"
 //action
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { setSupplyModal } from "src/service/apiActions/modalAction/modalAction"
 import { getSuppliers } from "src/service/apiActions/supplierAction/supplierAction"
+import { searchProductByBarcodeOrName } from "src/service/apiActions/productAction/productAction"
+import ReactSearchAutocomplete from "react-search-autocomplete/dist/components/ReactSearchAutocomplete"
+
 //icons
 import * as MdIcons from "react-icons/md"
 import * as FaIcons from "react-icons/fa"
@@ -46,29 +50,40 @@ export class SupplyModal extends Component {
     visible: false,
     icon: "",
     action: "",
-    suppliers: [],
+    supplier: [],
+    visible: false,
+    query: "",
+    page: 0,
+    limit: 10,
     message: "",
-    toast: "",
-    product: [
-      { productName: "alaksan", barcode: 123127800 },
-      { productName: "Biogesic", barcode: 1212312 },
-      { productName: "Diatabs", barcode: 312331231 },
-      { productName: "asdas", barcode: 123123 },
-    ],
+
+    product: [],
     quantityReceived: 1,
     productItems: [],
+    supplierItems: [],
+    supplierSelected: false,
+    items: [],
   }
 
   componentDidMount() {
-
+    const { query, page, limit } = this.state
+    this.getSuppliers(query, page, limit)
+    this.searchProduct(query, page, limit)
   }
-
   getSuppliers = () => {
-    this.props.getSuppliers()
+    const { query, page, limit } = this.state
+
+    this.props.getSuppliers(query, page, limit)
   }
+
+  searchProduct(query, page, limit) {
+    this.props.searchProductByBarcodeOrName(query, page, 10)
+  }
+
   componentDidUpdate(prevProps, prevState) {
     this.manageSupplyModal(prevProps, prevState)
     this.manageSupplierResponse(prevProps, prevState)
+    this.manageProductResponse(prevProps, prevState)
   }
 
   manageSupplyModal = (prevProps, prevState) => {
@@ -94,6 +109,7 @@ export class SupplyModal extends Component {
           action: "",
           icon: "",
           supplies: [],
+          supplierSelected: false,
         })
       }
     }
@@ -103,7 +119,18 @@ export class SupplyModal extends Component {
       let { status, action, data } = this.props.supplierResponse
       if (action === "GET_SUPPLIERS" && status === 200) {
         this.setState({
-          suppliers: data.suppliers,
+          supplierItems: data.suppliers.data,
+        })
+      }
+    }
+  }
+  manageProductResponse = (prevProps, prevState) => {
+    if (prevProps.productResponse !== this.props.productResponse) {
+      let { action, status, data } = this.props.productResponse
+      if (action === "SEARCH_PRODUCT" && status === 200) {
+        this.setState({
+          items: data.products.data,
+          product: data.products.data,
         })
       }
     }
@@ -139,22 +166,43 @@ export class SupplyModal extends Component {
       productItems: productItems,
     })
   }
+  handleSupplierOnSelect = (item) => {
+    this.setState({
+      supplier: item,
+      supplierSelected: true,
+    })
+  }
+  handleSupplierOnClear = () => {
+    this.setState({ supplier: [], supplierSelected: false })
+  }
+  handleProductOnClear = () => {
+    const { action, page, limit } = this.state
+
+    this.searchProduct("", page, limit)
+  }
+  handleOnSeachProduct = (string, results) => {
+    const { action, page, limit } = this.state
+
+    this.searchProduct(string, page, limit)
+  }
   render() {
     let {
       loading,
       visible,
       action,
       icon,
-      suppliers,
       message,
-      toast,
       product,
       quantityReceived,
       productItems,
+      supplierItems,
+      supplier,
+      supplierSelected,
+      items,
     } = this.state
     return (
       <div>
-        <CToaster push={toast} placement="top-end" />
+
         <CModal visible={visible} size="xl" scrollable>
           <CModalHeader
             onDismiss={() => {
@@ -172,41 +220,74 @@ export class SupplyModal extends Component {
           <CModalBody>
             <CForm id="supply-form">
               <CRow>
-                <CCol>
-                  <CFormSelect aria-label="Suppliers Name" className="mb-3">
-                    {suppliers &&
-                      suppliers.map((item, index) => {
-                        return (
-                          <option key={index} value={item.id}>
-                            {item.name}
-                          </option>
-                        )
-                      })}
-                  </CFormSelect>
+                <CCol sm="12" md="12" lg="6">
+                  <CContainer className="">
+                    <ReactSearchAutocomplete
+                      items={supplierItems}
+                      // onSearch={this.handleOnSearch}
+                      onSelect={this.handleSupplierOnSelect}
+                      onClear={this.handleSupplierOnClear}
+                      fuseOptions={{ keys: ["name"] }}
+                      resultStringKeyName="name"
+                      placeholder="Search Supplier"
+                      className="search-bar"
+                      autoFocus
+                      styling={{
+                        boxShadow: "none",
+                        fontSize: "16px",
+                        zIndex: 999,
+                        padding: "16px 24px",
+                        height: "50px",
+                        border: " 1px solid #b1b7c1",
+                        fontWiegth: "500",
+                        placeholderColor: "Black",
+                        width: "100%",
+                      }}
+                    />
+                  </CContainer>
+                  <CContainer className="mt-4">
+                    <CCallout color="info">
+                      {supplierSelected ? (
+                        <>
+                          <h4>Supplier Name</h4>
+                          <h5>{supplier.name}</h5>
+                        </>
+                      ) : (
+                        <>
+                          <CAlert color="info">
+                            Please, Search Supplier and Select.
+                          </CAlert>
+                        </>
+                      )}
+                    </CCallout>
+                  </CContainer>
                 </CCol>
-                <CCol>
-                  <CForm id="search-product-form">
-                    <CInputGroup>
-                      <CFormControl
-                        size="sm"
-                        type="text"
-                        id="floatingInput"
-                        placeholder="Search Product (e.g: Barcode Number or Product Name)"
-                        className="p-2"
-                        aria-autocomplete="none"
-                      />
-                      <CButton
-                        type="button"
-                        color="info"
-                        variant="outline"
-                        id="button-addon2"
-                        form="search-product-form"
-                      >
-                        <FaIcons.FaSearch />
-                      </CButton>
-                    </CInputGroup>
-                  </CForm>
-                  <div className="mb-4">
+                <CCol sm="12" md="12" lg="6">
+                  <CContainer className="">
+                    <ReactSearchAutocomplete
+                      items={items}
+                      onSearch={this.handleOnSeachProduct}
+                      // onSelect={this.handleOnSelect}
+                      onClear={this.handleProductOnClear}
+                      fuseOptions={{ keys: ["productName", "barcode"] }}
+                      resultStringKeyName="productName"
+                      placeholder="Search Product"
+                      className="search-bar"
+                      autoFocus
+                      styling={{
+                        boxShadow: "none",
+                        fontSize: "16px",
+                        zIndex: 999,
+                        padding: "16px 24px",
+                        height: "50px",
+                        border: " 1px solid #b1b7c1",
+                        fontWiegth: "500",
+                        placeholderColor: "Black",
+                        width: "100%",
+                      }}
+                    />
+                  </CContainer>
+                  <div className="mb-4 mt-4">
                     <CTable
                       striped
                       hover
@@ -216,8 +297,9 @@ export class SupplyModal extends Component {
                     >
                       <CTableBody>
                         {product.map((item, index) => {
+                          console.log(item)
                           return (
-                            <CTableRow key={index} className="text-center">
+                            <CTableRow key={item.id} className="text-center">
                               <CTableDataCell>
                                 {item.productName}
                               </CTableDataCell>
@@ -241,7 +323,6 @@ export class SupplyModal extends Component {
                   </div>
                 </CCol>
               </CRow>
-
               <CTable
                 striped
                 hover
@@ -352,4 +433,5 @@ export default connect(mapStateToProps, {
   clearMessage,
   setSupplyModal,
   getSuppliers,
+  searchProductByBarcodeOrName,
 })(SupplyModal)

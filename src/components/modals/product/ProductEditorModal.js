@@ -16,10 +16,8 @@ import {
   CFormLabel,
   CForm,
   CSpinner,
-  CToast,
-  CToastBody,
-  CToastClose,
-  CToaster,
+
+
   CFormSelect,
 } from "@coreui/react"
 
@@ -62,7 +60,7 @@ export class ProductEditorModal extends Component {
       images: [],
       productImage: [],
       removedImages: [],
-      toast: "",
+
       editorState: EditorState.createEmpty(),
       autoGenerateBarcode: false,
       brands: [],
@@ -426,7 +424,6 @@ export class ProductEditorModal extends Component {
       message,
       action,
       icon,
-      toast,
       categoryName,
       categoryId,
       brandName,
@@ -442,7 +439,7 @@ export class ProductEditorModal extends Component {
     }
     return (
       <>
-        <CToaster push={toast} placement="top-end" />
+
 
         <CModal size="xl" visible={visible} fullscreen="lg" scrollable>
           <CModalHeader

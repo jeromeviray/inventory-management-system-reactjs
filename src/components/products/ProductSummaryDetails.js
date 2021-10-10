@@ -9,10 +9,8 @@ import {
   CButton,
   CCardFooter,
   CSpinner,
-  CToast,
-  CToastBody,
-  CToastClose,
-  CToaster,
+
+
 } from "@coreui/react"
 import * as IoIcons from "react-icons/io"
 import { Carousel } from "react-responsive-carousel"
@@ -32,7 +30,6 @@ export class ProductSummaryDetails extends Component {
     this.state = {
       product: this.props.product,
       loading: false,
-      toast: '',
       button: this.props.button,
 
     }
@@ -114,7 +111,7 @@ export class ProductSummaryDetails extends Component {
     return (
       <>
         <LoginModal />
-        <CToaster push={toast} placement="top-end" />
+
 
         <CRow>
 

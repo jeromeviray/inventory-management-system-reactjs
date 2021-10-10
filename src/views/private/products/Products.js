@@ -12,10 +12,8 @@ import {
   CInputGroup,
   CFormControl,
   CBadge,
-  CToast,
-  CToastBody,
-  CToastClose,
-  CToaster,
+
+
 } from "@coreui/react"
 import * as FaIcons from "react-icons/fa"
 import * as MdIcons from "react-icons/md"
@@ -57,7 +55,7 @@ class Products extends Component {
     },
     keyword: "",
     visible: false,
-    toast: "",
+
     page: 0,
     limit: 10,
     query: "",
@@ -184,13 +182,13 @@ class Products extends Component {
     return <ScanBarcodeModal />
   }
   render() {
-    let { visible, message, toast, products } = this.state
+    let { visible, message, products } = this.state
     return (
       <>
         {this.renderProductEditorModal()}
         {this.renderScanBarcodeModal()}
         <AlertModal />
-        <CToaster push={toast} placement="top-end" />
+
         <ProductDetialsModal />
         <div className="d-flex justify-content-between mb-2">
           <div className="w-100">

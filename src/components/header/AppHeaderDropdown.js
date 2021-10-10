@@ -19,8 +19,8 @@ import { Component } from "react"
 import { connect } from "react-redux"
 
 import eventBus from "src/_helper/EventBus"
-import { logout } from "src/service/apiActions/userAction/userAction"
 import Roles from "src/router/config"
+import { logout } from "src/service/apiActions/userAction/userAction"
 
 const style = {
   marginRight: "10px",

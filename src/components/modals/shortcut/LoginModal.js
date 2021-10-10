@@ -16,10 +16,8 @@ import {
   CFormFeedback,
   CSpinner,
   CContainer,
-  CToast,
-  CToastBody,
-  CToastClose,
-  CToaster,
+
+
 } from "@coreui/react"
 
 import { connect } from "react-redux"
@@ -39,7 +37,7 @@ export class LoginModal extends Component {
     password: "",
     type: "password",
     loading: false,
-    toast: "",
+
   }
   componentDidUpdate(prevProps, prevState) {
     this.manageModalVisible(prevProps, prevState)
@@ -109,10 +107,10 @@ export class LoginModal extends Component {
   }
 
   render() {
-    let { visible, username, password, type, loading, toast } = this.state
+    let { visible, username, password, type, loading } = this.state
     return (
       <>
-        <CToaster push={toast} placement="top-end" />
+
         <CModal alignment="center" visible={visible}>
           <CModalHeader
             onDismiss={() => this.props.setLoginModal(false, "loginclose")}

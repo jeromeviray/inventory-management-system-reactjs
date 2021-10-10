@@ -10,10 +10,8 @@ import {
   CImage,
   CFormCheck,
   CCloseButton,
-  CToast,
-  CToastBody,
-  CToastClose,
-  CToaster,
+
+
   CContainer,
 } from "@coreui/react"
 import { connect } from "react-redux"
@@ -38,7 +36,7 @@ export class Checkout extends Component {
     message: "",
     cart: [],
     cartItems: [],
-    toast: "",
+
     checked: [],
     pendingItem: [],
     totalAmount: 0,
@@ -109,14 +107,14 @@ export class Checkout extends Component {
 
 
   render() {
-    let { cartItems, toast, checked } = this.state
+    let { cartItems, checked } = this.state
     const headerStyle = {
       fontWeight: "800",
     }
     return (
       <>
         <CContainer>
-          <CToaster push={toast} placement="top-end" />
+
           <CCard className="mb-3 border-0">
             <CCardHeader>
               <div className="d-flex justify-content-between">

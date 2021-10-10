@@ -1,99 +1,70 @@
 import {
+  BAN_ACCOUNT,
   CHANGE_PASSWORD,
   DELETE_ACCOUNT,
   FORGOT_PASSWORD,
-  GET_CUSTOMERS,
-  GET_EMPLOYEES,
+  GET_ME,
+  GET_USERS_ACCOUNT,
   RESET_PASSWORD,
   SAVE_EMPLOYEE,
+  UPDATE_USER,
   VALIDATE_TOKEN,
 } from "src/service/redux/constants"
 import AccountApiService from "src/service/restAPI/AccountApiService"
 import { SET_MESSAGE } from "src/constants/userConstants"
-import PromoApiService from "src/service/restAPI/PromoApiService"
 
-export const getEmployees = (query, page, limit) => async (dispatch) => {
-  return AccountApiService.getAccountEmployees(query, page, limit).then(
-    (response) => {
-      dispatch({
-        type: GET_EMPLOYEES,
-        payload: {
-          status: 200,
-          action: "GETEMPLOYEES",
-          data: {
-            employees: response.data,
+export const getUsersAccount =
+  (query, role, page, limit) => async (dispatch) => {
+    return AccountApiService.getUsersAccount(query, role, page, limit).then(
+      (response) => {
+        dispatch({
+          type: GET_USERS_ACCOUNT,
+          payload: {
+            status: 200,
+            action: "USERSACCOUNT",
+            data: {
+              accounts: response.data,
+            },
           },
-        },
-      })
-      return Promise.resolve()
-    },
-    (error) => {
-      const errorMessage =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString()
+        })
+        return Promise.resolve()
+      },
+      (error) => {
+        const errorMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString()
 
-      const status =
-        (error.response && error.response.data && error.response.data.code) ||
-        error.toString()
+        const status =
+          (error.response && error.response.data && error.response.data.code) ||
+          error.toString()
 
-      dispatch({
-        type: SET_MESSAGE,
-        payload: {
-          status: status,
-          data: {
-            message: errorMessage,
+        dispatch({
+          type: SET_MESSAGE,
+          payload: {
+            status: status,
+            data: {
+              message: errorMessage,
+            },
           },
-        },
-      })
-      return Promise.reject()
-    },
-  )
-}
-export const getCustomers = (query, page, limit) => async (dispatch) => {
-  return AccountApiService.getAccountCustomers(query, page, limit).then(
-    (response) => {
-      dispatch({
-        type: GET_CUSTOMERS,
-        payload: {
-          status: 200,
-          action: "GETCUSTOMERS",
-          data: {
-            customers: response.data,
-          },
-        },
-      })
-      return Promise.resolve()
-    },
-    (error) => {
-      const errorMessage =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString()
-
-      const status =
-        (error.response && error.response.data && error.response.data.code) ||
-        error.toString()
-
-      dispatch({
-        type: SET_MESSAGE,
-        payload: {
-          status: status,
-          data: {
-            message: errorMessage,
-          },
-        },
-      })
-      return Promise.reject()
-    },
-  )
-}
+        })
+        return Promise.reject()
+      },
+    )
+  }
 export const saveEmployee =
-  (firstName, lastName, email, phoneNumber, username, password, token, role) =>
+  (
+    firstName,
+    lastName,
+    email,
+    phoneNumber,
+    username,
+    password,
+    birthday,
+    role,
+  ) =>
   async (dispatch) => {
     return AccountApiService.saveEmployeeAccount(
       firstName,
@@ -102,7 +73,7 @@ export const saveEmployee =
       phoneNumber,
       username,
       password,
-      token,
+      birthday,
       role,
     ).then(
       (response) => {
@@ -149,7 +120,7 @@ export const saveEmployee =
       },
     )
   }
-export const deleteEmployee = (id) => async (dispatch) => {
+export const deleteAccount = (id) => async (dispatch) => {
   return AccountApiService.deleteAccount(id).then(
     (response) => {
       dispatch({
@@ -166,6 +137,52 @@ export const deleteEmployee = (id) => async (dispatch) => {
           status: 200,
           data: {
             message: "Successfully Deleted",
+          },
+        },
+      })
+    },
+    (error) => {
+      const errorMessage =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+
+      const status =
+        (error.response && error.response.data && error.response.data.code) ||
+        error.toString()
+
+      dispatch({
+        type: SET_MESSAGE,
+        payload: {
+          status: status,
+          data: {
+            message: errorMessage,
+          },
+        },
+      })
+      return Promise.reject()
+    },
+  )
+}
+export const banAccount = (id) => async (dispatch) => {
+  return AccountApiService.banAccount(id).then(
+    (response) => {
+      dispatch({
+        type: BAN_ACCOUNT,
+        payload: {
+          status: 200,
+          action: "BANACCOUNT",
+          data: {},
+        },
+      })
+      dispatch({
+        type: SET_MESSAGE,
+        payload: {
+          status: 200,
+          data: {
+            message: "Successfully Banned",
           },
         },
       })
@@ -375,6 +392,100 @@ export const resetPassword =
             status: 200,
             data: {
               message: "Successfully Reset your Password",
+            },
+          },
+        })
+        return Promise.resolve()
+      },
+      (error) => {
+        const errorMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString()
+
+        const status =
+          (error.response && error.response.data && error.response.data.code) ||
+          error.toString()
+
+        dispatch({
+          type: SET_MESSAGE,
+          payload: {
+            status: status,
+            data: {
+              message: errorMessage,
+            },
+          },
+        })
+        return Promise.reject()
+      },
+    )
+  }
+export const getMe = () => async (dispatch) => {
+  return AccountApiService.getMe().then(
+    (response) => {
+      dispatch({
+        type: GET_ME,
+        payload: {
+          status: 200,
+          action: GET_ME,
+          data: {
+            account: response.data,
+          },
+        },
+      })
+      return Promise.resolve()
+    },
+    (error) => {
+      const errorMessage =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+
+      const status =
+        (error.response && error.response.data && error.response.data.code) ||
+        error.toString()
+
+      dispatch({
+        type: SET_MESSAGE,
+        payload: {
+          status: status,
+          data: {
+            message: errorMessage,
+          },
+        },
+      })
+      return Promise.reject()
+    },
+  )
+}
+export const updateUser =
+  (id, firstName, lastName, phoneNumber, birthday) => async (dispatch) => {
+    return AccountApiService.updateUser(
+      id,
+      firstName,
+      lastName,
+      phoneNumber,
+      birthday,
+    ).then(
+      (response) => {
+        dispatch({
+          type: UPDATE_USER,
+          payload: {
+            status: 200,
+            action: UPDATE_USER,
+            data: {},
+          },
+        })
+        dispatch({
+          type: SET_MESSAGE,
+          payload: {
+            status: 200,
+            data: {
+              message: "Successfully Updated",
             },
           },
         })

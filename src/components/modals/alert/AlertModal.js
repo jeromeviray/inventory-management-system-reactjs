@@ -6,10 +6,6 @@ import {
   CModalFooter,
   CButton,
   CModalTitle,
-  CToast,
-  CToastBody,
-  CToastClose,
-  CToaster,
   CSpinner,
 } from "@coreui/react"
 import { connect } from "react-redux"
@@ -18,11 +14,13 @@ import { deleteBranch } from "src/service/apiActions/branchAction/branchAction"
 import { setAlertModal } from "src/service/apiActions/modalAction/modalAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { deleteBrand } from "src/service/apiActions/brandAction/brandAction"
-import { deleteEmployee } from "src/service/apiActions/accountAction/accountAction"
+import { deleteAccount } from "src/service/apiActions/accountAction/accountAction"
 import { deleteSupplier } from "src/service/apiActions/supplierAction/supplierAction"
 import { deleteCategory } from "src/service/apiActions/categoryAction/categoryAction"
 import { deleteProduct } from "src/service/apiActions/productAction/productAction"
 import { deletePromo } from "src/service/apiActions/promoAction/promoAction"
+import { withRouter } from "react-router"
+import { logout } from "src/service/apiActions/userAction/userAction"
 export class AlertModal extends Component {
   state = {
     visible: false,
@@ -33,7 +31,6 @@ export class AlertModal extends Component {
     success: false,
     message: "",
     status: "",
-    toast: "",
   }
   componentDidUpdate(prevProps, prevState) {
     this.manageModalAlert(prevProps, prevState)
@@ -100,6 +97,13 @@ export class AlertModal extends Component {
             module: module,
             action: action,
           })
+        case "DELETEME":
+          this.setState({
+            visible: alert,
+            id: id,
+            module: module,
+            action: action,
+          })
         default:
           this.setState({
             visible: alert,
@@ -107,14 +111,7 @@ export class AlertModal extends Component {
       }
     }
   }
-  // manageCredentials = (prevProps, prevState) => {
-  //     if (prevProps.userRespoonse !== this.props.userRespoonse) {
-  //         let { accessToken, type } = this.props.userRespoonse.credentials;
-  //         this.setState({
-  //             token: type + accessToken
-  //         })
-  //     }
-  // }
+
   handleOnDelete = () => {
     let { id, action, module } = this.state
     let { accessToken, type } = this.props.userResponse.credentials
@@ -122,16 +119,15 @@ export class AlertModal extends Component {
     this.setState({
       loading: true,
     })
-    console.log(action + " " + module)
     if (action === "DELETEBRANCH" && module === "BRANCH") {
       this.branchDelete(id, token)
       console.log("BRANCH")
     } else if (action === "DELETEBRAND" && module === "BRAND") {
       this.handleDeleteBrand(id, token)
     } else if (action === "DELETEEMPLOYEE" && module === "EMPLOYEE") {
-      this.handleEmployeeDelete(id)
+      this.handleAccountDelete(id)
     } else if (action === "DELETECUSTOMER" && module === "CUSTOMER") {
-      this.handleEmployeeDelete(id)
+      this.handleAccountDelete(id)
     } else if (action === "DELETESUPPLIER" && module === "SUPPLIER") {
       this.handleSupplierDelete(id)
     } else if (action === "DELETECATEGORY" && module === "CATEGORY") {
@@ -140,6 +136,8 @@ export class AlertModal extends Component {
       this.handleDeleteProduct(id)
     } else if (action === "DELETEPROMO" && module === "PROMO") {
       this.handleDeletePromo(id)
+    } else if (action === "DELETEME" && module === "ACCOUNT") {
+      this.handleDeleteMe(id)
     } else {
       console.log("ERRPR")
     }
@@ -181,9 +179,9 @@ export class AlertModal extends Component {
         })
       })
   }
-  handleEmployeeDelete = (id) => {
+  handleAccountDelete = (id) => {
     this.props
-      .deleteEmployee(id)
+      .deleteAccount(id)
       .then(() => {
         let { data } = this.props.messageResponse
         this.setState({
@@ -272,12 +270,31 @@ export class AlertModal extends Component {
         })
       })
   }
+  handleDeleteMe = (id) => {
+    this.props
+      .deleteAccount(id)
+      .then(() => {
+        let { data } = this.props.messageResponse
+        this.setState({
+          loading: false,
+        })
+        setInterval(() => {
+          this.props.logout()
+        }, 1000)
+      })
+      .catch(() => {
+        this.setState({
+          successFully: false,
+          loading: false,
+        })
+      })
+  }
 
   render() {
-    let { visible, toast, loading } = this.state
+    let { visible, loading } = this.state
     return (
       <div>
-        <CToaster push={toast} placement="top-end" />
+
 
         <CModal
           visible={visible}
@@ -327,9 +344,10 @@ export default connect(mapStateToProps, {
   deleteBranch,
   clearMessage,
   deleteBrand,
-  deleteEmployee,
+  deleteAccount,
   deleteSupplier,
   deleteCategory,
   deleteProduct,
   deletePromo,
-})(AlertModal)
+  logout
+})(withRouter(AlertModal))

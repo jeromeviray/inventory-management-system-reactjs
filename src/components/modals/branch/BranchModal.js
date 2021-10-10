@@ -11,10 +11,6 @@ import {
   CFormFloating,
   CFormControl,
   CFormLabel,
-  CToast,
-  CToastBody,
-  CToastClose,
-  CToaster,
 } from "@coreui/react"
 //redux
 import { connect } from "react-redux"
@@ -40,7 +36,6 @@ export class BranchModal extends Component {
     action: "",
     status: "",
     successFully: "",
-    toast: "",
   }
   componentDidUpdate(prevProps, prevState) {
     this.manageBranchModal(prevProps, prevState)
@@ -149,11 +144,10 @@ export class BranchModal extends Component {
       loading,
       successFully,
       message,
-      toast,
     } = this.state
     return (
       <div>
-        <CToaster push={toast} placement="top-end" />
+
         <CModal visible={visible}>
           <CModalHeader
             onDismiss={() => {

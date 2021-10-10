@@ -11,10 +11,8 @@ import {
   CFormFloating,
   CFormControl,
   CFormLabel,
-  CToast,
-  CToastBody,
-  CToastClose,
-  CToaster,
+
+
 } from "@coreui/react"
 import { connect } from "react-redux"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
@@ -26,7 +24,7 @@ import { setSupplierModal } from "src/service/apiActions/modalAction/modalAction
 // import Supplier from "src/views/private/supplier/Supplier"
 export class SupplierModal extends Component {
   state = {
-    toast: "",
+
     action: "",
     loading: false,
     visible: false,
@@ -146,10 +144,10 @@ export class SupplierModal extends Component {
   }
 
   render() {
-    let { action, toast, loading, icon, visible, name } = this.state
+    let { action, loading, icon, visible, name } = this.state
     return (
       <>
-        <CToaster push={toast} placement="top-end" />
+
         <CModal visible={visible}>
           <CModalHeader
             onDismiss={() => {

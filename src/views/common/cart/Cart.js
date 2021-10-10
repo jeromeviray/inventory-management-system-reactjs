@@ -7,10 +7,8 @@ import {
   CCardBody,
   CCardHeader,
   CCardFooter,
-  CToast,
-  CToastBody,
-  CToastClose,
-  CToaster,
+
+
   CSpinner,
 } from "@coreui/react"
 import { DotLoader } from "react-spinners"
@@ -49,7 +47,7 @@ export class Cart extends Component {
     permission: "",
     addressId: undefined,
     paymentMethodId: undefined,
-    toast: "",
+
     successfull: false,
     loading: false,
     redirectUrl: "",
@@ -204,7 +202,6 @@ export class Cart extends Component {
       addressId,
       paymentMethodId,
       successfull,
-      toast,
       loading,
       redirectUrl,
     } = this.state
@@ -227,7 +224,7 @@ export class Cart extends Component {
 
     return (
       <div>
-        <CToaster push={toast} placement="top-end" />
+
 
         <Suspense
           fallback={

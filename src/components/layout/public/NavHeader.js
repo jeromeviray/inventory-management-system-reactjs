@@ -199,6 +199,7 @@ const mapStateToProps = (state) => {
     isLoggedIn,
     credentials,
     productResponse: state.productResponser,
+    messageResponse: state.messageResponse,
   }
 }
 export default connect(mapStateToProps, {
