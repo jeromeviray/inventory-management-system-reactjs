@@ -8,7 +8,7 @@ import {
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
 //action 
-import { getOrders } from 'src/service/apiActions/orderAction/orderAction'
+import { getOrders, updateOrderStatus } from 'src/service/apiActions/orderAction/orderAction'
 import { logout } from 'src/service/apiActions/userAction/userAction'
 import { clearMessage } from 'src/service/apiActions/messageAction/messageAction'
 import { connect } from 'react-redux'
@@ -69,6 +69,52 @@ export class Orders extends Component {
             return "/user/order/"
         }
     }
+
+    handleOrder(orderData, orderStatus) {
+        let orderId = orderData.orderId;
+        this.props.updateOrderStatus(orderId, orderStatus).then(() => {
+            let orders = this.state.orders;
+            const order = this.props.orderResponse.data;
+            const index = orders.findIndex((o) => o.orderId == orderId);
+            orders.splice(index, 1);
+            console.log(orders)
+            if (orders.length == 0) {
+                this.props.getOrders(this.state.status, 0, 10);
+            } else {
+                let totalCounts = this.props.totalCounts;
+                if (typeof totalCounts[orderStatus.toUpperCase()] == 'undefined') {
+                    totalCounts[orderStatus.toUpperCase()] = 0;
+                }
+                totalCounts[orderData.orderStatus.toUpperCase()]--;
+                totalCounts[orderStatus.toUpperCase()]++;
+                this.props.totalCountChange(totalCounts);
+                this.setState({
+                    orders: orders
+                });
+            }
+        })
+    }
+
+    renderOrderAction(orderStatus, order) {
+        let orderButton = <></>;
+        console.log(orderStatus)
+        switch (orderStatus.toLowerCase()) {
+            case 'pending':
+                orderButton = <CButton onClick={() => { this.handleOrder(order, 'confirmed') }}>Confirm Order</CButton>;
+                break;
+            case 'confirmed':
+                orderButton = <CButton onClick={() => { this.handleOrder(order, 'shipped') }}>Mark as Shipped</CButton>;
+                break;
+            case 'shipped':
+                orderButton = <CButton onClick={() => { this.handleOrder(order, 'delivered') }}>Mark as Delivered</CButton>;
+                break;
+            case 'delivered':
+                orderButton = <CButton onClick={() => { this.handleOrder(order, 'payment_received') }}>Mark as Payment Received</CButton>;
+                break;
+        }
+        return orderButton;
+    }
+
     render() {
         let { message, orders, permission, path } = this.state;
         const fontStyle = {
@@ -96,7 +142,7 @@ export class Orders extends Component {
                     </CCard>
                 ) : (
                     orders.map((order, index) => {
-                        // const { firstName, lastName, street, barangay, province, region, city, postalCode } = order.customerAddress;
+                        const { firstName, lastName, street, barangay, province, region, city, phoneNumber } = order.customerAddress;
                         return (
                             <CCard className="mb-3" key={index}>
                                 <CCardHeader>
@@ -107,6 +153,24 @@ export class Orders extends Component {
                                         >
                                             Order ID: {order.orderId}
                                         </span>
+                                        <span
+                                            style={{ fontSize: "14px", fontWeight: "400" }}
+                                            className="text-black-50"
+                                        >
+                                            Customer Name: {firstName + " " + lastName}
+                                        </span>
+                                        <span
+                                            style={{ fontSize: "14px", fontWeight: "400" }}
+                                            className="text-black-50"
+                                        >
+                                            Mobile: {phoneNumber}
+                                        </span>
+                                        <span
+                                            style={{ fontSize: "14px", fontWeight: "400" }}
+                                            className="text-black-50"
+                                        >
+                                            Address: {street + " " + " " + barangay + ", " + city + ", " + province}
+                                        </span>
                                     </CRow>
                                 </CCardHeader>
                                 <CCardBody>
@@ -115,6 +179,10 @@ export class Orders extends Component {
                                             return <OrderCard item={item} key={index} />
                                         })}
                                     </CContainer>
+                                    {(order.orderStatus == "DELIVERED" || order.orderStatus == "PAYMENT_RECEIVED") &&
+                                        <CButton style={{ float: "right" }}>Submit Product Review</CButton>
+                                    }
+
                                 </CCardBody>
                                 <CCardFooter className="p-4">
                                     <div className="d-flex justify-content-between align-items-end">
@@ -135,12 +203,11 @@ export class Orders extends Component {
                                                 View More
                                             </Link>
 
-                                            {(permission === Roles.SUPER_ADMIN ||
-                                                permission === Roles.ADMIN) && this.state.status == 'pending' ? (
-                                                <CButton>Confirm Order</CButton>
-                                            ) : (
+                                            {(permission === Roles.SUPER_ADMIN || permission === Roles.ADMIN) ?
+                                                this.renderOrderAction(this.state.status, order)
+                                                :
                                                 <></>
-                                            )}
+                                            }
                                         </div>
                                         <div className="d-flex flex-column">
                                             <div style={fontStyle} className="mt-2">
@@ -221,5 +288,6 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
     getOrders,
     logout,
-    clearMessage
+    clearMessage,
+    updateOrderStatus
 })(Orders)

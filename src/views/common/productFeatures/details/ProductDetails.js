@@ -22,6 +22,7 @@ import ProductDescriptions from "src/components/products/ProductDescriptions"
 import ProductComments from "src/components/products/ProductComments"
 import { saveComment, getComments } from "src/service/apiActions/commentAction/commentAction"
 import { xor } from "lodash"
+import { CommentSection } from "src/components/CommentSection"
 export class ProductDetails extends Component {
   state = {
     message: "",
@@ -114,13 +115,11 @@ export class ProductDetails extends Component {
           </CCardBody>
         </CCard>
         <CCard className="mt-2 mb-5  p-3">
-          <h4 className="mb-4">Product Review</h4>
           <CCardBody className=" ps-0">
-            <ProductComments key={getProduct?.product.id}
-              productComments={formattedComments}
-              productId={getProduct?.product.id}
-              isAnonymous={true}
-            />
+            <div className="commentSection">
+              <h4 className="mb-4">Product Review</h4>
+              <CommentSection commentsArray={formattedComments} disableReplyButton={true} />
+            </div>
           </CCardBody>
         </CCard>
       </>

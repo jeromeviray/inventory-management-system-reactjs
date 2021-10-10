@@ -1,10 +1,10 @@
-import { GET_ORDER_BY_ID, GET_ORDERS, ORDER_ITEMS, PLACE_ORDER } from "src/service/redux/constants";
+import { GET_ORDER_BY_ID, GET_ORDERS, ORDER_ITEMS, PLACE_ORDER, UPDATE_ORDER_STATUS } from "src/service/redux/constants";
 import { SET_MESSAGE } from "src/constants/userConstants";
 import OrderApiService from "src/service/restAPI/OrderApiService";
+import { handleError } from "../indexAction";
 
-
-export const getOrders = (status) => async (dispatch) => {
-    return OrderApiService.getOrders(status).then(
+export const getOrders = (status, page, limit) => async (dispatch) => {
+    return OrderApiService.getOrders(status, page, limit).then(
         (response) => {
             dispatch({
                 type: GET_ORDERS,
@@ -20,27 +20,7 @@ export const getOrders = (status) => async (dispatch) => {
             return Promise.resolve();
         },
         (error) => {
-            const errorMessage =
-                (error.response &&
-                    error.response.data &&
-                    error.response.data.message) ||
-                error.message ||
-                error.toString();
-
-            const status = (error.response &&
-                error.response.data &&
-                error.response.data.code) ||
-                error.toString();
-
-            dispatch({
-                type: SET_MESSAGE,
-                payload: {
-                    status: status,
-                    data: {
-                        message: errorMessage
-                    }
-                }
-            })
+            handleError(error, dispatch);
             return Promise.reject();
         }
     )
@@ -86,27 +66,7 @@ export const placeOrder = (orderDetials) => async (dispatch) => {
             return Promise.resolve();
         },
         (error) => {
-            const errorMessage =
-                (error.response &&
-                    error.response.data &&
-                    error.response.data.message) ||
-                error.message ||
-                error.toString();
-
-            const status = (error.response &&
-                error.response.data &&
-                error.response.data.code) ||
-                error.toString();
-
-            dispatch({
-                type: SET_MESSAGE,
-                payload: {
-                    status: status,
-                    data: {
-                        message: errorMessage
-                    }
-                }
-            })
+            handleError(error, dispatch);
             return Promise.reject();
         }
     )
@@ -128,27 +88,39 @@ export const getOrderByOrderId = (orderId) => async (dispatch) => {
             return Promise.resolve();
         },
         (error) => {
-            const errorMessage =
-                (error.response &&
-                    error.response.data &&
-                    error.response.data.message) ||
-                error.message ||
-                error.toString();
+            handleError(error, dispatch);
+            return Promise.reject();
+        }
+    )
+}
 
-            const status = (error.response &&
-                error.response.data &&
-                error.response.data.code) ||
-                error.toString();
-
+export const updateOrderStatus = (orderId, status) => async (dispatch) => {
+    return OrderApiService.updateOrderStatus(orderId, status).then(
+        (response) => {
             dispatch({
-                type: SET_MESSAGE,
+                type: UPDATE_ORDER_STATUS,
                 payload: {
-                    status: status,
+                    status: 200,
+                    action: UPDATE_ORDER_STATUS,
                     data: {
-                        message: errorMessage
+                        order: response.data
                     }
                 }
             })
+            dispatch({
+                type: SET_MESSAGE,
+                payload: {
+                    status: 200,
+                    data: {
+                        message: "Successfully updated order " + orderId + " status to " + status.toUpperCase(),
+                        order: response.data
+                    }
+                }
+            })
+            return Promise.resolve();
+        },
+        (error) => {
+            handleError(error, dispatch);
             return Promise.reject();
         }
     )

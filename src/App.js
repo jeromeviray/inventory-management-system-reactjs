@@ -5,7 +5,6 @@ import {
   Route,
   Switch
 } from "react-router-dom"
-import "./scss/style.scss"
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css"
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 
@@ -16,6 +15,7 @@ import { DotLoader } from "react-spinners";
 import { logout } from "src/service/apiActions/userAction/userAction"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import "./scss/style.scss"
 
 const loading = (
   <div className="d-flex justify-content-center align-items-center  position-fixed ">

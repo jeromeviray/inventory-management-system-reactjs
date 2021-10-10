@@ -1,5 +1,6 @@
 import React, { Component, Suspense } from "react"
 import { connect } from 'react-redux'
+import Roles from 'src/router/config'
 
 import {
   CNav,
@@ -10,9 +11,9 @@ import {
   CSpinner,
   CForm,
   CInputGroup,
-  CFormControl,
   CButton,
   CBadge,
+  CFormControl
 } from "@coreui/react"
 import { DotLoader } from "react-spinners"
 
@@ -34,7 +35,14 @@ export class Order extends Component {
       CONFIRMED: 0,
       SHIPPED: 0,
       COMPLETED: 0,
-    }
+    },
+  }
+
+  constructor(props) {
+    super(props);
+    this.totalCountChange = this.totalCountChange.bind(this);
+    let { roles } = this.props.userResponse.credentials;
+    this.state.permission = roles.roleName ? roles.roleName : roles
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -51,16 +59,21 @@ export class Order extends Component {
       }
     }
   }
+
+  totalCountChange(totalCounts) {
+    this.setState({
+      totalCounts: totalCounts
+    })
+  }
+
   render() {
-    const { orderStatus, activeKey, totalCounts } = this.state;
+    const { orderStatus, activeKey, totalCounts, permission } = this.state;
+    console.log("ROLE", permission)
     const tabStyle = {
       margin: "10px 0",
       padding: "12px 16px",
       overflow: "hidden",
     }
-
-    console.log(orderStatus)
-
     return (
       <>
         <div className="d-flex justify-content-end mb-2">
@@ -126,15 +139,28 @@ export class Order extends Component {
           </CNavItem>
           <CNavItem>
             <CNavLink
-              href="#completed"
+              href="#delivered"
               active={activeKey === 4}
               onClick={() => {
-                this.setState({ activeKey: 4, orderStatus: 'completed' })
+                this.setState({ activeKey: 4, orderStatus: 'delivered' })
               }}
             >
-              Completed <CBadge color="warning">{totalCounts.COMPLETED ? totalCounts.COMPLETED : 0}</CBadge>
+              Delivered <CBadge color="warning">{totalCounts.DELIVERED ? totalCounts.DELIVERED : 0}</CBadge>
             </CNavLink>
           </CNavItem>
+          {(permission === Roles.SUPER_ADMIN || permission === Roles.ADMIN) &&
+            <CNavItem>
+              <CNavLink
+                href="#payment_received"
+                active={activeKey === 5}
+                onClick={() => {
+                  this.setState({ activeKey: 5, orderStatus: 'PAYMENT_RECEIVED' })
+                }}
+              >
+                Payment Received <CBadge color="warning">{totalCounts.PAYMENT_RECEIVED ? totalCounts.PAYMENT_RECEIVED : 0}</CBadge>
+              </CNavLink>
+            </CNavItem>
+          }
         </CNav>
 
         <CTabContent style={tabStyle}>
@@ -153,6 +179,8 @@ export class Order extends Component {
               <Orders
                 key={orderStatus}
                 status={orderStatus}
+                totalCounts={totalCounts}
+                totalCountChange={this.totalCountChange}
               />
             </Suspense>
           </CTabPane>
@@ -166,6 +194,7 @@ export class Order extends Component {
 const mapStateToProps = (state) => {
   return {
     orderResponse: state.orderResponse,
+    userResponse: state.userResponse
   }
 }
 export default connect(mapStateToProps, {

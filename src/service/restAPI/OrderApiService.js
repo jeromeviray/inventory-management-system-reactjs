@@ -7,6 +7,7 @@ export class OrderApiService {
             headers: authHeader()
         })
     }
+
     placeOrderDetails(orderDetails) {
         return axios.post("/orders/checkout", {
             customerAddressId: orderDetails.addressId,
@@ -16,8 +17,15 @@ export class OrderApiService {
             headers: authHeader()
         })
     }
+
     getOrderByOrderId(orderId) {
         return axios.get("/orders/" + orderId, {
+            headers: authHeader()
+        })
+    }
+
+    updateOrderStatus(orderId, status) {
+        return axios.put("/orders/" + orderId + "/status/" + status, {}, {
             headers: authHeader()
         })
     }

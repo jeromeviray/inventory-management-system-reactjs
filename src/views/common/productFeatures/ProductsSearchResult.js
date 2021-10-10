@@ -56,7 +56,7 @@ export class ProductsSearchResult extends Component {
     let page = data.selected
     this.setState({ page: page })
     const { limit, query, categoryName } = this.state
-    this.getProductsByCategoryName(categoryName, query, page, limit)
+    this.getDiscoverProducts(query, page, limit)
   }
   render() {
     let { message, products } = this.state
