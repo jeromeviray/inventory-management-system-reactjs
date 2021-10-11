@@ -148,7 +148,7 @@ export class Order extends Component {
               Delivered <CBadge color="warning">{totalCounts.DELIVERED ? totalCounts.DELIVERED : 0}</CBadge>
             </CNavLink>
           </CNavItem>
-          {(permission === Roles.SUPER_ADMIN || permission === Roles.ADMIN) &&
+          {/* {(permission === Roles.SUPER_ADMIN || permission === Roles.ADMIN) &&
             <CNavItem>
               <CNavLink
                 href="#payment_received"
@@ -160,7 +160,7 @@ export class Order extends Component {
                 Payment Received <CBadge color="warning">{totalCounts.PAYMENT_RECEIVED ? totalCounts.PAYMENT_RECEIVED : 0}</CBadge>
               </CNavLink>
             </CNavItem>
-          }
+          } */}
         </CNav>
 
         <CTabContent style={tabStyle}>

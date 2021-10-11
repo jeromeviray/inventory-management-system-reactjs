@@ -1,4 +1,4 @@
-import { GET_ORDERS, GET_ORDER_BY_ID, ORDER_ITEMS, PLACE_ORDER } from "../constants";
+import { GET_ORDERS, GET_ORDER_BY_ID, ORDER_ITEMS, PLACE_ORDER, UPDATE_PAYMENT_STATUS, GET_PAYMENT_TRANSACTIONS } from "../constants";
 
 const orderReducer = (state = {}, action) => {
     const { type, payload } = action;
@@ -11,6 +11,20 @@ const orderReducer = (state = {}, action) => {
                     orders: payload.data.orders,
                     orderStatusCount: payload.data.orderStatusCount
                 }
+            }
+        case GET_PAYMENT_TRANSACTIONS:
+            return {
+                status: payload.status,
+                action: payload.action,
+                data: {
+                    payments: payload.data.payments,
+                }
+            }
+        case UPDATE_PAYMENT_STATUS:
+            return {
+                status: payload.status,
+                action: payload.action,
+                data: payload.data
             }
         case ORDER_ITEMS:
             return {
