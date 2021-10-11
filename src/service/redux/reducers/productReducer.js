@@ -6,6 +6,7 @@ import {
   // GET_PRODUCT,
   GET_PRODUCTS,
   GET_PRODUCTS_BY_STATUS,
+  GET_PRODUCTS_WITH_PROMO,
   GET_PRODUCT_BY_CATEGORY_NAME,
   GET_PRODUCT_DETAILS,
   SEARCH_PRODUCT,
@@ -39,69 +40,75 @@ const productReducer = (state = {}, action) => {
       response["data"] = data.products
       break
     case GET_PRODUCT:
-      return response = {
+      return (response = {
         type: action.type,
         status: action.payload.status,
         action: "GETBYID",
         data: {
-          product: action.payload.data.product
-        }
-      }
+          product: action.payload.data.product,
+        },
+      })
     case GET_DISCOVER_PRODUCT:
       return {
         status: action.payload.status,
         action: "DISCOVER",
         data: {
-          products: action.payload.data.products
-        }
+          products: action.payload.data.products,
+        },
       }
     case GET_PRODUCT_DETAILS:
       return {
         status: action.payload.status,
         action: "DETAILS",
         data: {
-          product: action.payload.data.product
-        }
+          product: action.payload.data.product,
+        },
       }
     case UPDATE_PRODUCT:
       return {
         status: action.payload.status,
         action: action.payload.action,
         data: {
-          updatedProduct: action.payload.updatedProduct
-        }
+          updatedProduct: action.payload.updatedProduct,
+        },
       }
     case DELETE_PRODUCT:
       return {
         status: action.payload.status,
         action: action.payload.actin,
-        data: {
-
-        }
+        data: {},
       }
     case SEARCH_PRODUCT:
       return {
         status: action.payload.status,
         action: action.payload.action,
         data: {
-          products: action.payload.data.products
-        }
+          products: action.payload.data.products,
+        },
       }
     case GET_PRODUCT_BY_CATEGORY_NAME:
       return {
         status: action.payload.status,
         action: action.payload.action,
         data: {
-          products: action.payload.data.products
-        }
+          products: action.payload.data.products,
+        },
       }
     case GET_PRODUCTS_BY_STATUS:
       return {
         status: action.payload.status,
         action: action.payload.action,
         data: {
-          products: action.payload.data.products
-        }
+          products: action.payload.data.products,
+        },
+      }
+    case GET_PRODUCTS_WITH_PROMO:
+      return {
+        status: action.payload.status,
+        action: action.payload.action,
+        data: {
+          products: action.payload.data.products,
+        },
       }
     default:
       return state

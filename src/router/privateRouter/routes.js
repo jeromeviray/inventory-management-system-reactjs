@@ -29,7 +29,9 @@ const Promo = React.lazy(() => import("src/views/private/products/promo/Promo"))
 //   import("../../views/private/inventory/Inventory"),
 // )
 const Order = React.lazy(() => import("../../views/private/order/Order"))
-const Wishlist = React.lazy(() => import("../../views/private/wishlist/WishlistController"))
+const Wishlist = React.lazy(() =>
+  import("../../views/private/wishlist/WishlistController"),
+)
 const Sale = React.lazy(() => import("../../views/private/sale/Sale"))
 const Brand = React.lazy(() =>
   import("../../views/private/products/brand/Brand"),
@@ -208,7 +210,7 @@ export const routes = [
     name: "Profile",
     component: Profile,
     permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
-  }
+  },
 ]
 
 export const publicRoutes = [
@@ -243,7 +245,7 @@ export const publicRoutes = [
   },
   {
     exact: true,
-    path: "/products/promo",
+    path: "/products/all/promo",
     name: "Promo Products",
     component: PromoProducts,
   },
@@ -282,7 +284,8 @@ export const publicRoutes = [
     path: "/user/order",
     name: "Order",
     component: Order,
-  }, {
+  },
+  {
     exact: true,
     path: "/user/wishlist",
     name: "Wishlist",

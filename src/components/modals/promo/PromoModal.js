@@ -14,8 +14,6 @@ import {
   CFormLabel,
   CForm,
   CSpinner,
-
-
   CFormSelect,
   CInputGroup,
   CFormFeedback,
@@ -66,7 +64,6 @@ export class PromoModal extends Component {
     items: [],
     stopStreaming: true,
     dateValidate: "",
-
   }
   promoState = {
     promoId: "",
@@ -131,22 +128,23 @@ export class PromoModal extends Component {
       } else if (action === "Edit") {
         const range = [
           {
-            startDate: new Date(promo.startDate),
-            endDate: new Date(promo.endDate),
+            startDate: new Date(promo.promo.startDate),
+            endDate: new Date(promo.promo.endDate),
             key: "selection",
           },
         ]
+
         this.setState({
           visible: visible,
           action: action,
           icon: icon,
-          percentage: promo.percentage,
-          quantity: promo.quantity,
+          percentage: promo.promo.percentage,
+          quantity: promo.promo.quantity,
           products: promo.product,
           selectionRange: range,
-          startDate: dateFormat(promo.startDate, "dd-mmm-yyyy HH:MM:ss"),
-          endDate: dateFormat(promo.endDate, "dd-mmm-yyyy HH:MM:ss"),
-          promoId: promo.id,
+          startDate: dateFormat(promo.promo.startDate, "dd-mmm-yyyy HH:MM:ss"),
+          endDate: dateFormat(promo.promo.startDate, "dd-mmm-yyyy HH:MM:ss"),
+          promoId: promo.promo.id,
         })
       } else {
         this.onResetValue()
@@ -264,8 +262,8 @@ export class PromoModal extends Component {
         this.onResetValue()
         setInterval(() => {
           this.props.clearMessage()
-          this.setState({ visible: false })
         }, 1000)
+        this.props.setPromoModal(false, "close")
       })
       .catch(() => {
         this.setState({
@@ -296,8 +294,8 @@ export class PromoModal extends Component {
         this.onResetValue()
         setInterval(() => {
           this.props.clearMessage()
-          this.setState({ visible: false })
         }, 1000)
+        this.props.setPromoModal(false, "close")
       })
       .catch(() => {
         this.setState({
@@ -329,7 +327,6 @@ export class PromoModal extends Component {
     }
     return (
       <>
-
         <CModal size="xl" visible={visible} fullscreen="lg" scrollable>
           <CModalHeader
             onDismiss={() => this.props.setPromoModal(false, "close")}

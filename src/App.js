@@ -13,8 +13,8 @@ import PrivateRouter from "./router/privateRouter/PrivateRouter"
 import { DotLoader } from "react-spinners"
 
 import { logout } from "src/service/apiActions/userAction/userAction"
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 import "./scss/style.scss"
 
 const loading = (
@@ -48,18 +48,17 @@ const ForgotPassword = React.lazy(() =>
 const CustomerLayout = React.lazy(() => import("src/layout/CustomerLayout"))
 
 class App extends Component {
-
   componentDidUpdate(prevProps, prevState) {
-    this.manageResponse(prevProps, prevState);
+    this.manageResponse(prevProps, prevState)
   }
 
   manageResponse(prevProps, prevState) {
     if (this.props.messageResponse != prevProps.messageResponse) {
-      let failMessage = this.props.messageResponse;
+      let failMessage = this.props.messageResponse
       if (failMessage.status > 400 && failMessage.status <= 403) {
         setTimeout(() => {
-          toast("Session Expired")
-          this.props.logout();
+          toast("Session Expired" + failMessage.data.message)
+          this.props.logout()
         }, 1000)
       } else if (failMessage.data && failMessage.data.message) {
         toast(failMessage.data.message)

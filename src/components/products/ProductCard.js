@@ -108,10 +108,15 @@ export class ProductCard extends Component {
     }
   }
 
-  renderAlert = () => { }
+  renderAlert = () => {}
   render() {
     let { iconModal, product, imageLink, fileImage, visible } = this.state
+    console.log(product)
     const { productName, productPrice, id } = product.product
+    const status = product.promo && product.promo.status
+    const percentage = product.promo && product.promo.percentage
+    let discount = (productPrice * percentage) / 100
+    let price = productPrice - discount
     return (
       <>
         <ProductDetialsModal />
@@ -131,8 +136,8 @@ export class ProductCard extends Component {
                   src={
                     fileImage.length > 0
                       ? "/images/products/" +
-                      fileImage[0].path +
-                      fileImage[0].fileName
+                        fileImage[0].path +
+                        fileImage[0].fileName
                       : NO_IMAGE_BASE64
                   }
                   alt="product"
@@ -152,7 +157,28 @@ export class ProductCard extends Component {
             </Link>
 
             <div className="card-label-price">
-              <CCardTitle>&#8369;{productPrice.toFixed(2)}</CCardTitle>
+              <CCardTitle>
+                &#8369;
+                {status === "ONGOING" ? (
+                  <>
+                    <span
+                      className="text-muted text-decoration-line-through me-2"
+                      style={{ fontSize: "16px" }}
+                    >
+                      {productPrice.toFixed(2)}
+                    </span>
+                    <span>{price.toFixed(2)}</span>
+                    <span
+                      className="text-muted ms-3"
+                      style={{ fontSize: "16px" }}
+                    >
+                      {percentage + "%"}
+                    </span>
+                  </>
+                ) : (
+                  productPrice.toFixed(2)
+                )}
+              </CCardTitle>
               <div className="product-stock-container">
                 <span className="stock-label">Stock: </span>
                 {product.inventory.totalStock > 0 ? (

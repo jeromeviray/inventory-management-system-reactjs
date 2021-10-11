@@ -95,7 +95,7 @@ export class Dashboard extends Component {
   }
   handleStatusOnClick = (status) => {
     this.setState({
-      status: status
+      status: status,
     })
     const { query, page, limit } = this.state
     this.getProducts(page, status, limit, query)
@@ -163,16 +163,15 @@ export class Dashboard extends Component {
           <CCardHeader>
             <CRow>
               <CCol sm="5" className="d-flex align-items-center">
-                <h4 className="card-title mb-0 ">
-                  Products need Action
-                </h4>
+                <h4 className="card-title mb-0 ">Products need Action</h4>
               </CCol>
               <CCol sm="7">
                 <CButtonGroup className="float-end">
-
                   {["OUT_OF_STOCK", "LOW"].map((value) => (
                     <CButton
-                      color={value === "LOW" ? "outline-warning" : "outline-danger"}
+                      color={
+                        value === "LOW" ? "outline-warning" : "outline-danger"
+                      }
                       key={value}
                       className="mx-0"
                       active={value === status}
@@ -185,7 +184,7 @@ export class Dashboard extends Component {
               </CCol>
             </CRow>
           </CCardHeader>
-          <CCardBody className="p-0 m-0 " >
+          <CCardBody className="p-0 m-0 ">
             <CTable
               striped
               hover
@@ -197,16 +196,19 @@ export class Dashboard extends Component {
               <CTableCaption>
                 <div className="d-flex justify-content-between align-items-center">
                   <div>
-                    List of Products: <b>{products.totalItems}</b>
+                    <Link
+                      to={{
+                        pathname: "/app/products/products",
+                        state: status,
+                      }}
+                    >
+                      View More
+                    </Link>
                   </div>
                   <div>
-                    <Link to={{
-                      pathname: "/app/products/products",
-                      state: status
-                    }}>View More</Link>
+                    List of Products: <b>{products.totalItems}</b>
                   </div>
                 </div>
-
               </CTableCaption>
 
               <CTableHead color="dark">
@@ -215,13 +217,14 @@ export class Dashboard extends Component {
                   <CTableHeaderCell scope="col">Barcode</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Name</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Price</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Alert Stocks Threshold</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">
+                    Alert Stocks Threshold
+                  </CTableHeaderCell>
                   <CTableHeaderCell scope="col">Total Stocks</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Status</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody className="text-center" color="light">
-
                 {products.data && products.data.length > 0 ? (
                   products.data.map((product, index) => {
                     const { id, barcode, productName, productPrice } =
@@ -245,8 +248,9 @@ export class Dashboard extends Component {
                         </CTableDataCell>
                         <CTableDataCell>{threshold}</CTableDataCell>
                         <CTableDataCell>{totalStock}</CTableDataCell>
-                        <CTableDataCell>{this.manageStatus(status)}</CTableDataCell>
-
+                        <CTableDataCell>
+                          {this.manageStatus(status)}
+                        </CTableDataCell>
                       </CTableRow>
                     )
                   })
@@ -259,8 +263,6 @@ export class Dashboard extends Component {
             </CTable>
           </CCardBody>
         </CCard>
-
-
       </>
     )
   }
@@ -268,9 +270,8 @@ export class Dashboard extends Component {
 const mapStateToProps = (state) => {
   return {
     productResponse: state.productResponser,
-
   }
 }
 export default connect(mapStateToProps, {
-  getProductsByStatus
+  getProductsByStatus,
 })(Dashboard)

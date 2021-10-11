@@ -41,7 +41,7 @@ export class DiscoverProducts extends Component {
   manageProductResponse = (prevProps, prevState) => {
     if (prevProps.productResponser !== this.props.productResponser) {
       let { status, action, data } = this.props.productResponser
-
+      console.log(data)
       if (status === 200 && action === "DISCOVER") {
         this.setState({
           products: data.products,

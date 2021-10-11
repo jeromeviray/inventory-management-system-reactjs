@@ -66,8 +66,8 @@ export class ProductApiService {
       params: {
         query: query,
         page: page,
-        limit: limit
-      }
+        limit: limit,
+      },
     })
   }
   getProductsByStatus(query, status, page, limit) {
@@ -77,8 +77,18 @@ export class ProductApiService {
         status: status,
         query: query,
         page: page,
-        limit: limit
-      }
+        limit: limit,
+      },
+    })
+  }
+  getProductsWithPromo(status, query, page, limit) {
+    return axios.get("/products/promo", {
+      params: {
+        status: status,
+        query: query,
+        page: page,
+        limit: limit,
+      },
     })
   }
 }

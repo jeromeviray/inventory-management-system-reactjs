@@ -9,6 +9,7 @@ import {
   GET_PRODUCT,
   GET_PRODUCTS,
   GET_PRODUCTS_BY_STATUS,
+  GET_PRODUCTS_WITH_PROMO,
   GET_PRODUCT_BY_CATEGORY_NAME,
   GET_PRODUCT_DETAILS,
   SAVE_FAIL,
@@ -472,9 +473,14 @@ export const getProductsByCategoryName =
       },
     )
   }
-export const getProductsByStatus = (query, status, page, limit) => async (dispatch) => {
-  return ProductApiService.getProductsByStatus(query, status, page, limit)
-    .then(
+export const getProductsByStatus =
+  (query, status, page, limit) => async (dispatch) => {
+    return ProductApiService.getProductsByStatus(
+      query,
+      status,
+      page,
+      limit,
+    ).then(
       (response) => {
         dispatch({
           type: GET_PRODUCTS_BY_STATUS,
@@ -482,9 +488,9 @@ export const getProductsByStatus = (query, status, page, limit) => async (dispat
             status: 200,
             action: GET_PRODUCTS_BY_STATUS,
             data: {
-              products: response.data
-            }
-          }
+              products: response.data,
+            },
+          },
         })
       },
       (error) => {
@@ -511,6 +517,55 @@ export const getProductsByStatus = (query, status, page, limit) => async (dispat
           },
         })
         return Promise.reject()
-      }
+      },
     )
-}
+  }
+
+export const getProductsWithPromo =
+  (status, query, page, limit) => async (dispatch) => {
+    return ProductApiService.getProductsWithPromo(
+      status,
+      query,
+      page,
+      limit,
+    ).then(
+      (response) => {
+        dispatch({
+          type: GET_PRODUCTS_WITH_PROMO,
+          payload: {
+            status: 200,
+            action: GET_PRODUCTS_WITH_PROMO,
+            data: {
+              products: response.data,
+            },
+          },
+        })
+        return Promise.resolve()
+      },
+      (error) => {
+        const message =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.error_message ||
+          error.toString()
+
+        const status =
+          (error.response && error.response.data && error.response.data.code) ||
+          error.status ||
+          error.toString()
+
+        dispatch({
+          type: SET_MESSAGE,
+          payload: {
+            status: status,
+            data: {
+              message: message,
+            },
+          },
+        })
+        return Promise.reject()
+      },
+    )
+  }
