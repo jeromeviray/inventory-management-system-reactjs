@@ -15,18 +15,14 @@ import {
   CTableDataCell,
   CTableBody,
   CTableCaption,
-  // CFormFloating,
-  // CFormControl,
-  // CFormLabel,
-
-
   CFormSelect,
+  CToast,
+  CToastBody,
+  CToastClose,
+  CToaster,
   CRow,
   CCol,
   CFormControl,
-  CInputGroup,
-  CListGroup,
-  CListGroupItem,
   CContainer,
   CCallout,
   CAlert,
@@ -36,13 +32,15 @@ import Barcode from "react-barcode"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { setSupplyModal } from "src/service/apiActions/modalAction/modalAction"
 import { getSuppliers } from "src/service/apiActions/supplierAction/supplierAction"
+import { saveIncomingSupply } from "src/service/apiActions/incomingSupplyAction/incomingSupplyAction"
 import { searchProductByBarcodeOrName } from "src/service/apiActions/productAction/productAction"
 import ReactSearchAutocomplete from "react-search-autocomplete/dist/components/ReactSearchAutocomplete"
-
+import BarcodeScannerComponent from "react-qr-barcode-scanner"
 //icons
 import * as MdIcons from "react-icons/md"
 import * as FaIcons from "react-icons/fa"
-
+import * as BiIcons from "react-icons/bi"
+import * as GrIcons from "react-icons/gr"
 import { connect } from "react-redux"
 export class SupplyModal extends Component {
   state = {
@@ -50,7 +48,7 @@ export class SupplyModal extends Component {
     visible: false,
     icon: "",
     action: "",
-    supplier: [],
+    supplier: {},
     visible: false,
     query: "",
     page: 0,
@@ -58,11 +56,15 @@ export class SupplyModal extends Component {
     message: "",
 
     product: [],
-    quantityReceived: 1,
     productItems: [],
     supplierItems: [],
     supplierSelected: false,
     items: [],
+    showScanner: false,
+    supplierErrorMessage: "",
+    incomingSupplyMessage: "",
+    id: "",
+    removedProductItems: [],
   }
 
   componentDidMount() {
@@ -88,8 +90,6 @@ export class SupplyModal extends Component {
 
   manageSupplyModal = (prevProps, prevState) => {
     if (prevProps.modalVisible !== this.props.modalVisible) {
-      this.getSuppliers()
-
       let { visible, action, icon, supply } = this.props.modalVisible
       if (action === "Add") {
         this.setState({
@@ -97,19 +97,27 @@ export class SupplyModal extends Component {
           action: action,
           icon: icon,
         })
+        this.getSuppliers()
       } else if (action === "Edit") {
         this.setState({
           visible: visible,
           action: action,
           icon: icon,
+          productItems: supply.incomingSupplyItems,
+          supplier: supply.supplier,
+          supplierSelected: true,
+          id: supply.id,
         })
-      } else {
+      } else if (action === "close") {
         this.setState({
           visible: visible,
           action: "",
           icon: "",
-          supplies: [],
+          supplier: [],
+          productItems: [],
+          supplierItems: [],
           supplierSelected: false,
+          removedProductItems: [],
         })
       }
     }
@@ -121,10 +129,16 @@ export class SupplyModal extends Component {
         this.setState({
           supplierItems: data.suppliers.data,
         })
+        if (this.state.supplierSelected) {
+          this.setState({
+            supplier: data.suppliers.data,
+          })
+        }
       }
     }
   }
   manageProductResponse = (prevProps, prevState) => {
+    const { showScanner } = this.state
     if (prevProps.productResponse !== this.props.productResponse) {
       let { action, status, data } = this.props.productResponse
       if (action === "SEARCH_PRODUCT" && status === 200) {
@@ -132,6 +146,11 @@ export class SupplyModal extends Component {
           items: data.products.data,
           product: data.products.data,
         })
+        if (showScanner) {
+          data.products.data.map((product, index) => {
+            this.handleTempProductItem(index, product)
+          })
+        }
       }
     }
   }
@@ -139,19 +158,21 @@ export class SupplyModal extends Component {
   handleTempProductItem = (index, item) => {
     let { product } = this.state
     const productItems = this.state.productItems.slice(0)
-
     let find = productItems.findIndex((product) => {
-      return product.name === item.productName
+      return product.product.productName === item.productName
     })
 
     if (find > -1) {
       let getProduct = productItems[find]
-      getProduct.quantityReceived++
+      getProduct.numberReceived++
     } else {
       let item = {
-        name: product[index].productName,
-        barcode: product[index].barcode,
-        quantityReceived: 1,
+        numberReceived: 1,
+        product: {
+          id: product[index].id,
+          productName: product[index].productName,
+          barcode: product[index].barcode,
+        },
       }
       productItems.push(item)
     }
@@ -159,18 +180,65 @@ export class SupplyModal extends Component {
       productItems: productItems,
     })
   }
-  handleRemoveTempProductItem = (index) => {
-    let { productItems } = this.state
+  handleRemoveTempProductItem = (index, item) => {
+    const { action, removedProductItems, productItems } = this.state
+    if (action === "Edit") {
+      const removed = removedProductItems.slice(0)
+      removed.push(item)
+      this.setState({
+        removedProductItems: removed,
+      })
+    }
     productItems.splice(index, 1)
     this.setState({
       productItems: productItems,
     })
   }
-  handleSupplierOnSelect = (item) => {
+  handleOnChange = (index, event) => {
+    const { productItems } = this.state
+    let product = productItems[index]
+    product.numberReceived++
     this.setState({
-      supplier: item,
+      productItems: productItems,
+    })
+  }
+  handleSupplierOnSearch = (string, results) => {
+    const { page, limit } = this.state
+    this.setState({
+      supplierSelected: false,
+    })
+    this.props.getSuppliers(string, page, limit).catch(() => {
+      let { status, data } = this.props.messageResponse
+      if (status > 400 && status <= 403) {
+        this.props.logout()
+        this.props.clearMessage()
+      }
+      this.setState({
+        message: data.message,
+      })
+    })
+  }
+
+  handleSupplierOnSelect = (item) => {
+    const { page, limit } = this.state
+    this.setState({
       supplierSelected: true,
     })
+    this.props.getSuppliers(item.name, page, limit).catch(() => {
+      let { status, data } = this.props.messageResponse
+      if (status > 400 && status <= 403) {
+        this.props.logout()
+        this.props.clearMessage()
+      }
+      this.setState({
+        message: data.message,
+      })
+    })
+  }
+  handleProductOnSelect = (item) => {
+    const { page, limit } = this.state
+
+    this.searchProduct(item.productName, page, limit)
   }
   handleSupplierOnClear = () => {
     this.setState({ supplier: [], supplierSelected: false })
@@ -181,9 +249,100 @@ export class SupplyModal extends Component {
     this.searchProduct("", page, limit)
   }
   handleOnSeachProduct = (string, results) => {
-    const { action, page, limit } = this.state
+    const { page, limit } = this.state
 
     this.searchProduct(string, page, limit)
+  }
+  handleDecodeBarcode = (decoded) => {
+    const { page, limit } = this.state
+    if (decoded) {
+      this.searchProduct(decoded, page, limit)
+    }
+  }
+  handleOnSubmit = (event) => {
+    event.preventDefault()
+    const { action } = this.state
+    if (action === "Add") {
+      this.handleOnSave()
+    } else if (action === "Edit") {
+      this.handleOnUpdate()
+    }
+  }
+  handleOnSave = () => {
+    const { supplier, productItems } = this.state
+
+    if (supplier.length > 0 && productItems.length > 0) {
+      this.props
+        .saveIncomingSupply(productItems, supplier[0])
+        .then(() => {
+          let { status, data } = this.props.messageResponse
+          if (status > 400 && status <= 403) {
+            this.props.logout()
+            this.props.clearMessage()
+          }
+          this.props.setSupplyModal(false, "close", "", "")
+          this.setState({
+            toast: this.toastComponent(),
+          })
+        })
+        .catch(() => {
+          let { status, data } = this.props.messageResponse
+
+          if (status > 400 && status <= 403) {
+            setInterval(() => {
+              this.props.logout()
+              this.props.clearMessage()
+            }, 1000)
+          } else {
+            this.setState({
+              toast: this.toastComponent(),
+              loading: false,
+              validation: false,
+            })
+          }
+        })
+    } else {
+      if (supplier.length === 0) {
+        this.setState({
+          supplierErrorMessage: "PLease Search and Select Supplier.",
+        })
+      } else if (productItems.length === 0) {
+        this.setState({
+          incomingSupplyMessage: "Please Add Incoming Products.",
+        })
+      }
+    }
+  }
+  handleOnUpdate = () => {
+    const { productItems, supplier, id } = this.state
+    console.log(productItems)
+    console.log(supplier)
+    console.log(id)
+  }
+  toastComponent() {
+    let { data, status } = this.props.messageResponse
+    let color = ""
+    if (status === 200) {
+      color = "success"
+    } else if (status > 400 && status <= 403) {
+      color = "danger"
+    } else if (status > 405 && status <= 500) {
+      color = "warning"
+    } else {
+      color = "primary"
+    }
+    return (
+      <CToast
+        color={color}
+        className="text-white align-items-center"
+        delay={3000}
+      >
+        <div className="d-flex">
+          <CToastBody>{data.message}</CToastBody>
+          <CToastClose className="me-2 m-auto" white />
+        </div>
+      </CToast>
+    )
   }
   render() {
     let {
@@ -193,16 +352,19 @@ export class SupplyModal extends Component {
       icon,
       message,
       product,
-      quantityReceived,
       productItems,
       supplierItems,
       supplier,
       supplierSelected,
       items,
+      showScanner,
+      incomingSupplyMessage,
+      supplierErrorMessage,
+      removedProductItems,
     } = this.state
+    console.log(removedProductItems)
     return (
       <div>
-
         <CModal visible={visible} size="xl" scrollable>
           <CModalHeader
             onDismiss={() => {
@@ -218,13 +380,13 @@ export class SupplyModal extends Component {
             </CModalTitle>
           </CModalHeader>
           <CModalBody>
-            <CForm id="supply-form">
+            <CForm id="supply-form" onSubmit={this.handleOnSubmit}>
               <CRow>
                 <CCol sm="12" md="12" lg="6">
                   <CContainer className="">
                     <ReactSearchAutocomplete
                       items={supplierItems}
-                      // onSearch={this.handleOnSearch}
+                      onSearch={this.handleSupplierOnSearch}
                       onSelect={this.handleSupplierOnSelect}
                       onClear={this.handleSupplierOnClear}
                       fuseOptions={{ keys: ["name"] }}
@@ -249,12 +411,23 @@ export class SupplyModal extends Component {
                     <CCallout color="info">
                       {supplierSelected ? (
                         <>
-                          <h4>Supplier Name</h4>
-                          <h5>{supplier.name}</h5>
+                          {action === "Edit" ? (
+                            <>
+                              <h4>Supplier Name</h4>
+                              <h5>{supplier.name && supplier.name}</h5>
+                            </>
+                          ) : (
+                            <>
+                              <h4>Supplier Name</h4>
+                              {supplier.map((item, index) => {
+                                return <h5 key={item.id}>{item.name}</h5>
+                              })}
+                            </>
+                          )}
                         </>
                       ) : (
                         <>
-                          <CAlert color="info">
+                          <CAlert color="danger">
                             Please, Search Supplier and Select.
                           </CAlert>
                         </>
@@ -263,41 +436,70 @@ export class SupplyModal extends Component {
                   </CContainer>
                 </CCol>
                 <CCol sm="12" md="12" lg="6">
-                  <CContainer className="">
-                    <ReactSearchAutocomplete
-                      items={items}
-                      onSearch={this.handleOnSeachProduct}
-                      // onSelect={this.handleOnSelect}
-                      onClear={this.handleProductOnClear}
-                      fuseOptions={{ keys: ["productName", "barcode"] }}
-                      resultStringKeyName="productName"
-                      placeholder="Search Product"
-                      className="search-bar"
-                      autoFocus
-                      styling={{
-                        boxShadow: "none",
-                        fontSize: "16px",
-                        zIndex: 999,
-                        padding: "16px 24px",
-                        height: "50px",
-                        border: " 1px solid #b1b7c1",
-                        fontWiegth: "500",
-                        placeholderColor: "Black",
-                        width: "100%",
-                      }}
-                    />
-                  </CContainer>
+                  <CRow className="align-items-center">
+                    <CCol
+                      sm="10"
+                      md="10"
+                      lg="10"
+                      className={showScanner ? "d-none" : "d-block"}
+                    >
+                      <ReactSearchAutocomplete
+                        items={items}
+                        onSearch={this.handleOnSeachProduct}
+                        onSelect={this.handleProductOnSelect}
+                        onClear={this.handleProductOnClear}
+                        fuseOptions={{ keys: ["productName", "barcode"] }}
+                        resultStringKeyName="productName"
+                        placeholder="Search Product"
+                        className="search-bar"
+                        autoFocus
+                        styling={{
+                          boxShadow: "none",
+                          fontSize: "16px",
+                          zIndex: 999,
+                          padding: "16px 24px",
+                          height: "50px",
+                          border: " 1px solid #b1b7c1",
+                          fontWiegth: "500",
+                          placeholderColor: "Black",
+                          width: "100%",
+                        }}
+                      />
+                    </CCol>
+                    <CCol sm="1" md="1" lg="1" className="p-0">
+                      <div className="text-center">
+                        <CButton
+                          className="pt-2 pb-2 "
+                          type="button"
+                          color={showScanner ? "danger" : "info"}
+                          variant="outline"
+                          id="btn-scan-barcode"
+                          onClick={() =>
+                            this.setState({
+                              showScanner: !showScanner,
+                              // stopStreaming: !stopStreaming,
+                            })
+                          }
+                        >
+                          {showScanner ? (
+                            <GrIcons.GrClose size="24" />
+                          ) : (
+                            <BiIcons.BiBarcodeReader size="24" />
+                          )}
+                        </CButton>
+                      </div>
+                    </CCol>
+                  </CRow>
                   <div className="mb-4 mt-4">
                     <CTable
                       striped
                       hover
-                      className="shadow-sm "
+                      className={showScanner ? "d-none" : "shadow-sm"}
                       responsive="md"
                       align="middle"
                     >
                       <CTableBody>
                         {product.map((item, index) => {
-                          console.log(item)
                           return (
                             <CTableRow key={item.id} className="text-center">
                               <CTableDataCell>
@@ -320,6 +522,23 @@ export class SupplyModal extends Component {
                         })}
                       </CTableBody>
                     </CTable>
+                    <div className={showScanner ? "  d-block mt-3" : " d-none"}>
+                      {showScanner ? (
+                        <>
+                          <BarcodeScannerComponent
+                            delay={500}
+                            facingMode
+                            // stopStream={stopStreaming}
+                            torch="true"
+                            onUpdate={(err, result) => {
+                              if (result) this.handleDecodeBarcode(result.text)
+                            }}
+                          />
+                        </>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
                   </div>
                 </CCol>
               </CRow>
@@ -349,14 +568,18 @@ export class SupplyModal extends Component {
                   </CTableRow>
                 </CTableHead>
                 <CTableBody className="text-center" color="light">
-                  {productItems &&
+                  {productItems.length > 0 ? (
                     productItems.map((productItem, index) => {
                       return (
                         <CTableRow className="text-center" key={index}>
-                          <CTableDataCell>{productItem.name}</CTableDataCell>
+                          <CTableDataCell>
+                            {productItem.product.name
+                              ? productItem.product.name
+                              : productItem.product.productName}
+                          </CTableDataCell>
                           <CTableDataCell>
                             <Barcode
-                              value={String(productItem.barcode)}
+                              value={String(productItem.product.barcode)}
                               height={50}
                               width={1}
                               fontSize={14}
@@ -365,14 +588,24 @@ export class SupplyModal extends Component {
                             />
                           </CTableDataCell>
                           <CTableDataCell>
-                            {productItem.quantityReceived}
+                            <CFormControl
+                              type="number"
+                              min={1}
+                              value={productItem.numberReceived}
+                              onChange={(event) =>
+                                this.handleOnChange(index, event)
+                              }
+                            />
                           </CTableDataCell>
                           <CTableDataCell>
                             <CButton
                               variant="ghost"
                               color="danger"
                               onClick={() =>
-                                this.handleRemoveTempProductItem(index)
+                                this.handleRemoveTempProductItem(
+                                  index,
+                                  productItem,
+                                )
                               }
                             >
                               <MdIcons.MdDelete size={20} />
@@ -380,7 +613,20 @@ export class SupplyModal extends Component {
                           </CTableDataCell>
                         </CTableRow>
                       )
-                    })}
+                    })
+                  ) : (
+                    <>
+                      {incomingSupplyMessage && (
+                        <CTableRow className="text-center">
+                          <CTableDataCell colSpan="4">
+                            <div className="alert alert-danger" role="alert">
+                              {incomingSupplyMessage}
+                            </div>
+                          </CTableDataCell>
+                        </CTableRow>
+                      )}
+                    </>
+                  )}
                   {message && (
                     <CTableRow className="text-center">
                       <CTableDataCell colSpan="4">
@@ -434,4 +680,5 @@ export default connect(mapStateToProps, {
   setSupplyModal,
   getSuppliers,
   searchProductByBarcodeOrName,
+  saveIncomingSupply,
 })(SupplyModal)
