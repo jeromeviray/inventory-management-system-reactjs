@@ -52,9 +52,9 @@ const _nav = [
       {
         _component: "CNavItem",
         as: NavLink,
-        anchor: "Sale",
+        anchor: "Order Sales",
         to: "/app/sale",
-        icon: <FaIcons.FaPercent size={20} style={iconMargin} />,
+        icon: <FaIcons.FaMoneyBill size={20} style={iconMargin} />,
         permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
       },
     ],

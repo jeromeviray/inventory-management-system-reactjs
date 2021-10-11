@@ -109,7 +109,7 @@ export const routes = [
   },
   {
     path: "/app/sale",
-    name: "Sale",
+    name: "Order Sales",
     component: Sale,
     permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
   },
@@ -208,7 +208,7 @@ export const routes = [
     name: "Profile",
     component: Profile,
     permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
-  },
+  }
 ]
 
 export const publicRoutes = [

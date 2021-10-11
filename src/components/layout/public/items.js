@@ -20,11 +20,6 @@ export const topItems = [
         icon: <Faicons.FaRegCompass style={iconStyle} />
     },
     {
-        pathName: "/sale",
-        title: "Sale",
-        icon: <AiIcons.AiFillTags style={iconStyle} />
-    },
-    {
         pathName: "/about",
         title: "About",
         icon: <AiIcons.AiFillInfoCircle style={iconStyle} />
@@ -40,11 +35,6 @@ export const bottomItems = [
         pathName: "/discover",
         title: "Discover",
         icon: <Faicons.FaRegCompass style={iconStyle} />
-    },
-    {
-        pathName: "/sale",
-        title: "Sale",
-        icon: <AiIcons.AiFillTags style={iconStyle} />
     },
     {
         pathName: "/user/profile",
