@@ -12,27 +12,29 @@ import {
   CInputGroup,
   CFormControl,
   CBadge,
-
+  CCard,
+  CCardBody,
+  CCardHeader,
+  CCol,
+  CRow,
+  CButtonGroup
 
 } from "@coreui/react"
 import * as FaIcons from "react-icons/fa"
 import * as MdIcons from "react-icons/md"
 import * as BiIcons from "react-icons/bi"
-
 import Barcode from "react-barcode"
 import ReactPaginate from "react-paginate"
 //action
 import { connect } from "react-redux"
 import { withRouter } from "react-router-dom"
-import { getProducts } from "../../../service/apiActions/productAction/productAction"
+import { getProductsByStatus, getProduct } from "../../../service/apiActions/productAction/productAction"
 import { setProductModal } from "../../../service/apiActions/modalAction/modalAction"
 import {
   setProductDetailsModal,
   editProductModal,
 } from "../../../service/apiActions/modalAction/modalAction"
-import { getInventories } from "src/service/apiActions/inventoryAction/inventoryAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
-import { getProduct } from "src/service/apiActions/productAction/productAction"
 import {
   setAlertModal,
   setScanModal,
@@ -40,6 +42,11 @@ import {
 
 import AlertModal from "src/components/modals/alert/AlertModal"
 import ScanBarcodeModal from "src/components/modals/scanBarcode/ScanBarcodeModal"
+import ReactToPrint from 'react-to-print';
+
+import { history } from "src/_helper/history"
+import * as IoIcons from "react-icons/io5"
+
 const ProductDetialsModal = lazy(() =>
   import("src/components/modals/product/ProductDetialsModal"),
 )
@@ -62,12 +69,23 @@ class Products extends Component {
   }
 
   componentDidMount() {
-    const { page, limit, query } = this.state
-    this.getProducts(page, limit, query)
+    const getStatus = this.props.location.state;
+
+    history.replace('/app/products/products', null);
+    const { page, status, limit, query } = this.state
+    if (getStatus) {
+      this.getProducts(query, getStatus, page, limit)
+      this.setState({
+        status: getStatus
+      })
+    } else {
+      this.getProducts(query, status, page, limit)
+    }
+
   }
 
-  getProducts(page, limit, query) {
-    this.props.getProducts(query, page, limit)
+  getProducts(query, status, page, limit) {
+    this.props.getProductsByStatus(query, status, page, limit)
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -83,8 +101,8 @@ class Products extends Component {
         visible: response.visible,
       })
       if (response.action === "close") {
-        const { page, limit, query } = this.state
-        this.getProducts(page, limit, query)
+        const { page, limit, query, status } = this.state
+        this.getProducts(query, status, page, limit)
       }
     }
   }
@@ -93,6 +111,7 @@ class Products extends Component {
 
     if (prevProps.productResponse !== this.props.productResponse) {
       let { action, status, data } = this.props.productResponse
+      console.log(data)
       if (action === "GETBYID") {
         if (status >= 200 && status <= 300) {
           this.props.editProductModal(
@@ -102,9 +121,9 @@ class Products extends Component {
             <FaIcons.FaEdit size={20} />,
           )
         }
-      } else if (status === 200 && action === "LIST") {
+      } else if (status === 200 && action === "GET_PRODUCTS_BY_STATUS") {
         this.setState({
-          products: data,
+          products: data.products,
         })
       }
     }
@@ -113,8 +132,8 @@ class Products extends Component {
     if (prevProps.scannerResponse !== this.props.scannerResponse) {
       let { action, decoded } = this.props.scannerResponse
       if (action === "DECODEDBARCODE") {
-        const { page, limit } = this.state
-        this.props.getProducts(decoded, page, limit)
+        const { page, limit, status } = this.state
+        this.getProducts(decoded, status, page, limit)
         this.setState({ query: decoded })
       }
     }
@@ -153,14 +172,14 @@ class Products extends Component {
   }
 
   handleSearch = (event) => {
-    const { page, limit } = this.state
-    this.props.getProducts(event.target.value, page, limit)
+    const { page, limit, status } = this.state
+    this.getProducts(event.target.value, status, page, limit)
     this.setState({ query: event.target.value })
   }
   handleOnSubmitSearch = (event) => {
     event.preventDefault()
-    const { query, page, limit } = this.state
-    this.props.getProducts(query, page, limit)
+    const { query, page, limit, status } = this.state
+    this.getProducts(query, status, page, limit)
     this.setState({
       query: event.target.value,
     })
@@ -168,8 +187,8 @@ class Products extends Component {
   handlePageClick = (data) => {
     let page = data.selected
     this.setState({ page: page })
-    const { limit, query } = this.state
-    this.props.getProducts(query, page, limit)
+    const { limit, query, status } = this.state
+    this.getProducts(query, status, page, limit)
   }
   handleGetProduct = (id) => {
     const { accessToken, type } = this.props.userResponse.credentials
@@ -181,8 +200,25 @@ class Products extends Component {
   renderScanBarcodeModal = () => {
     return <ScanBarcodeModal />
   }
+  handleStatusOnClick = (status) => {
+    const { query, page, limit } = this.state
+
+    if (status === "ALL") {
+      this.setState({
+        status: ''
+      })
+      this.getProducts(query, '', page, limit)
+    } else {
+      this.setState({
+        status: status
+      })
+      this.getProducts(query, status, page, limit)
+    }
+
+
+  }
   render() {
-    let { visible, message, products } = this.state
+    let { visible, message, products, status } = this.state
     return (
       <>
         {this.renderProductEditorModal()}
@@ -249,121 +285,170 @@ class Products extends Component {
                 <BiIcons.BiBarcodeReader size="24" />
               </CButton>
             </div>
+            <div className="d-flex align-items-end flex-row-reverse m-2">
+
+              <ReactToPrint
+                trigger={() =>
+                  <CButton
+                    type="button"
+                    variant="outline"
+                    color="info"
+                    className=" pt-2 pb-2 "
+                  >
+                    <IoIcons.IoPrintOutline size={20} />
+                  </CButton>
+                }
+                content={() => this.componentRef}
+              />
+            </div>
           </div>
         </div>
-        <CTable
-          striped
-          hover
-          className="shadow-sm "
-          responsive
-          bordered
-          align="middle"
-        >
-          <CTableCaption>
-            List of Products: <b>{products.totalItems}</b>
-          </CTableCaption>
+        <CCard className="mb-4 bg-transparent border-0">
+          <CCardHeader>
+            <CRow>
+              <CCol sm="5" className="d-flex align-items-center">
+                <h4 className="card-title mb-0 ">
+                  Products
+                </h4>
+              </CCol>
+              <CCol sm="7">
+                <CButtonGroup className="float-end">
 
-          <CTableHead color="dark">
-            <CTableRow className="text-center">
-              {/* <CTableHeaderCell scope="col">Image</CTableHeaderCell> */}
-              <CTableHeaderCell scope="col">Barcode</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Name</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Price</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Alert Stocks Threshold</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Total Stocks</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Status</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Action</CTableHeaderCell>
-            </CTableRow>
-          </CTableHead>
-          <CTableBody className="text-center" color="light">
-            {message && (
-              <CTableRow className="text-center">
-                <CTableDataCell colSpan="8">
-                  <div className="alert alert-danger" role="alert">
-                    {message}
-                  </div>
-                </CTableDataCell>
-              </CTableRow>
-            )}
-            {products.data.length > 0 ? (
-              products.data.map((product, index) => {
-                const { id, barcode, productName, productPrice } =
-                  product.product
-                const { threshold, status, totalStock } = product.inventory
-                return (
-                  <CTableRow className="text-center" key={index}>
-                    <CTableDataCell>
-                      <Barcode
-                        value={String(barcode)}
-                        height={50}
-                        width={1}
-                        fontSize={14}
-                        margin={7}
-                        background="#f5f5f548"
-                      />
-                    </CTableDataCell>
-                    <CTableDataCell>{productName}</CTableDataCell>
-                    <CTableDataCell>
-                      &#8369;{productPrice.toFixed(2)}
-                    </CTableDataCell>
-                    <CTableDataCell>{threshold}</CTableDataCell>
-                    <CTableDataCell>{totalStock}</CTableDataCell>
-                    <CTableDataCell>{this.manageStatus(status)}</CTableDataCell>
-                    <CTableDataCell>
-                      <CButton
-                        color="secondary"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() =>
-                          this.props.setProductDetailsModal(
-                            true,
-                            "view",
-                            product,
-                          )
-                        }
-                      >
-                        <FaIcons.FaEye size="20" />
-                      </CButton>
-                      <CButton
-                        color="info"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => this.handleGetProduct(id)}
-                      >
-                        <FaIcons.FaEdit size="20" />
-                      </CButton>
-                      <CButton
-                        color="danger"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() =>
-                          // this.props.setAlertModal(
-                          //   !visible,
-                          //   "DELETEPRODUCT",
-                          //   "PRODUCT",
-                          //   product.id,
-                          // )
-                          this.props.setAlertModal(
-                            !visible,
-                            "DELETEPRODUCT",
-                            "PRODUCT",
-                            id,
-                          )
-                        }
-                      >
-                        <MdIcons.MdDelete size="20" />
-                      </CButton>
+                  {["ALL", "OK", "LOW", "OUT_OF_STOCK"].map((value) => (
+                    <CButton
+                      color={value === "LOW"
+                        ? "outline-warning"
+                        : value === "OUT_OF_STOCK"
+                          ? "outline-danger"
+                          : value === "ALL" ? "outline-secondary" : "outline-success"}
+                      key={value}
+                      className="mx-0"
+                      active={value === status}
+                      onClick={() => this.handleStatusOnClick(value)}
+                    >
+                      {value}
+                    </CButton>
+                  ))}
+                </CButtonGroup>
+              </CCol>
+            </CRow>
+          </CCardHeader>
+          <CCardBody className="p-0 m-0 " >
+            <CTable
+              striped
+              hover
+              className="shadow-sm "
+              responsive
+              bordered
+              align="middle"
+              ref={(el) => (this.componentRef = el)}
+            >
+              <CTableCaption>
+                List of Products: <b>{products.totalItems}</b>
+              </CTableCaption>
+
+              <CTableHead color="dark">
+                <CTableRow className="text-center">
+                  <CTableHeaderCell scope="col">Barcode</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Name</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Price</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Alert Stocks Threshold</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Total Stocks</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Status</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+                </CTableRow>
+              </CTableHead>
+              <CTableBody className="text-center" color="light">
+                {message && (
+                  <CTableRow className="text-center">
+                    <CTableDataCell colSpan="8">
+                      <div className="alert alert-danger" role="alert">
+                        {message}
+                      </div>
                     </CTableDataCell>
                   </CTableRow>
-                )
-              })
-            ) : (
-              <CTableRow>
-                <CTableDataCell colSpan="7">No data</CTableDataCell>
-              </CTableRow>
-            )}
-          </CTableBody>
-        </CTable>
+                )}
+                {products.data.length > 0 ? (
+                  products.data.map((product, index) => {
+                    const { id, barcode, productName, productPrice } =
+                      product.product
+                    const { threshold, status, totalStock } = product.inventory
+                    return (
+                      <CTableRow className="text-center" key={index}>
+                        <CTableDataCell>
+                          <Barcode
+                            value={String(barcode)}
+                            height={50}
+                            width={1}
+                            fontSize={14}
+                            margin={7}
+                            background="#f5f5f548"
+                          />
+                        </CTableDataCell>
+                        <CTableDataCell>{productName}</CTableDataCell>
+                        <CTableDataCell>
+                          &#8369;{productPrice.toFixed(2)}
+                        </CTableDataCell>
+                        <CTableDataCell>{threshold}</CTableDataCell>
+                        <CTableDataCell>{totalStock}</CTableDataCell>
+                        <CTableDataCell>{this.manageStatus(status)}</CTableDataCell>
+                        <CTableDataCell>
+                          <CButton
+                            color="secondary"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() =>
+                              this.props.setProductDetailsModal(
+                                true,
+                                "view",
+                                product,
+                              )
+                            }
+                          >
+                            <FaIcons.FaEye size="20" />
+                          </CButton>
+                          <CButton
+                            color="info"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => this.handleGetProduct(id)}
+                          >
+                            <FaIcons.FaEdit size="20" />
+                          </CButton>
+                          <CButton
+                            color="danger"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() =>
+                              // this.props.setAlertModal(
+                              //   !visible,
+                              //   "DELETEPRODUCT",
+                              //   "PRODUCT",
+                              //   product.id,
+                              // )
+                              this.props.setAlertModal(
+                                !visible,
+                                "DELETEPRODUCT",
+                                "PRODUCT",
+                                id,
+                              )
+                            }
+                          >
+                            <MdIcons.MdDelete size="20" />
+                          </CButton>
+                        </CTableDataCell>
+                      </CTableRow>
+                    )
+                  })
+                ) : (
+                  <CTableRow>
+                    <CTableDataCell colSpan="7">No data</CTableDataCell>
+                  </CTableRow>
+                )}
+              </CTableBody>
+            </CTable>
+          </CCardBody>
+        </CCard>
         <ReactPaginate
           previousLabel={"previous"}
           nextLabel={"next"}
@@ -395,8 +480,7 @@ const mapStateToProps = (state) => {
 export default withRouter(
   connect(mapStateToProps, {
     setProductModal,
-    getProducts,
-    getInventories,
+    getProductsByStatus,
     clearMessage,
     setProductDetailsModal,
     getProduct,

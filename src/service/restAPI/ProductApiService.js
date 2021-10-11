@@ -70,6 +70,17 @@ export class ProductApiService {
       }
     })
   }
+  getProductsByStatus(query, status, page, limit) {
+    return axios.get("/products/status", {
+      headers: authHeader(),
+      params: {
+        status: status,
+        query: query,
+        page: page,
+        limit: limit
+      }
+    })
+  }
 }
 
 export default new ProductApiService()

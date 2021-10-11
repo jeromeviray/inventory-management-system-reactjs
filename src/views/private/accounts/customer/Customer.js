@@ -116,7 +116,7 @@ export class Customer extends Component {
           striped
           hover
           className="shadow-sm "
-          responsive="md"
+          responsive
           bordered
           align="middle"
         >

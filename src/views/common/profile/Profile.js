@@ -152,29 +152,7 @@ export class Profile extends Component {
                   </CButton>
                 </div>
               </div>
-              <div className="d-flex justify-content-between mb-5 mt-5">
-                <div className="font-style  w-100">
-                  <h6>Account</h6>
-                </div>
-                <div className="font-style text-end w-100">
-                  <CButton
-                    color="danger"
-                    variant="ghost"
-                    onClick={() =>
-                      this.props.setAlertModal(
-                        !false,
-                        "DELETEME",
-                        "ACCOUNT",
-                        id,
-                      )
-                    }
-                    size="sm"
-                  >
-                    <MdIcons.MdDelete size="20" />
-                    <span className="ms-2"> Delete Account</span>
-                  </CButton>
-                </div>
-              </div>
+
             </CCardTitle>
           </CCardBody>
         </CCard>

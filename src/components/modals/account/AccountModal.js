@@ -27,6 +27,7 @@ import { clearMessage } from "src/service/apiActions/messageAction/messageAction
 //icons
 import * as FaIcons from "react-icons/fa"
 import { connect } from "react-redux"
+import Roles from "src/router/config"
 
 export class AccountModal extends Component {
   state = {
@@ -103,6 +104,7 @@ export class AccountModal extends Component {
       }
     }
   }
+
   handleOnChange = (event) => {
     let name = event.target.name
     this.setState({
@@ -246,6 +248,7 @@ export class AccountModal extends Component {
       changePasswordLoading,
       birthday,
     } = this.state
+    let permission = this.props.userResponse.credentials.roles;
     return (
       <div>
         <CModal visible={visible} size="lg">
@@ -310,7 +313,7 @@ export class AccountModal extends Component {
                       </CFormLabel>
                     </CFormFloating>
                   </CCol>
-                  <CCol sm="12" md="6" lg>
+                  <CCol sm="12" md="6" lg className={permission.roleName === Roles.SUPER_ADMIN ? "" : "d-none"}>
                     <CFormFloating className="mb-3">
                       <CFormSelect
                         value={role}
@@ -343,7 +346,7 @@ export class AccountModal extends Component {
                       </CFormLabel>
                     </CFormFloating>
                   </CCol>
-                  <CCol sm="12" lg="6">
+                  <CCol sm="12" lg="6" className={edit ? "d-none" : ""}>
                     <CFormFloating className="text-dark position-relative">
                       <CFormControl
                         name="password"
