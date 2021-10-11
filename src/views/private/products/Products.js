@@ -269,7 +269,7 @@ class Products extends Component {
               <CTableHeaderCell scope="col">Barcode</CTableHeaderCell>
               <CTableHeaderCell scope="col">Name</CTableHeaderCell>
               <CTableHeaderCell scope="col">Price</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Threshold</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Alert Stocks Threshold</CTableHeaderCell>
               <CTableHeaderCell scope="col">Total Stocks</CTableHeaderCell>
               <CTableHeaderCell scope="col">Status</CTableHeaderCell>
               <CTableHeaderCell scope="col">Action</CTableHeaderCell>

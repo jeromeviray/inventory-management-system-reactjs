@@ -48,5 +48,20 @@ export class IncomingSupplyApiService {
       },
     )
   }
+  updateIncomingSuppleis(id, incomingSupplyItems, supplier, removedIncomingSupplyItems) {
+    return axios.put("/supplies/update/" + id, {
+      incomingSupply: {
+        incomingSupplyItems: incomingSupplyItems,
+        supplier: {
+          id: supplier.id,
+        },
+      },
+      removedItems: removedIncomingSupplyItems
+    },
+      {
+        headers: authHeader(),
+      },
+    )
+  }
 }
 export default new IncomingSupplyApiService()

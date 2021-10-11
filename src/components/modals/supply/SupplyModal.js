@@ -30,9 +30,10 @@ import {
 import Barcode from "react-barcode"
 //action
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
+
 import { setSupplyModal } from "src/service/apiActions/modalAction/modalAction"
 import { getSuppliers } from "src/service/apiActions/supplierAction/supplierAction"
-import { saveIncomingSupply } from "src/service/apiActions/incomingSupplyAction/incomingSupplyAction"
+import { saveIncomingSupply, updateIncomingSupplyItems } from "src/service/apiActions/incomingSupplyAction/incomingSupplyAction"
 import { searchProductByBarcodeOrName } from "src/service/apiActions/productAction/productAction"
 import ReactSearchAutocomplete from "react-search-autocomplete/dist/components/ReactSearchAutocomplete"
 import BarcodeScannerComponent from "react-qr-barcode-scanner"
@@ -79,7 +80,7 @@ export class SupplyModal extends Component {
   }
 
   searchProduct(query, page, limit) {
-    this.props.searchProductByBarcodeOrName(query, page, 10)
+    this.props.searchProductByBarcodeOrName(query, page, 5)
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -133,6 +134,10 @@ export class SupplyModal extends Component {
           this.setState({
             supplier: data.suppliers.data,
           })
+        } else {
+          this.setState({
+            supplier: data.suppliers.data
+          })
         }
       }
     }
@@ -141,6 +146,8 @@ export class SupplyModal extends Component {
     const { showScanner } = this.state
     if (prevProps.productResponse !== this.props.productResponse) {
       let { action, status, data } = this.props.productResponse
+      console.log(data)
+
       if (action === "SEARCH_PRODUCT" && status === 200) {
         this.setState({
           items: data.products.data,
@@ -158,8 +165,9 @@ export class SupplyModal extends Component {
   handleTempProductItem = (index, item) => {
     let { product } = this.state
     const productItems = this.state.productItems.slice(0)
+    console.log(item)
     let find = productItems.findIndex((product) => {
-      return product.product.productName === item.productName
+      return product.product.id === item.id
     })
 
     if (find > -1) {
@@ -262,6 +270,9 @@ export class SupplyModal extends Component {
   handleOnSubmit = (event) => {
     event.preventDefault()
     const { action } = this.state
+    this.setState({
+      loading: true
+    })
     if (action === "Add") {
       this.handleOnSave()
     } else if (action === "Edit") {
@@ -282,7 +293,7 @@ export class SupplyModal extends Component {
           }
           this.props.setSupplyModal(false, "close", "", "")
           this.setState({
-            toast: this.toastComponent(),
+            loading: false
           })
         })
         .catch(() => {
@@ -295,7 +306,6 @@ export class SupplyModal extends Component {
             }, 1000)
           } else {
             this.setState({
-              toast: this.toastComponent(),
               loading: false,
               validation: false,
             })
@@ -314,36 +324,37 @@ export class SupplyModal extends Component {
     }
   }
   handleOnUpdate = () => {
-    const { productItems, supplier, id } = this.state
-    console.log(productItems)
-    console.log(supplier)
-    console.log(id)
+    const { productItems, supplier, id, removedProductItems } = this.state
+
+    this.props.updateIncomingSupplyItems(id, productItems, supplier, removedProductItems)
+      .then(() => {
+        let { status, data } = this.props.messageResponse
+        if (status > 400 && status <= 403) {
+          this.props.logout()
+          this.props.clearMessage()
+        }
+        this.props.setSupplyModal(false, "close", "", "")
+        this.setState({
+          loading: false
+        })
+
+      })
+      .catch(() => {
+        let { status, data } = this.props.messageResponse
+
+        if (status > 400 && status <= 403) {
+          setInterval(() => {
+            this.props.clearMessage()
+          }, 1000)
+        } else {
+          this.setState({
+            loading: false,
+            validation: false,
+          })
+        }
+      })
   }
-  toastComponent() {
-    let { data, status } = this.props.messageResponse
-    let color = ""
-    if (status === 200) {
-      color = "success"
-    } else if (status > 400 && status <= 403) {
-      color = "danger"
-    } else if (status > 405 && status <= 500) {
-      color = "warning"
-    } else {
-      color = "primary"
-    }
-    return (
-      <CToast
-        color={color}
-        className="text-white align-items-center"
-        delay={3000}
-      >
-        <div className="d-flex">
-          <CToastBody>{data.message}</CToastBody>
-          <CToastClose className="me-2 m-auto" white />
-        </div>
-      </CToast>
-    )
-  }
+
   render() {
     let {
       loading,
@@ -681,4 +692,5 @@ export default connect(mapStateToProps, {
   getSuppliers,
   searchProductByBarcodeOrName,
   saveIncomingSupply,
+  updateIncomingSupplyItems
 })(SupplyModal)

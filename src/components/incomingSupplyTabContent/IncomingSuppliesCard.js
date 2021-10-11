@@ -14,31 +14,69 @@ import {
 } from "@coreui/react"
 import { Link } from "react-router-dom"
 import Barcode from "react-barcode"
-import { markIncomingSuppliesAsDelivered } from "src/service/apiActions/incomingSupplyAction/incomingSupplyAction"
+import { markIncomingSuppliesAsDelivered, getIncomingSupplies } from "src/service/apiActions/incomingSupplyAction/incomingSupplyAction"
 import { connect } from "react-redux"
-import { logout } from "src/service/apiActions/userAction/userAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { setSupplyModal } from "src/service/apiActions/modalAction/modalAction"
 
 import * as MdIcons from "react-icons/md"
 
 export class IncomingSuppliesCard extends Component {
-  markIncomingSuppliesAsDelivered = (id) => {
+
+  handleIncomingSupplyItem(incomingItem, status) {
     this.props
-      .markIncomingSuppliesAsDelivered(id)
+      .markIncomingSuppliesAsDelivered(incomingItem.id)
       .then(() => {
-        const { data, status } = this.props.messageResponse
+        let supplies = this.props.supplies;
+        let incomingSupplies = this.props.incomingSupplyResponse.data
+        const index = supplies.findIndex((o) => o.id === incomingItem.id)
+
+        supplies.splice(index, 1)
+        if (supplies.length === 0) {
+          this.props.getIncomingSupplies('', status, 0, 10)
+        } else {
+          let totalCounts = this.props.totalCounts;
+          if (typeof totalCounts[status.toUpperCase()] == 'undefined') {
+            totalCounts[status.toUpperCase()] = 0;
+          }
+          totalCounts[incomingItem.incomingSupplyStatus.toUpperCase()]--;
+          totalCounts[status.toUpperCase()]++;
+          this.props.totalCountChange(totalCounts);
+          // this.setState({
+          //   orders: orders
+          // });
+        }
       })
       .catch(() => {
         let { status, data } = this.props.messageResponse
 
         if (status > 400 && status <= 403) {
           setInterval(() => {
-            this.props.logout()
             this.props.clearMessage()
           }, 1000)
         }
       })
+    // let orderId = orderData.orderId;
+    // this.props.updateOrderStatus(orderId, orderStatus).then(() => {
+    //   let orders = this.state.orders;
+    //   const order = this.props.orderResponse.data;
+    //   const index = orders.findIndex((o) => o.orderId == orderId);
+    //   orders.splice(index, 1);
+    //   if (orders.length == 0) {
+    //     this.props.getOrders(this.state.status, 0, 10);
+    //   } else {
+    //     let totalCounts = this.props.totalCounts;
+    //     if (typeof totalCounts[orderStatus.toUpperCase()] == 'undefined') {
+    //       totalCounts[orderStatus.toUpperCase()] = 0;
+    //     }
+    //     totalCounts[orderData.orderStatus.toUpperCase()]--;
+    //     totalCounts[orderStatus.toUpperCase()]++;
+    //     this.props.totalCountChange(totalCounts);
+    //     this.setState({
+    //       orders: orders
+    //     });
+    //   }
+    // })
   }
   renderIncomingAction(orderStatus, incomingSupply) {
     let orderButton = <></>
@@ -50,14 +88,6 @@ export class IncomingSuppliesCard extends Component {
               color="info"
               className="me-2"
               variant="ghost"
-              // onClick={() =>
-              //   this.props.addBrandModal(
-              //     !visible,
-              //     "Edit",
-              //     brand,
-              //     <MdIcons.MdModeEdit size="20" className="me-2" />,
-              //   )
-              // }
               onClick={() =>
                 this.props.setSupplyModal(
                   !false,
@@ -71,7 +101,7 @@ export class IncomingSuppliesCard extends Component {
             </CButton>
             <CButton
               onClick={() => {
-                this.markIncomingSuppliesAsDelivered(incomingSupply.id)
+                this.handleIncomingSupplyItem(incomingSupply, "pending")
               }}
             >
               Mask as Delivered
@@ -83,7 +113,7 @@ export class IncomingSuppliesCard extends Component {
     return orderButton
   }
   render() {
-    let supplies = this.props.supplies
+    let supplies = this.props.supplies;
     const fontStyle = {
       fontSize: "14px",
       fontWeight: "400",
@@ -108,7 +138,7 @@ export class IncomingSuppliesCard extends Component {
               updatedAt,
               supplyReference,
             } = supply
-
+            console.log(supply)
             return (
               <CCard className="mb-3" key={index}>
                 <CCardHeader>
@@ -298,8 +328,8 @@ const mapStateToProps = (state) => {
   }
 }
 export default connect(mapStateToProps, {
-  logout,
   clearMessage,
   markIncomingSuppliesAsDelivered,
   setSupplyModal,
+  getIncomingSupplies
 })(IncomingSuppliesCard)

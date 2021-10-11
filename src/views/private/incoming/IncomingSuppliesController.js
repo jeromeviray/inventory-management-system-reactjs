@@ -55,13 +55,13 @@ export class IncomingSuppliesController extends Component {
     }
   }
 
-  totalCountChange(totalCounts) {
+  totalCountChange = (totalCounts) => {
     this.setState({
       totalCounts: totalCounts,
     })
   }
   render() {
-    let { activeKey, visible, totalCounts, status, incomingSupplies } =
+    let { activeKey, visible, totalCounts, status } =
       this.state
     const tabStyle = {
       margin: "10px 0",

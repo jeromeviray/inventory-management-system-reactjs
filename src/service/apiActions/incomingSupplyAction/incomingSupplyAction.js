@@ -6,6 +6,7 @@ import {
   GET_INCOMING_SUPPLY,
   MARK_INCOMING_SUPPLY_AS_DELIVERED,
   SAVE_INCOMING_SUPPLY,
+  UPDATE_INCOMING_SUPPLY,
 } from "src/service/redux/constants"
 import IncomingSupplyApiService from "src/service/restAPI/IncomingSupplyApiService"
 
@@ -163,7 +164,7 @@ export const markIncomingSuppliesAsDelivered = (id) => async (dispatch) => {
         payload: {
           status: 200,
           data: {
-            message: "Incoming Supplies has been Delivered.",
+            message: "Incoming Supply Items has been Delivered.",
           },
         },
       })
@@ -193,4 +194,52 @@ export const markIncomingSuppliesAsDelivered = (id) => async (dispatch) => {
       return Promise.reject()
     },
   )
+}
+export const updateIncomingSupplyItems = (id, incomingSupplyItems, supplier, removedIncomingSupplyItems) => async (dispatch) => {
+  return IncomingSupplyApiService.updateIncomingSuppleis(id, incomingSupplyItems, supplier, removedIncomingSupplyItems)
+    .then(
+      (response) => {
+        dispatch({
+          type: UPDATE_INCOMING_SUPPLY,
+          payload: {
+            status: 200,
+            action: UPDATE_INCOMING_SUPPLY,
+            data: {}
+          }
+        })
+        dispatch({
+          type: SET_MESSAGE,
+          payload: {
+            status: 200,
+            data: {
+              message: "Incoming Supply Items has been Updated.",
+            },
+          },
+        })
+        return Promise.resolve()
+      },
+      (error) => {
+        const errorMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString()
+
+        const status =
+          (error.response && error.response.data && error.response.data.code) ||
+          error.toString()
+
+        dispatch({
+          type: SET_MESSAGE,
+          payload: {
+            status: status,
+            data: {
+              message: errorMessage,
+            },
+          },
+        })
+        return Promise.reject()
+      }
+    )
 }

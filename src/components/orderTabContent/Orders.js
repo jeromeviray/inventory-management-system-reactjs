@@ -81,7 +81,6 @@ export class Orders extends Component {
             const order = this.props.orderResponse.data;
             const index = orders.findIndex((o) => o.orderId == orderId);
             orders.splice(index, 1);
-            console.log(orders)
             if (orders.length == 0) {
                 this.props.getOrders(this.state.status, 0, 10);
             } else {
