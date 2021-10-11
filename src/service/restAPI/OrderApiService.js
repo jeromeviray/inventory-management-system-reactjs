@@ -8,6 +8,24 @@ export class OrderApiService {
         })
     }
 
+    getPaymentTransactions(query, page, limit) {
+        return axios.get("/orders/payments", {
+            headers: authHeader(),
+            params: {
+                query: query,
+                page: page,
+                limit: limit
+            }
+        })
+    }
+
+    updateOrderPaymentStatus(orderId, paymentStatus) {
+        return axios.put("/orders/" + orderId + "/paid/" + paymentStatus, {}, {
+            headers: authHeader()
+        })
+    }
+
+
     placeOrderDetails(orderDetails) {
         return axios.post("/orders/checkout", {
             customerAddressId: orderDetails.addressId,
