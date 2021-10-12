@@ -57,7 +57,6 @@ export class Orders extends Component {
     manageorderRepsonse = (prevProps, prevState) => {
         if (prevProps.orderResponse !== this.props.orderResponse) {
             let { status, action, data } = this.props.orderResponse;
-            console.log(this.props.orderResponse);
             if (status === 200 && action === "GET_ORDERS") {
                 this.setState({
                     orders: data.orders
@@ -100,7 +99,6 @@ export class Orders extends Component {
 
     renderOrderAction(orderStatus, order) {
         let orderButton = <></>;
-        console.log(orderStatus)
         switch (orderStatus.toLowerCase()) {
             case 'pending':
                 orderButton = <CButton onClick={() => { this.handleOrder(order, 'confirmed') }}>Confirm Order</CButton>;
@@ -162,7 +160,6 @@ export class Orders extends Component {
 
         console.log(comments)
         let index = comments && comments.findIndex((ctt) => ctt.product.id == item.product.id)
-        console.log(index)
 
         if (index >= 0) {
             const ct = comments[index];
@@ -184,6 +181,7 @@ export class Orders extends Component {
             fontSize: "14px",
             fontWeight: "400"
         }
+        console.log(orders)
         return (
             <>
                 {orders.length === 0 ? (

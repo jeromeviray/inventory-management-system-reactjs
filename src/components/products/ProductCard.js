@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { CCard, CCardBody, CCardTitle, CBadge } from "@coreui/react"
+import { CCard, CCardBody, CCardTitle, CBadge, CCardFooter, CButton, CSpinner } from "@coreui/react"
 import ReactStars from "react-rating-stars-component"
 import * as FaIcons from "react-icons/fa"
 import * as BsIcons from "react-icons/bs"
@@ -16,7 +16,9 @@ import {
 } from "src/service/apiActions/productAction/productAction"
 
 import { NO_IMAGE_BASE64 } from "src/service/redux/constants"
-import { Link } from "react-router-dom"
+import { Link, withRouter } from "react-router-dom"
+import { deleteWishlist, saveWishlist } from "src/service/apiActions/wishlistAction/wishlistAction"
+import { addToCart } from "src/service/apiActions/cartAction/cartAction"
 
 export class ProductCard extends Component {
   state = {
@@ -27,6 +29,7 @@ export class ProductCard extends Component {
     visible: false,
     action: "",
     message: "",
+    loading: false
   }
   componentDidMount = () => {
     this.handleIconModal()
@@ -46,7 +49,69 @@ export class ProductCard extends Component {
       imageLink: this.props.imageLink,
     })
   }
+  handleAddToCart = (event) => {
+    let { product } = this.state.product
+    let { isLoggedIn, credentials } = this.props.userResponse
+    this.setState({
+      loading: true,
+    })
+    if (!isLoggedIn) {
+      this.setState({
+        loading: false,
+      })
+      this.props.history.push("/login")
 
+    } else {
+      let token = credentials.type + credentials.accessToken
+      this.props
+        .addToCart(product.id, token)
+        .then(() => {
+          this.setState({
+            loading: false,
+          })
+        })
+        .catch(() => {
+          let { status, action } = this.props.messageResponse
+          this.setState({
+            loading: false,
+          })
+        })
+    }
+  }
+  handleAddToWishlist(productId) {
+    let { product } = this.state
+    let { isLoggedIn, credentials } = this.props.userResponse
+    this.setState({
+      loading: true,
+    })
+    if (!isLoggedIn) {
+      this.setState({
+        loading: false,
+      })
+      this.props.history.push("/login")
+      return;
+    }
+    const wishlist = product.wishlist;
+    if (wishlist && wishlist.id > 0) {
+      this.props.deleteWishlist(wishlist.id).then(() => {
+        product.wishlist = null;
+        this.setState({ product: product, loading: false })
+      }).catch(() => {
+        this.setState({
+          loading: false
+        })
+      })
+    } else {
+      this.props.saveWishlist({ id: productId }).then(() => {
+        product.wishlist = this.props.wishlistResponse.data;
+        this.setState({ product: product, loading: false })
+      }).catch(() => {
+        this.setState({
+          loading: false
+        })
+      })
+    }
+  }
   manageProductResponse(prevProps, prevState) {
     const { visible } = this.state
 
@@ -108,15 +173,16 @@ export class ProductCard extends Component {
     }
   }
 
-  renderAlert = () => {}
+  renderAlert = () => { }
   render() {
-    let { iconModal, product, imageLink, fileImage, visible } = this.state
-    console.log(product)
+    let { product, fileImage, loading } = this.state
     const { productName, productPrice, id } = product.product
+    const { inventory, wishlist } = product
     const status = product.promo && product.promo.status
     const percentage = product.promo && product.promo.percentage
     let discount = (productPrice * percentage) / 100
     let price = productPrice - discount
+    // console.log(product)
     return (
       <>
         <ProductDetialsModal />
@@ -136,8 +202,8 @@ export class ProductCard extends Component {
                   src={
                     fileImage.length > 0
                       ? "/images/products/" +
-                        fileImage[0].path +
-                        fileImage[0].fileName
+                      fileImage[0].path +
+                      fileImage[0].fileName
                       : NO_IMAGE_BASE64
                   }
                   alt="product"
@@ -169,8 +235,8 @@ export class ProductCard extends Component {
                     </span>
                     <span>{price.toFixed(2)}</span>
                     <span
-                      className="text-muted ms-3"
-                      style={{ fontSize: "16px" }}
+                      className="text-muted "
+                      style={{ fontSize: "16px", float: "right" }}
                     >
                       {percentage + "%"}
                     </span>
@@ -181,13 +247,20 @@ export class ProductCard extends Component {
               </CCardTitle>
               <div className="product-stock-container">
                 <span className="stock-label">Stock: </span>
-                {product.inventory.totalStock > 0 ? (
-                  <span className="stock-label-value">
-                    {product.inventory.totalStock}
-                  </span>
-                ) : (
-                  this.manageStatus(product.inventory.status)
-                )}
+                {product.promo ?
+                  <span className="">
+                    <span className="stock-label-value">
+                      {product.promo.quantity}
+                    </span>
+
+                  </span> :
+                  product.inventory.totalStock > 0 ? (
+                    <span className="stock-label-value">
+                      {product.inventory.totalStock}
+                    </span>
+                  ) : (
+                    this.manageStatus(product.inventory.status)
+                  )}
               </div>
             </div>
             <ReactStars
@@ -198,6 +271,62 @@ export class ProductCard extends Component {
               edit={false}
             />
           </CCardBody>
+          <CCardFooter>
+            {status ?
+              <CButton
+                type="button"
+                color="info"
+                className="d-flex justify-content-center align-items-center w-100"
+                onClick={this.handleAddToCart}
+                disabled={loading}
+              >
+                {loading ? (
+                  <CSpinner size="sm" />
+                ) : (
+                  <span className="d-flex align-items-center login-icon me-2">
+                    <FaIcons.FaCartPlus />
+                  </span>
+                )}
+                <span className="ms-2">Add To Cart</span>
+              </CButton>
+              : inventory.status != 'OUT_OF_STOCK' ?
+                <CButton
+                  type="button"
+                  color="info"
+                  className="d-flex justify-content-center align-items-center w-100"
+                  onClick={this.handleAddToCart}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <CSpinner size="sm" />
+                  ) : (
+                    <span className="d-flex align-items-center login-icon me-2">
+                      <FaIcons.FaCartPlus />
+                    </span>
+                  )}
+                  <span className="ms-2">Add To Cart</span>
+                </CButton>
+                :
+                <CButton
+                  type="button"
+                  color="info"
+                  className="d-flex justify-content-center align-items-center w-100"
+                  onClick={() => { this.handleAddToWishlist(id) }}
+                  disabled={loading}
+                  style={{ background: "pink" }}
+                >
+                  {loading ? (
+                    <CSpinner size="sm" />
+                  ) : (
+                    <span className="d-flex align-items-center login-icon me-2">
+                      {wishlist ? <FaIcons.FaHeart /> : <FaIcons.FaRegHeart />}
+
+                    </span>
+                  )}
+                  <span className="ms-2">{wishlist ? 'Remove Wishlist' : 'Add To Wishlist'}</span>
+                </CButton>
+            }
+          </CCardFooter>
         </CCard>
       </>
     )
@@ -210,6 +339,7 @@ const mapStateToProps = (state) => {
     userResponse: state.userResponse,
     modalVisibleResponse: state.modalVisibleResponse,
     messageResponse: state.messageResponse,
+    wishlistResponse: state.wishlistResponse,
   }
 }
 export default connect(mapStateToProps, {
@@ -218,4 +348,7 @@ export default connect(mapStateToProps, {
   editProductModal,
   getProduct,
   getProductDetails,
-})(ProductCard)
+  deleteWishlist,
+  saveWishlist,
+  addToCart
+})(withRouter(ProductCard))

@@ -59,6 +59,7 @@ class App extends Component {
         setTimeout(() => {
           toast("Session Expired" + failMessage.data.message)
           this.props.logout()
+          window.location.reload();
         }, 1000)
       } else if (failMessage.data && failMessage.data.message) {
         toast(failMessage.data.message)

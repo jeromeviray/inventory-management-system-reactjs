@@ -11,7 +11,7 @@ import {
   CFormCheck,
   CCloseButton,
 
-
+  CBadge,
   CContainer,
 } from "@coreui/react"
 import { connect } from "react-redux"
@@ -105,12 +105,40 @@ export class Checkout extends Component {
     this.props.paymentDetailsOnChange(pendingItem, quantity, totalPrice)
   }
 
-
+  manageStatus = (status) => {
+    switch (status) {
+      case "OK":
+        return (
+          <CBadge color="success" shape="rounded-pill">
+            {status}
+          </CBadge>
+        )
+      case "LOW":
+        return (
+          <CBadge color="warning" shape="rounded-pill">
+            {status}
+          </CBadge>
+        )
+      case "OUT_OF_STOCK":
+        return (
+          <CBadge color="danger" shape="rounded-pill">
+            OUT OF STOCK
+          </CBadge>
+        )
+      default:
+        return (
+          <CBadge color="danger" shape="rounded-pill">
+            {status}
+          </CBadge>
+        )
+    }
+  }
   render() {
     let { cartItems, checked } = this.state
     const headerStyle = {
       fontWeight: "800",
     }
+    console.log(cartItems)
     return (
       <>
         <CContainer>
@@ -139,6 +167,14 @@ export class Checkout extends Component {
             <CCardBody>
               {cartItems.length > 0 ? (
                 cartItems.map((item, index) => {
+                  const { quantity, addedAt, } = item
+                  const { product, inventory, promo } = item.product
+                  let disabled = promo ? false : inventory.totalStock > 0 ? false : true;
+                  let status = promo && promo.status;
+                  const percentage = promo && promo.percentage
+                  let discount = (product.productPrice * percentage) / 100
+                  let price = product.productPrice - discount
+                  let amount = quantity * (price)
                   return (
                     <CCard
                       key={index}
@@ -156,14 +192,17 @@ export class Checkout extends Component {
                               checked={checked[index]}
                               value={item}
                               onChange={() => this.handleOnChange(index)}
+                              disabled={disabled}
                             />
                           </div>
+
                           <CImage
                             rounded
                             src={
-                              item.product.fileImages.length > 0
+                              product.fileImages.length > 0
                                 ? "/images/products/" +
-                                item.product.fileImages[0].fileName
+                                product.fileImages[0].path +
+                                product.fileImages[0].fileName
                                 : NO_IMAGE_BASE64
                             }
                             width={100}
@@ -172,15 +211,33 @@ export class Checkout extends Component {
                           <div className="ms-2  w-100">
                             <CRow className="d-flex justify-content-between">
                               <CCol className="ps-4 text-dark">
-                                {item.product.productName}
+                                {product.productName}
                               </CCol>
                               <CCol className="text-dark d-flex flex-column align-items-center">
                                 <span>
-                                  &#8369;{item.product.productPrice.toFixed(2)}
+                                  &#8369;{status === "ONGOING" ? (
+                                    <>
+                                      <span
+                                        className="text-muted text-decoration-line-through me-2"
+                                        style={{ fontSize: "16px" }}
+                                      >
+                                        {product.productPrice.toFixed(2)}
+                                      </span>
+                                      <span>{price.toFixed(2)}</span><br />
+                                      <span
+                                        className="text-muted "
+                                        style={{ fontSize: "16px" }}
+                                      >
+                                        {percentage + "%"} discount
+                                      </span>
+                                    </>
+                                  ) : (
+                                    product.productPrice.toFixed(2)
+                                  )}
                                 </span>
                               </CCol>
                               <CCol className="text-dark d-flex flex-column align-items-center">
-                                <span>{item.quantity}</span>
+                                <span>{quantity}</span>
                               </CCol>
                               <CCol className="text-dark  d-flex justify-content-end">
                                 <span>
@@ -202,14 +259,19 @@ export class Checkout extends Component {
                       >
                         <div className="d-flex justify-content-between align-items-center w-100 ">
                           <span className="text-muted font-style">
-                            {item.addedAt}
+                            <div>
+                              {addedAt}
+                            </div>
+                            <div>
+                              Stock: <span>{inventory.totalStock}</span>{disabled ? this.manageStatus(inventory.status) : ""}
+                            </div>
                           </span>
                           <div className="d-flex align-items-center">
                             <span className="text-muted font-style me-2">
                               Amount
                             </span>
                             <span style={{ fontWeight: "500" }}>
-                              &#8369;{item.amount.toFixed(2)}
+                              &#8369;{amount.toFixed(2)}
                             </span>
                           </div>
                         </div>

@@ -62,6 +62,8 @@ export class AlertModal extends Component {
             module: module,
             action: action,
           })
+          break
+
         case "DELETECUSTOMER":
           this.setState({
             visible: alert,
@@ -69,6 +71,8 @@ export class AlertModal extends Component {
             module: module,
             action: action,
           })
+          break
+
         case "DELETESUPPLIER":
           this.setState({
             visible: alert,
@@ -76,6 +80,8 @@ export class AlertModal extends Component {
             module: module,
             action: action,
           })
+          break
+
         case "DELETECATEGORY":
           this.setState({
             visible: alert,
@@ -83,6 +89,8 @@ export class AlertModal extends Component {
             module: module,
             action: action,
           })
+          break
+
         case "DELETEPRODUCT":
           this.setState({
             visible: alert,
@@ -90,6 +98,8 @@ export class AlertModal extends Component {
             module: module,
             action: action,
           })
+          break
+
         case "DELETEPROMO":
           this.setState({
             visible: alert,
@@ -97,6 +107,8 @@ export class AlertModal extends Component {
             module: module,
             action: action,
           })
+          break
+
         case "DELETEME":
           this.setState({
             visible: alert,
@@ -104,6 +116,8 @@ export class AlertModal extends Component {
             module: module,
             action: action,
           })
+          break
+
         default:
           this.setState({
             visible: alert,

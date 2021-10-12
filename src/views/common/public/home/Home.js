@@ -7,14 +7,14 @@ import { DotLoader } from "react-spinners"
 import { connect } from "react-redux"
 // import { NewArrivalProducts, PopularProducts } from 'src/components/public'
 // action
-import { getDiscoverProducts } from "src/service/apiActions/productAction/productAction"
+import { getDiscoverProducts, getProductsWithPromo } from "src/service/apiActions/productAction/productAction"
 // import ProductDetialsModal from 'src/components/modals/product/ProductDetialsModal'
 const HeroCarousel = React.lazy(() =>
   import("src/components/carousel/HeroCarousel"),
 )
-const NewArrivalProducts = React.lazy(() =>
+const PromoProducts = React.lazy(() =>
   import(
-    "src/components/public/productFeatures/newArrivalProducts/NewArrivalProducts"
+    "src/components/public/productFeatures/PromoProducts/PromoProducts"
   ),
 )
 const PopularProducts = React.lazy(() =>
@@ -42,7 +42,9 @@ export class Home extends Component {
     query: "",
   }
   componentDidMount() {
+    const { page, limit, query } = this.state
     this.getDiscoverProducts()
+    this.getProductsWithPromo("ONGOING", query, page, limit)
   }
   getDiscoverProducts = () => {
     let { page, limit, query } = this.state
@@ -52,7 +54,9 @@ export class Home extends Component {
       })
     })
   }
-
+  getProductsWithPromo = (status, query, page, limit) => {
+    this.props.getProductsWithPromo(status, query, page, limit)
+  }
   render() {
     let { message } = this.state
     return (
@@ -86,7 +90,7 @@ export class Home extends Component {
               </div>
             )}
             <PopularProducts />
-            <NewArrivalProducts />
+            <PromoProducts />
           </CContainer>
         </Suspense>
       </>
@@ -101,4 +105,5 @@ const mapStateToProps = (state) => {
 }
 export default connect(mapStateToProps, {
   getDiscoverProducts,
+  getProductsWithPromo
 })(Home)

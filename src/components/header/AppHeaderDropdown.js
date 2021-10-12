@@ -21,6 +21,7 @@ import { connect } from "react-redux"
 import eventBus from "src/_helper/EventBus"
 import Roles from "src/router/config"
 import { logout } from "src/service/apiActions/userAction/userAction"
+import { getMe } from "src/service/apiActions/accountAction/accountAction"
 
 const style = {
   marginRight: "10px",
@@ -30,6 +31,7 @@ class AppHeaderDropdown extends Component {
     hrefLink: "",
     permission: "",
     isLoggedIn: false,
+    account: []
   }
   componentDidMount() {
     let { isLoggedIn, credentials } = this.props.userResponse
@@ -46,9 +48,17 @@ class AppHeaderDropdown extends Component {
     eventBus.on("logout", () => {
       this.logOut()
     })
+    this.getMe()
+
   }
-  componentDidUpdate() {
+  getMe = () => {
+    this.props.getMe();
+  }
+  componentDidUpdate(prevProps, prevState) {
+
     eventBus.remove("logout")
+    this.manageAccountReponse(prevProps, prevState)
+
   }
   handleLogOut = () => {
     window.location.reload()
@@ -61,12 +71,36 @@ class AppHeaderDropdown extends Component {
       return "/user/"
     }
   }
+  manageAccountReponse = (prevProps, prevState) => {
+    if (prevProps.accountResponse !== this.props.accountResponse) {
+      const { status, action, data } = this.props.accountResponse
+      if (status === 200 && action === "GET_ME") {
+        this.setState({
+          account: data.account,
+        })
+      }
+    }
+  }
   render() {
-    let { hrefLink } = this.state
+    let { account, hrefLink } = this.state
+    const firstName = account && account.firstName;
+    const lastName = account && account.lastName
+    console.log(firstName)
+
     return (
       <CDropdown variant="nav-item">
         <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
-          <CAvatar src="/avatars/8.jpg" size="md" />
+          {account.profileImage ?
+            <CAvatar color="secondary" src={account.profileImage} size="md" /> :
+            <CAvatar color="secondary" size="md" >
+              <h4 className="p-0 m-0">
+                {account.firstName &&
+                  account.firstName.charAt(0)
+                }
+              </h4>
+
+            </CAvatar>
+          }
         </CDropdownToggle>
         <CDropdownMenu className="pt-0" placement="bottom-end">
           <CDropdownHeader className="bg-light fw-semibold py-2">
@@ -94,8 +128,10 @@ class AppHeaderDropdown extends Component {
 const mapStateToProps = (state) => {
   return {
     userResponse: state.userResponse,
+    accountResponse: state.accountResponse,
   }
 }
 export default connect(mapStateToProps, {
   logout,
+  getMe
 })(AppHeaderDropdown)

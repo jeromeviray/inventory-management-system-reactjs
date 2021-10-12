@@ -84,7 +84,7 @@ export class CategoryModal extends Component {
     this.props
       .saveCategory(categoryName)
       .then(() => {
-        let { status, data } = this.props.messageResponse
+        let { status } = this.props.messageResponse
         if (status === 200) {
           this.setState({
             categoryName: "",
@@ -105,7 +105,7 @@ export class CategoryModal extends Component {
     this.props
       .updateCategory(id, name)
       .then(() => {
-        let { status, data } = this.props.messageResponse
+        let { status } = this.props.messageResponse
         if (status === 200) {
           this.setState({
             categoryName: "",
@@ -118,7 +118,7 @@ export class CategoryModal extends Component {
         }, 1000)
       })
       .catch(() => {
-        let { status, data } = this.props.messageResponse
+        // let { status, data } = this.props.messageResponse
         this.setState({
           loading: false,
         })

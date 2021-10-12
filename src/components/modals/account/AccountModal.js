@@ -260,7 +260,7 @@ export class AccountModal extends Component {
             <CModalTitle>
               <div className="d-flex align-items-center">
                 {icon}
-                {action + " Employee Account"}
+                {action + " Account"}
               </div>
             </CModalTitle>
           </CModalHeader>

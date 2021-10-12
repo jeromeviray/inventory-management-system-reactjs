@@ -31,6 +31,7 @@ export class PopularProducts extends Component {
   }
   render() {
     let { message, products } = this.state
+    console.log(products)
     return (
       <>
         {/* <ProductDetialsModal /> */}

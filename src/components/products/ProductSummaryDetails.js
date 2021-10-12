@@ -9,7 +9,7 @@ import {
   CButton,
   CCardFooter,
   CSpinner,
-
+  CBadge
 
 } from "@coreui/react"
 import * as IoIcons from "react-icons/io"
@@ -90,11 +90,41 @@ export class ProductSummaryDetails extends Component {
       })
     }
   }
-
+  manageStatus = (status) => {
+    switch (status) {
+      case "OK":
+        return (
+          <CBadge color="success" shape="rounded-pill">
+            {status}
+          </CBadge>
+        )
+      case "LOW":
+        return (
+          <CBadge color="warning" shape="rounded-pill">
+            {status}
+          </CBadge>
+        )
+      case "OUT_OF_STOCK":
+        return (
+          <CBadge color="danger" shape="rounded-pill">
+            OUT OF STOCK
+          </CBadge>
+        )
+      default:
+        return (
+          <CBadge color="danger" shape="rounded-pill">
+            {status}
+          </CBadge>
+        )
+    }
+  }
   render() {
-    const { product, inventory, wishlist } = this.state.product
+    const { product, inventory, wishlist, promo } = this.state.product
     const { loading, toast, button } = this.state;
-
+    const promoStatus = promo && promo.status
+    const percentage = promo && promo.percentage
+    let discount = (product.productPrice * percentage) / 100
+    let price = product.productPrice - discount
     const arrowStyles = {
       position: "absolute",
       zIndex: "2",
@@ -195,11 +225,37 @@ export class ProductSummaryDetails extends Component {
                 </div>
                 <div className="mt-3 mb-3  d-flex align-items-center justify-content-between">
                   <h5 className="peso-price">
-                    &#8369;{product.productPrice.toFixed(2)}
+                    &#8369;{promoStatus ? <>
+                      <span
+                        className="text-muted text-decoration-line-through me-2"
+                        style={{ fontSize: "16px" }}
+                      >
+                        {product.productPrice.toFixed(2)}
+                      </span>
+                      <span>{price.toFixed(2)}</span>
+                      <span
+                        className="text-muted ms-3"
+                        style={{ fontSize: "16px" }}
+                      >
+                        {percentage + "%"}
+                      </span></>
+                      : product.productPrice.toFixed(2)}
                   </h5>
                   <span style={{ ...fontStyle }} className="peso-price">
                     {inventory.totalSold ? inventory.totalSold : 0} <span className="text-muted">sold</span>
                   </span>
+                </div>
+                <div className="product-stock-container">
+                  <span className="stock-label">Stock: </span>
+                  {promo ? <span className="stock-label-value">
+                    {promo.quantity}
+                  </span> : inventory.totalStock > 0 ? (
+                    <span className="stock-label-value">
+                      {inventory.totalStock}
+                    </span>
+                  ) : (
+                    this.manageStatus(inventory.status)
+                  )}
                 </div>
                 <hr />
 
@@ -207,7 +263,7 @@ export class ProductSummaryDetails extends Component {
               {button ?
                 <CCardFooter className="bg-transparent">
                   <div className="d-flex justify-content-end ">
-                    {inventory.status != 'OUT_OF_STOCK' ?
+                    {promoStatus ?
                       <CButton
                         type="button"
                         color="info"
@@ -224,24 +280,41 @@ export class ProductSummaryDetails extends Component {
                         )}
                         <span className="ms-2">Add To Cart</span>
                       </CButton>
-                      :
-                      <CButton
-                        type="button"
-                        color="info"
-                        className="d-flex justify-content-center align-items-center w-100"
-                        onClick={() => { this.handleAddToWishlist(product.id) }}
-                        disabled={loading}
-                        style={{ background: "pink" }}
-                      >
-                        {loading ? (
-                          <CSpinner size="sm" />
-                        ) : (
-                          <span className="d-flex align-items-center login-icon me-2">
-                            <FaIcons.FaHeart />
-                          </span>
-                        )}
-                        <span className="ms-2">{wishlist ? 'Remove Wishlist' : 'Add To Wishlist'}</span>
-                      </CButton>
+                      : inventory.status != 'OUT_OF_STOCK' ?
+                        <CButton
+                          type="button"
+                          color="info"
+                          className="d-flex justify-content-center align-items-center w-100"
+                          onClick={this.handleAddToCart}
+                          disabled={loading}
+                        >
+                          {loading ? (
+                            <CSpinner size="sm" />
+                          ) : (
+                            <span className="d-flex align-items-center login-icon me-2">
+                              <FaIcons.FaCartPlus />
+                            </span>
+                          )}
+                          <span className="ms-2">Add To Cart</span>
+                        </CButton>
+                        :
+                        <CButton
+                          type="button"
+                          color="info"
+                          className="d-flex justify-content-center align-items-center w-100"
+                          onClick={() => { this.handleAddToWishlist(product.id) }}
+                          disabled={loading}
+                          style={{ background: "pink" }}
+                        >
+                          {loading ? (
+                            <CSpinner size="sm" />
+                          ) : (
+                            <span className="d-flex align-items-center login-icon me-2">
+                              <FaIcons.FaHeart />
+                            </span>
+                          )}
+                          <span className="ms-2">{wishlist ? 'Remove Wishlist' : 'Add To Wishlist'}</span>
+                        </CButton>
                     }
 
                   </div>

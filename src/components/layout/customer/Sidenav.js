@@ -45,7 +45,17 @@ export class Sidenav extends Component {
       <>
         <div className=" w-25 d-none d-lg-block pt-4 " >
           <div className="d-flex align-items-center flex-column">
-            <CAvatar color="secondary" src="/avatars/1.jpg" size="xl" />
+            {account.profileImage ?
+              <CAvatar color="secondary" src={account.profileImage} size="xl" /> :
+              <CAvatar color="secondary" size="xl" >
+                <h1 className="p-0 m-0">
+                  {account.firstName &&
+                    account.firstName.charAt(0)
+                  }
+                </h1>
+
+              </CAvatar>
+            }
             <div className=" mt-3">
               {account.firstName && account.lastName ? (
                 <h5>
