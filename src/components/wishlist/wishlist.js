@@ -129,25 +129,11 @@ export class Wishlist extends Component {
     }
 
     render() {
-        let { message, wishlist, permission, path, originalList, visible } = this.state;
-        const fontStyle = {
-            fontSize: "14px",
-            fontWeight: "400"
-        }
-
+        let { wishlist, originalList } = this.state;
+        const product = wishlist.product;
+        const rating = product.rating ? product.rating : 0;
         return (
             <>
-                {message && (
-                    <CCard className="mb-3">
-                        <CCardBody>
-                            {/* <div className="form-group d-flex justify-content-center align-items-center"> */}
-                            <div className="alert alert-danger" role="alert">
-                                {message}
-                            </div>
-                            {/* </div> */}
-                        </CCardBody>
-                    </CCard>
-                )}
                 {wishlist.length === 0 ? (
                     <CCard>
                         <CCardBody>
@@ -221,13 +207,18 @@ export class Wishlist extends Component {
                                                         )}
                                                     </div>
                                                 </div>
-                                                <ReactStars
-                                                    count={5}
-                                                    value={3.5}
-                                                    size={24}
-                                                    isHalf={true}
-                                                    edit={false}
-                                                />
+                                                {rating ?
+                                                    <ReactStars
+                                                        count={5}
+                                                        value={rating ? rating : 0}
+                                                        size={24}
+                                                        edit={false}
+                                                    />
+                                                    :
+                                                    <div style={{ padding: "5px 0px" }}>
+                                                        <span className="text-black-50 ">No Rating</span>
+                                                    </div>
+                                                }
                                             </CCardBody>
                                         </CCard>
                                     </CCol>

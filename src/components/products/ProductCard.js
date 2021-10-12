@@ -182,7 +182,7 @@ export class ProductCard extends Component {
     const percentage = product.promo && product.promo.percentage
     let discount = (productPrice * percentage) / 100
     let price = productPrice - discount
-    // console.log(product)
+    const rating = product.product.rating ? product.product.rating : 0;
     return (
       <>
         <ProductDetialsModal />
@@ -263,13 +263,19 @@ export class ProductCard extends Component {
                   )}
               </div>
             </div>
-            <ReactStars
-              count={5}
-              value={3.5}
-              size={24}
-              isHalf={true}
-              edit={false}
-            />
+            {rating ?
+              <ReactStars
+                count={5}
+                value={rating ? rating : 0}
+                size={24}
+                edit={false}
+              />
+              :
+              <div style={{ "padding": "5px 0px" }}>
+                <span className="text-black-50 ">No Rating</span>
+              </div>
+            }
+
           </CCardBody>
           <CCardFooter>
             {status ?

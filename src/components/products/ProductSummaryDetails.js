@@ -138,6 +138,7 @@ export class ProductSummaryDetails extends Component {
       fontSize: "14px",
       fontWeight: "500",
     }
+    const rating = product.rating ? product.rating : 0;
     return (
       <>
         <LoginModal />
@@ -202,14 +203,18 @@ export class ProductSummaryDetails extends Component {
               <CCardTitle>{product.productName}</CCardTitle>
               <CCardBody className=" ps-0">
                 <div className="d-flex justify-content-start align-items-center">
-                  <ReactStars
-                    count={5}
-                    value={3.5}
-                    size={24}
-                    isHalf={true}
-                    edit={false}
-                  />
-                  <span className="text-black-50 ms-3">4.4</span>
+                  {rating ?
+                    <ReactStars
+                      count={5}
+                      value={rating ? rating : 0}
+                      size={24}
+                      edit={false}
+                    />
+                    :
+                    <div style={{ padding: "5px 0px" }}>
+                      <span className="text-black-50 ">No Rating</span>
+                    </div>
+                  }
                 </div>
                 {product.sku &&
                   <div className="mt-2 mb-2" style={{ ...fontStyle }}>
@@ -241,9 +246,9 @@ export class ProductSummaryDetails extends Component {
                       </span></>
                       : product.productPrice.toFixed(2)}
                   </h5>
-                  <span style={{ ...fontStyle }} className="peso-price">
+                  {/* <span style={{ ...fontStyle }} className="peso-price">
                     {inventory.totalSold ? inventory.totalSold : 0} <span className="text-muted">sold</span>
-                  </span>
+                  </span> */}
                 </div>
                 <div className="product-stock-container">
                   <span className="stock-label">Stock: </span>

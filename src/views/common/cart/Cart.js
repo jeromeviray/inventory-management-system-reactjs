@@ -19,7 +19,7 @@ import { DotLoader } from "react-spinners"
 import { connect } from "react-redux"
 //action
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
-import { placeOrder } from "src/service/apiActions/orderAction/orderAction"
+import { placeOrder, updateOrderPaymentStatus } from "src/service/apiActions/orderAction/orderAction"
 import { history } from "src/_helper/history"
 import { Redirect } from "react-router-dom"
 import Roles from "src/router/config"
@@ -62,6 +62,9 @@ export class Cart extends Component {
 
     if (this.props.userResponse.isLoggedIn) {
       const { orderId, paymentStatus } = this.props.match.params
+      if (paymentStatus == "success" || paymentStatus == "failed") {
+        this.props.updateOrderPaymentStatus(orderId, paymentStatus)
+      }
       this.setState({ successfull: paymentStatus == "success" })
     }
   }
@@ -376,4 +379,5 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
   clearMessage,
   placeOrder,
+  updateOrderPaymentStatus
 })(Cart)
