@@ -114,7 +114,7 @@ export const routes = [
   },
   {
     path: "/app/sale",
-    name: "Order Sales",
+    name: "Order Sales Report",
     component: Sale,
     permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
   },
