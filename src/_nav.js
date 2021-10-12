@@ -147,26 +147,26 @@ const _nav = [
       },
     ],
   },
-  {
-    _component: "CNavGroup",
-    anchor: "Reports",
-    icon: <FaIcons.FaChartBar size={20} style={iconMargin} />,
-    permission: [Roles.SUPER_ADMIN],
-    items: [
-      {
-        _component: "CNavItem",
-        as: NavLink,
-        anchor: "Report",
-        to: "/app/reports/reports",
-      },
-      {
-        _component: "CNavItem",
-        as: NavLink,
-        anchor: "Product Report",
-        to: "/app/reports/product",
-      },
-    ],
-  },
+  // {
+  //   _component: "CNavGroup",
+  //   anchor: "Reports",
+  //   icon: <FaIcons.FaChartBar size={20} style={iconMargin} />,
+  //   permission: [Roles.SUPER_ADMIN],
+  //   items: [
+  //     {
+  //       _component: "CNavItem",
+  //       as: NavLink,
+  //       anchor: "Report",
+  //       to: "/app/reports/reports",
+  //     },
+  //     {
+  //       _component: "CNavItem",
+  //       as: NavLink,
+  //       anchor: "Product Report",
+  //       to: "/app/reports/product",
+  //     },
+  //   ],
+  // },
 ]
 
 export default _nav
