@@ -11,7 +11,7 @@ import {
   CNavLink,
   CNavItem,
 } from "@coreui/react"
-import * as FaIcons from 'react-icons/fa'
+import * as FaIcons from "react-icons/fa"
 
 import { AppBreadcrumb } from "./index"
 
@@ -52,11 +52,11 @@ class AppHeader extends Component {
           {/* </CHeaderBrand> */}
 
           <CHeaderNav className="ms-3">
-            <CNavItem>
+            {/* <CNavItem>
               <CNavLink href="#">
                 <FaIcons.FaBell size={20} />
               </CNavLink>
-            </CNavItem>
+            </CNavItem> */}
             <AppHeaderDropdown />
           </CHeaderNav>
         </CContainer>

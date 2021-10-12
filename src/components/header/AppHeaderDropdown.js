@@ -31,7 +31,7 @@ class AppHeaderDropdown extends Component {
     hrefLink: "",
     permission: "",
     isLoggedIn: false,
-    account: []
+    account: [],
   }
   componentDidMount() {
     let { isLoggedIn, credentials } = this.props.userResponse
@@ -49,16 +49,13 @@ class AppHeaderDropdown extends Component {
       this.logOut()
     })
     this.getMe()
-
   }
   getMe = () => {
-    this.props.getMe();
+    this.props.getMe()
   }
   componentDidUpdate(prevProps, prevState) {
-
     eventBus.remove("logout")
     this.manageAccountReponse(prevProps, prevState)
-
   }
   handleLogOut = () => {
     window.location.reload()
@@ -83,24 +80,22 @@ class AppHeaderDropdown extends Component {
   }
   render() {
     let { account, hrefLink } = this.state
-    const firstName = account && account.firstName;
+    const firstName = account && account.firstName
     const lastName = account && account.lastName
     console.log(firstName)
 
     return (
       <CDropdown variant="nav-item">
         <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
-          {account.profileImage ?
-            <CAvatar color="secondary" src={account.profileImage} size="md" /> :
-            <CAvatar color="secondary" size="md" >
+          {account.profileImage ? (
+            <CAvatar color="secondary" src={account.profileImage} size="md" />
+          ) : (
+            <CAvatar color="info" size="md">
               <h4 className="p-0 m-0">
-                {account.firstName &&
-                  account.firstName.charAt(0)
-                }
+                {account.firstName ? account.firstName.charAt(0) : "N"}
               </h4>
-
             </CAvatar>
-          }
+          )}
         </CDropdownToggle>
         <CDropdownMenu className="pt-0" placement="bottom-end">
           <CDropdownHeader className="bg-light fw-semibold py-2">
@@ -133,5 +128,5 @@ const mapStateToProps = (state) => {
 }
 export default connect(mapStateToProps, {
   logout,
-  getMe
+  getMe,
 })(AppHeaderDropdown)

@@ -138,7 +138,6 @@ export class Checkout extends Component {
     const headerStyle = {
       fontWeight: "800",
     }
-    console.log(cartItems)
     return (
       <>
         <CContainer>

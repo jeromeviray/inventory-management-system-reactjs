@@ -21,6 +21,7 @@ import { CChartBar } from "@coreui/react-chartjs"
 import { getProductsByStatus } from "src/service/apiActions/productAction/productAction.js"
 import { connect } from "react-redux"
 import Barcode from "react-barcode"
+import { getProductsAndCountTatolSold } from "src/service/apiActions/dashboardAction/dashboardAction.js"
 const WidgetsDropdown = lazy(() =>
   import("../../../components/widgets/WidgetsDropdown.js"),
 )
@@ -35,14 +36,23 @@ export class Dashboard extends Component {
     page: 0,
     limit: 10,
     query: "",
+    productsTotalSold: {
+      data: [],
+      totalPages: 0,
+    },
   }
 
   componentDidMount() {
     const { page, status, limit, query } = this.state
     this.getProducts(page, status, limit, query)
+    this.getProductsAndCountTatolSold(query, page, limit)
+  }
+  getProductsAndCountTatolSold = (query, page, limit) => {
+    this.props.getProductsAndCountTatolSold(query, page, limit)
   }
   componentDidUpdate(prevProps, prevState) {
     this.manageProductResponse(prevProps, prevState)
+    this.manageDashboardResponse(prevProps, prevState)
   }
 
   manageProductResponse(prevProps, prevState) {
@@ -52,6 +62,18 @@ export class Dashboard extends Component {
       if (status === 200 && action === "GET_PRODUCTS_BY_STATUS") {
         this.setState({
           products: data.products,
+        })
+      }
+    }
+  }
+
+  manageDashboardResponse = (prevPros, prevState) => {
+    if (prevPros.dashboardResponse !== this.props.dashboardResponse) {
+      const { status, action, data } = this.props.dashboardResponse
+      console.log(this.props.dashboardResponse)
+      if (status === 200 && action === "GET_PRODUCTS_COUNT_TOTAL_SOLD") {
+        this.setState({
+          productsTotalSold: data.products,
         })
       }
     }
@@ -101,64 +123,45 @@ export class Dashboard extends Component {
     this.getProducts(page, status, limit, query)
   }
   render() {
-    const { products, status } = this.state
-    const random = () => Math.round(Math.random() * 100)
+    const { products, status, productsTotalSold } = this.state
+
+    let totalSold = []
+    let productNames = []
+    productsTotalSold.data.map((item, index) => {
+      totalSold.push(item.totalSold)
+      productNames.push(item.productName)
+    })
+
     return (
       <>
         <WidgetsDropdown />
-        {/* <CCard className="mb-4">
+        
+        <CCard className="mb-4">
           <CCardHeader>
             <CRow>
               <CCol sm="5">
                 <h4 id="traffic" className="card-title mb-0">
-                  Traffic
+                  Top 10 Most Sold Product
                 </h4>
-                <div className="small text-medium-emphasis">
-                  January - July 2021
-                </div>
-              </CCol>
-              <CCol sm="7" className="d-none d-md-block">
-                <CButtonGroup className="float-end me-3">
-                  {["Day", "Month", "Year"].map((value) => (
-                    <CButton
-                      color="outline-secondary"
-                      key={value}
-                      className="mx-0"
-                      active={value === "Month"}
-                    >
-                      {value}
-                    </CButton>
-                  ))}
-                </CButtonGroup>
               </CCol>
             </CRow>
           </CCardHeader>
           <CCardBody>
             <CChartBar
               data={{
-                labels: [
-                  "January",
-                  "February",
-                  "March",
-                  "April",
-                  "May",
-                  "June",
-                  "July",
-                  "August",
-                  "September",
-                ],
+                labels: productNames,
                 datasets: [
                   {
-                    label: "Revenue",
+                    label: "Sold Product",
                     backgroundColor: "#f87979",
-                    data: [40, 20, 12, 39, 10, 40, 39, 80, 40],
+                    data: totalSold,
                   },
                 ],
               }}
               labels="months"
             />
           </CCardBody>
-        </CCard> */}
+        </CCard>
         <CCard className="mb-4 bg-transparent border-0">
           <CCardHeader>
             <CRow>
@@ -270,8 +273,10 @@ export class Dashboard extends Component {
 const mapStateToProps = (state) => {
   return {
     productResponse: state.productResponser,
+    dashboardResponse: state.dashboardResponse,
   }
 }
 export default connect(mapStateToProps, {
   getProductsByStatus,
+  getProductsAndCountTatolSold,
 })(Dashboard)

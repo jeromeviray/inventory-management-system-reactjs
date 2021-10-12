@@ -73,6 +73,9 @@ const OrderDetails = React.lazy(() =>
 const ProductDetails = React.lazy(() =>
   import("src/views/common/productFeatures/details/ProductDetails"),
 )
+const CustomerAddressController = React.lazy(() =>
+  import("src/views/common/address/CustomerAddressController"),
+)
 export const routes = [
   {
     path: "/app",
@@ -188,14 +191,7 @@ export const routes = [
     path: "/app/reports",
     exact: true,
     name: "Reports",
-    component: Reports,
-    permission: [Roles.SUPER_ADMIN],
-  },
-  {
-    path: "/app/reports/reports",
-    exact: true,
-    name: "Reports",
-    component: Reports,
+    component: ProductReport,
     permission: [Roles.SUPER_ADMIN],
   },
   {
@@ -278,6 +274,12 @@ export const publicRoutes = [
     path: "/user/profile",
     name: "Profile",
     component: Profile,
+  },
+  {
+    exact: true,
+    path: "/user/addresses",
+    name: "Address",
+    component: CustomerAddressController,
   },
   {
     exact: true,

@@ -6,7 +6,6 @@ import Roles from "./router/config"
 import * as FaIcons from "react-icons/fa"
 import * as ImIcons from "react-icons/im"
 import * as IoIcons from "react-icons/io"
-import * as Io5Icons from "react-icons/io5"
 import * as BsIcons from "react-icons/bs"
 import * as AiIcons from "react-icons/ai"
 import * as MdIcons from "react-icons/md"
@@ -147,26 +146,20 @@ const _nav = [
       },
     ],
   },
-  // {
-  //   _component: "CNavGroup",
-  //   anchor: "Reports",
-  //   icon: <FaIcons.FaChartBar size={20} style={iconMargin} />,
-  //   permission: [Roles.SUPER_ADMIN],
-  //   items: [
-  //     {
-  //       _component: "CNavItem",
-  //       as: NavLink,
-  //       anchor: "Report",
-  //       to: "/app/reports/reports",
-  //     },
-  //     {
-  //       _component: "CNavItem",
-  //       as: NavLink,
-  //       anchor: "Product Report",
-  //       to: "/app/reports/product",
-  //     },
-  //   ],
-  // },
+  {
+    _component: "CNavGroup",
+    anchor: "Reports",
+    icon: <FaIcons.FaChartBar size={20} style={iconMargin} />,
+    permission: [Roles.SUPER_ADMIN],
+    items: [
+      {
+        _component: "CNavItem",
+        as: NavLink,
+        anchor: "Product Report",
+        to: "/app/reports/product",
+      },
+    ],
+  },
 ]
 
 export default _nav

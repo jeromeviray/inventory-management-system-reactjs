@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { CCard, CCardTitle, CCardBody, CButton } from "@coreui/react"
+import { CCard, CCardTitle, CCardBody, CButton, CAvatar } from "@coreui/react"
 import { connect } from "react-redux"
 import { getMe } from "src/service/apiActions/accountAction/accountAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
@@ -10,6 +10,7 @@ import * as MdIcons from "react-icons/md"
 import { addAccountModal } from "src/service/apiActions/modalAction/modalAction"
 import ChangePasswordModal from "src/components/modals/account/ChangePasswordModal"
 import { changePasswordModal } from "src/service/apiActions/modalAction/modalAction"
+import Roles from "src/router/config"
 
 export class Profile extends Component {
   state = {
@@ -38,7 +39,9 @@ export class Profile extends Component {
   }
   render() {
     let { account, message, visible } = this.state
-    const id = account.account && account.account.id
+    // const id = account.account && account.account.id
+    const { roles } = this.props.userResponse.credentials
+
     const margin = {
       marginBottom: "12px",
     }
@@ -56,14 +59,51 @@ export class Profile extends Component {
         )}
         <CCard>
           <CCardBody className="p-4">
-            <CCardTitle className="d-flex justify-content-between">
+            {roles.roleName === Roles.SUPER_ADMIN ? (
+              account.profileImage ? (
+                <CAvatar
+                  color="secondary"
+                  src={account.profileImage}
+                  size="xl"
+                />
+              ) : (
+                <CAvatar color="info" size="xl">
+                  <h1 className="p-0 m-0">
+                    {account.firstName ? account.firstName.charAt(0) : "N"}
+                  </h1>
+                </CAvatar>
+              )
+            ) : (
+              <></>
+            )}
+            <CCardTitle className="d-flex justify-content-between mt-3">
               <div className="font-style d-flex ">
                 <div className="font-style d-flex flex-column align-items-start ">
+                  {roles.roleName === Roles.SUPER_ADMIN ? (
+                    <h6 className="m-0 pe-3 mb-2">Name:</h6>
+                  ) : (
+                    <></>
+                  )}
+
                   <h6 className="m-0 pe-3 mb-2">Username:</h6>
                   <h6 className="m-0 pe-3 mb-2">Email:</h6>
                   <h6 className="m-0 pe-3 mb-2">Role:</h6>
                 </div>
                 <div className="font-style d-flex flex-column align-items-start text-black-50">
+                  {roles.roleName === Roles.SUPER_ADMIN ? (
+                    <strong style={{ ...margin }}>
+                      {account.firstName && account.lastName ? (
+                        <>
+                          <span>{account.firstName}</span>
+                          <span className="ps-1">{account.lastName}</span>
+                        </>
+                      ) : (
+                        <span className="text-danger">No Name</span>
+                      )}
+                    </strong>
+                  ) : (
+                    <></>
+                  )}
                   <strong style={{ ...margin }}>
                     {account.account && account.account.username}
                   </strong>
@@ -152,7 +192,6 @@ export class Profile extends Component {
                   </CButton>
                 </div>
               </div>
-
             </CCardTitle>
           </CCardBody>
         </CCard>
@@ -164,6 +203,7 @@ const mapStateToProps = (state) => {
   return {
     accountResponse: state.accountResponse,
     messageResponse: state.messageResponse,
+    userResponse: state.userResponse,
   }
 }
 export default connect(mapStateToProps, {

@@ -9,20 +9,14 @@ import {
   CCardBody,
   CAlert,
 } from "@coreui/react"
-
-import { connect } from "react-redux"
-//icons
-import * as FaIcons from "react-icons/fa"
-// modal
-import AddressModal from "src/components/modals/address/AddressModal"
-//action
+import { withRouter } from "react-router"
 import { getAdress } from "src/service/apiActions/addressAction/addressAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { setAddressModal } from "src/service/apiActions/modalAction/modalAction"
-//history
-import { history } from "src/_helper/history"
-
-export class CustomerAddress extends Component {
+import AddressModal from "src/components/modals/address/AddressModal"
+import { connect } from "react-redux"
+import * as FaIcons from "react-icons/fa"
+export class CustomerAddressController extends Component {
   state = {
     message: "",
     action: "",
@@ -32,7 +26,7 @@ export class CustomerAddress extends Component {
   }
   componentDidMount() {
     if (!this.props.userResponse.isLoggedIn) {
-      history.push("/login")
+      this.props.history.push("/login")
     } else {
       this.retreiveAddressResponse()
     }
@@ -63,14 +57,6 @@ export class CustomerAddress extends Component {
       }
     }
   }
-  handleOnChange = (event) => {
-    let value = event.target.value
-    this.setState({
-      addressId: value,
-    })
-    this.props.checkValueOnChange(value)
-  }
-
   render() {
     let { message, addresses, visible } = this.state
     const cursorStyle = {
@@ -108,24 +94,12 @@ export class CustomerAddress extends Component {
                 >
                   <CCardBody className="p-3 ">
                     <div className="d-flex align-items-center justify-content-start">
-                      <CFormCheck
-                        type="radio"
-                        name="check"
-                        id={"address" + address.id}
-                        style={cursorStyle}
-                        value={address.id}
-                        defaultChecked={
-                          this.props.getValue !== undefined ? checked : false
-                        }
-                        onChange={this.handleOnChange}
-                      />
-
-                      <CCardTitle className="ps-4">
+                      <CCardTitle>
                         {address.firstName + " " + address.lastName}
                       </CCardTitle>
                     </div>
 
-                    <div className="ps-5">{address.city}</div>
+                    <div className="ps-3">{address.city}</div>
                   </CCardBody>
                 </CCard>
               </CCol>
@@ -148,6 +122,7 @@ export class CustomerAddress extends Component {
     )
   }
 }
+
 const mapStateToProps = (state) => {
   return {
     addressResponse: state.addressResponse,
@@ -160,4 +135,4 @@ export default connect(mapStateToProps, {
   getAdress,
   clearMessage,
   setAddressModal,
-})(CustomerAddress)
+})(withRouter(CustomerAddressController))

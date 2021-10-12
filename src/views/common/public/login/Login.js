@@ -88,8 +88,10 @@ export class Login extends Component {
           window.location.reload()
         })
         .catch(() => {
+          let { data } = this.props.messageResponse;
           this.setState({
             loading: false,
+            message: data.message
           })
         })
     } else {

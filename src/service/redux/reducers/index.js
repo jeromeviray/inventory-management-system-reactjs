@@ -22,6 +22,7 @@ import promoReducer from "./promoReducer"
 import scannerReducer from "./scannerReducer"
 import wishlistReducer from "./wishlistReducer"
 import commentReducer from "./commentReducer"
+import dashboardReducer from "./dashboardReducer"
 
 export default combineReducers({
   //modals
@@ -68,4 +69,6 @@ export default combineReducers({
   scannerResponse: scannerReducer,
   wishlistResponse: wishlistReducer,
   commentResponse: commentReducer,
+  //dahsboard
+  dashboardResponse: dashboardReducer,
 })

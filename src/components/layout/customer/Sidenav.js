@@ -7,6 +7,7 @@ import { Link } from "react-router-dom"
 import * as VscIcons from "react-icons/vsc"
 import * as IoIcons from "react-icons/io5"
 import * as BiIcons from "react-icons/bi"
+import * as MdIcons from "react-icons/md"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { getMe } from "src/service/apiActions/accountAction/accountAction"
 import accoutReducer from "src/service/redux/reducers/accountReducer"
@@ -21,7 +22,7 @@ export class Sidenav extends Component {
   }
 
   getMe = () => {
-    this.props.getMe();
+    this.props.getMe()
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -40,26 +41,30 @@ export class Sidenav extends Component {
   }
 
   render() {
-    let { username, account } = this.state;
+    let { account } = this.state
+    const profile = account && account.profileImage
     return (
       <>
-        <div className=" w-25 d-none d-lg-block pt-4 " >
+        <div className=" w-25 d-none d-lg-block pt-4 ">
           <div className="d-flex align-items-center flex-column">
-            {account.profileImage ?
-              <CAvatar color="secondary" src={account.profileImage} size="xl" /> :
-              <CAvatar color="secondary" size="xl" >
+            {account.profileImage ? (
+              <CAvatar
+                color="secondary"
+                src={profile}
+                size="xl"
+                alt="user-profile"
+              />
+            ) : (
+              <CAvatar color="info" size="xl">
                 <h1 className="p-0 m-0">
-                  {account.firstName &&
-                    account.firstName.charAt(0)
-                  }
+                  {account.firstName ? account.firstName.charAt(0) : "N"}
                 </h1>
-
               </CAvatar>
-            }
+            )}
             <div className=" mt-3">
               {account.firstName && account.lastName ? (
                 <h5>
-                  <span>{account.firstName}</span>{" "}
+                  <span>{account.firstName}</span>
                   <span className="ps-1">{account.lastName}</span>
                 </h5>
               ) : (
@@ -72,23 +77,39 @@ export class Sidenav extends Component {
           <div className="mt-5 side-nav-items">
             <ul className="side-nav-wrapper">
               <li className="mb-2 side-nav-list">
-                <Link to="/user/profile" className="side-nav-item d-flex align-items-center">
+                <Link
+                  to="/user/profile"
+                  className="side-nav-item d-flex align-items-center"
+                >
                   <VscIcons.VscAccount size={20} />
                   <span className="ms-2">My Profile</span>
                 </Link>
               </li>
               <li className="side-nav-list mb-2">
-
-                <Link to="/user/order" className="side-nav-item d-flex align-items-center">
+                <Link
+                  to="/user/order"
+                  className="side-nav-item d-flex align-items-center"
+                >
                   <IoIcons.IoBagCheck size={20} />
                   <span className="ms-2">My Order</span>
                 </Link>
               </li>
               <li className="side-nav-list mb-2">
-
-                <Link to="/user/wishlist" className="side-nav-item d-flex align-items-center">
+                <Link
+                  to="/user/wishlist"
+                  className="side-nav-item d-flex align-items-center"
+                >
                   <BiIcons.BiHistory size={20} />
                   <span className="ms-2">Wishlist</span>
+                </Link>
+              </li>
+              <li className="side-nav-list mb-2">
+                <Link
+                  to="/user/addresses"
+                  className="side-nav-item d-flex align-items-center"
+                >
+                  <MdIcons.MdLocationOn size={20} />
+                  <span className="ms-2">My Addresses</span>
                 </Link>
               </li>
             </ul>

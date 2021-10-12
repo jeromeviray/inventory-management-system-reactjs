@@ -7,8 +7,6 @@ import {
   CCardBody,
   CCardHeader,
   CCardFooter,
-
-
   CSpinner,
 } from "@coreui/react"
 import { DotLoader } from "react-spinners"
@@ -19,7 +17,10 @@ import { DotLoader } from "react-spinners"
 import { connect } from "react-redux"
 //action
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
-import { placeOrder, updateOrderPaymentStatus } from "src/service/apiActions/orderAction/orderAction"
+import {
+  placeOrder,
+  updateOrderPaymentStatus,
+} from "src/service/apiActions/orderAction/orderAction"
 import { history } from "src/_helper/history"
 import { Redirect } from "react-router-dom"
 import Roles from "src/router/config"
@@ -208,6 +209,7 @@ export class Cart extends Component {
       loading,
       redirectUrl,
     } = this.state
+    var totalAmount = 0
     const headerStyle = {
       fontWeight: "800",
     }
@@ -219,7 +221,6 @@ export class Cart extends Component {
       return <Redirect to="/login" />
     }
 
-    console.log(redirectUrl, successfull)
     if (successfull && redirectUrl != "" && redirectUrl) {
       window.location.replace(redirectUrl)
       return <></>
@@ -227,8 +228,6 @@ export class Cart extends Component {
 
     return (
       <div>
-
-
         <Suspense
           fallback={
             <div className="d-flex justify-content-center align-items-center  position-fixed ">
@@ -268,19 +267,46 @@ export class Cart extends Component {
 
                     {items.length > 0 ? (
                       items.map((item, index) => {
+                        const { promo, product } = item.product
+                        const status = promo && promo.status
+
+                        const percentage = promo && promo.percentage
+                        let discount = (product.productPrice * percentage) / 100
+                        let price = product.productPrice - discount
+                        if (status === "ONGOING") {
+                          totalAmount += price
+                        } else {
+                          totalAmount += product.productPrice
+                        }
+
                         return (
                           <>
                             <div
-                              key={index}
+                              key={item.id}
                               className="p-2 d-flex justify-content-between align-items-center"
                             >
                               <span
                                 className="text-truncate d-inline-block"
                                 style={{ maxWidth: "150px" }}
                               >
-                                {item.product.productName}
+                                {product.productName}
                               </span>
-                              <span>{item.amount.toFixed(2)}</span>
+                              <span>
+                                &#8369;
+                                {status === "ONGOING" ? (
+                                  <>
+                                    <span
+                                      className="text-muted text-decoration-line-through me-2"
+                                      style={{ fontSize: "16px" }}
+                                    >
+                                      {product.productPrice.toFixed(2)}
+                                    </span>
+                                    <span>{price.toFixed(2)}</span>
+                                  </>
+                                ) : (
+                                  product.productPrice.toFixed(2)
+                                )}
+                              </span>
                             </div>
                           </>
                         )
@@ -306,7 +332,7 @@ export class Cart extends Component {
                         Total Amount
                       </span>
                       <span style={{ fontWeight: "500" }}>
-                        &#8369;{Tamount.toFixed(2)}
+                        &#8369;{totalAmount.toFixed(2)}
                       </span>
                     </div>
                   </div>
@@ -379,5 +405,5 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
   clearMessage,
   placeOrder,
-  updateOrderPaymentStatus
+  updateOrderPaymentStatus,
 })(Cart)
