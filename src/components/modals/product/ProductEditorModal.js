@@ -16,14 +16,13 @@ import {
   CFormLabel,
   CForm,
   CSpinner,
-
-
   CFormSelect,
 } from "@coreui/react"
 
 //icons
 // import * as FaIcons from 'react-icons/fa'
 import { MdDelete } from "react-icons/md"
+import * as BiIcons from "react-icons/bi"
 
 // npm packages
 import ImageUploading from "react-images-uploading"
@@ -40,7 +39,9 @@ import { getBrands } from "src/service/apiActions/brandAction/brandAction"
 import { updateProduct } from "src/service/apiActions/productAction/productAction"
 //api
 import ProductApiService from "src/service/restAPI/ProductApiService"
-
+import ScanBarcodeModal from "../scanBarcode/ScanBarcodeModal"
+import { setScanModal } from "../../../service/apiActions/modalAction/modalAction"
+import { getDecodedBarcode } from "src/service/apiActions/scannerAction/scannerAction"
 export class ProductEditorModal extends Component {
   constructor(props) {
     super(props)
@@ -109,6 +110,7 @@ export class ProductEditorModal extends Component {
     this.manageModalVisible(prevProps, prevState)
     this.manageBrandsResponse(prevProps, prevState)
     this.manageCategoryResponse(prevProps, prevState)
+    this.manageScannerResponse(prevProps, prevState)
   }
   manageBrandsResponse = (prevProps, prevState) => {
     if (prevProps.brandResponse !== this.props.brandResponse) {
@@ -133,6 +135,7 @@ export class ProductEditorModal extends Component {
   manageModalVisible = (prevProps, prevState) => {
     if (prevProps.modalVisibleResponse !== this.props.modalVisibleResponse) {
       let { action, visible, icon } = this.props.modalVisibleResponse
+      console.log(this.props.modalVisibleResponse)
       if (action === "Add") {
         this.setState({
           visible: visible,
@@ -164,8 +167,8 @@ export class ProductEditorModal extends Component {
           productId: id,
           editorState: productDescription
             ? EditorState.createWithContent(
-              convertFromRaw(JSON.parse(productDescription)),
-            )
+                convertFromRaw(JSON.parse(productDescription)),
+              )
             : EditorState.createEmpty(),
         })
 
@@ -187,7 +190,7 @@ export class ProductEditorModal extends Component {
     }
   }
   async getImages(fileImages) {
-    for (let i = 0;i < fileImages.length;i++) {
+    for (let i = 0; i < fileImages.length; i++) {
       ProductApiService.getImage(fileImages[i].path, fileImages[i].fileName)
         .then((response) => {
           this.loadImage(response.data, fileImages[i].fileName)
@@ -296,7 +299,7 @@ export class ProductEditorModal extends Component {
     let productData = new FormData()
 
     if (productImage.length > 0) {
-      for (let i = 0;i < productImage.length;i++) {
+      for (let i = 0; i < productImage.length; i++) {
         if (productImage[i].file) {
           productData.append("productImages[]", productImage[i].file)
         }
@@ -360,7 +363,7 @@ export class ProductEditorModal extends Component {
     let productData = new FormData()
 
     if (productImage.length > 0) {
-      for (let i = 0;i < productImage.length;i++) {
+      for (let i = 0; i < productImage.length; i++) {
         if (productImage[i].file) {
           productData.append("productImages[]", productImage[i].file)
         }
@@ -409,7 +412,16 @@ export class ProductEditorModal extends Component {
       removedImages.push(productImage[index].filename)
     }
   }
+  manageScannerResponse = (prevProps, prevState) => {
+    if (prevProps.scannerResponse !== this.props.scannerResponse) {
+      let { action, decoded } = this.props.scannerResponse
+      console.log(this.props.scannerResponse)
 
+      if (action === "inputBarcode") {
+        this.setState({ barcode: decoded })
+      }
+    }
+  }
   render() {
     let {
       visible,
@@ -439,8 +451,7 @@ export class ProductEditorModal extends Component {
     }
     return (
       <>
-
-
+        <ScanBarcodeModal />
         <CModal size="xl" visible={visible} fullscreen="lg" scrollable>
           <CModalHeader
             onDismiss={() => {
@@ -502,9 +513,9 @@ export class ProductEditorModal extends Component {
                         style={
                           isDragging
                             ? {
-                              backgroundColor: "#8E9293",
-                              border: "4px dashed #ffffff",
-                            }
+                                backgroundColor: "#8E9293",
+                                border: "4px dashed #ffffff",
+                              }
                             : undefined
                         }
                         onClick={onImageUpload}
@@ -574,22 +585,39 @@ export class ProductEditorModal extends Component {
                   </CFormFloating>
                 </CCol>
                 <CCol sm="12" md="6" lg>
-                  <CFormFloating className="mb-3">
-                    <CFormControl
-                      type="number"
-                      id="floatingBarcode"
-                      placeholder="Product Barcode"
-                      name="barcode"
-                      value={barcode}
-                      onChange={this.handleOnChange}
-                      required
-                      disabled={action === "Edit" ? true : false}
-                    // disabled={autoGenerateBarcode}
-                    />
-                    <CFormLabel htmlFor="floatingBarcode">
-                      Product Barcode
-                    </CFormLabel>
-                  </CFormFloating>
+                  <div className="d-flex align-items-center justify-content-between">
+                    <CFormFloating className="mb-3 w-100">
+                      <CFormControl
+                        type="number"
+                        id="floatingBarcode"
+                        placeholder="Product Barcode"
+                        name="barcode"
+                        value={barcode}
+                        onChange={this.handleOnChange}
+                        required
+                        disabled={action === "Edit" ? true : false}
+                        // disabled={autoGenerateBarcode}
+                      />
+                      <CFormLabel htmlFor="floatingBarcode">
+                        Product Barcode
+                      </CFormLabel>
+                    </CFormFloating>
+                    <div>
+                      <CButton
+                        className="pt-2 pb-2 ms-2"
+                        type="button"
+                        color="info"
+                        variant="outline"
+                        id="btn-scan-barcode"
+                        onClick={() =>
+                          this.props.setScanModal(!false, "inputBarcode")
+                        }
+                      >
+                        <BiIcons.BiBarcodeReader size="24" />
+                      </CButton>
+                    </div>
+                  </div>
+
                   {/* <CRow className="align-items-end">
                     <CCol sm="8" md="8" lg="8">
                       <CFormFloating className="mb-3">
@@ -760,6 +788,7 @@ const mapStateToProps = (state) => {
     productResponse: state.productResponser,
     brandResponse: state.brandResponse,
     categoryResponse: state.categoryResponse,
+    scannerResponse: state.scannerResponse,
   }
 }
 export default connect(mapStateToProps, {
@@ -770,4 +799,6 @@ export default connect(mapStateToProps, {
   getCategories,
   getBrands,
   updateProduct,
+  setScanModal,
+  getDecodedBarcode,
 })(ProductEditorModal)

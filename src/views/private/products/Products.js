@@ -17,8 +17,7 @@ import {
   CCardHeader,
   CCol,
   CRow,
-  CButtonGroup
-
+  CButtonGroup,
 } from "@coreui/react"
 import * as FaIcons from "react-icons/fa"
 import * as MdIcons from "react-icons/md"
@@ -28,7 +27,10 @@ import ReactPaginate from "react-paginate"
 //action
 import { connect } from "react-redux"
 import { withRouter } from "react-router-dom"
-import { getProductsByStatus, getProduct } from "../../../service/apiActions/productAction/productAction"
+import {
+  getProductsByStatus,
+  getProduct,
+} from "../../../service/apiActions/productAction/productAction"
 import { setProductModal } from "../../../service/apiActions/modalAction/modalAction"
 import {
   setProductDetailsModal,
@@ -42,7 +44,7 @@ import {
 
 import AlertModal from "src/components/modals/alert/AlertModal"
 import ScanBarcodeModal from "src/components/modals/scanBarcode/ScanBarcodeModal"
-import ReactToPrint from 'react-to-print';
+import ReactToPrint from "react-to-print"
 
 import { history } from "src/_helper/history"
 import * as IoIcons from "react-icons/io5"
@@ -69,19 +71,18 @@ class Products extends Component {
   }
 
   componentDidMount() {
-    const getStatus = this.props.location.state;
+    const getStatus = this.props.location.state
 
-    history.replace('/app/products/products', null);
+    history.replace("/app/products/products", null)
     const { page, status, limit, query } = this.state
     if (getStatus) {
       this.getProducts(query, getStatus, page, limit)
       this.setState({
-        status: getStatus
+        status: getStatus,
       })
     } else {
       this.getProducts(query, status, page, limit)
     }
-
   }
 
   getProducts(query, status, page, limit) {
@@ -111,7 +112,6 @@ class Products extends Component {
 
     if (prevProps.productResponse !== this.props.productResponse) {
       let { action, status, data } = this.props.productResponse
-      console.log(data)
       if (action === "GETBYID") {
         if (status >= 200 && status <= 300) {
           this.props.editProductModal(
@@ -205,17 +205,15 @@ class Products extends Component {
 
     if (status === "ALL") {
       this.setState({
-        status: ''
+        status: "",
       })
-      this.getProducts(query, '', page, limit)
+      this.getProducts(query, "", page, limit)
     } else {
       this.setState({
-        status: status
+        status: status,
       })
       this.getProducts(query, status, page, limit)
     }
-
-
   }
   render() {
     let { visible, message, products, status } = this.state
@@ -286,9 +284,8 @@ class Products extends Component {
               </CButton>
             </div>
             <div className="d-flex align-items-end flex-row-reverse m-2">
-
               <ReactToPrint
-                trigger={() =>
+                trigger={() => (
                   <CButton
                     type="button"
                     variant="outline"
@@ -297,7 +294,7 @@ class Products extends Component {
                   >
                     <IoIcons.IoPrintOutline size={20} />
                   </CButton>
-                }
+                )}
                 content={() => this.componentRef}
               />
             </div>
@@ -307,20 +304,21 @@ class Products extends Component {
           <CCardHeader>
             <CRow>
               <CCol sm="5" className="d-flex align-items-center">
-                <h4 className="card-title mb-0 ">
-                  Products
-                </h4>
+                <h4 className="card-title mb-0 ">Products</h4>
               </CCol>
               <CCol sm="7">
                 <CButtonGroup className="float-end">
-
                   {["ALL", "OK", "LOW", "OUT_OF_STOCK"].map((value) => (
                     <CButton
-                      color={value === "LOW"
-                        ? "outline-warning"
-                        : value === "OUT_OF_STOCK"
+                      color={
+                        value === "LOW"
+                          ? "outline-warning"
+                          : value === "OUT_OF_STOCK"
                           ? "outline-danger"
-                          : value === "ALL" ? "outline-secondary" : "outline-success"}
+                          : value === "ALL"
+                          ? "outline-secondary"
+                          : "outline-success"
+                      }
                       key={value}
                       className="mx-0"
                       active={value === status}
@@ -333,7 +331,7 @@ class Products extends Component {
               </CCol>
             </CRow>
           </CCardHeader>
-          <CCardBody className="p-0 m-0 " >
+          <CCardBody className="p-0 m-0 ">
             <CTable
               striped
               hover
@@ -352,7 +350,9 @@ class Products extends Component {
                   <CTableHeaderCell scope="col">Barcode</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Name</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Price</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Alert Stocks Threshold</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">
+                    Alert Stocks Threshold
+                  </CTableHeaderCell>
                   <CTableHeaderCell scope="col">Total Stocks</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Status</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Action</CTableHeaderCell>
@@ -391,7 +391,9 @@ class Products extends Component {
                         </CTableDataCell>
                         <CTableDataCell>{threshold}</CTableDataCell>
                         <CTableDataCell>{totalStock}</CTableDataCell>
-                        <CTableDataCell>{this.manageStatus(status)}</CTableDataCell>
+                        <CTableDataCell>
+                          {this.manageStatus(status)}
+                        </CTableDataCell>
                         <CTableDataCell>
                           <CButton
                             color="secondary"

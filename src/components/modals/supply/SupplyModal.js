@@ -33,7 +33,10 @@ import { clearMessage } from "src/service/apiActions/messageAction/messageAction
 
 import { setSupplyModal } from "src/service/apiActions/modalAction/modalAction"
 import { getSuppliers } from "src/service/apiActions/supplierAction/supplierAction"
-import { saveIncomingSupply, updateIncomingSupplyItems } from "src/service/apiActions/incomingSupplyAction/incomingSupplyAction"
+import {
+  saveIncomingSupply,
+  updateIncomingSupplyItems,
+} from "src/service/apiActions/incomingSupplyAction/incomingSupplyAction"
 import { searchProductByBarcodeOrName } from "src/service/apiActions/productAction/productAction"
 import ReactSearchAutocomplete from "react-search-autocomplete/dist/components/ReactSearchAutocomplete"
 import BarcodeScannerComponent from "react-qr-barcode-scanner"
@@ -49,7 +52,7 @@ export class SupplyModal extends Component {
     visible: false,
     icon: "",
     action: "",
-    supplier: {},
+    supplier: [],
     visible: false,
     query: "",
     page: 0,
@@ -66,6 +69,7 @@ export class SupplyModal extends Component {
     incomingSupplyMessage: "",
     id: "",
     removedProductItems: [],
+    supplierId: -1,
   }
 
   componentDidMount() {
@@ -133,10 +137,7 @@ export class SupplyModal extends Component {
         if (this.state.supplierSelected) {
           this.setState({
             supplier: data.suppliers.data,
-          })
-        } else {
-          this.setState({
-            supplier: data.suppliers.data
+            supplierId: data.suppliers.data.id,
           })
         }
       }
@@ -146,8 +147,6 @@ export class SupplyModal extends Component {
     const { showScanner } = this.state
     if (prevProps.productResponse !== this.props.productResponse) {
       let { action, status, data } = this.props.productResponse
-      console.log(data)
-
       if (action === "SEARCH_PRODUCT" && status === 200) {
         this.setState({
           items: data.products.data,
@@ -165,7 +164,6 @@ export class SupplyModal extends Component {
   handleTempProductItem = (index, item) => {
     let { product } = this.state
     const productItems = this.state.productItems.slice(0)
-    console.log(item)
     let find = productItems.findIndex((product) => {
       return product.product.id === item.id
     })
@@ -271,7 +269,7 @@ export class SupplyModal extends Component {
     event.preventDefault()
     const { action } = this.state
     this.setState({
-      loading: true
+      loading: true,
     })
     if (action === "Add") {
       this.handleOnSave()
@@ -280,11 +278,14 @@ export class SupplyModal extends Component {
     }
   }
   handleOnSave = () => {
-    const { supplier, productItems } = this.state
+    const { supplierId, supplier, productItems } = this.state
+    // console.log(supplier[0])
+    // const supplierId = supplier && supplier[0]
+    if (productItems.length > 0) {
+      console.log(supplierId)
 
-    if (supplier.length > 0 && productItems.length > 0) {
       this.props
-        .saveIncomingSupply(productItems, supplier[0])
+        .saveIncomingSupply(productItems, supplierId)
         .then(() => {
           let { status, data } = this.props.messageResponse
           if (status > 400 && status <= 403) {
@@ -293,12 +294,11 @@ export class SupplyModal extends Component {
           }
           this.props.setSupplyModal(false, "close", "", "")
           this.setState({
-            loading: false
+            loading: false,
           })
         })
         .catch(() => {
           let { status, data } = this.props.messageResponse
-
           if (status > 400 && status <= 403) {
             setInterval(() => {
               this.props.logout()
@@ -312,13 +312,9 @@ export class SupplyModal extends Component {
           }
         })
     } else {
-      if (supplier.length === 0) {
+      if (productItems.length === 0) {
         this.setState({
-          supplierErrorMessage: "PLease Search and Select Supplier.",
-        })
-      } else if (productItems.length === 0) {
-        this.setState({
-          incomingSupplyMessage: "Please Add Incoming Products.",
+          incomingSupplyMessage: "Please Add Products.",
         })
       }
     }
@@ -326,7 +322,13 @@ export class SupplyModal extends Component {
   handleOnUpdate = () => {
     const { productItems, supplier, id, removedProductItems } = this.state
 
-    this.props.updateIncomingSupplyItems(id, productItems, supplier, removedProductItems)
+    this.props
+      .updateIncomingSupplyItems(
+        id,
+        productItems,
+        supplier,
+        removedProductItems,
+      )
       .then(() => {
         let { status, data } = this.props.messageResponse
         if (status > 400 && status <= 403) {
@@ -335,9 +337,8 @@ export class SupplyModal extends Component {
         }
         this.props.setSupplyModal(false, "close", "", "")
         this.setState({
-          loading: false
+          loading: false,
         })
-
       })
       .catch(() => {
         let { status, data } = this.props.messageResponse
@@ -373,7 +374,6 @@ export class SupplyModal extends Component {
       supplierErrorMessage,
       removedProductItems,
     } = this.state
-    console.log(removedProductItems)
     return (
       <div>
         <CModal visible={visible} size="xl" scrollable>
@@ -420,29 +420,22 @@ export class SupplyModal extends Component {
                   </CContainer>
                   <CContainer className="mt-4">
                     <CCallout color="info">
-                      {supplierSelected ? (
-                        <>
-                          {action === "Edit" ? (
-                            <>
-                              <h4>Supplier Name</h4>
-                              <h5>{supplier.name && supplier.name}</h5>
-                            </>
-                          ) : (
-                            <>
-                              <h4>Supplier Name</h4>
-                              {supplier.map((item, index) => {
+                      <>
+                        {action === "Edit" ? (
+                          <>
+                            <h4>Supplier Name</h4>
+                            <h5>{supplier && supplier.name}</h5>
+                          </>
+                        ) : (
+                          <>
+                            <h4>Supplier Name</h4>
+                            {supplier &&
+                              supplier.map((item, index) => {
                                 return <h5 key={item.id}>{item.name}</h5>
                               })}
-                            </>
-                          )}
-                        </>
-                      ) : (
-                        <>
-                          <CAlert color="danger">
-                            Please, Search Supplier and Select.
-                          </CAlert>
-                        </>
-                      )}
+                          </>
+                        )}
+                      </>
                     </CCallout>
                   </CContainer>
                 </CCol>
@@ -692,5 +685,5 @@ export default connect(mapStateToProps, {
   getSuppliers,
   searchProductByBarcodeOrName,
   saveIncomingSupply,
-  updateIncomingSupplyItems
+  updateIncomingSupplyItems,
 })(SupplyModal)

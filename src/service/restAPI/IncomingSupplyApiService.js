@@ -2,14 +2,14 @@ import axios from "./RestApi"
 import authHeader from "../auth/authHeader"
 
 export class IncomingSupplyApiService {
-  saveIncomingSupply(incomingSupplyItems, supplier) {
-    console.log(incomingSupplyItems)
+  saveIncomingSupply(incomingSupplyItems, supplierId) {
+    console.log(supplierId)
     return axios.post(
       "/supplies/save",
       {
         incomingSupplyItems: incomingSupplyItems,
         supplier: {
-          id: supplier.id,
+          id: supplierId,
         },
       },
       {
@@ -36,7 +36,6 @@ export class IncomingSupplyApiService {
   }
 
   markIncomingSuppliesAsDelivered(id) {
-    console.log(authHeader())
     return axios.put(
       "/supplies/delivered",
       {},
@@ -48,16 +47,23 @@ export class IncomingSupplyApiService {
       },
     )
   }
-  updateIncomingSuppleis(id, incomingSupplyItems, supplier, removedIncomingSupplyItems) {
-    return axios.put("/supplies/update/" + id, {
-      incomingSupply: {
-        incomingSupplyItems: incomingSupplyItems,
-        supplier: {
-          id: supplier.id,
+  updateIncomingSuppleis(
+    id,
+    incomingSupplyItems,
+    supplier,
+    removedIncomingSupplyItems,
+  ) {
+    return axios.put(
+      "/supplies/update/" + id,
+      {
+        incomingSupply: {
+          incomingSupplyItems: incomingSupplyItems,
+          supplier: {
+            id: supplier.id,
+          },
         },
+        removedItems: removedIncomingSupplyItems,
       },
-      removedItems: removedIncomingSupplyItems
-    },
       {
         headers: authHeader(),
       },

@@ -14,7 +14,10 @@ import {
 } from "@coreui/react"
 import { Link } from "react-router-dom"
 import Barcode from "react-barcode"
-import { markIncomingSuppliesAsDelivered, getIncomingSupplies } from "src/service/apiActions/incomingSupplyAction/incomingSupplyAction"
+import {
+  markIncomingSuppliesAsDelivered,
+  getIncomingSupplies,
+} from "src/service/apiActions/incomingSupplyAction/incomingSupplyAction"
 import { connect } from "react-redux"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { setSupplyModal } from "src/service/apiActions/modalAction/modalAction"
@@ -22,26 +25,25 @@ import { setSupplyModal } from "src/service/apiActions/modalAction/modalAction"
 import * as MdIcons from "react-icons/md"
 
 export class IncomingSuppliesCard extends Component {
-
   handleIncomingSupplyItem(incomingItem, status) {
     this.props
       .markIncomingSuppliesAsDelivered(incomingItem.id)
       .then(() => {
-        let supplies = this.props.supplies;
+        let supplies = this.props.supplies
         let incomingSupplies = this.props.incomingSupplyResponse.data
         const index = supplies.findIndex((o) => o.id === incomingItem.id)
 
         supplies.splice(index, 1)
         if (supplies.length === 0) {
-          this.props.getIncomingSupplies('', status, 0, 10)
+          this.props.getIncomingSupplies("", status, 0, 10)
         } else {
-          let totalCounts = this.props.totalCounts;
-          if (typeof totalCounts[status.toUpperCase()] == 'undefined') {
-            totalCounts[status.toUpperCase()] = 0;
+          let totalCounts = this.props.totalCounts
+          if (typeof totalCounts[status.toUpperCase()] == "undefined") {
+            totalCounts[status.toUpperCase()] = 0
           }
-          totalCounts[incomingItem.incomingSupplyStatus.toUpperCase()]--;
-          totalCounts[status.toUpperCase()]++;
-          this.props.totalCountChange(totalCounts);
+          totalCounts[incomingItem.incomingSupplyStatus.toUpperCase()]--
+          totalCounts[status.toUpperCase()]++
+          this.props.totalCountChange(totalCounts)
           // this.setState({
           //   orders: orders
           // });
@@ -113,7 +115,7 @@ export class IncomingSuppliesCard extends Component {
     return orderButton
   }
   render() {
-    let supplies = this.props.supplies;
+    let supplies = this.props.supplies
     const fontStyle = {
       fontSize: "14px",
       fontWeight: "400",
@@ -247,7 +249,7 @@ export class IncomingSuppliesCard extends Component {
                           Supplier Name:
                         </span>
                         <span style={{ fontWeight: "500" }}>
-                          {supplier.name}
+                          {supplier && supplier.name}
                         </span>
                       </div>
                       <div style={fontStyle} className="mt-2">
@@ -331,5 +333,5 @@ export default connect(mapStateToProps, {
   clearMessage,
   markIncomingSuppliesAsDelivered,
   setSupplyModal,
-  getIncomingSupplies
+  getIncomingSupplies,
 })(IncomingSuppliesCard)

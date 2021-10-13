@@ -1,3 +1,5 @@
+import config from "../../config"
+
 export const GET_PRODUCTS = "GET_PRODUCTS"
 export const GET_PRODUCT = "GET_PRODUCT"
 export const DELETE_PRODUCT = "DELETE_PRODUCT"
@@ -40,10 +42,10 @@ export const SET_PROMO_MODAL = "SET_PROMO_MODAL"
 export const CHANGE_PASSWORD_MODAL = "CHANGE_PASSWORD_MODAL"
 
 // endpoint constalnts
-export const API_BASE_URL = "http://localhost:4480"
-export const FRONT_END_BASED_URL = "http://localhost:4000"
+export const API_BASE_URL = config.api.private.baseUrl
+export const FRONT_END_BASED_URL = config.api.private.baseFrontendUrl
 
-export const OAUTH2_REDIRECT_URI = "http://localhost:4000/oauth2/redirect"
+export const OAUTH2_REDIRECT_URI = API_BASE_URL + "/oauth2/redirect"
 
 export const ACCESS_TOKEN = "accessToken"
 export const REFRESH_TOKEN = "refreshToken"

@@ -98,10 +98,10 @@ export const getIncomingSupply = (id) => async (dispatch) => {
 }
 
 export const saveIncomingSupply =
-  (incomingSupplies, supplier) => async (dispatch) => {
+  (incomingSupplies, supplierId) => async (dispatch) => {
     return IncomingSupplyApiService.saveIncomingSupply(
       incomingSupplies,
-      supplier,
+      supplierId,
     ).then(
       (response) => {
         dispatch({
