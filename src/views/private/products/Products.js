@@ -117,7 +117,7 @@ class Products extends Component {
           this.props.editProductModal(
             !visible,
             "Edit",
-            data.product.product,
+            data.product,
             <FaIcons.FaEdit size={20} />,
           )
         }
@@ -314,10 +314,10 @@ class Products extends Component {
                         value === "LOW"
                           ? "outline-warning"
                           : value === "OUT_OF_STOCK"
-                          ? "outline-danger"
-                          : value === "ALL"
-                          ? "outline-secondary"
-                          : "outline-success"
+                            ? "outline-danger"
+                            : value === "ALL"
+                              ? "outline-secondary"
+                              : "outline-success"
                       }
                       key={value}
                       className="mx-0"
