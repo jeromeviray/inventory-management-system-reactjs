@@ -100,6 +100,7 @@ export const RESET_PASSWORD = "RESET_PASSWORD"
 export const GET_ME = "GET_ME"
 export const BAN_ACCOUNT = "BAN_ACCOUNT"
 export const UPDATE_USER = "UPDATE_USER"
+export const VERIFY_ACCOUNT = "VERIFY_ACCOUNT"
 //cart
 export const ADD_TO_CART = "ADD_TO_CART"
 export const GET_CART_ITEMS = "GET_CART_ITEMS"

@@ -99,6 +99,9 @@ export class AccountApiService {
       },
     })
   }
+  verifyAccount(code) {
+    return axios.get("/account/verification/" + code)
+  }
   validateToken(token) {
     return axios.get("/account/password/forgot/token", {
       params: {
