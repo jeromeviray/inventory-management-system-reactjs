@@ -1,15 +1,6 @@
 import React from "react"
-import {
-  CButton,
-  CCol,
-  CContainer,
-  CFormControl,
-  CInputGroup,
-  CInputGroupText,
-  CRow,
-} from "@coreui/react"
-import CIcon from "@coreui/icons-react"
-
+import { CCol, CContainer, CRow } from "@coreui/react"
+import { Link } from "react-router-dom"
 const Page404 = () => {
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
@@ -22,18 +13,10 @@ const Page404 = () => {
               <p className="text-medium-emphasis float-start">
                 The page you are looking for was not found.
               </p>
+              <p className="text-medium-emphasis float-start">
+                <Link to="/">Home</Link>
+              </p>
             </div>
-            <CInputGroup className="input-prepend">
-              <CInputGroupText>
-                <CIcon name="cil-magnifying-glass" />
-              </CInputGroupText>
-              <CFormControl
-                size="sm"
-                type="text"
-                placeholder="What are you looking for?"
-              />
-              <CButton color="info">Search</CButton>
-            </CInputGroup>
           </CCol>
         </CRow>
       </CContainer>

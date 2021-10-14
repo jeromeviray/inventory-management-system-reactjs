@@ -78,6 +78,13 @@ const ProductDetails = React.lazy(() =>
 const CustomerAddressController = React.lazy(() =>
   import("src/views/common/address/CustomerAddressController"),
 )
+const TermsAndCondition = React.lazy(() =>
+  import("src/views/common/termsAndCondition/TermsAndCondition"),
+)
+const StoreInformation = React.lazy(() =>
+  import("src/views/private/store/StoreInformation"),
+)
+
 export const routes = [
   {
     path: config.api.private.prefixFrontendUrl + "/app",
@@ -207,6 +214,20 @@ export const routes = [
     exact: true,
     name: "Profile",
     component: Profile,
+    permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
+  },
+  {
+    path: config.api.private.prefixFrontendUrl + "/app/store",
+    exact: true,
+    name: "Store Information",
+    component: StoreInformation,
+    permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
+  },
+  {
+    path: config.api.private.prefixFrontendUrl + "/app/terms",
+    exact: true,
+    name: "Terms and Condition",
+    component: TermsAndCondition,
     permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
   },
 ]

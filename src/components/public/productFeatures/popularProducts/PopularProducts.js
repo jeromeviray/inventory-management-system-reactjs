@@ -30,11 +30,9 @@ export class PopularProducts extends Component {
     }
   }
   render() {
-    let { message, products } = this.state
-    console.log(products)
+    let { products } = this.state
     return (
       <>
-        {/* <ProductDetialsModal /> */}
         <CRow className=" pt-2 pb-2 mb-4">
           <h4>Popular Product</h4>
           {products.data.slice(0, 8).map((product, index) => {

@@ -26,12 +26,9 @@ import { history } from "src/_helper/history"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import Roles from "src/router/config"
 import { Link } from "react-router-dom"
-<<<<<<< HEAD
 import config from "../../../../config"
-
-=======
+import { getStoreInformation } from "src/service/apiActions/storeAction/StoreInformationAction"
 import { verifyCode } from "src/service/apiActions/accountAction/accountAction"
->>>>>>> 12dfed9c64204a8e9f0be732d1d0d82e167a3d9d
 const RightFormCard = lazy(() =>
   import("../../../../components/public/RightFormCard"),
 )
@@ -53,7 +50,8 @@ export class Register extends Component {
     isLoggedIn: false,
     permission: "",
     verifyform: false,
-    verificationCode: ""
+    verificationCode: "",
+    storeInfo: [],
   }
   userCredentials = {
     username: "",
@@ -106,7 +104,7 @@ export class Register extends Component {
             loading: false,
             successful: true,
             message: successResponse,
-            verifyform: true
+            verifyform: true,
           })
           this.onResetValue()
         })
@@ -121,6 +119,7 @@ export class Register extends Component {
   }
   componentDidMount() {
     this.redirectAuthenticated()
+    this.props.getStoreInformation()
   }
   redirectAuthenticated() {
     const isLoggedIn = this.props.userResponse.isLoggedIn
@@ -138,28 +137,44 @@ export class Register extends Component {
   }
   handleVerificationCode = (event) => {
     event.preventDefault()
-    let {
-      verificationCode
-    } = this.state
+    let { verificationCode } = this.state
     this.setState({
       loading: true,
     })
     if (verificationCode) {
-      this.props.verifyCode(verificationCode).then(() => {
-        let { data } = this.props.messageResponse
-        this.setState({
-          messgae: data.message,
-          verifyform: false,
-          loading: false
+      this.props
+        .verifyCode(verificationCode)
+        .then(() => {
+          let { data } = this.props.messageResponse
+          this.setState({
+            messgae: data.message,
+            verifyform: false,
+            loading: false,
+          })
         })
-      }).catch(() => {
-        let { data } = this.props.messageResponse
-        this.setState({
-          messgae: data.message,
-          verifyform: false,
-          loading: false
+        .catch(() => {
+          let { data } = this.props.messageResponse
+          this.setState({
+            messgae: data.message,
+            verifyform: false,
+            loading: false,
+          })
         })
-      })
+    }
+  }
+  componentDidUpdate = (prevProps, prevState) => {
+    this.manageStoreInformationResponse(prevProps, prevState)
+  }
+  manageStoreInformationResponse = (prevProps, prevState) => {
+    if (
+      prevProps.storeInformationResponse !== this.props.storeInformationResponse
+    ) {
+      const { action, status, data } = this.props.storeInformationResponse
+      if (action === "GET_STORE_INFORMATION" && status === 200) {
+        this.setState({
+          storeInfo: data.storeInfo,
+        })
+      }
     }
   }
   render() {
@@ -177,9 +192,9 @@ export class Register extends Component {
       isLoggedIn,
       permission,
       verifyform,
-      verificationCode
+      verificationCode,
+      storeInfo,
     } = this.state
-    console.log(verificationCode)
     if (isLoggedIn) {
       if (permission === Roles.SUPER_ADMIN || permission === Roles.ADMIN) {
         return <Redirect to={config.api.private.prefixFrontendUrl + "/app"} />
@@ -187,6 +202,10 @@ export class Register extends Component {
         return <Redirect to={config.api.private.prefixFrontendUrl + "/home"} />
       }
     }
+    const margin = {
+      marginBottom: "12px",
+    }
+
     return (
       <>
         <CHeader position="sticky">
@@ -196,7 +215,19 @@ export class Register extends Component {
               to={config.api.private.prefixFrontendUrl + "/home"}
               style={{ cursor: "pointer" }}
             >
-              <h2 className="nav-item">Logo</h2>
+              {storeInfo.storeName ? (
+                <strong style={{ ...margin }}>
+                  <Link to="/" className="nav-link">
+                    {storeInfo.storeName}
+                  </Link>
+                </strong>
+              ) : (
+                <strong style={{ ...margin }}>
+                  <Link to="/" className="nav-link">
+                    IMS
+                  </Link>
+                </strong>
+              )}
             </Link>
           </CContainer>
         </CHeader>
@@ -207,261 +238,55 @@ export class Register extends Component {
                 <CCardGroup className="shadow-lg">
                   <CCard className="p-4 m-0 left-to-right form-container border-0">
                     <CCardBody>
-                      {!loading ? verifyform ?
-                        <>
-                          <CForm id="verificationForm" onSubmit={this.handleVerificationCode} >
-                            <CCol
-                              sm="12"
-                              md="12"
-                              lg="12"
-                              className="d-flex justify-content-center p-3"
+                      {!loading ? (
+                        verifyform ? (
+                          <>
+                            <CForm
+                              id="verificationForm"
+                              onSubmit={this.handleVerificationCode}
                             >
-                              <h2 className="text-dark">Verification Code</h2>
-                            </CCol>
-                            <CRow className="justify-content-center align-items-center">
-                              <CCol>
-                                <CInputGroup>
-                                  <CCol xs="12" sm="12" md="12" lg="12">
-                                    <CFormFloating className="mb-3 text-dark ">
-                                      <CFormControl
-                                        name="verificationCode"
-                                        type="text"
-                                        autoCorrect="false"
-                                        id="floatingVerificationCode"
-                                        placeholder="Verification Code"
-                                        onChange={this.handleOnChange}
-                                        value={verificationCode}
-                                        required
-                                        className="rounded-pill  ps-4 pe-4"
-                                      />
-                                      <CFormLabel
-                                        htmlFor="floatingVerificationCode "
-                                        className="ps-4 pe-4"
-                                      >
-                                        <FaIcons.FaLock size={18} />
-                                        <span className="ps-2">Verification Code</span>
-                                      </CFormLabel>
-                                    </CFormFloating>
-                                  </CCol>
-                                </CInputGroup>
+                              <CCol
+                                sm="12"
+                                md="12"
+                                lg="12"
+                                className="d-flex justify-content-center p-3"
+                              >
+                                <h2 className="text-dark">Verification Code</h2>
                               </CCol>
-                            </CRow>
-                            <CButton
-                              form="verificationForm"
-                              type="submit"
-                              color="info"
-                              size="lg"
-                              style={{ margin: "20px auto", width: "50%" }}
-                              className="d-flex justify-content-center align-items-center position-relative overflow-hidden login-btn"
-                            >
-                              {loading ? (
-                                <CSpinner size="sm" />
-                              ) : (
-                                <span className="d-flex align-items-center login-icon me-2">
-                                  <FaIcons.FaLock size={20} />
-                                </span>
-                              )}
-                              <span className="label-btn ">Verify</span>
-                            </CButton>
-                          </CForm>
-                        </> :
-                        <>
-                          <CForm onSubmit={this.handleSubmit}>
-                            <CCol
-                              sm="12"
-                              md="12"
-                              lg="12"
-                              className="d-flex justify-content-center p-3"
-                            >
-                              <h2 className="text-dark">Register</h2>
-                            </CCol>
-                            <CRow>
-                              <CCol xs="12" sm="12" md="6" lg="6">
-                                <CInputGroup>
-                                  <CCol xs="12" sm="12" md="12" lg="12">
-                                    <CFormFloating className="mb-3 text-dark ">
-                                      <CFormControl
-                                        name="firstName"
-                                        type="text"
-                                        autoCorrect="false"
-                                        id="floatingFirstName"
-                                        placeholder="First name"
-                                        onChange={this.handleOnChange}
-                                        value={firstName}
-                                        required
-                                        className="rounded-pill  ps-4 pe-4"
-                                      />
-                                      <CFormLabel
-                                        htmlFor="floatingFirstName "
-                                        className="ps-4 pe-4"
-                                      >
-                                        <FaIcons.FaUser size={18} />
-                                        <span className="ps-2">First name</span>
-                                      </CFormLabel>
-                                    </CFormFloating>
-                                  </CCol>
-                                </CInputGroup>
-                              </CCol>
-                              <CCol xs="12" sm="12" md="6" lg="6">
-                                <CInputGroup>
-                                  <CCol xs="12" sm="12" md="12" lg="12">
-                                    <CFormFloating className="mb-3 text-dark ">
-                                      <CFormControl
-                                        name="lastName"
-                                        type="text"
-                                        autoCorrect="false"
-                                        id="floatingLastName"
-                                        placeholder="Last name"
-                                        onChange={this.handleOnChange}
-                                        value={lastName}
-                                        required
-                                        className="rounded-pill  ps-4 pe-4"
-                                      />
-                                      <CFormLabel
-                                        htmlFor="floatingLastName"
-                                        className="ps-4 pe-4"
-                                      >
-                                        <FaIcons.FaUser size={18} />
-                                        <span className="ps-2">Last name</span>
-                                      </CFormLabel>
-                                    </CFormFloating>
-                                  </CCol>
-                                </CInputGroup>
-                              </CCol>
-                            </CRow>
-                            <CRow>
-                              <CCol md="6" sm="12" lg="6">
-                                <CInputGroup>
-                                  <CCol xs="12" sm="12" md="12" lg="12">
-                                    <CFormFloating className="mb-3 text-dark ">
-                                      <CFormControl
-                                        name="phoneNumber"
-                                        type="number"
-                                        autoCorrect="false"
-                                        id="floatingPhoneNumber"
-                                        placeholder="Phone number"
-                                        onChange={this.handleOnChange}
-                                        value={phoneNumber}
-                                        required
-                                        className="rounded-pill  ps-4 pe-4"
-                                      />
-                                      <CFormLabel
-                                        htmlFor="floatingPhoneNumber "
-                                        className="ps-4 pe-4"
-                                      >
-                                        <FaIcons.FaPhone size={18} />
-                                        <span className="ps-2">Phone number</span>
-                                      </CFormLabel>
-                                    </CFormFloating>
-                                  </CCol>
-                                </CInputGroup>
-                              </CCol>
-                              <CCol md="6" sm="12" lg="6">
-                                <CInputGroup>
-                                  <CCol xs="12" sm="12" md="12" lg="12">
-                                    <CFormFloating className="mb-3 text-dark position-relative">
-                                      <CFormControl
-                                        name="email"
-                                        type="email"
-                                        id="floatingEmail"
-                                        autoCorrect="false"
-                                        placeholder="Email"
-                                        onChange={this.handleOnChange}
-                                        value={email}
-                                        required
-                                        className="rounded-pill ps-4 pe-4"
-                                      />
-                                      <CFormLabel
-                                        htmlFor="exampleFormControlTextarea1 "
-                                        className="ps-4 pe-4"
-                                      >
-                                        <FaIcons.FaEnvelope size={18} />
-                                        <span className="ps-2">Email</span>
-                                      </CFormLabel>
-                                      <CFormFeedback invalid>
-                                        Please provide a valid username
-                                      </CFormFeedback>
-                                    </CFormFloating>
-                                  </CCol>
-                                </CInputGroup>
-                              </CCol>
-                            </CRow>
-                            <CRow>
-                              <CCol md="6" sm="12" lg="6">
-                                <CInputGroup>
-                                  <CCol xs="12" sm="12" md="12" lg="12">
-                                    <CFormFloating className="mb-3 text-dark ">
-                                      <CFormControl
-                                        name="username"
-                                        type="text"
-                                        autoCorrect="false"
-                                        id="floatingInput"
-                                        placeholder="username"
-                                        onChange={this.handleOnChange}
-                                        value={username}
-                                        required
-                                        className="rounded-pill  ps-4 pe-4"
-                                      />
-                                      <CFormLabel
-                                        htmlFor="floatingInput "
-                                        className="ps-4 pe-4"
-                                      >
-                                        <FaIcons.FaUserCircle size={18} />
-                                        <span className="ps-2">Username</span>
-                                      </CFormLabel>
-                                    </CFormFloating>
-                                  </CCol>
-                                </CInputGroup>
-                              </CCol>
-                              <CCol md="6" sm="12" lg="6">
-                                <CInputGroup>
-                                  <CCol xs="12" sm="12" md="12" lg="12">
-                                    <CFormFloating className="mb-3 text-dark position-relative">
-                                      <CFormControl
-                                        name="password"
-                                        type={type}
-                                        id="floatingPassword"
-                                        autoCorrect="false"
-                                        placeholder="Password"
-                                        onChange={this.handleOnChange}
-                                        value={password}
-                                        required
-                                        className="rounded-pill ps-4 pe-4"
-                                      />
-                                      <CFormLabel
-                                        htmlFor="exampleFormControlTextarea1 "
-                                        className="ps-4 pe-4"
-                                      >
-                                        <FaIcons.FaLock size={18} />
-                                        <span className="ps-2">Password</span>
-                                      </CFormLabel>
-                                      <span
-                                        onClick={this.handleShowPassword}
-                                        className="position-absolute top-50 end-0 translate-middle-y ps-4 pe-4"
-                                      >
-                                        {type === "password" ? (
-                                          <FaIcons.FaEyeSlash size={20} />
-                                        ) : (
-                                          <FaIcons.FaEye size={20} />
-                                        )}
-                                      </span>
-                                      <CFormFeedback invalid>
-                                        Please provide a valid username
-                                      </CFormFeedback>
-                                    </CFormFloating>
-                                  </CCol>
-                                </CInputGroup>
-                              </CCol>
-                            </CRow>
-                            <CCol
-                              sm="12"
-                              md="12"
-                              lg="12"
-                              className="d-flex flex-column justify-content-center"
-                            >
+                              <CRow className="justify-content-center align-items-center">
+                                <CCol>
+                                  <CInputGroup>
+                                    <CCol xs="12" sm="12" md="12" lg="12">
+                                      <CFormFloating className="mb-3 text-dark ">
+                                        <CFormControl
+                                          name="verificationCode"
+                                          type="text"
+                                          autoCorrect="false"
+                                          id="floatingVerificationCode"
+                                          placeholder="Verification Code"
+                                          onChange={this.handleOnChange}
+                                          value={verificationCode}
+                                          required
+                                          className="rounded-pill  ps-4 pe-4"
+                                        />
+                                        <CFormLabel
+                                          htmlFor="floatingVerificationCode "
+                                          className="ps-4 pe-4"
+                                        >
+                                          <FaIcons.FaLock size={18} />
+                                          <span className="ps-2">
+                                            Verification Code
+                                          </span>
+                                        </CFormLabel>
+                                      </CFormFloating>
+                                    </CCol>
+                                  </CInputGroup>
+                                </CCol>
+                              </CRow>
                               <CButton
+                                form="verificationForm"
                                 type="submit"
-                                color="success"
+                                color="info"
                                 size="lg"
                                 style={{ margin: "20px auto", width: "50%" }}
                                 className="d-flex justify-content-center align-items-center position-relative overflow-hidden login-btn"
@@ -470,15 +295,235 @@ export class Register extends Component {
                                   <CSpinner size="sm" />
                                 ) : (
                                   <span className="d-flex align-items-center login-icon me-2">
-                                    <BsIcons.BsFillPersonPlusFill size={20} />
+                                    <FaIcons.FaLock size={20} />
                                   </span>
                                 )}
-                                <span className="label-btn ">Register</span>
+                                <span className="label-btn ">Verify</span>
                               </CButton>
-                            </CCol>
-
-                          </CForm>
-                        </> : (
+                            </CForm>
+                          </>
+                        ) : (
+                          <>
+                            <CForm onSubmit={this.handleSubmit}>
+                              <CCol
+                                sm="12"
+                                md="12"
+                                lg="12"
+                                className="d-flex justify-content-center p-3"
+                              >
+                                <h2 className="text-dark">Register</h2>
+                              </CCol>
+                              <CRow>
+                                <CCol xs="12" sm="12" md="6" lg="6">
+                                  <CInputGroup>
+                                    <CCol xs="12" sm="12" md="12" lg="12">
+                                      <CFormFloating className="mb-3 text-dark ">
+                                        <CFormControl
+                                          name="firstName"
+                                          type="text"
+                                          autoCorrect="false"
+                                          id="floatingFirstName"
+                                          placeholder="First name"
+                                          onChange={this.handleOnChange}
+                                          value={firstName}
+                                          required
+                                          className="rounded-pill  ps-4 pe-4"
+                                        />
+                                        <CFormLabel
+                                          htmlFor="floatingFirstName "
+                                          className="ps-4 pe-4"
+                                        >
+                                          <FaIcons.FaUser size={18} />
+                                          <span className="ps-2">
+                                            First name
+                                          </span>
+                                        </CFormLabel>
+                                      </CFormFloating>
+                                    </CCol>
+                                  </CInputGroup>
+                                </CCol>
+                                <CCol xs="12" sm="12" md="6" lg="6">
+                                  <CInputGroup>
+                                    <CCol xs="12" sm="12" md="12" lg="12">
+                                      <CFormFloating className="mb-3 text-dark ">
+                                        <CFormControl
+                                          name="lastName"
+                                          type="text"
+                                          autoCorrect="false"
+                                          id="floatingLastName"
+                                          placeholder="Last name"
+                                          onChange={this.handleOnChange}
+                                          value={lastName}
+                                          required
+                                          className="rounded-pill  ps-4 pe-4"
+                                        />
+                                        <CFormLabel
+                                          htmlFor="floatingLastName"
+                                          className="ps-4 pe-4"
+                                        >
+                                          <FaIcons.FaUser size={18} />
+                                          <span className="ps-2">
+                                            Last name
+                                          </span>
+                                        </CFormLabel>
+                                      </CFormFloating>
+                                    </CCol>
+                                  </CInputGroup>
+                                </CCol>
+                              </CRow>
+                              <CRow>
+                                <CCol md="6" sm="12" lg="6">
+                                  <CInputGroup>
+                                    <CCol xs="12" sm="12" md="12" lg="12">
+                                      <CFormFloating className="mb-3 text-dark ">
+                                        <CFormControl
+                                          name="phoneNumber"
+                                          type="number"
+                                          autoCorrect="false"
+                                          id="floatingPhoneNumber"
+                                          placeholder="Phone number"
+                                          onChange={this.handleOnChange}
+                                          value={phoneNumber}
+                                          required
+                                          className="rounded-pill  ps-4 pe-4"
+                                        />
+                                        <CFormLabel
+                                          htmlFor="floatingPhoneNumber "
+                                          className="ps-4 pe-4"
+                                        >
+                                          <FaIcons.FaPhone size={18} />
+                                          <span className="ps-2">
+                                            Phone number
+                                          </span>
+                                        </CFormLabel>
+                                      </CFormFloating>
+                                    </CCol>
+                                  </CInputGroup>
+                                </CCol>
+                                <CCol md="6" sm="12" lg="6">
+                                  <CInputGroup>
+                                    <CCol xs="12" sm="12" md="12" lg="12">
+                                      <CFormFloating className="mb-3 text-dark position-relative">
+                                        <CFormControl
+                                          name="email"
+                                          type="email"
+                                          id="floatingEmail"
+                                          autoCorrect="false"
+                                          placeholder="Email"
+                                          onChange={this.handleOnChange}
+                                          value={email}
+                                          required
+                                          className="rounded-pill ps-4 pe-4"
+                                        />
+                                        <CFormLabel
+                                          htmlFor="exampleFormControlTextarea1 "
+                                          className="ps-4 pe-4"
+                                        >
+                                          <FaIcons.FaEnvelope size={18} />
+                                          <span className="ps-2">Email</span>
+                                        </CFormLabel>
+                                        <CFormFeedback invalid>
+                                          Please provide a valid username
+                                        </CFormFeedback>
+                                      </CFormFloating>
+                                    </CCol>
+                                  </CInputGroup>
+                                </CCol>
+                              </CRow>
+                              <CRow>
+                                <CCol md="6" sm="12" lg="6">
+                                  <CInputGroup>
+                                    <CCol xs="12" sm="12" md="12" lg="12">
+                                      <CFormFloating className="mb-3 text-dark ">
+                                        <CFormControl
+                                          name="username"
+                                          type="text"
+                                          autoCorrect="false"
+                                          id="floatingInput"
+                                          placeholder="username"
+                                          onChange={this.handleOnChange}
+                                          value={username}
+                                          required
+                                          className="rounded-pill  ps-4 pe-4"
+                                        />
+                                        <CFormLabel
+                                          htmlFor="floatingInput "
+                                          className="ps-4 pe-4"
+                                        >
+                                          <FaIcons.FaUserCircle size={18} />
+                                          <span className="ps-2">Username</span>
+                                        </CFormLabel>
+                                      </CFormFloating>
+                                    </CCol>
+                                  </CInputGroup>
+                                </CCol>
+                                <CCol md="6" sm="12" lg="6">
+                                  <CInputGroup>
+                                    <CCol xs="12" sm="12" md="12" lg="12">
+                                      <CFormFloating className="mb-3 text-dark position-relative">
+                                        <CFormControl
+                                          name="password"
+                                          type={type}
+                                          id="floatingPassword"
+                                          autoCorrect="false"
+                                          placeholder="Password"
+                                          onChange={this.handleOnChange}
+                                          value={password}
+                                          required
+                                          className="rounded-pill ps-4 pe-4"
+                                        />
+                                        <CFormLabel
+                                          htmlFor="exampleFormControlTextarea1 "
+                                          className="ps-4 pe-4"
+                                        >
+                                          <FaIcons.FaLock size={18} />
+                                          <span className="ps-2">Password</span>
+                                        </CFormLabel>
+                                        <span
+                                          onClick={this.handleShowPassword}
+                                          className="position-absolute top-50 end-0 translate-middle-y ps-4 pe-4"
+                                        >
+                                          {type === "password" ? (
+                                            <FaIcons.FaEyeSlash size={20} />
+                                          ) : (
+                                            <FaIcons.FaEye size={20} />
+                                          )}
+                                        </span>
+                                        <CFormFeedback invalid>
+                                          Please provide a valid username
+                                        </CFormFeedback>
+                                      </CFormFloating>
+                                    </CCol>
+                                  </CInputGroup>
+                                </CCol>
+                              </CRow>
+                              <CCol
+                                sm="12"
+                                md="12"
+                                lg="12"
+                                className="d-flex flex-column justify-content-center"
+                              >
+                                <CButton
+                                  type="submit"
+                                  color="success"
+                                  size="lg"
+                                  style={{ margin: "20px auto", width: "50%" }}
+                                  className="d-flex justify-content-center align-items-center position-relative overflow-hidden login-btn"
+                                >
+                                  {loading ? (
+                                    <CSpinner size="sm" />
+                                  ) : (
+                                    <span className="d-flex align-items-center login-icon me-2">
+                                      <BsIcons.BsFillPersonPlusFill size={20} />
+                                    </span>
+                                  )}
+                                  <span className="label-btn ">Register</span>
+                                </CButton>
+                              </CCol>
+                            </CForm>
+                          </>
+                        )
+                      ) : (
                         <CSpinner />
                       )}
                       {message && (
@@ -516,5 +561,6 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
   createAccount,
   clearMessage,
-  verifyCode
+  verifyCode,
+  getStoreInformation,
 })(Register)

@@ -31,7 +31,7 @@ import { history } from "src/_helper/history.js"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction.js"
 import Roles from "src/router/config/Roles.js"
 import config from "../../../../config"
-
+import { getStoreInformation } from "src/service/apiActions/storeAction/StoreInformationAction"
 const RightFormCard = lazy(() =>
   import("../../../../components/public/RightFormCard.js"),
 )
@@ -49,6 +49,7 @@ export class Login extends Component {
     message: "",
     permission: "",
     isLoggedIn: false,
+    storeInfo: [],
   }
   constructor(props) {
     super(props)
@@ -100,6 +101,7 @@ export class Login extends Component {
   }
   componentDidMount() {
     this.redirectSuccessAuthentication()
+    this.props.getStoreInformation()
   }
   redirectSuccessAuthentication() {
     const isLoggedIn = this.props.userResponse.isLoggedIn
@@ -115,6 +117,21 @@ export class Login extends Component {
       })
     }
   }
+  componentDidUpdate = (prevProps, prevState) => {
+    this.manageStoreInformationResponse(prevProps, prevState)
+  }
+  manageStoreInformationResponse = (prevProps, prevState) => {
+    if (
+      prevProps.storeInformationResponse !== this.props.storeInformationResponse
+    ) {
+      const { action, status, data } = this.props.storeInformationResponse
+      if (action === "GET_STORE_INFORMATION" && status === 200) {
+        this.setState({
+          storeInfo: data.storeInfo,
+        })
+      }
+    }
+  }
   render() {
     let {
       type,
@@ -125,6 +142,7 @@ export class Login extends Component {
       message,
       permission,
       isLoggedIn,
+      storeInfo,
     } = this.state
     if (isLoggedIn) {
       if (permission === Roles.SUPER_ADMIN || permission === Roles.ADMIN) {
@@ -133,6 +151,10 @@ export class Login extends Component {
         return <Redirect to={config.api.private.prefixFrontendUrl + "/home"} />
       }
     }
+    const margin = {
+      marginBottom: "12px",
+    }
+
     return (
       <>
         <CHeader position="sticky">
@@ -142,7 +164,19 @@ export class Login extends Component {
               to={config.api.private.prefixFrontendUrl + "/home"}
               style={{ cursor: "pointer" }}
             >
-              <h2 className="nav-item">Logo</h2>
+              {storeInfo.storeName ? (
+                <strong style={{ ...margin }}>
+                  <Link to="/" className="nav-link">
+                    {storeInfo.storeName}
+                  </Link>
+                </strong>
+              ) : (
+                <strong style={{ ...margin }}>
+                  <Link to="/" className="nav-link">
+                    IMS
+                  </Link>
+                </strong>
+              )}
             </Link>
           </CContainer>
         </CHeader>
@@ -289,8 +323,11 @@ const mapStateToProps = (state) => {
   return {
     userResponse: state.userResponse,
     messageResponse: state.messageResponse,
+    storeInformationResponse: state.storeInformationResponse,
   }
 }
-export default connect(mapStateToProps, { authenticateUser, clearMessage })(
-  Login,
-)
+export default connect(mapStateToProps, {
+  getStoreInformation,
+  authenticateUser,
+  clearMessage,
+})(Login)

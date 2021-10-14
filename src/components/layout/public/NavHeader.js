@@ -21,9 +21,8 @@ import {
   getDiscoverProducts,
 } from "src/service/apiActions/productAction/productAction"
 import { getProductsByCategoryName } from "src/service/apiActions/productAction/productAction"
-
+import { getStoreInformation } from "src/service/apiActions/storeAction/StoreInformationAction"
 import config from "../../../config"
-
 const style = {
   marginRight: "10px",
 }
@@ -41,10 +40,12 @@ export class NavHeader extends Component {
     limit: 12,
     action: "",
     categoryName: "",
+    storeInfo: [],
   }
   componentDidMount() {
     const { query, page, limit } = this.state
     this.searchProduct(query, page, limit)
+    this.props.getStoreInformation()
   }
   searchProduct(query, page, limit) {
     this.props.searchProductByBarcodeOrName(query, page, limit)
@@ -71,6 +72,7 @@ export class NavHeader extends Component {
   }
   componentDidUpdate(prevProps, prevState) {
     this.manageProductResponse(prevProps, prevState)
+    this.manageStoreInformationResponse(prevProps, prevState)
   }
   manageProductResponse = (prevProps, prevState) => {
     if (prevProps.productResponse !== this.props.productResponse) {
@@ -86,6 +88,18 @@ export class NavHeader extends Component {
     }
   }
 
+  manageStoreInformationResponse = (prevProps, prevState) => {
+    if (
+      prevProps.storeInformationResponse !== this.props.storeInformationResponse
+    ) {
+      const { action, status, data } = this.props.storeInformationResponse
+      if (action === "GET_STORE_INFORMATION" && status === 200) {
+        this.setState({
+          storeInfo: data.storeInfo,
+        })
+      }
+    }
+  }
   handleOnSearch = (string, results) => {
     const { action, page, limit } = this.state
     if (action === "GET_PRODUCT_BY_CATEGORY_NAME") {
@@ -130,7 +144,10 @@ export class NavHeader extends Component {
 
   render() {
     const isLoggedIn = this.props.isLoggedIn
-    let { items } = this.state
+    let { items, storeInfo } = this.state
+    const margin = {
+      marginBottom: "12px",
+    }
     return (
       <CHeader position="sticky">
         <CContainer>
@@ -139,7 +156,19 @@ export class NavHeader extends Component {
             to={config.api.private.prefixFrontendUrl + "/home"}
             style={{ cursor: "pointer" }}
           >
-            <h2 className="nav-item">Logo</h2>
+            {storeInfo.storeName ? (
+              <strong style={{ ...margin }}>
+                <Link to="/" className="nav-link">
+                  {storeInfo.storeName}
+                </Link>
+              </strong>
+            ) : (
+              <strong style={{ ...margin }}>
+                <Link to="/" className="nav-link">
+                  IMS
+                </Link>
+              </strong>
+            )}
           </Link>
           {isLoggedIn ? (
             <CHeaderNav className="ms-3">
@@ -213,10 +242,12 @@ const mapStateToProps = (state) => {
     credentials,
     productResponse: state.productResponser,
     messageResponse: state.messageResponse,
+    storeInformationResponse: state.storeInformationResponse,
   }
 }
 export default connect(mapStateToProps, {
   searchProductByBarcodeOrName,
   getDiscoverProducts,
   getProductsByCategoryName,
+  getStoreInformation,
 })(withRouter(NavHeader))

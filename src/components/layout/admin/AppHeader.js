@@ -8,8 +8,7 @@ import {
   CHeaderDivider,
   CHeaderNav,
   CHeaderToggler,
-  CNavLink,
-  CNavItem,
+  CAvatar,
 } from "@coreui/react"
 import * as FaIcons from "react-icons/fa"
 
@@ -19,14 +18,20 @@ import { AppHeaderDropdown } from "./index"
 
 // import { sideBarChange } from "../../service/apiActions/changeStateAction"
 import { sideBarChange } from "src/service/apiActions/changeStateAction"
+import { getStoreInformation } from "src/service/apiActions/storeAction/StoreInformationAction"
 
 class AppHeader extends Component {
   state = {
     sidebarUnfoldable: false,
     sidebarShow: false,
+    storeInfo: [],
   }
-
+  componentDidMount() {
+    this.props.getStoreInformation()
+  }
   componentDidUpdate(prevProps, prevState) {
+    this.manageStoreInformationResponse(prevProps, prevState)
+
     if (prevProps.changeStateResponse !== this.props.changeStateResponse) {
       this.setState({
         sidebarShow: this.props.changeStateResponse.state.sidebarState,
@@ -34,8 +39,23 @@ class AppHeader extends Component {
     }
   }
 
+  manageStoreInformationResponse = (prevProps, prevState) => {
+    if (
+      prevProps.storeInformationResponse !== this.props.storeInformationResponse
+    ) {
+      const { action, status, data } = this.props.storeInformationResponse
+      if (action === "GET_STORE_INFORMATION" && status === 200) {
+        this.setState({
+          storeInfo: data.storeInfo,
+        })
+      }
+    }
+  }
   render() {
-    const { sidebarShow } = this.state
+    const margin = {
+      marginBottom: "12px",
+    }
+    const { sidebarShow, storeInfo } = this.state
     return (
       <CHeader position="sticky" className="mb-4">
         <CContainer fluid>
@@ -45,18 +65,21 @@ class AppHeader extends Component {
           >
             <FaIcons.FaBars size={20} />
           </CHeaderToggler>
-          {/* <CHeaderBrand className="mx-auto nav-link" to="/home" style={{ cursor: "pointer" }}> */}
-          {/* <Link className="nav-link" to="/home" style={{ cursor: "pointer" }}> */}
-          <h2 className="nav-item">Logo</h2>
-          {/* </Link> */}
-          {/* </CHeaderBrand> */}
+          {storeInfo.storeName ? (
+            <strong style={{ ...margin }}>
+              <Link to="/" className="nav-link">
+                {storeInfo.storeName}
+              </Link>
+            </strong>
+          ) : (
+            <strong style={{ ...margin }}>
+              <Link to="/" className="nav-link">
+                IMS
+              </Link>
+            </strong>
+          )}
 
           <CHeaderNav className="ms-3">
-            {/* <CNavItem>
-              <CNavLink href="#">
-                <FaIcons.FaBell size={20} />
-              </CNavLink>
-            </CNavItem> */}
             <AppHeaderDropdown />
           </CHeaderNav>
         </CContainer>
@@ -72,11 +95,13 @@ class AppHeader extends Component {
 const mapStateToProps = (state) => {
   return {
     changeStateResponse: state.changeStateResponse,
+    storeInformationResponse: state.storeInformationResponse,
   }
 }
 
 export default withRouter(
   connect(mapStateToProps, {
     sideBarChange,
+    getStoreInformation,
   })(AppHeader),
 )
