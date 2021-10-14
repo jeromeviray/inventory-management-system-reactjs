@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import { Redirect } from "react-router-dom"
 import queryString from "query-string"
 import { history } from "src/_helper/history"
-
+import config from "../../config"
 export class RedirectSuccessHandler extends Component {
   render() {
     let params = queryString.parse(this.props.location.search)
@@ -22,7 +22,7 @@ export class RedirectSuccessHandler extends Component {
 
     if (currentUser) {
       localStorage.setItem("credentials", JSON.stringify(currentUser))
-      history.push("/home")
+      history.push(config.api.private.prefixFrontendUrl + "/home")
       window.location.reload()
       // return (
       //     <Redirect
@@ -37,7 +37,7 @@ export class RedirectSuccessHandler extends Component {
       return (
         <Redirect
           to={{
-            pathname: "/login",
+            pathname: config.api.private.prefixFrontendUrl + "/login",
             state: {
               from: this.props.location,
               error: error,

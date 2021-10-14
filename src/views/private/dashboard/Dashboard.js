@@ -22,6 +22,8 @@ import { getProductsByStatus } from "src/service/apiActions/productAction/produc
 import { connect } from "react-redux"
 import Barcode from "react-barcode"
 import { getProductsAndCountTatolSold } from "src/service/apiActions/dashboardAction/dashboardAction.js"
+import config from "../../../config"
+
 const WidgetsDropdown = lazy(() =>
   import("../../../components/widgets/WidgetsDropdown.js"),
 )
@@ -135,7 +137,7 @@ export class Dashboard extends Component {
     return (
       <>
         <WidgetsDropdown />
-        
+
         <CCard className="mb-4">
           <CCardHeader>
             <CRow>
@@ -201,7 +203,9 @@ export class Dashboard extends Component {
                   <div>
                     <Link
                       to={{
-                        pathname: "/app/products/products",
+                        pathname:
+                          config.api.private.prefixFrontendUrl +
+                          "/app/products/products",
                         state: status,
                       }}
                     >

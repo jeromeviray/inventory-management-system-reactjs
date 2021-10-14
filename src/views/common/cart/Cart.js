@@ -21,6 +21,9 @@ import {
   placeOrder,
   updateOrderPaymentStatus,
 } from "src/service/apiActions/orderAction/orderAction"
+
+import config from "../../../config"
+
 import { history } from "src/_helper/history"
 import { Redirect } from "react-router-dom"
 import Roles from "src/router/config"
@@ -56,7 +59,7 @@ export class Cart extends Component {
 
   componentDidMount() {
     if (!this.props.userResponse.isLoggedIn) {
-      history.push("/login")
+      history.push(config.api.private.prefixFrontendUrl + "/login")
     } else {
       this.redirectUser()
     }
@@ -215,10 +218,10 @@ export class Cart extends Component {
     }
     if (isLoggedIn) {
       if (permission === Roles.SUPER_ADMIN || permission === Roles.ADMIN) {
-        return <Redirect to="/app" />
+        return <Redirect to={config.api.private.prefixFrontendUrl + "/app"} />
       }
     } else if (!this.props.userResponse.isLoggedIn) {
-      return <Redirect to="/login" />
+      return <Redirect to={config.api.private.prefixFrontendUrl + "/login"} />
     }
 
     if (successfull && redirectUrl != "" && redirectUrl) {

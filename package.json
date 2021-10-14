@@ -2,7 +2,6 @@
   "name": "@project/inventory-management-system",
   "description": "Thesis Project titled Inventory Management System",
   "version": "0.1.0",
-  "homepage": "http://.",
   "private": true,
   "dependencies": {
     "@coreui/chartjs": "3.0.0",
@@ -63,14 +62,15 @@
     "eslint": "^7.30.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
+    "gh-pages": "^3.2.3",
     "prettier": "2.3.2",
     "sass": "^1.35.1"
   },
   "scripts": {
     "start": "SET REACT_APP_ENV=dev & react-scripts start",
     "build": "SET REACT_APP_ENV=dev & react-scripts build",
-    "deploy": "aws s3 sync build/ s3://inventory-management-reactjs --acl public-read",
-    "build-prod": "SET REACT_APP_ENV=prod & react-scripts build",
+    "deploy": "gh-pages -d build",
+    "build-test": "SET REACT_APP_ENV=test & react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

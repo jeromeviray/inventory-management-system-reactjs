@@ -3,6 +3,7 @@ const dev = {
     private: {
       baseUrl: "http://localhost:4480",
       baseFrontendUrl: "http://localhost:4000",
+      prefixFrontendUrl: "",
     },
   },
 }
@@ -10,17 +11,9 @@ const dev = {
 const test = {
   api: {
     private: {
-      baseUrl: "https://inventory-mng-api.herokuapp.com/",
-      baseFrontendUrl: "https://d3dw1h6vufmuro.cloudfront.net/",
-    },
-  },
-}
-
-const prod = {
-  api: {
-    private: {
-      baseUrl:
-        "https://lva53xan1f.execute-api.ap-southeast-2.amazonaws.com/Prod",
+      baseUrl: "https://ec2-13-229-154-20.ap-southeast-1.compute.amazonaws.com",
+      baseFrontendUrl: "https://elite-replica-329023.as.r.appspot.com",
+      prefixFrontendUrl: "",
     },
   },
 }
@@ -31,7 +24,6 @@ const getEnv = function () {
   env = env.trim()
   if (env === "dev") return dev
   if (env === "test") return test
-  if (env === "prod") return prod
 }
 
 const config = getEnv()

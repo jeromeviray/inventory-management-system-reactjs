@@ -16,8 +16,6 @@ import {
   CFormFeedback,
   CSpinner,
   CContainer,
-
-
 } from "@coreui/react"
 
 import { connect } from "react-redux"
@@ -30,6 +28,8 @@ import * as FiIcons from "react-icons/fi"
 import Roles from "src/router/config"
 import { history } from "src/_helper/history"
 
+import config from "../../../config"
+
 export class LoginModal extends Component {
   state = {
     visible: false,
@@ -37,7 +37,6 @@ export class LoginModal extends Component {
     password: "",
     type: "password",
     loading: false,
-
   }
   componentDidUpdate(prevProps, prevState) {
     this.manageModalVisible(prevProps, prevState)
@@ -87,7 +86,9 @@ export class LoginModal extends Component {
           ) {
             this.props.setLoginModal(false, "loginclose")
             setInterval(() => {
-              history.push("/app/dashboard")
+              history.push(
+                config.api.private.prefixFrontendUrl + "/app/dashboard",
+              )
               window.location.reload()
             }, 1000)
           } else {
@@ -110,7 +111,6 @@ export class LoginModal extends Component {
     let { visible, username, password, type, loading } = this.state
     return (
       <>
-
         <CModal alignment="center" visible={visible}>
           <CModalHeader
             onDismiss={() => this.props.setLoginModal(false, "loginclose")}

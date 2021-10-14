@@ -1,6 +1,8 @@
 import React from "react"
 import Roles from "../config/Roles"
 
+import config from "../../config"
+
 // examples
 // All Role has access
 const Dashboard = React.lazy(() =>
@@ -78,13 +80,13 @@ const CustomerAddressController = React.lazy(() =>
 )
 export const routes = [
   {
-    path: "/app",
+    path: config.api.private.prefixFrontendUrl + "/app",
     exact: true,
     name: "Inventory",
     permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
   },
   {
-    path: "/app/dashboard",
+    path: config.api.private.prefixFrontendUrl + "/app/dashboard",
     name: "Dashboard",
     component: Dashboard,
     permission: [
@@ -93,115 +95,115 @@ export const routes = [
     ],
   },
   // {
-  //   path: "/app/inventory",
+  //   path: config.api.private.prefixFrontendUrl + "/app/inventory",
   //   name: "Inventory",
   //   component: Inventory,
   //   permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
   // },
   {
     exact: true,
-    path: "/app/order",
+    path: config.api.private.prefixFrontendUrl + "/app/order",
     name: "Order",
     component: Order,
     permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
   },
 
   {
-    path: "/app/order/:id",
+    path: config.api.private.prefixFrontendUrl + "/app/order/:id",
     name: "Details",
     component: OrderDetails,
     permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
   },
   {
-    path: "/app/sale",
+    path: config.api.private.prefixFrontendUrl + "/app/sale",
     name: "Order Sales Report",
     component: Sale,
     permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
   },
   {
-    path: "/app/products",
+    path: config.api.private.prefixFrontendUrl + "/app/products",
     name: "Product",
     exact: true,
     component: Products,
     permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
   },
   {
-    path: "/app/products/products",
+    path: config.api.private.prefixFrontendUrl + "/app/products/products",
     name: "Product",
     exact: true,
     component: Products,
     permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
   },
   {
-    path: "/app/products/brand",
+    path: config.api.private.prefixFrontendUrl + "/app/products/brand",
     name: "Brand",
     component: Brand,
     permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
   },
   {
-    path: "/app/products/brand",
+    path: config.api.private.prefixFrontendUrl + "/app/products/brand",
     name: "Brand",
     component: Brand,
     permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
   },
   {
-    path: "/app/products/categories",
+    path: config.api.private.prefixFrontendUrl + "/app/products/categories",
     name: "Categories",
     component: Category,
     permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
   },
   {
-    path: "/app/products/promo",
+    path: config.api.private.prefixFrontendUrl + "/app/products/promo",
     name: "Promo",
     component: Promo,
     permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
   },
   {
     exact: true,
-    path: "/app/supply",
+    path: config.api.private.prefixFrontendUrl + "/app/supply",
     name: "Incoming supply",
     component: IncomingSupplies,
     permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
   },
   {
-    path: "/app/supply/:id",
+    path: config.api.private.prefixFrontendUrl + "/app/supply/:id",
     name: "Details",
     component: IncomingSuppliesDetails,
     permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
   },
   {
-    path: "/app/suppliers",
+    path: config.api.private.prefixFrontendUrl + "/app/suppliers",
     name: "Suppliers",
     component: Suppliers,
     permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
   },
   {
-    path: "/app/employee",
+    path: config.api.private.prefixFrontendUrl + "/app/employee",
     name: "Employee Accounts",
     component: Employee,
     permission: [Roles.SUPER_ADMIN],
   },
   {
-    path: "/app/customers",
+    path: config.api.private.prefixFrontendUrl + "/app/customers",
     name: "Customer Accounts",
     component: Customer,
     permission: [Roles.SUPER_ADMIN],
   },
   {
-    path: "/app/reports",
+    path: config.api.private.prefixFrontendUrl + "/app/reports",
     exact: true,
     name: "Reports",
     component: ProductReport,
     permission: [Roles.SUPER_ADMIN],
   },
   {
-    path: "/app/reports/product",
+    path: config.api.private.prefixFrontendUrl + "/app/reports/product",
     name: "Product Report",
     component: ProductReport,
     permission: [Roles.SUPER_ADMIN],
   },
   {
-    path: "/app/profile",
+    path: config.api.private.prefixFrontendUrl + "/app/profile",
     exact: true,
     name: "Profile",
     component: Profile,
@@ -211,91 +213,94 @@ export const routes = [
 
 export const publicRoutes = [
   {
-    path: "/",
+    path: config.api.private.prefixFrontendUrl + "/",
     name: "Home",
     exact: true,
   },
   {
-    path: "/home",
+    path: config.api.private.prefixFrontendUrl + "/home",
     name: "Home",
     component: Home,
   },
 
   {
     exact: true,
-    path: "/products",
+    path: config.api.private.prefixFrontendUrl + "/products",
     name: "Discover",
     component: DiscoverProducts,
   },
   {
     exact: true,
-    path: "/products/product/:query",
+    path: config.api.private.prefixFrontendUrl + "/products/product/:query",
     name: "Product Details",
     component: ProductDetails,
   },
   {
     exact: true,
-    path: "/products/:query",
+    path: config.api.private.prefixFrontendUrl + "/products/:query",
     name: "Product Search Result",
     component: ProductsSearchResult,
   },
   {
     exact: true,
-    path: "/products/all/promo",
+    path: config.api.private.prefixFrontendUrl + "/products/all/promo",
     name: "Promo Products",
     component: PromoProducts,
   },
   {
     exact: true,
-    path: "/products/category/:categoryName",
+    path:
+      config.api.private.prefixFrontendUrl + "/products/category/:categoryName",
     name: "Products By Category",
     component: ProductsCategory,
   },
   {
-    path: "/about",
+    path: config.api.private.prefixFrontendUrl + "/about",
     name: "About",
     component: About,
   },
 
   {
     exact: true,
-    path: "/cart",
+    path: config.api.private.prefixFrontendUrl + "/cart",
     name: "Cart",
     component: Cart,
   },
   {
     exact: true,
-    path: "/cart/:orderId/payment/:paymentStatus",
+    path:
+      config.api.private.prefixFrontendUrl +
+      "/cart/:orderId/payment/:paymentStatus",
     name: "Cart",
     component: Cart,
   },
   {
     exact: true,
-    path: "/user/profile",
+    path: config.api.private.prefixFrontendUrl + "/user/profile",
     name: "Profile",
     component: Profile,
   },
   {
     exact: true,
-    path: "/user/addresses",
+    path: config.api.private.prefixFrontendUrl + "/user/addresses",
     name: "Address",
     component: CustomerAddressController,
   },
   {
     exact: true,
-    path: "/user/order",
+    path: config.api.private.prefixFrontendUrl + "/user/order",
     name: "Order",
     component: Order,
   },
   {
     exact: true,
-    path: "/user/wishlist",
+    path: config.api.private.prefixFrontendUrl + "/user/wishlist",
     name: "Wishlist",
     component: Wishlist,
   },
   {
     exact: true,
-    path: "/user/order/:id",
+    path: config.api.private.prefixFrontendUrl + "/user/order/:id",
     name: "Details",
     component: OrderDetails,
   },

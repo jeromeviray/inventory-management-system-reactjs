@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { Link } from "react-router-dom"
+import config from "../../config"
 //action
 import { getCategoriesList } from "src/service/apiActions/categoryAction/categoryAction"
 export class CategoryList extends Component {
@@ -15,7 +16,7 @@ export class CategoryList extends Component {
   getCategoriesList = () => {
     this.props.getCategoriesList()
   }
-  
+
   componentDidUpdate(prevProps, prevState) {
     this.manageCategoriesListResponse(prevProps, prevState)
   }
@@ -53,7 +54,9 @@ export class CategoryList extends Component {
                       <Link
                         to={{
                           pathname:
-                            "/products/category/" + category.categoryName,
+                            config.api.private.prefixFrontendUrl +
+                            "/products/category/" +
+                            category.categoryName,
                           state: category.categoryName,
                         }}
                         className="list-item-link"

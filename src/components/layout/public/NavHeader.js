@@ -21,9 +21,13 @@ import {
   getDiscoverProducts,
 } from "src/service/apiActions/productAction/productAction"
 import { getProductsByCategoryName } from "src/service/apiActions/productAction/productAction"
+
+import config from "../../../config"
+
 const style = {
   marginRight: "10px",
 }
+
 export class NavHeader extends Component {
   state = {
     items: [],
@@ -109,7 +113,8 @@ export class NavHeader extends Component {
       this.getDiscoverProducts(item.productName, page, limit)
     }
     this.props.history.push({
-      pathname: "/products/" + item.productName,
+      pathname:
+        config.api.private.prefixFrontendUrl + "/products/" + item.productName,
       state: item.productName,
     })
   }
@@ -129,7 +134,11 @@ export class NavHeader extends Component {
     return (
       <CHeader position="sticky">
         <CContainer>
-          <Link className="nav-link" to="/home" style={{ cursor: "pointer" }}>
+          <Link
+            className="nav-link"
+            to={config.api.private.prefixFrontendUrl + "/home"}
+            style={{ cursor: "pointer" }}
+          >
             <h2 className="nav-item">Logo</h2>
           </Link>
           {isLoggedIn ? (
@@ -147,13 +156,17 @@ export class NavHeader extends Component {
           ) : (
             <CHeaderNav className="ms-3 ">
               <CNavItem>
-                <CNavLink href="/login">
+                <CNavLink
+                  href={config.api.private.prefixFrontendUrl + "/login"}
+                >
                   <FiIcons.FiLogIn size={20} style={style} />
                   Login
                 </CNavLink>
               </CNavItem>
               <CNavItem>
-                <CNavLink href="/register">
+                <CNavLink
+                  href={config.api.private.prefixFrontendUrl + "/register"}
+                >
                   <FaIcons.FaUserPlus size={20} style={style} />
                   Register
                 </CNavLink>

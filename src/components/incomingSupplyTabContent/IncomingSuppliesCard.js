@@ -24,6 +24,8 @@ import { setSupplyModal } from "src/service/apiActions/modalAction/modalAction"
 
 import * as MdIcons from "react-icons/md"
 
+import config from "../../config"
+
 export class IncomingSuppliesCard extends Component {
   handleIncomingSupplyItem(incomingItem, status) {
     this.props
@@ -303,7 +305,10 @@ export class IncomingSuppliesCard extends Component {
                       >
                         <Link
                           to={{
-                            pathname: "/app/supply/" + id,
+                            pathname:
+                              config.api.private.prefixFrontendUrl +
+                              "/app/supply/" +
+                              id,
                             state: id,
                           }}
                           className="m-2"

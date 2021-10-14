@@ -21,6 +21,7 @@ import { clearMessage } from "src/service/apiActions/messageAction/messageAction
 import { setAddressModal } from "src/service/apiActions/modalAction/modalAction"
 //history
 import { history } from "src/_helper/history"
+import config from "../../../../config"
 
 export class CustomerAddress extends Component {
   state = {
@@ -32,7 +33,7 @@ export class CustomerAddress extends Component {
   }
   componentDidMount() {
     if (!this.props.userResponse.isLoggedIn) {
-      history.push("/login")
+      history.push(config.api.private.prefixFrontendUrl + "/login")
     } else {
       this.retreiveAddressResponse()
     }

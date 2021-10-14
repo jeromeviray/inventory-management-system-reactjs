@@ -9,6 +9,8 @@ import { connect } from "react-redux"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import Roles from "src/router/config"
 
+import config from "../../config"
+
 const Page404 = React.lazy(() =>
   import("../../views/common/public/page404/Page404"),
 )
@@ -40,7 +42,7 @@ export class PublicContent extends Component {
     let { isLoggedIn, permission } = this.state
     if (isLoggedIn) {
       if (permission === Roles.SUPER_ADMIN || permission === Roles.ADMIN) {
-        return <Redirect to="/app" />
+        return <Redirect to={config.api.private.prefixFrontendUrl + "/app"} />
       }
     }
     return (
@@ -75,14 +77,22 @@ export class PublicContent extends Component {
                 path="/"
                 exact
                 render={() => {
-                  return <Redirect to="/home" />
+                  return (
+                    <Redirect
+                      to={config.api.private.prefixFrontendUrl + "/home"}
+                    />
+                  )
                 }}
               />
               <Route
                 path="/user"
                 exact
                 render={() => {
-                  return <Redirect to="/user/order" />
+                  return (
+                    <Redirect
+                      to={config.api.private.prefixFrontendUrl + "/user/order"}
+                    />
+                  )
                 }}
               />
 

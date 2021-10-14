@@ -15,6 +15,8 @@ import { connect } from "react-redux"
 import Routings from "src/_helper/Routings"
 import Roles from "src/router/config"
 
+import config from "../../../config"
+
 class AppContent extends Component {
   state = {
     getRoutes: [],
@@ -46,12 +48,13 @@ class AppContent extends Component {
     // console.log(this.props.userResponse.credentials.roles.roleName)
     return (
       <CContainer lg>
-
-        <Suspense fallback={
-          <div className="d-flex justify-content-center align-items-center  position-fixed ">
-            <DotLoader color="#36D7B7" size={100} />
-          </div>
-        }>
+        <Suspense
+          fallback={
+            <div className="d-flex justify-content-center align-items-center  position-fixed ">
+              <DotLoader color="#36D7B7" size={100} />
+            </div>
+          }
+        >
           <Switch>
             {getRoutes.map((route, idx) => {
               return (
@@ -71,12 +74,18 @@ class AppContent extends Component {
               )
             })}
             {this.props.userResponse.credentials.roles.roleName ===
-              Roles.SUPER_ADMIN ? (
+            Roles.SUPER_ADMIN ? (
               <Route
                 path="/app"
                 exact
                 render={() => {
-                  return <Redirect to="/app/dashboard" />
+                  return (
+                    <Redirect
+                      to={
+                        config.api.private.prefixFrontendUrl + "/app/dashboard"
+                      }
+                    />
+                  )
                 }}
               />
             ) : (
@@ -84,7 +93,11 @@ class AppContent extends Component {
                 path="/app"
                 exact
                 render={() => {
-                  return <Redirect to="/app/order" />
+                  return (
+                    <Redirect
+                      to={config.api.private.prefixFrontendUrl + "/app/order"}
+                    />
+                  )
                 }}
               />
             )}
@@ -95,7 +108,7 @@ class AppContent extends Component {
             )}
           </Switch>
         </Suspense>
-      </CContainer >
+      </CContainer>
     )
   }
 }

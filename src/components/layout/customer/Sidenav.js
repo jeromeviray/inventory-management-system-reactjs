@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { CAvatar, CNav, CNavItem } from "@coreui/react"
+import { CAvatar } from "@coreui/react"
 import { connect } from "react-redux"
 import { Link } from "react-router-dom"
 
@@ -10,7 +10,8 @@ import * as BiIcons from "react-icons/bi"
 import * as MdIcons from "react-icons/md"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { getMe } from "src/service/apiActions/accountAction/accountAction"
-import accoutReducer from "src/service/redux/reducers/accountReducer"
+
+import config from "../../../config"
 
 export class Sidenav extends Component {
   state = {
@@ -78,7 +79,7 @@ export class Sidenav extends Component {
             <ul className="side-nav-wrapper">
               <li className="mb-2 side-nav-list">
                 <Link
-                  to="/user/profile"
+                  to={config.api.private.prefixFrontendUrl + "/user/profile"}
                   className="side-nav-item d-flex align-items-center"
                 >
                   <VscIcons.VscAccount size={20} />
@@ -87,7 +88,7 @@ export class Sidenav extends Component {
               </li>
               <li className="side-nav-list mb-2">
                 <Link
-                  to="/user/order"
+                  to={config.api.private.prefixFrontendUrl + "/user/order"}
                   className="side-nav-item d-flex align-items-center"
                 >
                   <IoIcons.IoBagCheck size={20} />
@@ -96,7 +97,7 @@ export class Sidenav extends Component {
               </li>
               <li className="side-nav-list mb-2">
                 <Link
-                  to="/user/wishlist"
+                  to={config.api.private.prefixFrontendUrl + "/user/wishlist"}
                   className="side-nav-item d-flex align-items-center"
                 >
                   <BiIcons.BiHistory size={20} />
@@ -105,7 +106,7 @@ export class Sidenav extends Component {
               </li>
               <li className="side-nav-list mb-2">
                 <Link
-                  to="/user/addresses"
+                  to={config.api.private.prefixFrontendUrl + "/user/addresses"}
                   className="side-nav-item d-flex align-items-center"
                 >
                   <MdIcons.MdLocationOn size={20} />

@@ -1,8 +1,15 @@
 import React, { Component } from "react"
-import { CCard, CCardBody, CCardTitle, CBadge, CCardFooter, CButton, CSpinner } from "@coreui/react"
+import {
+  CCard,
+  CCardBody,
+  CCardTitle,
+  CBadge,
+  CCardFooter,
+  CButton,
+  CSpinner,
+} from "@coreui/react"
 import ReactStars from "react-rating-stars-component"
 import * as FaIcons from "react-icons/fa"
-import * as BsIcons from "react-icons/bs"
 import { connect } from "react-redux"
 import {
   setProductModal,
@@ -17,8 +24,13 @@ import {
 
 import { NO_IMAGE_BASE64 } from "src/service/redux/constants"
 import { Link, withRouter } from "react-router-dom"
-import { deleteWishlist, saveWishlist } from "src/service/apiActions/wishlistAction/wishlistAction"
+import {
+  deleteWishlist,
+  saveWishlist,
+} from "src/service/apiActions/wishlistAction/wishlistAction"
 import { addToCart } from "src/service/apiActions/cartAction/cartAction"
+
+import config from "../../config"
 
 export class ProductCard extends Component {
   state = {
@@ -29,7 +41,7 @@ export class ProductCard extends Component {
     visible: false,
     action: "",
     message: "",
-    loading: false
+    loading: false,
   }
   componentDidMount = () => {
     this.handleIconModal()
@@ -59,8 +71,7 @@ export class ProductCard extends Component {
       this.setState({
         loading: false,
       })
-      this.props.history.push("/login")
-
+      this.props.history.push(config.api.private.prefixFrontendUrl + "/login")
     } else {
       let token = credentials.type + credentials.accessToken
       this.props
@@ -88,28 +99,34 @@ export class ProductCard extends Component {
       this.setState({
         loading: false,
       })
-      this.props.history.push("/login")
-      return;
+      this.props.history.push(config.api.private.prefixFrontendUrl + "/login")
+      return
     }
-    const wishlist = product.wishlist;
+    const wishlist = product.wishlist
     if (wishlist && wishlist.id > 0) {
-      this.props.deleteWishlist(wishlist.id).then(() => {
-        product.wishlist = null;
-        this.setState({ product: product, loading: false })
-      }).catch(() => {
-        this.setState({
-          loading: false
+      this.props
+        .deleteWishlist(wishlist.id)
+        .then(() => {
+          product.wishlist = null
+          this.setState({ product: product, loading: false })
         })
-      })
+        .catch(() => {
+          this.setState({
+            loading: false,
+          })
+        })
     } else {
-      this.props.saveWishlist({ id: productId }).then(() => {
-        product.wishlist = this.props.wishlistResponse.data;
-        this.setState({ product: product, loading: false })
-      }).catch(() => {
-        this.setState({
-          loading: false
+      this.props
+        .saveWishlist({ id: productId })
+        .then(() => {
+          product.wishlist = this.props.wishlistResponse.data
+          this.setState({ product: product, loading: false })
         })
-      })
+        .catch(() => {
+          this.setState({
+            loading: false,
+          })
+        })
     }
   }
   manageProductResponse(prevProps, prevState) {
@@ -173,7 +190,7 @@ export class ProductCard extends Component {
     }
   }
 
-  renderAlert = () => { }
+  renderAlert = () => {}
   render() {
     let { product, fileImage, loading } = this.state
     const { productName, productPrice, id } = product.product
@@ -182,7 +199,7 @@ export class ProductCard extends Component {
     const percentage = product.promo && product.promo.percentage
     let discount = (productPrice * percentage) / 100
     let price = productPrice - discount
-    const rating = product.product.rating ? product.product.rating : 0;
+    const rating = product.product.rating ? product.product.rating : 0
     return (
       <>
         <ProductDetialsModal />
@@ -190,7 +207,10 @@ export class ProductCard extends Component {
           <div className="img-container">
             <Link
               to={{
-                pathname: "/products/product/" + productName,
+                pathname:
+                  config.api.private.prefixFrontendUrl +
+                  "/products/product/" +
+                  productName,
                 state: id,
               }}
               className="link-product-content"
@@ -202,8 +222,8 @@ export class ProductCard extends Component {
                   src={
                     fileImage.length > 0
                       ? "/images/products/" +
-                      fileImage[0].path +
-                      fileImage[0].fileName
+                        fileImage[0].path +
+                        fileImage[0].fileName
                       : NO_IMAGE_BASE64
                   }
                   alt="product"
@@ -214,7 +234,10 @@ export class ProductCard extends Component {
           <CCardBody>
             <Link
               to={{
-                pathname: "/products/product/" + productName,
+                pathname:
+                  config.api.private.prefixFrontendUrl +
+                  "/products/product/" +
+                  productName,
                 state: id,
               }}
               className="nav-link text-dark p-0"
@@ -247,38 +270,36 @@ export class ProductCard extends Component {
               </CCardTitle>
               <div className="product-stock-container">
                 <span className="stock-label">Stock: </span>
-                {product.promo ?
+                {product.promo ? (
                   <span className="">
                     <span className="stock-label-value">
                       {product.promo.quantity}
                     </span>
-
-                  </span> :
-                  product.inventory.totalStock > 0 ? (
-                    <span className="stock-label-value">
-                      {product.inventory.totalStock}
-                    </span>
-                  ) : (
-                    this.manageStatus(product.inventory.status)
-                  )}
+                  </span>
+                ) : product.inventory.totalStock > 0 ? (
+                  <span className="stock-label-value">
+                    {product.inventory.totalStock}
+                  </span>
+                ) : (
+                  this.manageStatus(product.inventory.status)
+                )}
               </div>
             </div>
-            {rating ?
+            {rating ? (
               <ReactStars
                 count={5}
                 value={rating ? rating : 0}
                 size={24}
                 edit={false}
               />
-              :
-              <div style={{ "padding": "5px 0px" }}>
+            ) : (
+              <div style={{ padding: "5px 0px" }}>
                 <span className="text-black-50 ">No Rating</span>
               </div>
-            }
-
+            )}
           </CCardBody>
           <CCardFooter>
-            {status ?
+            {status ? (
               <CButton
                 type="button"
                 color="info"
@@ -295,43 +316,46 @@ export class ProductCard extends Component {
                 )}
                 <span className="ms-2">Add To Cart</span>
               </CButton>
-              : inventory.status != 'OUT_OF_STOCK' ?
-                <CButton
-                  type="button"
-                  color="info"
-                  className="d-flex justify-content-center align-items-center w-100"
-                  onClick={this.handleAddToCart}
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <CSpinner size="sm" />
-                  ) : (
-                    <span className="d-flex align-items-center login-icon me-2">
-                      <FaIcons.FaCartPlus />
-                    </span>
-                  )}
-                  <span className="ms-2">Add To Cart</span>
-                </CButton>
-                :
-                <CButton
-                  type="button"
-                  color="info"
-                  className="d-flex justify-content-center align-items-center w-100"
-                  onClick={() => { this.handleAddToWishlist(id) }}
-                  disabled={loading}
-                  style={{ background: "pink" }}
-                >
-                  {loading ? (
-                    <CSpinner size="sm" />
-                  ) : (
-                    <span className="d-flex align-items-center login-icon me-2">
-                      {wishlist ? <FaIcons.FaHeart /> : <FaIcons.FaRegHeart />}
-
-                    </span>
-                  )}
-                  <span className="ms-2">{wishlist ? 'Remove Wishlist' : 'Add To Wishlist'}</span>
-                </CButton>
-            }
+            ) : inventory.status != "OUT_OF_STOCK" ? (
+              <CButton
+                type="button"
+                color="info"
+                className="d-flex justify-content-center align-items-center w-100"
+                onClick={this.handleAddToCart}
+                disabled={loading}
+              >
+                {loading ? (
+                  <CSpinner size="sm" />
+                ) : (
+                  <span className="d-flex align-items-center login-icon me-2">
+                    <FaIcons.FaCartPlus />
+                  </span>
+                )}
+                <span className="ms-2">Add To Cart</span>
+              </CButton>
+            ) : (
+              <CButton
+                type="button"
+                color="info"
+                className="d-flex justify-content-center align-items-center w-100"
+                onClick={() => {
+                  this.handleAddToWishlist(id)
+                }}
+                disabled={loading}
+                style={{ background: "pink" }}
+              >
+                {loading ? (
+                  <CSpinner size="sm" />
+                ) : (
+                  <span className="d-flex align-items-center login-icon me-2">
+                    {wishlist ? <FaIcons.FaHeart /> : <FaIcons.FaRegHeart />}
+                  </span>
+                )}
+                <span className="ms-2">
+                  {wishlist ? "Remove Wishlist" : "Add To Wishlist"}
+                </span>
+              </CButton>
+            )}
           </CCardFooter>
         </CCard>
       </>
@@ -356,5 +380,5 @@ export default connect(mapStateToProps, {
   getProductDetails,
   deleteWishlist,
   saveWishlist,
-  addToCart
+  addToCart,
 })(withRouter(ProductCard))

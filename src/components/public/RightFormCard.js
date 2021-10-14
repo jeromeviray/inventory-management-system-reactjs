@@ -9,6 +9,8 @@ import * as BsIcons from "react-icons/bs"
 import * as FiIcons from "react-icons/fi"
 import * as FaIcons from "react-icons/fa"
 
+import config from "../../config"
+
 export class RightFormCard extends Component {
   render() {
     return (
@@ -45,7 +47,7 @@ export class RightFormCard extends Component {
             >
               {this.props.button === "login" ? (
                 <Link
-                  to="/login"
+                  to={config.api.private.prefixFrontendUrl + "/login"}
                   className="btn login-btn p-0 "
                   style={{ width: "50%" }}
                 >
@@ -64,7 +66,7 @@ export class RightFormCard extends Component {
                 </Link>
               ) : (
                 <Link
-                  to="/register"
+                  to={config.api.private.prefixFrontendUrl + "/register"}
                   className="register-btn btn p-0 "
                   style={{ width: "50%" }}
                 >

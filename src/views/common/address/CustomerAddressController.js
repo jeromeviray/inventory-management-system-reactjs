@@ -5,7 +5,6 @@ import {
   CCol,
   CCard,
   CCardTitle,
-  CFormCheck,
   CCardBody,
   CAlert,
 } from "@coreui/react"
@@ -16,6 +15,7 @@ import { setAddressModal } from "src/service/apiActions/modalAction/modalAction"
 import AddressModal from "src/components/modals/address/AddressModal"
 import { connect } from "react-redux"
 import * as FaIcons from "react-icons/fa"
+import config from "../../../config"
 export class CustomerAddressController extends Component {
   state = {
     message: "",
@@ -26,7 +26,7 @@ export class CustomerAddressController extends Component {
   }
   componentDidMount() {
     if (!this.props.userResponse.isLoggedIn) {
-      this.props.history.push("/login")
+      this.props.history.push(config.api.private.prefixFrontendUrl + "/login")
     } else {
       this.retreiveAddressResponse()
     }

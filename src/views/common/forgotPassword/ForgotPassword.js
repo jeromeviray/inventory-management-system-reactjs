@@ -34,6 +34,8 @@ import {
   validateToken,
   resetPassword,
 } from "src/service/apiActions/accountAction/accountAction"
+import config from "../../../config"
+
 const style = {
   marginRight: "10px",
 }
@@ -42,6 +44,7 @@ const spinner = (
     <DotLoader color="#36D7B7" size={100} />
   </div>
 )
+
 export class ForgotPassword extends Component {
   state = {
     type: "password",
@@ -249,28 +252,36 @@ export class ForgotPassword extends Component {
 
     if (isLoggedIn) {
       if (permission === Roles.SUPER_ADMIN || permission === Roles.ADMIN) {
-        return <Redirect to="/app" />
+        return <Redirect to={config.api.private.prefixFrontendUrl + "/app"} />
       } else {
-        return <Redirect to="/home" />
+        return <Redirect to={config.api.private.prefixFrontendUrl + "/home"} />
       }
     }
     return (
       <>
         <CHeader position="sticky">
           <CContainer>
-            <Link className="nav-link" to="/home" style={{ cursor: "pointer" }}>
+            <Link
+              className="nav-link"
+              to={config.api.private.prefixFrontendUrl + "/home"}
+              style={{ cursor: "pointer" }}
+            >
               <h2 className="nav-item">Logo</h2>
             </Link>
 
             <CHeaderNav className="ms-3 ">
               <CNavItem>
-                <CNavLink href="/login">
+                <CNavLink
+                  href={config.api.private.prefixFrontendUrl + "/login"}
+                >
                   <FiIcons.FiLogIn size={20} style={style} />
                   Login
                 </CNavLink>
               </CNavItem>
               <CNavItem>
-                <CNavLink href="/register">
+                <CNavLink
+                  href={config.api.private.prefixFrontendUrl + "/register"}
+                >
                   <FaIcons.FaUserPlus size={20} style={style} />
                   Register
                 </CNavLink>
@@ -574,7 +585,11 @@ export class ForgotPassword extends Component {
                           )}
                         </div>
                       )}
-                      <Link to="/login">Back Login</Link>
+                      <Link
+                        to={config.api.private.prefixFrontendUrl + "/login"}
+                      >
+                        Back Login
+                      </Link>
                     </CCardBody>
                   </CCard>
                 </CCardGroup>

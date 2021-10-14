@@ -10,6 +10,7 @@ import {
   AppFooter,
   AppHeader,
 } from "../components/layout/admin/index"
+import config from "../config"
 
 export class DefaultLayout extends Component {
   state = {
@@ -20,7 +21,7 @@ export class DefaultLayout extends Component {
   componentDidMount() {
     console.log(this.props.messageResponse)
     if (!this.props.userResponse.isLoggedIn) {
-      history.push("/login")
+      history.push(config.api.private.prefixFrontendUrl + "/login")
     } else {
       this.redirectUser()
     }
@@ -48,10 +49,10 @@ export class DefaultLayout extends Component {
         permission === Roles.CUSTOMER ||
         permission === Roles.ROLE_USER
       ) {
-        return <Redirect to="/400" />
+        return <Redirect to={config.api.private.prefixFrontendUrl + "/400"} />
       }
     } else if (!this.props.userResponse.isLoggedIn) {
-      return <Redirect to="/login" />
+      return <Redirect to={config.api.private.prefixFrontendUrl + "/login"} />
     }
     return (
       <div>

@@ -30,10 +30,7 @@ import { history } from "src/_helper/history.js"
 // clear message
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction.js"
 import Roles from "src/router/config/Roles.js"
-
-//validations
-
-// import Form from "react-validation"
+import config from "../../../../config"
 
 const RightFormCard = lazy(() =>
   import("../../../../components/public/RightFormCard.js"),
@@ -41,6 +38,7 @@ const RightFormCard = lazy(() =>
 const style = {
   marginRight: "10px",
 }
+
 export class Login extends Component {
   state = {
     type: "password",
@@ -88,10 +86,10 @@ export class Login extends Component {
           window.location.reload()
         })
         .catch(() => {
-          let { data } = this.props.messageResponse;
+          let { data } = this.props.messageResponse
           this.setState({
             loading: false,
-            message: data.message
+            message: data.message,
           })
         })
     } else {
@@ -130,16 +128,20 @@ export class Login extends Component {
     } = this.state
     if (isLoggedIn) {
       if (permission === Roles.SUPER_ADMIN || permission === Roles.ADMIN) {
-        return <Redirect to="/app" />
+        return <Redirect to={config.api.private.prefixFrontendUrl + "/app"} />
       } else {
-        return <Redirect to="/home" />
+        return <Redirect to={config.api.private.prefixFrontendUrl + "/home"} />
       }
     }
     return (
       <>
         <CHeader position="sticky">
           <CContainer>
-            <Link className="nav-link" to="/home" style={{ cursor: "pointer" }}>
+            <Link
+              className="nav-link"
+              to={config.api.private.prefixFrontendUrl + "/home"}
+              style={{ cursor: "pointer" }}
+            >
               <h2 className="nav-item">Logo</h2>
             </Link>
           </CContainer>
@@ -254,7 +256,14 @@ export class Login extends Component {
                             <span className="label-btn ">Login</span>
                           </CButton>
 
-                          <Link to="/password/forgot">Forgot Password</Link>
+                          <Link
+                            to={
+                              config.api.private.prefixFrontendUrl +
+                              "/password/forgot"
+                            }
+                          >
+                            Forgot Password
+                          </Link>
                         </CCol>
                         {message && (
                           <div className="form-group">

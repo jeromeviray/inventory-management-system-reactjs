@@ -17,6 +17,8 @@ import { ToastContainer, toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import "./scss/style.scss"
 
+import config from "./config"
+
 const loading = (
   <div className="d-flex justify-content-center align-items-center  position-fixed ">
     <DotLoader color="#36D7B7" size={100} />
@@ -59,7 +61,7 @@ class App extends Component {
         setTimeout(() => {
           toast("Session Expired" + failMessage.data.message)
           this.props.logout()
-          window.location.reload();
+          window.location.reload()
         }, 1000)
       } else if (failMessage.data && failMessage.data.message) {
         toast(failMessage.data.message)
@@ -76,45 +78,51 @@ class App extends Component {
             <Switch>
               <Route
                 exact
-                path="/oauth2/redirect"
+                path={config.api.private.prefixFrontendUrl + "/oauth2/redirect"}
                 name="success handler"
                 render={(props) => <RedirectSuccessHandler {...props} />}
               />
               <Route
                 exact
-                path="/login"
+                path={config.api.private.prefixFrontendUrl + "/login"}
                 name="Login Page"
                 render={(props) => <Login {...props} />}
               />
               <Route
                 exact
-                path="/password/forgot"
+                path={config.api.private.prefixFrontendUrl + "/password/forgot"}
                 name="Forgot password"
                 render={(props) => <ForgotPassword {...props} />}
               />
               <Route
                 exact
-                path="/register"
+                path={config.api.private.prefixFrontendUrl + "/register"}
                 name="Register Page"
                 render={(props) => <Register {...props} />}
               />
               <Route
                 exact
-                path="/500"
+                path={config.api.private.prefixFrontendUrl + "/500"}
                 name="Page 500"
                 render={(props) => <Page500 {...props} />}
               />
               <Route
                 exact
-                path="/400"
+                path={config.api.private.prefixFrontendUrl + "/400"}
                 name="Page 400"
                 render={(props) => <Page404 {...props} />}
               />
-              <PrivateRouter path="/app" component={DefaultLayout} />
-              <PrivateRouter path="/user" component={CustomerLayout} />
+              <PrivateRouter
+                path={config.api.private.prefixFrontendUrl + "/app"}
+                component={DefaultLayout}
+              />
+              <PrivateRouter
+                path={config.api.private.prefixFrontendUrl + "/user"}
+                component={CustomerLayout}
+              />
               <Route
                 path="/"
-                name="public"
+                name={config.api.private.prefixFrontendUrl + "public"}
                 render={(props) => <PublicLayout {...props} />}
               />
             </Switch>

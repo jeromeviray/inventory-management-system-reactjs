@@ -26,6 +26,7 @@ import { history } from "src/_helper/history"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import Roles from "src/router/config"
 import { Link } from "react-router-dom"
+import config from "../../../../config"
 
 const RightFormCard = lazy(() =>
   import("../../../../components/public/RightFormCard"),
@@ -95,7 +96,7 @@ export class Register extends Component {
           phoneNumber,
         )
         .then(() => {
-          const successResponse = this.props.messageResponse.data.message;
+          const successResponse = this.props.messageResponse.data.message
           this.setState({
             loading: false,
             successful: true,
@@ -147,16 +148,20 @@ export class Register extends Component {
 
     if (isLoggedIn) {
       if (permission === Roles.SUPER_ADMIN || permission === Roles.ADMIN) {
-        return <Redirect to="/app" />
+        return <Redirect to={config.api.private.prefixFrontendUrl + "/app"} />
       } else {
-        return <Redirect to="/home" />
+        return <Redirect to={config.api.private.prefixFrontendUrl + "/home"} />
       }
     }
     return (
       <>
         <CHeader position="sticky">
           <CContainer>
-            <Link className="nav-link" to="/home" style={{ cursor: "pointer" }}>
+            <Link
+              className="nav-link"
+              to={config.api.private.prefixFrontendUrl + "/home"}
+              style={{ cursor: "pointer" }}
+            >
               <h2 className="nav-item">Logo</h2>
             </Link>
           </CContainer>
