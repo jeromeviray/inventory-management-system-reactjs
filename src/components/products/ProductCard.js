@@ -190,7 +190,7 @@ export class ProductCard extends Component {
     }
   }
 
-  renderAlert = () => {}
+  renderAlert = () => { }
   render() {
     let { product, fileImage, loading } = this.state
     const { productName, productPrice, id } = product.product
@@ -222,8 +222,8 @@ export class ProductCard extends Component {
                   src={
                     fileImage.length > 0
                       ? "/images/products/" +
-                        fileImage[0].path +
-                        fileImage[0].fileName
+                      fileImage[0].path +
+                      fileImage[0].fileName
                       : NO_IMAGE_BASE64
                   }
                   alt="product"
@@ -276,13 +276,15 @@ export class ProductCard extends Component {
                       {product.promo.quantity}
                     </span>
                   </span>
-                ) : product.inventory.totalStock > 0 ? (
-                  <span className="stock-label-value">
-                    {product.inventory.totalStock}
-                  </span>
-                ) : (
-                  this.manageStatus(product.inventory.status)
-                )}
+                ) : product.inventory.status === "OUT_OF_STOCK" ?
+                  (
+                    this.manageStatus(product.inventory.status)
+                  ) : product.inventory.totalStock > 0 ?
+                    <span className="stock-label-value">
+                      {product.inventory.totalStock}
+                    </span> : <span className="stock-label-value">
+                      {product.inventory.threshold}
+                    </span>}
               </div>
             </div>
             {rating ? (

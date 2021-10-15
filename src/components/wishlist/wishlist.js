@@ -139,8 +139,9 @@ export class Wishlist extends Component {
 
   render() {
     let { wishlist, originalList } = this.state
+    console.log(wishlist.product ? product.rating : 0)
     const product = wishlist.product
-    const rating = product.rating ? product.rating : 0
+    const rating = 0
     return (
       <>
         {wishlist.length === 0 ? (
@@ -180,8 +181,8 @@ export class Wishlist extends Component {
                               src={
                                 fileImages.length > 0
                                   ? "/images/products/" +
-                                    fileImages[0].path +
-                                    fileImages[0].fileName
+                                  fileImages[0].path +
+                                  fileImages[0].fileName
                                   : NO_IMAGE_BASE64
                               }
                               alt="product"

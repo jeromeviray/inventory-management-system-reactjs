@@ -156,17 +156,17 @@ export class NavHeader extends Component {
             to={config.api.private.prefixFrontendUrl + "/home"}
             style={{ cursor: "pointer" }}
           >
-            {storeInfo.storeName ? (
+            {storeInfo.acronym ? (
               <strong style={{ ...margin }}>
-                <Link to="/" className="nav-link">
-                  {storeInfo.storeName}
-                </Link>
+                {storeInfo.acronym}
+              </strong>
+            ) : storeInfo.storeName ? (
+              <strong style={{ ...margin }}>
+                {storeInfo.storeName}
               </strong>
             ) : (
               <strong style={{ ...margin }}>
-                <Link to="/" className="nav-link">
-                  IMS
-                </Link>
+                IMSs
               </strong>
             )}
           </Link>

@@ -64,7 +64,6 @@ export class StoreInformation extends Component {
   render() {
     let { carouselImages, storeInfo } = this.state
     let content = storeInfo.description && JSON.parse(storeInfo.description)
-    console.log(storeInfo)
     const arrowStyles = {
       position: "absolute",
       zIndex: "2",
@@ -141,7 +140,7 @@ export class StoreInformation extends Component {
         <CContainer className="mt-3">
           <CCard className=" p-3">
             {storeInfo.logo ? (
-              <CAvatar color="secondary" src={storeInfo.logo} size="xl" />
+              <CAvatar color="secondary" src={"/logo/" + storeInfo.logo} size="xl" />
             ) : (
               <CAvatar color="secondary" size="xl">
                 <small className="p-0 m-0">N/L</small>
@@ -151,6 +150,7 @@ export class StoreInformation extends Component {
               <div className="font-style d-flex ">
                 <div className="font-style d-flex flex-column align-items-start ">
                   <h6 className="m-0 pe-3 mb-2">Store name:</h6>
+                  <h6 className="m-0 pe-3 mb-2">Acronym name:</h6>
                   <h6 className="m-0 pe-3 mb-2">Contact #:</h6>
                   <h6 className="m-0 pe-3 mb-2">Email:</h6>
                   <h6 className="m-0 pe-3 mb-2">Location:</h6>
@@ -160,6 +160,15 @@ export class StoreInformation extends Component {
                     {storeInfo.storeName ? (
                       <>
                         <span>{storeInfo.storeName}</span>
+                      </>
+                    ) : (
+                      <span className="text-warning">--</span>
+                    )}
+                  </strong>
+                  <strong style={{ ...margin }}>
+                    {storeInfo.acronym ? (
+                      <>
+                        <span>{storeInfo.acronym}</span>
                       </>
                     ) : (
                       <span className="text-warning">--</span>
@@ -199,14 +208,14 @@ export class StoreInformation extends Component {
                   color="info"
                   variant="ghost"
                   size="sm"
-                  //    onClick={() =>
-                  //      this.props.addAccountModal(
-                  //        !visible,
-                  //        "Edit",
-                  //        account,
-                  //        <MdIcons.MdModeEdit size="20" className="me-2" />,
-                  //      )
-                  //    }
+                //    onClick={() =>
+                //      this.props.addAccountModal(
+                //        !visible,
+                //        "Edit",
+                //        account,
+                //        <MdIcons.MdModeEdit size="20" className="me-2" />,
+                //      )
+                //    }
                 >
                   <MdIcons.MdModeEdit size="20" />
                 </CButton>

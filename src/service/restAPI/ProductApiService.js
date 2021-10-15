@@ -45,6 +45,7 @@ export class ProductApiService {
   }
   getDiscoverProducts(query, page, limit) {
     return axios.get("/products/discover", {
+      headers: authHeader(),
       params: {
         query: query,
         page: page,
@@ -54,6 +55,7 @@ export class ProductApiService {
   }
   searchProductByBarcodeOrName(query, page, limit) {
     return axios.get("/products/search", {
+      headers: authHeader(),
       params: {
         query: query,
         page: page,
@@ -63,6 +65,8 @@ export class ProductApiService {
   }
   getProductsByCategoryName(categoryName, query, page, limit) {
     return axios.get("/products/category/" + categoryName, {
+
+      headers: authHeader(),
       params: {
         query: query,
         page: page,
@@ -83,6 +87,7 @@ export class ProductApiService {
   }
   getProductsWithPromo(status, query, page, limit) {
     return axios.get("/products/promo", {
+      headers: authHeader(),
       params: {
         status: status,
         query: query,

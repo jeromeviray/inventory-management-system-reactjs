@@ -164,19 +164,25 @@ export class Login extends Component {
               to={config.api.private.prefixFrontendUrl + "/home"}
               style={{ cursor: "pointer" }}
             >
-              {storeInfo.storeName ? (
-                <strong style={{ ...margin }}>
-                  <Link to="/" className="nav-link">
+              <Link
+                className="nav-link"
+                to={config.api.private.prefixFrontendUrl + "/home"}
+                style={{ cursor: "pointer" }}
+              >
+                {storeInfo.acronym ? (
+                  <strong style={{ ...margin }}>
+                    {storeInfo.acronym}
+                  </strong>
+                ) : storeInfo.storeName ? (
+                  <strong style={{ ...margin }}>
                     {storeInfo.storeName}
-                  </Link>
-                </strong>
-              ) : (
-                <strong style={{ ...margin }}>
-                  <Link to="/" className="nav-link">
-                    IMS
-                  </Link>
-                </strong>
-              )}
+                  </strong>
+                ) : (
+                  <strong style={{ ...margin }}>
+                    IMSs
+                  </strong>
+                )}
+              </Link>
             </Link>
           </CContainer>
         </CHeader>

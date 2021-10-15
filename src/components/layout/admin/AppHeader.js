@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { Link, withRouter } from "react-router-dom"
+import config from "../../../config"
 
 import {
   CContainer,
@@ -65,19 +66,25 @@ class AppHeader extends Component {
           >
             <FaIcons.FaBars size={20} />
           </CHeaderToggler>
-          {storeInfo.storeName ? (
-            <strong style={{ ...margin }}>
-              <Link to="/" className="nav-link">
+          <Link
+            className="nav-link"
+            to={config.api.private.prefixFrontendUrl + "/app"}
+            style={{ cursor: "pointer" }}
+          >
+            {storeInfo.acronym ? (
+              <strong style={{ ...margin }}>
+                {storeInfo.acronym}
+              </strong>
+            ) : storeInfo.storeName ? (
+              <strong style={{ ...margin }}>
                 {storeInfo.storeName}
-              </Link>
-            </strong>
-          ) : (
-            <strong style={{ ...margin }}>
-              <Link to="/" className="nav-link">
-                IMS
-              </Link>
-            </strong>
-          )}
+              </strong>
+            ) : (
+              <strong style={{ ...margin }}>
+                IMSs
+              </strong>
+            )}
+          </Link>
 
           <CHeaderNav className="ms-3">
             <AppHeaderDropdown />

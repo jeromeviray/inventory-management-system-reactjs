@@ -301,7 +301,8 @@ export class ProductEditorModal extends Component {
       threshold
     } = this.state
     let productData = new FormData()
-
+    const getThreshold = typeof threshold === undefined ? 0 : threshold;
+    this.setState({ threshold: getThreshold })
     if (productImage.length > 0) {
       for (let i = 0;i < productImage.length;i++) {
         if (productImage[i].file) {
@@ -317,7 +318,7 @@ export class ProductEditorModal extends Component {
     productData.append("productPrice", productPrice)
     productData.append("brandName", brandName)
     productData.append("categoryName", categoryName)
-    productData.append("threshold", threshold)
+    productData.append("threshold", getThreshold)
     productData.append(
       "productDescription",
       JSON.stringify(convertToRaw(editorState.getCurrentContent())),
@@ -370,7 +371,8 @@ export class ProductEditorModal extends Component {
       threshold
     } = this.state
     let productData = new FormData()
-
+    const getThreshold = typeof threshold === undefined ? 0 : threshold;
+    this.setState({ threshold: getThreshold })
     if (productImage.length > 0) {
       for (let i = 0;i < productImage.length;i++) {
         if (productImage[i].file) {
@@ -386,7 +388,7 @@ export class ProductEditorModal extends Component {
     productData.append("productName", productName)
     productData.append("productPrice", productPrice)
     productData.append("brandName", brandName)
-    productData.append("threshold", threshold)
+    productData.append("threshold", getThreshold)
     productData.append("categoryName", categoryName)
     productData.append(
       "productDescription",

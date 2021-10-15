@@ -205,7 +205,6 @@ export class Register extends Component {
     const margin = {
       marginBottom: "12px",
     }
-
     return (
       <>
         <CHeader position="sticky">
@@ -215,17 +214,17 @@ export class Register extends Component {
               to={config.api.private.prefixFrontendUrl + "/home"}
               style={{ cursor: "pointer" }}
             >
-              {storeInfo.storeName ? (
+              {storeInfo.acronym ? (
                 <strong style={{ ...margin }}>
-                  <Link to="/" className="nav-link">
-                    {storeInfo.storeName}
-                  </Link>
+                  {storeInfo.acronym}
+                </strong>
+              ) : storeInfo.storeName ? (
+                <strong style={{ ...margin }}>
+                  {storeInfo.storeName}
                 </strong>
               ) : (
                 <strong style={{ ...margin }}>
-                  <Link to="/" className="nav-link">
-                    IMS
-                  </Link>
+                  IMSs
                 </strong>
               )}
             </Link>
@@ -556,6 +555,7 @@ const mapStateToProps = (state) => {
   return {
     userResponse: state.userResponse,
     messageResponse: state.messageResponse,
+    storeInformationResponse: state.storeInformationResponse
   }
 }
 export default connect(mapStateToProps, {
