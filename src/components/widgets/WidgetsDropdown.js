@@ -42,6 +42,7 @@ export class WidgetsDropdown extends Component {
   }
   render() {
     const { summaries } = this.state
+    const { revenue } = summaries
     return (
       <>
         {/* <CRow>
@@ -79,31 +80,35 @@ export class WidgetsDropdown extends Component {
           </CCol>
         </CRow> */}
         <CRow>
-          {/* <CCol sm="12" md="6" lg="3">
+          <CCol sm="12" md="6" lg="3">
             <div className="container revenue">
               <div className="column-total-value">
                 <span>&#8369;</span>
-                <span>1,234</span>
+                <span>{revenue}</span>
+                <span className="text-dark ms-2" style={{ fontSize: "14px" }}>
+                  {summaries.revenueYear}
+                </span>
               </div>
               <div className="column-title">
-                <span>All Earnings</span>
+                <span>Total Revenue</span>
               </div>
 
               <div
                 className="background-img"
                 style={{
-                  backgroundImage: "url(/images/background/pesosign.png)",
+                  backgroundImage: "url(/background/pesosign.png)",
+                  zIndex: "1",
                 }}
               ></div>
             </div>
-          </CCol> */}
-          <CCol sm="4" lg="4">
+          </CCol>
+          <CCol sm="12" md="6" lg="3">
             <div className="container product">
               <div className="column-total-value">
-                <span>{summaries.totalProducts}</span>
+                <span>{summaries.product}</span>
               </div>
               <div className="column-title">
-                <span>Products</span>
+                <span>Total Products</span>
               </div>
 
               <div
@@ -115,13 +120,13 @@ export class WidgetsDropdown extends Component {
               ></div>
             </div>
           </CCol>
-          <CCol sm="4" lg="4">
+          <CCol sm="12" md="6" lg="3">
             <div className="container purchase">
               <div className="column-total-value">
-                <span>{summaries.totalSold}</span>
+                <span>{summaries.sold}</span>
               </div>
               <div className="column-title">
-                <span>Sold</span>
+                <span>Total Sold</span>
               </div>
 
               <div
@@ -133,13 +138,13 @@ export class WidgetsDropdown extends Component {
               ></div>
             </div>
           </CCol>
-          <CCol sm="4" lg="4">
+          <CCol sm="12" md="6" lg="3">
             <div className="container customer">
               <div className="column-total-value">
-                <span>{summaries.totalCustomers}</span>
+                <span>{summaries.customer}</span>
               </div>
               <div className="column-title">
-                <span>Customers</span>
+                <span>Total Customers</span>
               </div>
 
               <div

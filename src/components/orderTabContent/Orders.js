@@ -106,7 +106,7 @@ export class Orders extends Component {
     })
   }
 
-  renderOrderAction(orderStatus, order) {
+  renderOrderAction(orderStatus, order, paymentStatus) {
     let orderButton = <></>
     switch (orderStatus.toLowerCase()) {
       case "pending":
@@ -148,8 +148,11 @@ export class Orders extends Component {
             onClick={() => {
               this.handleOrder(order, "payment_received")
             }}
+            disabled={paymentStatus === "Paid" ? true : false}
           >
-            Mark as Payment Received
+            {paymentStatus === "Paid"
+              ? "Payment Recieved"
+              : "Mark as Payment Received"}
           </CButton>
         )
         break
@@ -223,7 +226,6 @@ export class Orders extends Component {
       fontSize: "14px",
       fontWeight: "400",
     }
-    console.log(orders)
     return (
       <>
         {orders.length === 0 ? (
@@ -258,14 +260,14 @@ export class Orders extends Component {
               city,
               phoneNumber,
             } = order.customerAddress
-            let paymentStatus = "Payment Pending";
+            let paymentStatus = "Payment Pending"
             switch (order.paymentStatus) {
               case 1:
-                paymentStatus = "Paid";
-                break;
+                paymentStatus = "Paid"
+                break
               case 2:
-                paymentStatus = "Failed";
-                break;
+                paymentStatus = "Failed"
+                break
             }
             return (
               <CCard className="mb-3" key={index}>
@@ -313,7 +315,6 @@ export class Orders extends Component {
                   >
                     <CContainer>
                       {order.orderItems.map((item, index) => {
-
                         this.handleOrderReview(order.orderId, item, 5, "")
                         const { rating, comment, submitted } =
                           this.orderReviews[order.orderId][item.product.id]
@@ -362,8 +363,12 @@ export class Orders extends Component {
                       </Link>
 
                       {permission === Roles.SUPER_ADMIN ||
-                        permission === Roles.ADMIN ? (
-                        this.renderOrderAction(this.state.status, order)
+                      permission === Roles.ADMIN ? (
+                        this.renderOrderAction(
+                          this.state.status,
+                          order,
+                          paymentStatus,
+                        )
                       ) : (
                         <></>
                       )}
