@@ -47,7 +47,7 @@ export const SET_TERMS_AND_CONDITION_MODAL = "SET_TERMS_AND_CONDITION_MODAL"
 export const API_BASE_URL = config.api.private.baseUrl
 export const FRONT_END_BASED_URL = config.api.private.baseFrontendUrl
 
-export const OAUTH2_REDIRECT_URI = API_BASE_URL + "/oauth2/redirect"
+export const OAUTH2_REDIRECT_URI = FRONT_END_BASED_URL + "/oauth2/redirect"
 
 export const ACCESS_TOKEN = "accessToken"
 export const REFRESH_TOKEN = "refreshToken"

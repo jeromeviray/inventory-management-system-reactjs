@@ -19,6 +19,8 @@ import DOMPurify from "dompurify"
 import draftToHtml from "draftjs-to-html"
 import { setStoreModal } from "src/service/apiActions/modalAction/modalAction"
 import StoreInformationModal from "src/components/modals/store/StoreInformationModal"
+import { getStoreInformation } from "src/service/apiActions/storeAction/StoreInformationAction"
+
 export class StoreInformation extends Component {
   state = {
     carouselImages: [],
