@@ -258,6 +258,15 @@ export class Orders extends Component {
               city,
               phoneNumber,
             } = order.customerAddress
+            let paymentStatus = "Payment Pending";
+            switch (order.paymentStatus) {
+              case 1:
+                paymentStatus = "Paid";
+                break;
+              case 2:
+                paymentStatus = "Failed";
+                break;
+            }
             return (
               <CCard className="mb-3" key={index}>
                 <CCardHeader>
@@ -304,6 +313,7 @@ export class Orders extends Component {
                   >
                     <CContainer>
                       {order.orderItems.map((item, index) => {
+
                         this.handleOrderReview(order.orderId, item, 5, "")
                         const { rating, comment, submitted } =
                           this.orderReviews[order.orderId][item.product.id]
@@ -374,6 +384,14 @@ export class Orders extends Component {
                         </span>
                         <span style={{ fontWeight: "500" }}>
                           {order.paymentMethod.paymentMethod}
+                        </span>
+                      </div>
+                      <div style={fontStyle} className="mt-2">
+                        <span style={fontStyle} className="text-black-50 me-2">
+                          Payment Status:
+                        </span>
+                        <span style={{ fontWeight: "500" }}>
+                          {paymentStatus}
                         </span>
                       </div>
                       <div style={fontStyle} className="mt-2">
