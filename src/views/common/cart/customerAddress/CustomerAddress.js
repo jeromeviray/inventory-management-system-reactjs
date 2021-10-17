@@ -95,7 +95,7 @@ export class CustomerAddress extends Component {
           }
         >
           <FaIcons.FaPlus size={20} />
-          <span style={{ marginLeft: "10px" }}>Add Branch</span>
+          <span style={{ marginLeft: "10px" }}>Add Address</span>
         </CButton>
         <CRow>
           {addresses.map((address, index) => {

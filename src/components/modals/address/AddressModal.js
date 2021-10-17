@@ -205,6 +205,9 @@ export class AddressModal extends Component {
                 </CFormFloating>
               </CCol>
               <CCol md={6}>
+
+              </CCol>
+              {/* <CCol md={6}>
                 <CFormFloating className="mb-3">
                   <CFormControl
                     name="region"
@@ -217,8 +220,37 @@ export class AddressModal extends Component {
                   />
                   <CFormLabel htmlFor="floatingRegion">Region</CFormLabel>
                 </CFormFloating>
+              </CCol> */}
+              <CCol md={6}>
+                <CFormFloating>
+                  <CFormControl
+                    name="street"
+                    type="text"
+                    id="floatingStreet"
+                    placeholder="Street"
+                    value={street}
+                    onChange={this.handleOnChange}
+                    required
+                  />
+                  <CFormLabel htmlFor="floatingStreet">Street</CFormLabel>
+                </CFormFloating>
               </CCol>
-              <CCol md={5}>
+              <CCol md={6}>
+                <CFormFloating>
+                  <CFormControl
+                    name="barangay"
+                    type="text"
+                    id="floatingBarangay"
+                    placeholder="Barangay"
+                    value={barangay}
+                    onChange={this.handleOnChange}
+                    required
+                  />
+                  <CFormLabel htmlFor="floatingBarangay">Barangay</CFormLabel>
+                </CFormFloating>
+              </CCol>
+
+              <CCol md={6}>
                 <CFormFloating>
                   <CFormControl
                     name="city"
@@ -232,7 +264,7 @@ export class AddressModal extends Component {
                   <CFormLabel htmlFor="floatingCity">City</CFormLabel>
                 </CFormFloating>
               </CCol>
-              <CCol md={4}>
+              <CCol md={6}>
                 <CFormFloating>
                   <CFormControl
                     name="province"
@@ -246,7 +278,7 @@ export class AddressModal extends Component {
                   <CFormLabel htmlFor="floatingProvince">Province</CFormLabel>
                 </CFormFloating>
               </CCol>
-              <CCol md={3}>
+              {/* <CCol md={3}>
                 <CFormFloating>
                   <CFormControl
                     name="postalCode"
@@ -261,35 +293,7 @@ export class AddressModal extends Component {
                     Postal code
                   </CFormLabel>
                 </CFormFloating>
-              </CCol>
-              <CCol md={12} className="mt-4 pt-2">
-                <CFormFloating>
-                  <CFormControl
-                    name="barangay"
-                    type="text"
-                    id="floatingBarangay"
-                    placeholder="Barangay"
-                    value={barangay}
-                    onChange={this.handleOnChange}
-                    required
-                  />
-                  <CFormLabel htmlFor="floatingBarangay">Barangay</CFormLabel>
-                </CFormFloating>
-              </CCol>
-              <CCol md={12} className="mt-4 pt-2">
-                <CFormFloating>
-                  <CFormControl
-                    name="street"
-                    type="text"
-                    id="floatingStreet"
-                    placeholder="Street"
-                    value={street}
-                    onChange={this.handleOnChange}
-                    required
-                  />
-                  <CFormLabel htmlFor="floatingStreet">1234 Main St</CFormLabel>
-                </CFormFloating>
-              </CCol>
+              </CCol> */}
             </CForm>
           </CModalBody>
           <CModalFooter>
@@ -310,7 +314,7 @@ export class AddressModal extends Component {
               form="address-form"
             >
               {loading && <CSpinner size="sm" className="ms-1" />}
-              Save {action === "Edit" ? "Changes" : "Branch"}
+              Save {action === "Edit" ? "Changes" : "Address"}
             </CButton>
           </CModalFooter>
         </CModal>
