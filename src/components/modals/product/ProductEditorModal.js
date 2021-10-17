@@ -509,6 +509,7 @@ export class ProductEditorModal extends Component {
                     toastVisible: false,
                   })
                 }
+                acceptType={["jpg", "gif", "png"]}
               >
                 {({
                   imageList,
@@ -527,9 +528,9 @@ export class ProductEditorModal extends Component {
                         style={
                           isDragging
                             ? {
-                              backgroundColor: "#8E9293",
-                              border: "4px dashed #ffffff",
-                            }
+                                backgroundColor: "#8E9293",
+                                border: "4px dashed #ffffff",
+                              }
                             : undefined
                         }
                         onClick={onImageUpload}
@@ -610,7 +611,7 @@ export class ProductEditorModal extends Component {
                         onChange={this.handleOnChange}
                         required
                         disabled={action === "Edit" ? true : false}
-                      // disabled={autoGenerateBarcode}
+                        // disabled={autoGenerateBarcode}
                       />
                       <CFormLabel htmlFor="floatingBarcode">
                         Product Barcode

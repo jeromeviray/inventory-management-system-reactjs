@@ -15,6 +15,8 @@ import {
   SET_SCAN_MODAL,
   SET_SUPPLIER_MODAL,
   SET_SUPPLY_MODAL,
+  SET_TERMS_AND_CONDITION_MODAL,
+  UDPATE_STORE_INFORMATION,
 } from "../constants"
 
 const modalVisibilityReducer = (state = {}, action) => {
@@ -125,6 +127,20 @@ const modalVisibilityReducer = (state = {}, action) => {
         visible: payload.data.visible,
         action: payload.action,
         promo: payload.data.promo,
+        icon: payload.data.icon,
+      }
+    case UDPATE_STORE_INFORMATION:
+      return {
+        visible: payload.data.visible,
+        action: payload.data.action,
+        storeInfo: payload.data.storeInfo,
+        icon: payload.data.icon,
+      }
+    case SET_TERMS_AND_CONDITION_MODAL:
+      return {
+        visible: payload.data.visible,
+        action: payload.data.action,
+        termsAndCondition: payload.data.termsAndCondition,
         icon: payload.data.icon,
       }
     default:
