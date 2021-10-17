@@ -11,6 +11,8 @@ import {
 import { NO_IMAGE_BASE64 } from "src/service/redux/constants"
 import ReactStars from "react-rating-stars-component"
 
+import config from "../../config";
+
 export class OrderCard extends Component {
   constructor(props) {
     super(props)
@@ -51,9 +53,9 @@ export class OrderCard extends Component {
                 rounded
                 src={
                   orderItem.product.fileImages.length > 0
-                    ? "/images/products/" +
-                      orderItem.product.fileImages[0].path +
-                      orderItem.product.fileImages[0].fileName
+                    ? config.api.private.baseUrl + "/api/v1/products/getImages/bytesArrays/" +
+                    orderItem.product.fileImages[0].path +
+                    orderItem.product.fileImages[0].fileName
                     : NO_IMAGE_BASE64
                 }
                 width={100}

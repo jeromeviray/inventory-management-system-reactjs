@@ -21,6 +21,7 @@ import { addToCart } from "src/service/apiActions/cartAction/cartAction"
 import { connect } from "react-redux"
 import { setLoginModal } from "src/service/apiActions/modalAction/modalAction"
 import LoginModal from "../modals/shortcut/LoginModal"
+import config from "../../config";
 
 import { saveWishlist, deleteWishlist } from "src/service/apiActions/wishlistAction/wishlistAction"
 
@@ -188,7 +189,7 @@ export class ProductSummaryDetails extends Component {
                   return (
                     <div key={index}>
                       <img
-                        src={"/images/products/" + image.path + image.fileName}
+                        src={config.api.private.baseUrl + "/api/v1/products/getImages/bytesArrays/" + image.path + image.fileName}
                       />
                     </div>
                   )

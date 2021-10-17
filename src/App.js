@@ -62,7 +62,7 @@ class App extends Component {
   manageResponse(prevProps, prevState) {
     if (this.props.messageResponse != prevProps.messageResponse) {
       let failMessage = this.props.messageResponse
-      if (failMessage.status > 400 && failMessage.status <= 403) {
+      if (failMessage.status > 400 && failMessage.status <= 403 && this.props.isLoggedIn) {
         setTimeout(() => {
           toast("Session Expired" + failMessage.data.message)
           this.props.logout()

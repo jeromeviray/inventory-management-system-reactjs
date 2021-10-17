@@ -180,7 +180,7 @@ export class Wishlist extends Component {
                               variant="top"
                               src={
                                 fileImages.length > 0
-                                  ? "/images/products/" +
+                                  ? config.api.private.baseUrl + "/api/v1/products/getImages/bytesArrays/" +
                                   fileImages[0].path +
                                   fileImages[0].fileName
                                   : NO_IMAGE_BASE64

@@ -23,6 +23,8 @@ import {
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { getOrderItems } from "src/service/apiActions/orderAction/orderAction"
 
+import config from "../../../../config";
+
 import { NO_IMAGE_BASE64 } from "src/service/redux/constants"
 
 //icon
@@ -199,7 +201,7 @@ export class Checkout extends Component {
                             rounded
                             src={
                               product.fileImages.length > 0
-                                ? "/images/products/" +
+                                ? config.api.private.baseUrl + "/api/v1/products/getImages/bytesArrays/" +
                                 product.fileImages[0].path +
                                 product.fileImages[0].fileName
                                 : NO_IMAGE_BASE64

@@ -221,7 +221,7 @@ export class ProductCard extends Component {
                   variant="top"
                   src={
                     fileImage.length > 0
-                      ? "/images/products/" +
+                      ? config.api.private.baseUrl + "/api/v1/products/getImages/bytesArrays/" +
                       fileImage[0].path +
                       fileImage[0].fileName
                       : NO_IMAGE_BASE64
