@@ -76,7 +76,7 @@ export class Order extends Component {
     }
     return (
       <>
-        <div className="d-flex justify-content-end mb-2">
+        {/* <div className="d-flex justify-content-end mb-2">
           <CForm className="w-50">
             <CInputGroup>
               <CFormControl
@@ -96,7 +96,7 @@ export class Order extends Component {
               </CButton>
             </CInputGroup>
           </CForm>
-        </div>
+        </div> */}
         <CNav
           variant="pills"
           role="tablist"

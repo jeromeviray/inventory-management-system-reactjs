@@ -27,6 +27,7 @@ import config from "../../../config"
 import { history } from "src/_helper/history"
 import { Redirect } from "react-router-dom"
 import Roles from "src/router/config"
+
 // import SuccessOrderPlace from './SuccessOrderPlace';
 const Checkout = React.lazy(() =>
   import("src/views/common/cart/checkout/Checkout"),

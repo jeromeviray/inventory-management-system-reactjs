@@ -30,7 +30,9 @@ export class CustomerAddress extends Component {
     addresses: [],
     addressId: "",
     visible: false,
+    isCart: false
   }
+
   componentDidMount() {
     if (!this.props.userResponse.isLoggedIn) {
       history.push(config.api.private.prefixFrontendUrl + "/login")
@@ -38,6 +40,7 @@ export class CustomerAddress extends Component {
       this.retreiveAddressResponse()
     }
   }
+
   retreiveAddressResponse = () => {
     this.props.getAdress()
   }
@@ -73,7 +76,7 @@ export class CustomerAddress extends Component {
   }
 
   render() {
-    let { message, addresses, visible } = this.state
+    let { message, addresses, visible, isCart } = this.state
     const cursorStyle = {
       cursor: "pointer",
     }
@@ -99,6 +102,17 @@ export class CustomerAddress extends Component {
         </CButton>
         <CRow>
           {addresses.map((address, index) => {
+            const {
+              firstName,
+              lastName,
+              phoneNumber,
+              street,
+              barangay,
+              province,
+              region,
+              city,
+              postalCode } = address;
+
             let checked = this.props.getValue == address.id
             return (
               <CCol key={index} md={12} className="mb-3">
@@ -125,18 +139,21 @@ export class CustomerAddress extends Component {
                         {address.firstName + " " + address.lastName}
                       </CCardTitle>
                     </div>
-
-                    <div className="ps-5">{address.city}</div>
+                    <div className="ps-5">
+                      {"# " + street + "," + barangay + "," + province + "," + region + "," + city + "," + postalCode}
+                    </div>
                   </CCardBody>
                 </CCard>
               </CCol>
             )
           })}
-          <CCol className="m-3 text-center" style={{ fontStyle: "italic" }}>
-            <CAlert color="warning">
-              To Proceed to the next step Select or Add your Address Information
-            </CAlert>
-          </CCol>
+          {isCart &&
+            <CCol className="m-3 text-center" style={{ fontStyle: "italic" }}>
+              <CAlert color="warning">
+                To Proceed to the next step Select or Add your Address Information
+              </CAlert>
+            </CCol>
+          }
         </CRow>
         {message && (
           <div className="form-group d-flex justify-content-center align-items-center">

@@ -13,12 +13,16 @@ import {
   CModalTitle,
   CModalFooter,
   CSpinner,
+  CFormSelect
 } from "@coreui/react"
 import { connect } from "react-redux"
 //action
 import { setAddressModal } from "src/service/apiActions/modalAction/modalAction"
 import { saveAddress } from "src/service/apiActions/addressAction/addressAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
+
+import { regions, provinces, cities, barangays } from 'select-philippines-address';
+
 export class AddressModal extends Component {
   state = {
     visible: false,
@@ -26,7 +30,16 @@ export class AddressModal extends Component {
     address: this.addressStates,
     loading: false,
     action: "",
+    regionsData: [],
+    provincesData: [],
+    citiesData: [],
+    baranggaysData: [],
+    baranggayId: "",
+    cityId: "",
+    provinceId: "",
+    regionId: ""
   }
+
   addressStates = {
     firstName: "",
     lastName: "",
@@ -38,9 +51,26 @@ export class AddressModal extends Component {
     street: "",
     postalCode: "",
   }
-  componentDidUpdate(prevPros, prevState) {
-    this.manageModalVisible(prevPros, prevState)
+
+  componentDidMount() {
+    regions().then((regions) => {
+      let regionsData = [];
+      regions.map((region) => {
+        regionsData[region.id] = {
+          name: region.region_name,
+          code: region.region_code
+        };
+      })
+      this.setState({
+        regionsData: regionsData
+      })
+    });
   }
+
+  componentDidUpdate(prevPros, prevState) {
+    this.manageModalVisible(prevPros, prevState);
+  }
+
   manageModalVisible = (prevProps, prevState) => {
     if (prevProps.modalVisible !== this.props.modalVisible) {
       let { visible, action, address, icon } = this.props.modalVisible
@@ -65,13 +95,19 @@ export class AddressModal extends Component {
       }
     }
   }
+
   handleOnChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value,
     })
   }
+
   handleOnSubmit = (event) => {
-    event.preventDefault()
+    const form = event.currentTarget
+    if (form.checkValidity() === false) {
+      event.preventDefault()
+      event.stopPropagation()
+    }
     this.setState({
       loading: true,
     })
@@ -104,9 +140,11 @@ export class AddressModal extends Component {
     } else if (action === "Edit") {
     }
   }
+
   onResetValue = () => {
     this.setState(() => this.addressStates)
   }
+
   handleSaveAddress = (address) => {
     this.props
       .saveAddress(address)
@@ -127,6 +165,106 @@ export class AddressModal extends Component {
       })
   }
 
+
+  onRegionChanged = (event) => {
+    const regionsData = this.state.regionsData;
+
+
+    if (event.target.value == "") {
+      return;
+    }
+
+    const data = regionsData[event.target.value];
+
+    this.setState({
+      regionId: event.target.value,
+      region: data.name
+    })
+
+    provinces(data.code).then((province) => {
+      let provincesData = [];
+      province.map((dt, index) => {
+        provincesData[index] = {
+          name: dt.province_name,
+          code: dt.province_code
+        };
+      })
+      this.setState({
+        provincesData: provincesData
+      })
+    });
+  }
+
+  onProvinceChanged = (event) => {
+    const provincesData = this.state.provincesData;
+
+    if (event.target.value == "") {
+      return;
+    }
+
+    const data = provincesData[event.target.value];
+
+    this.setState({
+      provinceId: event.target.value,
+      province: data.name
+    })
+
+
+    cities(data.code).then((city) => {
+      let citiesData = [];
+      city.map((dt, index) => {
+        citiesData[index] = {
+          name: dt.city_name,
+          code: dt.city_code
+        };
+      })
+      this.setState({
+        citiesData: citiesData
+      })
+    });
+  }
+
+  onCityChanged = (event) => {
+    const citiesData = this.state.citiesData;
+
+    if (event.target.value == "") {
+      return;
+    }
+    const data = citiesData[event.target.value];
+
+    this.setState({
+      cityId: event.target.value,
+      city: data.name
+    })
+
+    barangays(data.code).then((barangay) => {
+      let baranggaysData = [];
+      barangay.map((dt, index) => {
+        baranggaysData[index] = {
+          name: dt.brgy_name,
+          code: dt.brgy_code
+        };
+      })
+      this.setState({
+        baranggaysData: baranggaysData
+      })
+    });
+  }
+
+  onBaranggayChanged = (event) => {
+    const baranggaysData = this.state.baranggaysData;
+
+    if (event.target.value == "") {
+      return;
+    }
+    const data = baranggaysData[event.target.value];
+
+    this.setState({
+      baranggayId: event.target.value,
+      barangay: data.name
+    })
+  }
+
   render() {
     let {
       visible,
@@ -141,7 +279,15 @@ export class AddressModal extends Component {
       postalCode,
       loading,
       action,
-    } = this.state
+      regionsData,
+      provincesData,
+      citiesData,
+      baranggaysData,
+      baranggayId,
+      cityId,
+      regionId,
+      provinceId,
+    } = this.state;
     return (
       <>
 
@@ -153,7 +299,8 @@ export class AddressModal extends Component {
           </CModalHeader>
           <CModalBody>
             <CForm
-              className="row g-3"
+
+              className="row g-3 needs-validation"
               id="address-form"
               onSubmit={this.handleOnSubmit}
             >
@@ -193,7 +340,7 @@ export class AddressModal extends Component {
                     name="phoneNumber"
                     type="tel"
                     required
-                    // pattern="^(09|\+639)\d{9}$"
+                    pattern={"^(09|\\+639)\\d{9}$"}
                     id="floatingPhoneNumber"
                     placeholder="Last name"
                     value={phoneNumber}
@@ -207,21 +354,7 @@ export class AddressModal extends Component {
               <CCol md={6}>
 
               </CCol>
-              {/* <CCol md={6}>
-                <CFormFloating className="mb-3">
-                  <CFormControl
-                    name="region"
-                    type="text"
-                    id="floatingRegion"
-                    placeholder="Region"
-                    value={region}
-                    onChange={this.handleOnChange}
-                    required
-                  />
-                  <CFormLabel htmlFor="floatingRegion">Region</CFormLabel>
-                </CFormFloating>
-              </CCol> */}
-              <CCol md={6}>
+              <CCol md={12}>
                 <CFormFloating>
                   <CFormControl
                     name="street"
@@ -236,46 +369,79 @@ export class AddressModal extends Component {
                 </CFormFloating>
               </CCol>
               <CCol md={6}>
-                <CFormFloating>
-                  <CFormControl
-                    name="barangay"
+                <CFormFloating className="mb-3">
+                  <CFormSelect
+                    name="region"
                     type="text"
-                    id="floatingBarangay"
-                    placeholder="Barangay"
-                    value={barangay}
-                    onChange={this.handleOnChange}
+                    id="floatingRegion"
+                    placeholder="Region"
+                    value={regionId}
+                    onChange={this.onRegionChanged}
                     required
-                  />
-                  <CFormLabel htmlFor="floatingBarangay">Barangay</CFormLabel>
+                  >
+                    <option value="" disabled>-- Choose Region --</option>
+                    {regionsData.map((region, index) => {
+                      return <option value={index} key={index}>{region.name}</option>
+                    })}
+                  </CFormSelect>
+                  <CFormLabel htmlFor="floatingRegion">Region</CFormLabel>
                 </CFormFloating>
               </CCol>
-
               <CCol md={6}>
                 <CFormFloating>
-                  <CFormControl
+                  <CFormSelect
+                    name="province"
+                    type="text"
+                    id="floatingProvince"
+                    placeholder="Province"
+                    value={provinceId}
+                    onChange={this.onProvinceChanged}
+                    required
+                  >
+                    <option value="" disabled>-- Choose Province --</option>
+                    {provincesData.map((region, index) => {
+                      return <option value={index} key={region.name}>{region.name}</option>
+                    })}
+                  </CFormSelect>
+                  <CFormLabel htmlFor="floatingProvince">Province</CFormLabel>
+                </CFormFloating>
+              </CCol>
+              <CCol md={6}>
+                <CFormFloating>
+                  <CFormSelect
                     name="city"
                     type="text"
                     id="floatingCity"
                     placeholder="City"
-                    value={city}
-                    onChange={this.handleOnChange}
+                    value={cityId}
+                    onChange={this.onCityChanged}
                     required
-                  />
+                  >
+                    <option value="" disabled>-- Choose City --</option>
+                    {citiesData.map((region, index) => {
+                      return <option value={index} key={index}>{region.name}</option>
+                    })}
+                  </CFormSelect>
                   <CFormLabel htmlFor="floatingCity">City</CFormLabel>
                 </CFormFloating>
               </CCol>
               <CCol md={6}>
                 <CFormFloating>
-                  <CFormControl
-                    name="province"
+                  <CFormSelect
+                    name="barangay"
                     type="text"
-                    id="floatingProvince"
-                    placeholder="Province"
-                    value={province}
-                    onChange={this.handleOnChange}
+                    id="floatingBarangay"
+                    placeholder="Barangay"
+                    value={baranggayId}
+                    onChange={this.onBaranggayChanged}
                     required
-                  />
-                  <CFormLabel htmlFor="floatingProvince">Province</CFormLabel>
+                  >
+                    <option value="" disabled>-- Choose Barangay --</option>
+                    {baranggaysData.map((region, index) => {
+                      return <option value={index} key={index}>{region.name}</option>
+                    })}
+                  </CFormSelect>
+                  <CFormLabel htmlFor="floatingBarangay">Barangay</CFormLabel>
                 </CFormFloating>
               </CCol>
               {/* <CCol md={3}>

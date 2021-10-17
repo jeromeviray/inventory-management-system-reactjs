@@ -136,7 +136,7 @@ export class OrderDetails extends Component {
                                     <h6>
                                         <span className="mb-2 text-black-50 me-2  font-style ">Address:</span>
 
-                                        {"# " + street + "," + barangay + "," + province + "," + region + "," + city + "," + postalCode}
+                                        {"# " + street + ", " + barangay + ", " + city + ", " + province + ", " + region}
                                     </h6>
 
                                 </CCardBody>

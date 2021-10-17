@@ -23,6 +23,7 @@ export class CustomerAddressController extends Component {
     addresses: [],
     addressId: "",
     visible: false,
+    isCart: false
   }
   componentDidMount() {
     if (!this.props.userResponse.isLoggedIn) {
@@ -58,7 +59,7 @@ export class CustomerAddressController extends Component {
     }
   }
   render() {
-    let { message, addresses, visible } = this.state
+    let { message, addresses, visible, isCart } = this.state
     const cursorStyle = {
       cursor: "pointer",
     }
@@ -84,6 +85,16 @@ export class CustomerAddressController extends Component {
         </CButton>
         <CRow>
           {addresses.map((address, index) => {
+            const {
+              firstName,
+              lastName,
+              phoneNumber,
+              street,
+              barangay,
+              province,
+              region,
+              city,
+              postalCode } = address;
             let checked = this.props.getValue == address.id
             return (
               <CCol key={index} md={12} className="mb-3">
@@ -98,26 +109,33 @@ export class CustomerAddressController extends Component {
                         {address.firstName + " " + address.lastName}
                       </CCardTitle>
                     </div>
-
-                    <div className="ps-3">{address.city}</div>
+                    <div className="ps-2">
+                      Mobile #: {phoneNumber}
+                    </div>
+                    <div className="ps-2">
+                      Address: {"# " + street + ", " + barangay + ", " + city + ", " + province + ", " + region}
+                    </div>
                   </CCardBody>
                 </CCard>
               </CCol>
             )
           })}
-          <CCol className="m-3 text-center" style={{ fontStyle: "italic" }}>
+          {isCart && <CCol className="m-3 text-center" style={{ fontStyle: "italic" }}>
             <CAlert color="warning">
               To Proceed to the next step Select or Add your Address Information
             </CAlert>
           </CCol>
+          }
         </CRow>
-        {message && (
-          <div className="form-group d-flex justify-content-center align-items-center">
-            <div className="alert alert-danger" role="alert">
-              {message}
+        {
+          message && (
+            <div className="form-group d-flex justify-content-center align-items-center">
+              <div className="alert alert-danger" role="alert">
+                {message}
+              </div>
             </div>
-          </div>
-        )}
+          )
+        }
       </>
     )
   }
