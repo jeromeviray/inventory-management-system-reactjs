@@ -45,7 +45,6 @@ export class ChangePasswordModal extends Component {
     })
   }
   handleShowPassword = (event) => {
-    console.log(event)
     const { type } = this.state
     this.setState({
       type: type === "password" ? "text" : "password",
@@ -58,8 +57,6 @@ export class ChangePasswordModal extends Component {
     if (prevProps.modalVisible !== this.props.modalVisible) {
       let { visible, action, employee, icon } = this.props.modalVisible
       if (action === "ChangePassword") {
-        console.log(this.props.modalVisible)
-
         this.setState({
           visible: visible,
           action: action,

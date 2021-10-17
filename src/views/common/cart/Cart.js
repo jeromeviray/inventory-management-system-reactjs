@@ -56,6 +56,7 @@ export class Cart extends Component {
     successfull: false,
     loading: false,
     redirectUrl: "",
+    clientRef: null
   }
 
   componentDidMount() {
@@ -63,6 +64,12 @@ export class Cart extends Component {
       history.push(config.api.private.prefixFrontendUrl + "/login")
     } else {
       this.redirectUser()
+    }
+
+    if (this.props.websocketResponse) {
+      this.setState({
+        clientRef: this.props.websocketResponse.data.clientRef
+      })
     }
 
     if (this.props.userResponse.isLoggedIn) {
@@ -74,6 +81,13 @@ export class Cart extends Component {
     }
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.websocketResponse !== prevProps.websocketResponse) {
+      this.setState({
+        clientRef: this.props.websocketResponse.data.clientRef
+      })
+    }
+  }
   redirectUser = () => {
     const isLoggedIn = this.props.userResponse.isLoggedIn
     if (isLoggedIn) {
@@ -106,12 +120,22 @@ export class Cart extends Component {
     })
   }
   handleOnNext = () => {
-    let { step } = this.state
+    ;
+    let { step } = this.state;
+    if (step == 1) {
+      this.sendMessage()
+    }
     if (step === 3) return
     this.setState({
       step: ++step,
     })
   }
+
+  sendMessage = (msg) => {
+    console.log(this.state.clientRef);
+    this.state.clientRef.sendMessage('/app/websocket/inventory', JSON.stringify({ 'from': "SDF", 'text': "SDF" }));
+  }
+
   handleOnPre = () => {
     let { step } = this.state
     if (step === 1) return
@@ -404,6 +428,7 @@ const mapStateToProps = (state) => {
   return {
     userResponse: state.userResponse,
     messageResponse: state.messageResponse,
+    websocketResponse: state.websocketResponse
   }
 }
 export default connect(mapStateToProps, {
