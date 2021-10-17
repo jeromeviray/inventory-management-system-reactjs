@@ -19,8 +19,8 @@ import { connect } from "react-redux"
 import {
   searchProductByBarcodeOrName,
   getDiscoverProducts,
+  getProductsByCategoryName
 } from "src/service/apiActions/productAction/productAction"
-import { getProductsByCategoryName } from "src/service/apiActions/productAction/productAction"
 import { getStoreInformation } from "src/service/apiActions/storeAction/StoreInformationAction"
 import config from "../../../config"
 const style = {
@@ -44,23 +44,13 @@ export class NavHeader extends Component {
   }
   componentDidMount() {
     const { query, page, limit } = this.state
-    this.searchProduct(query, page, limit)
     this.props.getStoreInformation()
   }
+
   searchProduct(query, page, limit) {
     this.props.searchProductByBarcodeOrName(query, page, limit)
   }
 
-  getDiscoverProducts = (query, page, limit) => {
-    this.props.getDiscoverProducts(query, page, limit).catch(() => {
-      let { data } = this.props.messageResponse
-      if (data) {
-        this.setState({
-          loading: false,
-        })
-      }
-    })
-  }
   getProductsByCategoryName = (categoryName, query, page, limit) => {
     this.props
       .getProductsByCategoryName(categoryName, query, page, limit)
@@ -110,7 +100,7 @@ export class NavHeader extends Component {
         limit,
       )
     } else {
-      this.getDiscoverProducts(string, page, limit)
+      this.searchProduct(string, page, limit)
     }
   }
 
@@ -124,7 +114,7 @@ export class NavHeader extends Component {
         limit,
       )
     } else {
-      this.getDiscoverProducts(item.productName, page, limit)
+      this.searchProduct(item.productName, page, limit)
     }
     this.props.history.push({
       pathname:
@@ -138,7 +128,7 @@ export class NavHeader extends Component {
     if (action === "GET_PRODUCT_BY_CATEGORY_NAME") {
       this.getProductsByCategoryName(this.props.location.state, "", page, limit)
     } else {
-      this.getDiscoverProducts("", page, limit)
+      this.searchProduct("", page, limit)
     }
   }
 
@@ -148,6 +138,7 @@ export class NavHeader extends Component {
     const margin = {
       marginBottom: "12px",
     }
+    console.log(items)
     return (
       <CHeader position="sticky">
         <CContainer>
@@ -249,5 +240,5 @@ export default connect(mapStateToProps, {
   searchProductByBarcodeOrName,
   getDiscoverProducts,
   getProductsByCategoryName,
-  getStoreInformation,
+  getStoreInformation
 })(withRouter(NavHeader))

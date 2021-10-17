@@ -19,6 +19,7 @@ import {
   SEARCH_PRODUCT,
   SET_PRODUCT_MESSAGE,
   UPDATE_PRODUCT,
+  GET_POPULAR_PRODUCT
 } from "../../redux/constants"
 
 export const saveProduct = (formData) => async (dispatch) => {
@@ -68,6 +69,7 @@ export const saveProduct = (formData) => async (dispatch) => {
     },
   )
 }
+
 export const getProducts = (query, page, limit) => async (dispatch) => {
   return ProductApiService.getProducts(query, page, limit).then(
     (response) => {
@@ -109,6 +111,7 @@ export const getProducts = (query, page, limit) => async (dispatch) => {
     },
   )
 }
+
 export const getDiscoverProducts = (query, page, limit) => async (dispatch) => {
   return ProductApiService.getDiscoverProducts(query, page, limit).then(
     (response) => {
@@ -150,6 +153,49 @@ export const getDiscoverProducts = (query, page, limit) => async (dispatch) => {
     },
   )
 }
+
+export const getPopularProducts = (query, page, limit) => async (dispatch) => {
+  return ProductApiService.getPopularProducts(query, page, limit).then(
+    (response) => {
+      dispatch({
+        type: GET_POPULAR_PRODUCT,
+        payload: {
+          status: 200,
+          data: {
+            products: response.data,
+          },
+        },
+      })
+      return Promise.resolve()
+    },
+    (error) => {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.error_message ||
+        error.toString()
+
+      const status =
+        (error.response && error.response.data && error.response.data.code) ||
+        error.status ||
+        error.toString()
+
+      dispatch({
+        type: SET_PRODUCT_MESSAGE,
+        payload: {
+          status: status,
+          data: {
+            message: message,
+          },
+        },
+      })
+      return Promise.reject()
+    },
+  )
+}
+
 export const getImage = (image, token) => async (dispatch) => {
   return ProductApiService.getImage(image, token).then(
     (response) => {

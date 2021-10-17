@@ -1,19 +1,17 @@
 import React, { Component } from 'react'
 import { CCardTitle, CContainer, CRow, CCol } from '@coreui/react'
 import { connect } from 'react-redux'
-import { getStoreInformation } from 'src/service/apiActions/storeAction/StoreInformationAction'
 import config from 'src/config'
 import { Link } from 'react-router-dom'
 export class Footer extends Component {
     state = {
         storeInfo: [],
     }
-    componentDidMount() {
-        this.props.getStoreInformation();
-    }
+
     componentDidUpdate(prevProps, prevState) {
         this.manageStoreInformationResponse(prevProps, prevState)
     }
+
     manageStoreInformationResponse = (prevProps, prevState) => {
         if (
             prevProps.storeInformationResponse !== this.props.storeInformationResponse
@@ -26,6 +24,7 @@ export class Footer extends Component {
             }
         }
     }
+
     render() {
         const { storeInfo } = this.state;
         const margin = {
@@ -101,7 +100,7 @@ export class Footer extends Component {
                                                 <span>{storeInfo.contactNumber}</span>
                                             </>
                                         ) : (
-                                            <span>09458144695</span>
+                                            <span>0955864984</span>
                                         )}
                                     </strong>
                                     <strong style={{ ...margin }}>
@@ -110,7 +109,7 @@ export class Footer extends Component {
                                                 <span>{storeInfo.email}</span>
                                             </>
                                         ) : (
-                                            <span >jeromeviray4@gmail.com</span>
+                                            <span >inventorymanagement@gmail.com</span>
                                         )}
                                     </strong>
                                     <strong style={{ ...margin }}>
@@ -152,5 +151,4 @@ const mapStateToProps = (state) => {
     }
 }
 export default connect(mapStateToProps, {
-    getStoreInformation
 })(Footer)

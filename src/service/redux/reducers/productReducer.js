@@ -1,6 +1,7 @@
 import {
   DELETE_PRODUCT,
   GET_DISCOVER_PRODUCT,
+  GET_POPULAR_PRODUCT,
   // GET_IMAGE,
   GET_PRODUCT,
   // GET_PRODUCT,
@@ -52,6 +53,14 @@ const productReducer = (state = {}, action) => {
       return {
         status: action.payload.status,
         action: "DISCOVER",
+        data: {
+          products: action.payload.data.products,
+        },
+      }
+    case GET_POPULAR_PRODUCT:
+      return {
+        status: action.payload.status,
+        action: "GET_POPULAR_PRODUCT",
         data: {
           products: action.payload.data.products,
         },

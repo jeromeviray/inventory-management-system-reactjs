@@ -13,6 +13,8 @@ export default class PublicLayout extends Component {
                     <div className="body" style={{ margin: "20px 0" }}>
                          <PublicContent />
                     </div>
+                    <br></br>
+                    <br></br>
                     <Footer />
 
                </>

@@ -233,7 +233,7 @@ export class Cart extends Component {
       <div>
         <Suspense
           fallback={
-            <div className="d-flex justify-content-center align-items-center  position-fixed ">
+            <div className="d-flex justify-content-center align-items-center  position-fixed spinner">
               <DotLoader color="#36D7B7" size={100} />
             </div>
           }

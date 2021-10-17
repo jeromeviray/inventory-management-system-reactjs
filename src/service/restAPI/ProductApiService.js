@@ -53,6 +53,16 @@ export class ProductApiService {
       },
     })
   }
+  getPopularProducts(query, page, limit) {
+    return axios.get("/products/popular", {
+      headers: authHeader(),
+      params: {
+        query: query,
+        page: page,
+        limit: limit,
+      },
+    })
+  }
   searchProductByBarcodeOrName(query, page, limit) {
     return axios.get("/products/search", {
       headers: authHeader(),

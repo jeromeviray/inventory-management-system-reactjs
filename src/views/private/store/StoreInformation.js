@@ -2,7 +2,6 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import { getCarouselImages } from "src/service/apiActions/carouselAction/carouselAction"
 import { Carousel } from "react-responsive-carousel"
-import { getStoreInformation } from "src/service/apiActions/storeAction/StoreInformationAction"
 import * as IoIcons from "react-icons/io"
 import {
   CCard,
@@ -24,7 +23,6 @@ export class StoreInformation extends Component {
   }
   componentDidMount() {
     this.props.getCarouselImages()
-    this.props.getStoreInformation()
   }
   componentDidUpdate = (prevProps, prevState) => {
     this.getResponseCarouselImages(prevProps, prevState)
@@ -253,5 +251,4 @@ const mapStateToProps = (state) => {
 }
 export default connect(mapStateToProps, {
   getCarouselImages,
-  getStoreInformation,
 })(StoreInformation)

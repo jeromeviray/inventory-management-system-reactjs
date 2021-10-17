@@ -145,7 +145,6 @@ body {
 // google and facebook link
 .google-link,
 .facebook-link {
-  width: 60%;
   padding: 12px 20px;
   margin: 12px 0;
   font-weight: 400;
@@ -461,4 +460,12 @@ body {
   .column-total-value{
     color:#02787afb;
   }
+}
+
+.spinner {
+  display: "block";
+   position: "fixed";
+  z-index: "1031";
+  top: "50%";
+  right: "50%"; 
 }

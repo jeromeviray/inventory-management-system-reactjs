@@ -22,7 +22,7 @@ export class PopularProducts extends Component {
   manageProductResponse = (prevProps, prevState) => {
     if (prevProps.productResponser !== this.props.productResponser) {
       let { status, action, data } = this.props.productResponser
-      if (status === 200 && action === "DISCOVER") {
+      if (status === 200 && action === "GET_POPULAR_PRODUCT") {
         this.setState({
           products: data.products,
         })

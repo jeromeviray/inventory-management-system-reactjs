@@ -7,7 +7,11 @@ import { DotLoader } from "react-spinners"
 import { connect } from "react-redux"
 // import { NewArrivalProducts, PopularProducts } from 'src/components/public'
 // action
-import { getDiscoverProducts, getProductsWithPromo } from "src/service/apiActions/productAction/productAction"
+import {
+  getDiscoverProducts,
+  getProductsWithPromo,
+  getPopularProducts
+} from "src/service/apiActions/productAction/productAction"
 // import ProductDetialsModal from 'src/components/modals/product/ProductDetialsModal'
 const HeroCarousel = React.lazy(() =>
   import("src/components/carousel/HeroCarousel"),
@@ -43,9 +47,18 @@ export class Home extends Component {
   }
   componentDidMount() {
     const { page, limit, query } = this.state
-    this.getDiscoverProducts()
-    this.getProductsWithPromo("ONGOING", query, page, limit)
+    this.getPopularProducts()
   }
+
+  getPopularProducts = () => {
+    let { page, limit, query } = this.state
+    this.props.getPopularProducts(query, page, limit).catch(() => {
+      this.setState({
+        loading: false,
+      })
+    })
+  }
+
   getDiscoverProducts = () => {
     let { page, limit, query } = this.state
     this.props.getDiscoverProducts(query, page, limit).catch(() => {
@@ -54,16 +67,14 @@ export class Home extends Component {
       })
     })
   }
-  getProductsWithPromo = (status, query, page, limit) => {
-    this.props.getProductsWithPromo(status, query, page, limit)
-  }
+
   render() {
     let { message } = this.state
     return (
       <>
         <Suspense
           fallback={
-            <div className="d-flex justify-content-center align-items-center  position-fixed ">
+            <div className="d-flex justify-content-center align-items-center  position-fixed spinner">
               <DotLoader color="#36D7B7" size={100} />
             </div>
           }
@@ -105,5 +116,6 @@ const mapStateToProps = (state) => {
 }
 export default connect(mapStateToProps, {
   getDiscoverProducts,
-  getProductsWithPromo
+  getProductsWithPromo,
+  getPopularProducts
 })(Home)

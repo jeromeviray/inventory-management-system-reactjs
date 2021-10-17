@@ -19,7 +19,6 @@ import { AppHeaderDropdown } from "./index"
 
 // import { sideBarChange } from "../../service/apiActions/changeStateAction"
 import { sideBarChange } from "src/service/apiActions/changeStateAction"
-import { getStoreInformation } from "src/service/apiActions/storeAction/StoreInformationAction"
 
 class AppHeader extends Component {
   state = {
@@ -27,9 +26,7 @@ class AppHeader extends Component {
     sidebarShow: false,
     storeInfo: [],
   }
-  componentDidMount() {
-    this.props.getStoreInformation()
-  }
+
   componentDidUpdate(prevProps, prevState) {
     this.manageStoreInformationResponse(prevProps, prevState)
 
@@ -109,6 +106,5 @@ const mapStateToProps = (state) => {
 export default withRouter(
   connect(mapStateToProps, {
     sideBarChange,
-    getStoreInformation,
   })(AppHeader),
 )

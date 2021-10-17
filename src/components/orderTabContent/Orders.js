@@ -94,12 +94,14 @@ export class Orders extends Component {
         if (typeof totalCounts[orderStatus.toUpperCase()] == "undefined") {
           totalCounts[orderStatus.toUpperCase()] = 0
         }
-        totalCounts[orderData.orderStatus.toUpperCase()]--
-        totalCounts[orderStatus.toUpperCase()]++
-        this.props.totalCountChange(totalCounts)
-        this.setState({
-          orders: orders,
-        })
+        if (orderStatus == "payment_received") {
+          totalCounts[orderData.orderStatus.toUpperCase()]--
+          totalCounts[orderStatus.toUpperCase()]++
+          this.props.totalCountChange(totalCounts)
+          this.setState({
+            orders: orders,
+          })
+        }
       }
     })
   }
@@ -350,7 +352,7 @@ export class Orders extends Component {
                       </Link>
 
                       {permission === Roles.SUPER_ADMIN ||
-                      permission === Roles.ADMIN ? (
+                        permission === Roles.ADMIN ? (
                         this.renderOrderAction(this.state.status, order)
                       ) : (
                         <></>

@@ -17,10 +17,14 @@ import { ToastContainer, toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import "./scss/style.scss"
 
+import { getStoreInformation } from "src/service/apiActions/storeAction/StoreInformationAction"
+
 import config from "./config"
 
 const loading = (
-  <div className="d-flex justify-content-center align-items-center  position-fixed ">
+  <div
+    className="d-flex justify-content-center align-items-center position-fixed spinner"
+  >
     <DotLoader color="#36D7B7" size={100} />
   </div>
 )
@@ -52,6 +56,7 @@ const CustomerLayout = React.lazy(() => import("src/layout/CustomerLayout"))
 class App extends Component {
   componentDidUpdate(prevProps, prevState) {
     this.manageResponse(prevProps, prevState)
+    this.props.getStoreInformation()
   }
 
   manageResponse(prevProps, prevState) {
@@ -145,4 +150,5 @@ const mapStateToProps = (state) => {
 }
 export default connect(mapStateToProps, {
   logout,
+  getStoreInformation
 })(App)

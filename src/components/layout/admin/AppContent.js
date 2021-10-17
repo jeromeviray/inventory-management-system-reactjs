@@ -50,7 +50,7 @@ class AppContent extends Component {
       <CContainer lg>
         <Suspense
           fallback={
-            <div className="d-flex justify-content-center align-items-center  position-fixed ">
+            <div className="d-flex justify-content-center align-items-center  position-fixed spinner">
               <DotLoader color="#36D7B7" size={100} />
             </div>
           }
@@ -74,7 +74,7 @@ class AppContent extends Component {
               )
             })}
             {this.props.userResponse.credentials.roles.roleName ===
-            Roles.SUPER_ADMIN ? (
+              Roles.SUPER_ADMIN ? (
               <Route
                 path="/app"
                 exact
