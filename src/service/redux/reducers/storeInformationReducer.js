@@ -1,4 +1,4 @@
-import { GET_STORE_INFORMATION } from "../constants"
+import { GET_STORE_INFORMATION, UDPATE_STORE_INFORMATION } from "../constants"
 
 export const storeInformationReducer = (state = {}, action) => {
   const { type, payload } = action
@@ -10,6 +10,12 @@ export const storeInformationReducer = (state = {}, action) => {
         data: {
           storeInfo: payload.data.storeInfo,
         },
+      }
+    case UDPATE_STORE_INFORMATION:
+      return {
+        status: payload.status,
+        action: payload.action,
+        data: {},
       }
     default:
       return state

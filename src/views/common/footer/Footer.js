@@ -38,7 +38,6 @@ export class Footer extends Component {
                             <h5>Contact Us: </h5>
                             <div className="font-style d-flex text-light">
                                 <div className="font-style d-flex flex-column align-items-start ">
-
                                     <h6 className="m-0 pe-3 mb-2">Contact #:</h6>
                                     <h6 className="m-0 pe-3 mb-2">Email:</h6>
                                     <h6 className="m-0 pe-3 mb-2">Location:</h6>
@@ -59,7 +58,7 @@ export class Footer extends Component {
                                                 <span>{storeInfo.email}</span>
                                             </>
                                         ) : (
-                                            <span >jeromeviray4@gmail.com</span>
+                                            <span>jeromeviray4@gmail.com</span>
                                         )}
                                     </strong>
                                     <strong style={{ ...margin }}>
@@ -88,7 +87,6 @@ export class Footer extends Component {
                             <h5>Contact Us: </h5>
                             <div className="font-style d-flex text-light">
                                 <div className="font-style d-flex flex-column align-items-start ">
-
                                     <h6 className="m-0 pe-3 mb-2">Contact #:</h6>
                                     <h6 className="m-0 pe-3 mb-2">Email:</h6>
                                     <h6 className="m-0 pe-3 mb-2">Location:</h6>
@@ -100,7 +98,7 @@ export class Footer extends Component {
                                                 <span>{storeInfo.contactNumber}</span>
                                             </>
                                         ) : (
-                                            <span>0955864984</span>
+                                            <span>09458144695</span>
                                         )}
                                     </strong>
                                     <strong style={{ ...margin }}>
@@ -109,7 +107,7 @@ export class Footer extends Component {
                                                 <span>{storeInfo.email}</span>
                                             </>
                                         ) : (
-                                            <span >inventorymanagement@gmail.com</span>
+                                            <span>jeromeviray4@gmail.com</span>
                                         )}
                                     </strong>
                                     <strong style={{ ...margin }}>
@@ -133,10 +131,16 @@ export class Footer extends Component {
                             to={config.api.private.prefixFrontendUrl + "/home"}
                             style={{ cursor: "pointer" }}
                         >
-                            {storeInfo.storeName && (
+                            {storeInfo.storeName ? (
                                 <strong style={{ ...margin }}>
                                     {storeInfo.storeName.toUpperCase()}
                                 </strong>
+                            ) : (
+                                <>
+                                    <strong style={{ ...margin }}>
+                                        Inventory Management System
+                                    </strong>
+                                </>
                             )}
                         </Link>
                     </CCardTitle>

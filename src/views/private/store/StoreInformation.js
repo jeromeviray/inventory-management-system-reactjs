@@ -3,6 +3,8 @@ import { connect } from "react-redux"
 import { getCarouselImages } from "src/service/apiActions/carouselAction/carouselAction"
 import { Carousel } from "react-responsive-carousel"
 import * as IoIcons from "react-icons/io"
+import * as FaIcons from "react-icons/fa"
+
 import {
   CCard,
   CCardTitle,
@@ -15,11 +17,13 @@ import * as MdIcons from "react-icons/md"
 import { EditorState, convertFromRaw, convertToRaw } from "draft-js"
 import DOMPurify from "dompurify"
 import draftToHtml from "draftjs-to-html"
-
+import { setStoreModal } from "src/service/apiActions/modalAction/modalAction"
+import StoreInformationModal from "src/components/modals/store/StoreInformationModal"
 export class StoreInformation extends Component {
   state = {
     carouselImages: [],
     storeInfo: [],
+    visible: false,
   }
   componentDidMount() {
     this.props.getCarouselImages()
@@ -27,6 +31,7 @@ export class StoreInformation extends Component {
   componentDidUpdate = (prevProps, prevState) => {
     this.getResponseCarouselImages(prevProps, prevState)
     this.manageStoreInformationResponse(prevProps, prevState)
+    this.manageStoreInfo(prevProps, prevState)
   }
   getResponseCarouselImages = (prevProps, prevState) => {
     if (prevProps.carouselResponser !== this.props.carouselResponser) {
@@ -54,13 +59,21 @@ export class StoreInformation extends Component {
       }
     }
   }
+  manageStoreInfo = (prevProps, prevState) => {
+    if (prevProps.modalVisible !== this.props.modalVisible) {
+      let { action } = this.props.modalVisible
+      if (action === "close") {
+        this.props.getStoreInformation()
+      }
+    }
+  }
   createMarkup = (html) => {
     return {
       __html: DOMPurify.sanitize(html),
     }
   }
   render() {
-    let { carouselImages, storeInfo } = this.state
+    let { carouselImages, storeInfo, visible } = this.state
     let content = storeInfo.description && JSON.parse(storeInfo.description)
     const arrowStyles = {
       position: "absolute",
@@ -85,63 +98,80 @@ export class StoreInformation extends Component {
 
     return (
       <>
-        <Carousel
-          showArrows={true}
-          autoPlay={true}
-          showThumbs={false}
-          infiniteLoop={true}
-          dynamicHeight={false}
-          renderArrowPrev={(onClickHandler, hasPrev, label) =>
-            hasPrev && (
-              <button
-                type="button"
-                onClick={onClickHandler}
-                title={label}
-                className="arrow-style"
-                style={{ ...arrowStyles, left: 0 }}
-              >
-                <IoIcons.IoIosArrowBack size="40" style={{ color: "white" }} />
-              </button>
-            )
-          }
-          renderArrowNext={(onClickHandler, hasNext, label) =>
-            hasNext && (
-              <button
-                type="button"
-                onClick={onClickHandler}
-                title={label}
-                className="arrow-style"
-                style={{ ...arrowStyles, right: 0 }}
-              >
-                <IoIcons.IoIosArrowForward
-                  size="40"
-                  style={{ color: "white" }}
-                />
-              </button>
-            )
-          }
-        >
-          {carouselImages &&
-            carouselImages.map((image, index) => {
-              return (
-                <div key={index}>
-                  <img
-                    className="d-block "
-                    height="400"
-                    src={image.fileName}
-                    alt={image.fileName}
+        <StoreInformationModal />
+        <div>
+          <div className="mb-2 text-end">
+            <CButton variant="ghost" size="sm">
+              <FaIcons.FaPlus size={20} />,
+            </CButton>
+            <CButton color="info" variant="ghost" size="sm">
+              <MdIcons.MdModeEdit size="20" />
+            </CButton>
+          </div>
+          <Carousel
+            showArrows={true}
+            autoPlay={true}
+            showThumbs={false}
+            infiniteLoop={true}
+            dynamicHeight={false}
+            renderArrowPrev={(onClickHandler, hasPrev, label) =>
+              hasPrev && (
+                <button
+                  type="button"
+                  onClick={onClickHandler}
+                  title={label}
+                  className="arrow-style"
+                  style={{ ...arrowStyles, left: 0 }}
+                >
+                  <IoIcons.IoIosArrowBack
+                    size="40"
+                    style={{ color: "white" }}
                   />
-                </div>
+                </button>
               )
-            })}
-        </Carousel>
-        <CContainer className="mt-3">
+            }
+            renderArrowNext={(onClickHandler, hasNext, label) =>
+              hasNext && (
+                <button
+                  type="button"
+                  onClick={onClickHandler}
+                  title={label}
+                  className="arrow-style"
+                  style={{ ...arrowStyles, right: 0 }}
+                >
+                  <IoIcons.IoIosArrowForward
+                    size="40"
+                    style={{ color: "white" }}
+                  />
+                </button>
+              )
+            }
+          >
+            {carouselImages &&
+              carouselImages.map((image, index) => {
+                return (
+                  <div key={index}>
+                    <img
+                      className="d-block "
+                      height="400"
+                      src={image.fileName}
+                      alt={image.fileName}
+                    />
+                  </div>
+                )
+              })}
+          </Carousel>
+        </div>
+
+        <CContainer className="mt-3 ">
           <CCard className=" p-3">
-            {storeInfo.logo ? (
-              <CAvatar color="secondary" src={"/logo/" + storeInfo.logo} size="xl" />
+            {storeInfo.acronym ? (
+              <CAvatar color="warning" size="xl">
+                {storeInfo.acronym}
+              </CAvatar>
             ) : (
-              <CAvatar color="secondary" size="xl">
-                <small className="p-0 m-0">N/L</small>
+              <CAvatar color="warning" size="xl">
+                IMS
               </CAvatar>
             )}
             <CCardTitle className="d-flex justify-content-between mt-3">
@@ -206,14 +236,14 @@ export class StoreInformation extends Component {
                   color="info"
                   variant="ghost"
                   size="sm"
-                //    onClick={() =>
-                //      this.props.addAccountModal(
-                //        !visible,
-                //        "Edit",
-                //        account,
-                //        <MdIcons.MdModeEdit size="20" className="me-2" />,
-                //      )
-                //    }
+                  onClick={() =>
+                    this.props.setStoreModal(
+                      !visible,
+                      "Edit",
+                      storeInfo,
+                      <MdIcons.MdModeEdit size="20" className="me-2" />,
+                    )
+                  }
                 >
                   <MdIcons.MdModeEdit size="20" />
                 </CButton>
@@ -247,8 +277,11 @@ const mapStateToProps = (state) => {
   return {
     carouselResponser: state.carouselResponser,
     storeInformationResponse: state.storeInformationResponse,
+    modalVisible: state.modalVisibleResponse,
   }
 }
 export default connect(mapStateToProps, {
   getCarouselImages,
+  getStoreInformation,
+  setStoreModal,
 })(StoreInformation)

@@ -15,6 +15,8 @@ import {
   SET_PROMO_MODAL,
   ALERT_BAN_MODAL,
   CHANGE_PASSWORD_MODAL,
+  UDPATE_STORE_INFORMATION,
+  SET_TERMS_AND_CONDITION_MODAL,
 } from "src/service/redux/constants"
 
 export const setProductModal = (visible, action, icon) => async (dispatch) => {
@@ -87,16 +89,16 @@ export const setAlertBanModal =
       },
     })
   }
-export const addBranchModal =
-  (visible, action, branch, icon) => async (dispatch) => {
+export const setStoreModal =
+  (visible, action, storeInfo, icon) => async (dispatch) => {
     dispatch({
-      type: ADD_BRANCH_MODAL,
+      type: UDPATE_STORE_INFORMATION,
       payload: {
         status: 200,
         data: {
           visible: visible,
           action: action,
-          branch: branch,
+          storeInfo: storeInfo,
           icon: icon,
         },
       },
@@ -242,6 +244,21 @@ export const setPromoModal =
           visible: visible,
           icon: icon,
           promo: promo,
+        },
+      },
+    })
+  }
+export const setTermAndConditionModal =
+  (visible, action, termsAndCondition, icon) => async (dispatch) => {
+    dispatch({
+      type: SET_TERMS_AND_CONDITION_MODAL,
+      payload: {
+        status: 200,
+        data: {
+          visible: visible,
+          action: action,
+          termsAndCondition: termsAndCondition,
+          icon: icon,
         },
       },
     })
