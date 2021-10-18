@@ -6,6 +6,14 @@ export class DashboardApiService {
       headers: authHeader(),
     })
   }
+  getTotalRevenues(year) {
+    return axios.get("/revenue", {
+      headers: authHeader(),
+      params: {
+        year: year,
+      },
+    })
+  }
   getProductsAndCountTatolSold(query, page, limit) {
     return axios.get("/summaries/products/sold", {
       headers: authHeader(),

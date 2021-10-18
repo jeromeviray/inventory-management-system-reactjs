@@ -1,4 +1,8 @@
-const { GET_TOTALS, GET_PRODUCTS_COUNT_TOTAL_SOLD } = require("../constants")
+const {
+  GET_TOTALS,
+  GET_PRODUCTS_COUNT_TOTAL_SOLD,
+  GET_TOTAL_REVENUES,
+} = require("../constants")
 
 const dashboardReducer = (state = {}, action) => {
   const { type, payload } = action
@@ -9,6 +13,14 @@ const dashboardReducer = (state = {}, action) => {
         action: payload.action,
         data: {
           summaries: payload.data.summaries,
+        },
+      }
+    case GET_TOTAL_REVENUES:
+      return {
+        status: payload.status,
+        action: payload.action,
+        data: {
+          revenue: payload.data.revenue,
         },
       }
     case GET_PRODUCTS_COUNT_TOTAL_SOLD:
