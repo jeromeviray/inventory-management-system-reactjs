@@ -140,7 +140,7 @@ export class CustomerAddress extends Component {
                       </CCardTitle>
                     </div>
                     <div className="ps-5">
-                      {"# " + street + "," + barangay + "," + province + "," + region + "," + city + "," + postalCode}
+                      {street + ", " + barangay + ", " + city + ", " + province + ", " + region}
                     </div>
                   </CCardBody>
                 </CCard>

@@ -113,7 +113,7 @@ export class CustomerAddressController extends Component {
                       Mobile #: {phoneNumber}
                     </div>
                     <div className="ps-2">
-                      Address: {"# " + street + ", " + barangay + ", " + city + ", " + province + ", " + region}
+                      Address: {street + ", " + barangay + ", " + city + ", " + province + ", " + region}
                     </div>
                   </CCardBody>
                 </CCard>
