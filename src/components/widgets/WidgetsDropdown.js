@@ -43,51 +43,15 @@ export class WidgetsDropdown extends Component {
   render() {
     const { summaries } = this.state
     const { revenue } = summaries
+    const getTotalRevenue = revenue ? revenue : 0
     return (
       <>
-        {/* <CRow>
-          <CCol sm="6" lg="3">
-          <CWidgetDropdown
-            className="mb-4"
-            color="info"
-            value="&#8369;100k"
-            title="Revenue"
-          />
-        </CCol>
-          <CCol sm="4" lg="4">
-            <CWidgetDropdown
-              className="mb-4"
-              color="primary"
-              value={summaries.totalSold}
-              title="Products Sold"
-            />
-          </CCol>
-          <CCol sm="4" lg="4">
-            <CWidgetDropdown
-              className="mb-4"
-              color="warning"
-              value={summaries.totalProducts}
-              title="Total Products"
-            />
-          </CCol>
-          <CCol sm="4" lg="4">
-            <CWidgetDropdown
-              className="mb-4"
-              color="danger"
-              value={summaries.totalCustomers}
-              title="Total Customers"
-            />
-          </CCol>
-        </CRow> */}
         <CRow>
           <CCol sm="12" md="6" lg="3">
             <div className="container revenue">
               <div className="column-total-value">
                 <span>&#8369;</span>
-                <span>{revenue}</span>
-                <span className="text-dark ms-2" style={{ fontSize: "14px" }}>
-                  {summaries.revenueYear}
-                </span>
+                <span>{getTotalRevenue.toFixed(2)}</span>
               </div>
               <div className="column-title">
                 <span>Total Revenue</span>

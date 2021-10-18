@@ -2,6 +2,7 @@ import { SET_MESSAGE } from "src/constants/userConstants"
 import {
   GET_PRODUCTS_COUNT_TOTAL_SOLD,
   GET_TOTALS,
+  GET_TOTAL_REVENUES,
 } from "src/service/redux/constants"
 import DashboardApiService from "src/service/restAPI/DashboardApiService"
 
@@ -46,6 +47,46 @@ export const getTotals = () => async (dispatch) => {
   )
 }
 
+export const getTotalRevenues = (year) => async (dispatch) => {
+  return DashboardApiService.getTotalRevenues(year).then(
+    (response) => {
+      dispatch({
+        type: GET_TOTAL_REVENUES,
+        payload: {
+          status: 200,
+          action: GET_TOTAL_REVENUES,
+          data: {
+            revenue: response.data,
+          },
+        },
+      })
+      return Promise.resolve()
+    },
+    (error) => {
+      const errorMessage =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+
+      const status =
+        (error.response && error.response.data && error.response.data.code) ||
+        error.toString()
+
+      dispatch({
+        type: SET_MESSAGE,
+        payload: {
+          status: status,
+          data: {
+            message: errorMessage,
+          },
+        },
+      })
+      return Promise.reject()
+    },
+  )
+}
 export const getProductsAndCountTatolSold =
   (query, page, limit) => async (dispatch) => {
     return DashboardApiService.getProductsAndCountTatolSold(
