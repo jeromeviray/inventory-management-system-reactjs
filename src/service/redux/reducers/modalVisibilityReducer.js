@@ -9,6 +9,7 @@ import {
   EDIT_PRODUCT_MODAL,
   LOGIN_MODAL,
   SET_ADDRESS_MODAL,
+  SET_CAROULSE_MDOAL,
   SET_PRODUCTEDITMODAL_VISIBILIT,
   SET_PRODUCT_DETAILS_MODAL,
   SET_PROMO_MODAL,
@@ -141,6 +142,13 @@ const modalVisibilityReducer = (state = {}, action) => {
         visible: payload.data.visible,
         action: payload.data.action,
         termsAndCondition: payload.data.termsAndCondition,
+        icon: payload.data.icon,
+      }
+    case SET_CAROULSE_MDOAL:
+      return {
+        visible: payload.data.visible,
+        action: payload.data.action,
+        carousel: payload.data.carousel,
         icon: payload.data.icon,
       }
     default:
