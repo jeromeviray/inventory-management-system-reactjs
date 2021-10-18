@@ -19,7 +19,7 @@ const test = {
 }
 
 const getEnv = function () {
-  let env = process.env.REACT_APP_ENV
+  let env = "test"
   if (typeof env === "undefined") return dev
   env = env.trim()
   if (env === "dev") return dev
