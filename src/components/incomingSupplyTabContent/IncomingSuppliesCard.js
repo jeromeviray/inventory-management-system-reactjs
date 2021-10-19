@@ -11,6 +11,7 @@ import {
   CTableDataCell,
   CTableBody,
   CButton,
+  CTooltip,
 } from "@coreui/react"
 import { Link } from "react-router-dom"
 import Barcode from "react-barcode"
@@ -88,21 +89,24 @@ export class IncomingSuppliesCard extends Component {
       case "pending":
         orderButton = (
           <>
-            <CButton
-              color="info"
-              className="me-2"
-              variant="ghost"
-              onClick={() =>
-                this.props.setSupplyModal(
-                  !false,
-                  "Edit",
-                  incomingSupply,
-                  <MdIcons.MdModeEdit size="20" className="me-2" />,
-                )
-              }
-            >
-              <MdIcons.MdModeEdit size="20" />
-            </CButton>
+            <CTooltip content="Edit Incoming Supplies">
+              <CButton
+                color="info"
+                className="me-2"
+                variant="ghost"
+                onClick={() =>
+                  this.props.setSupplyModal(
+                    !false,
+                    "Edit",
+                    incomingSupply,
+                    <MdIcons.MdModeEdit size="20" className="me-2" />,
+                  )
+                }
+              >
+                <MdIcons.MdModeEdit size="20" />
+              </CButton>
+            </CTooltip>
+
             <CButton
               onClick={() => {
                 this.handleIncomingSupplyItem(incomingSupply, "pending")

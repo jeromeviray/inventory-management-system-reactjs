@@ -215,17 +215,11 @@ export class Register extends Component {
               style={{ cursor: "pointer" }}
             >
               {storeInfo.acronym ? (
-                <strong style={{ ...margin }}>
-                  {storeInfo.acronym}
-                </strong>
+                <strong style={{ ...margin }}>{storeInfo.acronym}</strong>
               ) : storeInfo.storeName ? (
-                <strong style={{ ...margin }}>
-                  {storeInfo.storeName}
-                </strong>
+                <strong style={{ ...margin }}>{storeInfo.storeName}</strong>
               ) : (
-                <strong style={{ ...margin }}>
-                  IMSs
-                </strong>
+                <strong style={{ ...margin }}>IMSs</strong>
               )}
             </Link>
           </CContainer>
@@ -377,13 +371,13 @@ export class Register extends Component {
                                       <CFormFloating className="mb-3 text-dark ">
                                         <CFormControl
                                           name="phoneNumber"
-                                          type="number"
-                                          autoCorrect="false"
+                                          type="tel"
+                                          required
+                                          pattern={"^(09|\\+639)\\d{9}$"}
                                           id="floatingPhoneNumber"
                                           placeholder="Phone number"
                                           onChange={this.handleOnChange}
                                           value={phoneNumber}
-                                          required
                                           className="rounded-pill  ps-4 pe-4"
                                         />
                                         <CFormLabel
@@ -405,9 +399,9 @@ export class Register extends Component {
                                       <CFormFloating className="mb-3 text-dark position-relative">
                                         <CFormControl
                                           name="email"
-                                          type="email"
+                                          type="text"
+                                          pattern="^[a-z0-9](\.?[a-z0-9]){5,}@g(oogle)?mail\.com$"
                                           id="floatingEmail"
-                                          autoCorrect="false"
                                           placeholder="Email"
                                           onChange={this.handleOnChange}
                                           value={email}
@@ -555,7 +549,7 @@ const mapStateToProps = (state) => {
   return {
     userResponse: state.userResponse,
     messageResponse: state.messageResponse,
-    storeInformationResponse: state.storeInformationResponse
+    storeInformationResponse: state.storeInformationResponse,
   }
 }
 export default connect(mapStateToProps, {

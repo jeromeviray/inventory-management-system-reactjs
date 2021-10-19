@@ -201,7 +201,7 @@ export class Dashboard extends Component {
     return (
       <>
         <WidgetsDropdown />
-        <CCard className="mb-4">
+        <CCard className="mb-4 d-none d-md-block">
           <CCardHeader>
             <CRow>
               <CCol sm="5">
@@ -231,7 +231,7 @@ export class Dashboard extends Component {
             />
           </CCardBody>
         </CCard>
-        <CCard className="mb-4">
+        <CCard className="mb-4 d-none d-md-block">
           <CCardHeader>
             <CRow>
               <CCol sm="5">

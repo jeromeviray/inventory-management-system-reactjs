@@ -36,10 +36,10 @@ export class Footer extends Component {
         style={{ zIndex: "2" }}
       >
         <CContainer className="">
-          <CRow className="align-items-center justify-content-center mb-3">
-            <CCol>
+          <CRow className="align-items-center justify-content-center mb-3 text-center">
+            <CCol sm="12" lg="6">
               <h5>Contact Us: </h5>
-              <div className="font-style d-flex text-light">
+              <div className="font-style d-flex text-light justify-content-center  mt-3">
                 <div className="font-style d-flex flex-column align-items-start ">
                   <h6 className="m-0 pe-3 mb-2">Contact #:</h6>
                   <h6 className="m-0 pe-3 mb-2">Email:</h6>
@@ -76,19 +76,19 @@ export class Footer extends Component {
                 </div>
               </div>
             </CCol>
-            <CCol>
+            <CCol sm="12" lg="6" className=" mt-3 mb-3">
               <h5>Terms and Condition </h5>
               <Link
-                className="nav-link "
+                className="nav-link text-light"
                 to={config.api.private.prefixFrontendUrl + "#"}
                 style={{ cursor: "pointer" }}
               >
                 Terms and Conditions
               </Link>
             </CCol>
-            <CCol>
+            <CCol sm="12" lg="6">
               <h5>Contact Us: </h5>
-              <div className="font-style d-flex text-light">
+              <div className="font-style d-flex text-light justify-content-center mt-3">
                 <div className="font-style d-flex flex-column align-items-start ">
                   <h6 className="m-0 pe-3 mb-2">Contact #:</h6>
                   <h6 className="m-0 pe-3 mb-2">Email:</h6>

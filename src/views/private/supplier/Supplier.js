@@ -11,6 +11,7 @@ import {
   CForm,
   CInputGroup,
   CFormControl,
+  CTooltip,
 } from "@coreui/react"
 import { connect } from "react-redux"
 //icons
@@ -143,38 +144,42 @@ export class Supplier extends Component {
                     <CTableDataCell>{supplier.name}</CTableDataCell>
                     <CTableDataCell>{supplier.createdAt}</CTableDataCell>
                     <CTableDataCell>
-                      <CButton
-                        color="info"
-                        className="me-2"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() =>
-                          this.props.setSupplierModal(
-                            !visible,
-                            "Edit",
-                            supplier,
-                            <MdIcons.MdModeEdit size="20" className="me-2" />,
-                          )
-                        }
-                      >
-                        <MdIcons.MdModeEdit size="20" />
-                      </CButton>
-                      <CButton
-                        color="danger"
-                        className="ms-2"
-                        variant="ghost"
-                        onClick={() =>
-                          this.props.setAlertModal(
-                            !visible,
-                            "DELETESUPPLIER",
-                            "SUPPLIER",
-                            supplier.id,
-                          )
-                        }
-                        size="sm"
-                      >
-                        <MdIcons.MdDelete size="20" />
-                      </CButton>
+                      <CTooltip content="Edit Supplier">
+                        <CButton
+                          color="info"
+                          className="me-2"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() =>
+                            this.props.setSupplierModal(
+                              !visible,
+                              "Edit",
+                              supplier,
+                              <MdIcons.MdModeEdit size="20" className="me-2" />,
+                            )
+                          }
+                        >
+                          <MdIcons.MdModeEdit size="20" />
+                        </CButton>
+                      </CTooltip>
+                      <CTooltip content="Delete Supplier">
+                        <CButton
+                          color="danger"
+                          className="ms-2"
+                          variant="ghost"
+                          onClick={() =>
+                            this.props.setAlertModal(
+                              !visible,
+                              "DELETESUPPLIER",
+                              "SUPPLIER",
+                              supplier.id,
+                            )
+                          }
+                          size="sm"
+                        >
+                          <MdIcons.MdDelete size="20" />
+                        </CButton>
+                      </CTooltip>
                     </CTableDataCell>
                   </CTableRow>
                 )

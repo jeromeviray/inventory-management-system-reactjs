@@ -18,6 +18,7 @@ import {
   CCol,
   CRow,
   CButtonGroup,
+  CTooltip,
 } from "@coreui/react"
 import * as FaIcons from "react-icons/fa"
 import * as MdIcons from "react-icons/md"
@@ -272,28 +273,32 @@ class Products extends Component {
               </CInputGroup>
             </CForm>
             <div className="text-center">
-              <CButton
-                className="pt-2 pb-2 ms-2"
-                type="button"
-                color="info"
-                variant="outline"
-                id="btn-scan-barcode"
-                onClick={() => this.props.setScanModal(!visible, "barcode")}
-              >
-                <BiIcons.BiBarcodeReader size="24" />
-              </CButton>
+              <CTooltip content="Scanner barcode">
+                <CButton
+                  className="pt-2 pb-2 ms-2"
+                  type="button"
+                  color="info"
+                  variant="outline"
+                  id="btn-scan-barcode"
+                  onClick={() => this.props.setScanModal(!visible, "barcode")}
+                >
+                  <BiIcons.BiBarcodeReader size="24" />
+                </CButton>
+              </CTooltip>
             </div>
             <div className="d-flex align-items-end flex-row-reverse m-2">
               <ReactToPrint
                 trigger={() => (
-                  <CButton
-                    type="button"
-                    variant="outline"
-                    color="info"
-                    className=" pt-2 pb-2 "
-                  >
-                    <IoIcons.IoPrintOutline size={20} />
-                  </CButton>
+                  <CTooltip content="Print Products">
+                    <CButton
+                      type="button"
+                      variant="outline"
+                      color="info"
+                      className=" pt-2 pb-2 "
+                    >
+                      <IoIcons.IoPrintOutline size={20} />
+                    </CButton>
+                  </CTooltip>
                 )}
                 content={() => this.componentRef}
               />
@@ -314,10 +319,10 @@ class Products extends Component {
                         value === "LOW"
                           ? "outline-warning"
                           : value === "OUT_OF_STOCK"
-                            ? "outline-danger"
-                            : value === "ALL"
-                              ? "outline-secondary"
-                              : "outline-success"
+                          ? "outline-danger"
+                          : value === "ALL"
+                          ? "outline-secondary"
+                          : "outline-success"
                       }
                       key={value}
                       className="mx-0"
@@ -395,49 +400,49 @@ class Products extends Component {
                           {this.manageStatus(status)}
                         </CTableDataCell>
                         <CTableDataCell>
-                          <CButton
-                            color="secondary"
-                            variant="ghost"
-                            size="sm"
-                            onClick={() =>
-                              this.props.setProductDetailsModal(
-                                true,
-                                "view",
-                                product,
-                              )
-                            }
-                          >
-                            <FaIcons.FaEye size="20" />
-                          </CButton>
-                          <CButton
-                            color="info"
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => this.handleGetProduct(id)}
-                          >
-                            <FaIcons.FaEdit size="20" />
-                          </CButton>
-                          <CButton
-                            color="danger"
-                            variant="ghost"
-                            size="sm"
-                            onClick={() =>
-                              // this.props.setAlertModal(
-                              //   !visible,
-                              //   "DELETEPRODUCT",
-                              //   "PRODUCT",
-                              //   product.id,
-                              // )
-                              this.props.setAlertModal(
-                                !visible,
-                                "DELETEPRODUCT",
-                                "PRODUCT",
-                                id,
-                              )
-                            }
-                          >
-                            <MdIcons.MdDelete size="20" />
-                          </CButton>
+                          <CTooltip content="View Product Details">
+                            <CButton
+                              color="secondary"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() =>
+                                this.props.setProductDetailsModal(
+                                  true,
+                                  "view",
+                                  product,
+                                )
+                              }
+                            >
+                              <FaIcons.FaEye size="20" />
+                            </CButton>
+                          </CTooltip>
+                          <CTooltip content="Edit Product">
+                            <CButton
+                              color="info"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => this.handleGetProduct(id)}
+                            >
+                              <FaIcons.FaEdit size="20" />
+                            </CButton>
+                          </CTooltip>
+                          <CTooltip content="Delete Product">
+                            <CButton
+                              color="danger"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() =>
+                                this.props.setAlertModal(
+                                  !visible,
+                                  "DELETEPRODUCT",
+                                  "PRODUCT",
+                                  id,
+                                )
+                              }
+                            >
+                              <MdIcons.MdDelete size="20" />
+                            </CButton>
+                          </CTooltip>
                         </CTableDataCell>
                       </CTableRow>
                     )

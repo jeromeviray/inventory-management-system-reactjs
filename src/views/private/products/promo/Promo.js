@@ -18,6 +18,7 @@ import {
   CCol,
   CRow,
   CButtonGroup,
+  CTooltip,
 } from "@coreui/react"
 import { connect } from "react-redux"
 // action
@@ -278,42 +279,46 @@ export class Promo extends Component {
                             </CTableDataCell>
                             <CTableDataCell className="text-center" colSpan="1">
                               {status !== "END" ? (
-                                <CButton
-                                  color="info"
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() =>
-                                    this.props.setPromoModal(
-                                      !visible,
-                                      "Edit",
-                                      promo,
-                                      <MdIcons.MdModeEdit
-                                        size="20"
-                                        className="me-2"
-                                      />,
-                                    )
-                                  }
-                                >
-                                  <MdIcons.MdModeEdit size="20" />
-                                </CButton>
+                                <CTooltip content="Edit Promo">
+                                  <CButton
+                                    color="info"
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() =>
+                                      this.props.setPromoModal(
+                                        !visible,
+                                        "Edit",
+                                        promo,
+                                        <MdIcons.MdModeEdit
+                                          size="20"
+                                          className="me-2"
+                                        />,
+                                      )
+                                    }
+                                  >
+                                    <MdIcons.MdModeEdit size="20" />
+                                  </CButton>
+                                </CTooltip>
                               ) : (
                                 <></>
                               )}
-                              <CButton
-                                color="danger"
-                                variant="ghost"
-                                onClick={() =>
-                                  this.props.setAlertModal(
-                                    !visible,
-                                    "DELETEPROMO",
-                                    "PROMO",
-                                    promo.promo.id,
-                                  )
-                                }
-                                size="sm"
-                              >
-                                <MdIcons.MdDelete size="20" />
-                              </CButton>
+                              <CTooltip content="Delete Promo">
+                                <CButton
+                                  color="danger"
+                                  variant="ghost"
+                                  onClick={() =>
+                                    this.props.setAlertModal(
+                                      !visible,
+                                      "DELETEPROMO",
+                                      "PROMO",
+                                      promo.promo.id,
+                                    )
+                                  }
+                                  size="sm"
+                                >
+                                  <MdIcons.MdDelete size="20" />
+                                </CButton>
+                              </CTooltip>
                             </CTableDataCell>
                           </CTableRow>
                         </>
