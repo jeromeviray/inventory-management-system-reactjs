@@ -106,7 +106,23 @@ export class Orders extends Component {
       }
     })
   }
-
+  renderCustomerAction = (orderStatus, order) => {
+    let orderButton = <></>
+    switch (orderStatus.toLowerCase()) {
+      case "pending":
+        orderButton = (
+          <CButton
+            onClick={() => {
+              this.handleOrder(order, "cancel")
+            }}
+          >
+            Cancel Order
+          </CButton>
+        )
+        break
+    }
+    return orderButton
+  }
   renderOrderAction(orderStatus, order, paymentStatus) {
     let orderButton = <></>
     switch (orderStatus.toLowerCase()) {
@@ -329,7 +345,6 @@ export class Orders extends Component {
                         this.handleOrderReview(order.orderId, item, 5, "")
                         const { rating, comment, submitted } =
                           this.orderReviews[order.orderId][item.product.id]
-                        console.log(rating, comment, submitted)
                         return (
                           <OrderCard
                             item={item}
@@ -369,15 +384,18 @@ export class Orders extends Component {
                       </Link>
 
                       {permission === Roles.SUPER_ADMIN ||
-                      permission === Roles.ADMIN ? (
-                        this.renderOrderAction(
-                          this.state.status,
-                          order,
-                          paymentStatus,
-                        )
-                      ) : (
-                        <></>
-                      )}
+                      permission === Roles.ADMIN
+                        ? this.renderOrderAction(
+                            this.state.status,
+                            order,
+                            paymentStatus,
+                          )
+                        : // item.orderStatus === "PENDING" ? <><CButton>Cancel</CButton></>:<></>
+                          this.renderCustomerAction(
+                            this.state.status,
+                            order,
+                            paymentStatus,
+                          )}
                     </div>
                     <div className="d-flex flex-column">
                       <div style={fontStyle} className="mt-2">

@@ -29,3 +29,6 @@ handlers:
 
 # #!/bin/sh
 # java -jar /home/ubuntu/www/inventory-management-api/target.jar
+
+cd /var/www/inventory-management-api/ && sudo bash
+service inventory-management stop && git pull && mvn clean install && service inventory-management start

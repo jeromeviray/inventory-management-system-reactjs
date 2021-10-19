@@ -7,6 +7,7 @@ import {
   CCardFooter,
   CButton,
   CSpinner,
+  CTooltip,
 } from "@coreui/react"
 import ReactStars from "react-rating-stars-component"
 import * as FaIcons from "react-icons/fa"
@@ -190,7 +191,7 @@ export class ProductCard extends Component {
     }
   }
 
-  renderAlert = () => { }
+  renderAlert = () => {}
   render() {
     let { product, fileImage, loading } = this.state
     const { productName, productPrice, id } = product.product
@@ -221,9 +222,10 @@ export class ProductCard extends Component {
                   variant="top"
                   src={
                     fileImage.length > 0
-                      ? config.api.private.baseUrl + "/api/v1/products/getImages/bytesArrays/" +
-                      fileImage[0].path +
-                      fileImage[0].fileName
+                      ? config.api.private.baseUrl +
+                        "/api/v1/products/getImages/bytesArrays/" +
+                        fileImage[0].path +
+                        fileImage[0].fileName
                       : NO_IMAGE_BASE64
                   }
                   alt="product"
@@ -276,15 +278,17 @@ export class ProductCard extends Component {
                       {product.promo.quantity}
                     </span>
                   </span>
-                ) : product.inventory.status === "OUT_OF_STOCK" ?
-                  (
-                    this.manageStatus(product.inventory.status)
-                  ) : product.inventory.totalStock > 0 ?
-                    <span className="stock-label-value">
-                      {product.inventory.totalStock}
-                    </span> : <span className="stock-label-value">
-                      {product.inventory.threshold}
-                    </span>}
+                ) : product.inventory.status === "OUT_OF_STOCK" ? (
+                  this.manageStatus(product.inventory.status)
+                ) : product.inventory.totalStock > 0 ? (
+                  <span className="stock-label-value">
+                    {product.inventory.totalStock}
+                  </span>
+                ) : (
+                  <span className="stock-label-value">
+                    {product.inventory.threshold}
+                  </span>
+                )}
               </div>
             </div>
             {rating ? (
@@ -302,61 +306,70 @@ export class ProductCard extends Component {
           </CCardBody>
           <CCardFooter>
             {status ? (
-              <CButton
-                type="button"
-                color="info"
-                className="d-flex justify-content-center align-items-center w-100"
-                onClick={this.handleAddToCart}
-                disabled={loading}
-              >
-                {loading ? (
-                  <CSpinner size="sm" />
-                ) : (
-                  <span className="d-flex align-items-center login-icon me-2">
-                    <FaIcons.FaCartPlus />
-                  </span>
-                )}
-                <span className="ms-2">Add To Cart</span>
-              </CButton>
+              <CTooltip content="Add to Cart">
+                <CButton
+                  type="button"
+                  color="info"
+                  className="d-flex justify-content-center align-items-center w-100"
+                  onClick={this.handleAddToCart}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <CSpinner size="sm" />
+                  ) : (
+                    <span className="d-flex align-items-center login-icon me-2">
+                      <FaIcons.FaCartPlus />
+                    </span>
+                  )}
+                  <span className="ms-2 d-none d-md-block">Add To Cart</span>
+                </CButton>
+              </CTooltip>
             ) : inventory.status != "OUT_OF_STOCK" ? (
-              <CButton
-                type="button"
-                color="info"
-                className="d-flex justify-content-center align-items-center w-100"
-                onClick={this.handleAddToCart}
-                disabled={loading}
-              >
-                {loading ? (
-                  <CSpinner size="sm" />
-                ) : (
-                  <span className="d-flex align-items-center login-icon me-2">
-                    <FaIcons.FaCartPlus />
-                  </span>
-                )}
-                <span className="ms-2">Add To Cart</span>
-              </CButton>
+              <CTooltip content="Add to Cart">
+                <CButton
+                  type="button"
+                  color="info"
+                  className="d-flex justify-content-center align-items-center w-100"
+                  onClick={this.handleAddToCart}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <CSpinner size="sm" />
+                  ) : (
+                    <span className="d-flex align-items-center login-icon me-2">
+                      <FaIcons.FaCartPlus />
+                    </span>
+                  )}
+                  <span className="ms-2 d-none d-md-block">Add To Cart</span>
+                </CButton>
+              </CTooltip>
             ) : (
-              <CButton
-                type="button"
-                color="info"
-                className="d-flex justify-content-center align-items-center w-100"
-                onClick={() => {
-                  this.handleAddToWishlist(id)
-                }}
-                disabled={loading}
-                style={{ background: "pink" }}
+              <CTooltip
+                content={wishlist ? "Remove Wishlist" : "Add To Wishlist"}
               >
-                {loading ? (
-                  <CSpinner size="sm" />
-                ) : (
-                  <span className="d-flex align-items-center login-icon me-2">
-                    {wishlist ? <FaIcons.FaHeart /> : <FaIcons.FaRegHeart />}
+                <CButton
+                  type="button"
+                  color="info"
+                  className="d-flex justify-content-center align-items-center w-100"
+                  onClick={() => {
+                    this.handleAddToWishlist(id)
+                  }}
+                  disabled={loading}
+                  style={{ background: "pink" }}
+                >
+                  {loading ? (
+                    <CSpinner size="sm" />
+                  ) : (
+                    <span className="d-flex align-items-center login-icon me-2">
+                      {wishlist ? <FaIcons.FaHeart /> : <FaIcons.FaRegHeart />}
+                    </span>
+                  )}
+
+                  <span className="ms-2 d-none d-md-block">
+                    {wishlist ? "Remove Wishlist" : "Add To Wishlist"}
                   </span>
-                )}
-                <span className="ms-2">
-                  {wishlist ? "Remove Wishlist" : "Add To Wishlist"}
-                </span>
-              </CButton>
+                </CButton>
+              </CTooltip>
             )}
           </CCardFooter>
         </CCard>

@@ -68,7 +68,6 @@ export class Order extends Component {
 
   render() {
     const { orderStatus, activeKey, totalCounts, permission } = this.state;
-    console.log("ROLE", permission)
     const tabStyle = {
       margin: "10px 0",
       padding: "12px 16px",
