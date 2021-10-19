@@ -17,6 +17,7 @@ import {
   CHANGE_PASSWORD_MODAL,
   UDPATE_STORE_INFORMATION,
   SET_TERMS_AND_CONDITION_MODAL,
+  SET_CAROULSE_MDOAL,
 } from "src/service/redux/constants"
 
 export const setProductModal = (visible, action, icon) => async (dispatch) => {
@@ -263,3 +264,18 @@ export const setTermAndConditionModal =
       },
     })
   }
+  export const setCarouselModal =
+    (visible, action, carousel, icon) => async (dispatch) => {
+      dispatch({
+        type: SET_CAROULSE_MDOAL,
+        payload: {
+          status: 200,
+          data: {
+            visible: visible,
+            action: action,
+            carousel: carousel,
+            icon: icon,
+          },
+        },
+      })
+    }

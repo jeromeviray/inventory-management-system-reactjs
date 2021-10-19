@@ -39,6 +39,7 @@ export class BrandModal extends Component {
   manageBrandModal = (prevProps, prevState) => {
     if (prevProps.modalVisible !== this.props.modalVisible) {
       let { visible, action, brand, icon } = this.props.modalVisible
+      console.log(brand)
       if (action === "Add") {
         this.setState({
           visible: visible,
@@ -50,7 +51,7 @@ export class BrandModal extends Component {
           visible: visible,
           action: action,
           icon: icon,
-          brandName: brand.brand,
+          brandName: brand.brandName,
           brandId: brand.id,
         })
       } else {
