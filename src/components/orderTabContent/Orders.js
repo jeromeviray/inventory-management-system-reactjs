@@ -33,6 +33,7 @@ export class Orders extends Component {
     token: "",
     permission: "",
     path: "",
+    updated: false,
   }
 
   orderReviews = {}
@@ -175,20 +176,17 @@ export class Orders extends Component {
         product: {
           id: parseInt(key),
         },
-        orderId: order.id,
       })
+      this.orderReviews[order.orderId][key].submitted = true
     }
-    this.props.saveComments(formattedReviews).then(() => {
-      for (var key in orderReviews) {
-        this.orderReviews[order.orderId][key].submitted = true
-      }
-    })
+    this.props.saveComments(order.orderId, formattedReviews)
+    this.setState({ update: true })
   }
 
   handleOrderReview(orderId, item, rating, comment) {
     const { orders } = this.state
     let orderIndex = orders.findIndex((ctt2) => ctt2.orderId == orderId)
-    const { comments } = orders[orderIndex]
+    let { comments } = orders[orderIndex]
 
     let submitted = false
 
@@ -200,9 +198,14 @@ export class Orders extends Component {
           submitted: false,
         },
       }
+    } else if (
+      typeof this.orderReviews[orderId][item.product.id] !== "undefined" &&
+      this.orderReviews[orderId][item.product.id].submitted
+    ) {
+      comment = this.orderReviews[orderId][item.product.id].comment
+      submitted = this.orderReviews[orderId][item.product.id].submitted
     }
 
-    console.log(comments)
     let index =
       comments && comments.findIndex((ctt) => ctt.product.id == item.product.id)
 
@@ -236,9 +239,17 @@ export class Orders extends Component {
           </CCard>
         ) : (
           orders.map((order, index) => {
-            let hasPendingReview = order.comments.findIndex(
-              (comment) => comment.order_id == order.id,
-            )
+            let hasPendingReview =
+              order.orderItems.length != order.comments.length
+
+            if (hasPendingReview && this.orderReviews[order.orderId]) {
+              hasPendingReview = false
+              for (var key in this.orderReviews[order.orderId]) {
+                if (this.orderReviews[order.orderId][key].submitted == false) {
+                  hasPendingReview = true
+                }
+              }
+            }
 
             const canReview =
               (order.orderStatus == "DELIVERED" ||
@@ -313,11 +324,12 @@ export class Orders extends Component {
                       this.handleOrderView(event, order)
                     }}
                   >
-                    <CContainer>
+                    <CContainer key={new Date()}>
                       {order.orderItems.map((item, index) => {
                         this.handleOrderReview(order.orderId, item, 5, "")
                         const { rating, comment, submitted } =
                           this.orderReviews[order.orderId][item.product.id]
+                        console.log(rating, comment, submitted)
                         return (
                           <OrderCard
                             item={item}
@@ -333,7 +345,7 @@ export class Orders extends Component {
                         )
                       })}
                     </CContainer>
-                    {hasPendingReview >= 0 && canReview && (
+                    {hasPendingReview && canReview && (
                       <CButton type="submit" style={{ float: "right" }}>
                         Submit Product Review
                       </CButton>
@@ -343,12 +355,6 @@ export class Orders extends Component {
                 <CCardFooter className="p-4">
                   <div className="d-flex justify-content-between align-items-end">
                     <div className="d-flex align-items-bottom">
-                      {/* {order.orderItems.map((item, index) => {
-                                                return (
-
-                                                )
-
-                                            })} */}
                       <Link
                         to={{
                           pathname:
