@@ -42,6 +42,7 @@ export const SET_SCAN_MODAL = "SET_SCAN_MODAL"
 export const SET_PROMO_MODAL = "SET_PROMO_MODAL"
 export const CHANGE_PASSWORD_MODAL = "CHANGE_PASSWORD_MODAL"
 export const SET_TERMS_AND_CONDITION_MODAL = "SET_TERMS_AND_CONDITION_MODAL"
+export const SET_CAROULSE_MDOAL = "SET_CAROUSEL_MODAL"
 
 // endpoint constalnts
 export const API_BASE_URL = config.api.private.baseUrl

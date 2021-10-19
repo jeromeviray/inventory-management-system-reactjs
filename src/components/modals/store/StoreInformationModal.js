@@ -69,7 +69,7 @@ export class BranchModal extends Component {
               )
             : EditorState.createEmpty(),
         })
-      } else {
+      } else if (action === "close") {
         this.setState({
           visible: visible,
           branchId: "",

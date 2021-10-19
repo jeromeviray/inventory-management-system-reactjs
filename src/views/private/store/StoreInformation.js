@@ -4,6 +4,8 @@ import { getCarouselImages } from "src/service/apiActions/carouselAction/carouse
 import { Carousel } from "react-responsive-carousel"
 import * as IoIcons from "react-icons/io"
 import * as FaIcons from "react-icons/fa"
+import { setCarouselModal } from "src/service/apiActions/modalAction/modalAction"
+import CarouselModal from "src/components/modals/carousel/CarouselModal"
 
 import {
   CCard,
@@ -101,9 +103,21 @@ export class StoreInformation extends Component {
     return (
       <>
         <StoreInformationModal />
+        <CarouselModal />
         <div>
           <div className="mb-2 text-end">
-            <CButton variant="ghost" size="sm">
+            <CButton
+              variant="ghost"
+              size="sm"
+              onClick={() =>
+                this.props.setCarouselModal(
+                  !visible,
+                  "Add Carousel",
+                  "",
+                  <FaIcons.FaPlus size={20} />,
+                )
+              }
+            >
               <FaIcons.FaPlus size={20} />,
             </CButton>
             <CButton color="info" variant="ghost" size="sm">
@@ -286,4 +300,5 @@ export default connect(mapStateToProps, {
   getCarouselImages,
   getStoreInformation,
   setStoreModal,
+  setCarouselModal,
 })(StoreInformation)
