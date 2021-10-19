@@ -11,8 +11,8 @@ const dev = {
 const test = {
   api: {
     private: {
-      baseUrl: "https://ec2-13-229-154-20.ap-southeast-1.compute.amazonaws.com",
-      baseFrontendUrl: "https://elite-replica-329023.as.r.appspot.com",
+      baseUrl: "https://api.inventory-mng-system.com",
+      baseFrontendUrl: "https://inventory-mng-system.com",
       prefixFrontendUrl: "",
     },
   },
