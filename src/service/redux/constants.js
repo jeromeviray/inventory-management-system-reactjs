@@ -108,7 +108,7 @@ export const VERIFY_ACCOUNT = "VERIFY_ACCOUNT"
 export const ADD_TO_CART = "ADD_TO_CART"
 export const GET_CART_ITEMS = "GET_CART_ITEMS"
 export const REMOVE_ITEM = "REMOVE_ITEM"
-
+export const QUANTITY_ACTION = "QUANTITY_ACTION"
 //address
 export const GET_ADDRESSES = "GET_ADDRESSES"
 export const UPDATE_ADDRESS = "UPDATE_ADDRESS"

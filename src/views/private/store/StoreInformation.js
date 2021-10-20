@@ -22,7 +22,8 @@ import draftToHtml from "draftjs-to-html"
 import { setStoreModal } from "src/service/apiActions/modalAction/modalAction"
 import StoreInformationModal from "src/components/modals/store/StoreInformationModal"
 import { getStoreInformation } from "src/service/apiActions/storeAction/StoreInformationAction"
-
+import { NO_IMAGE_BASE64 } from "src/service/redux/constants"
+import config from "src/config"
 export class StoreInformation extends Component {
   state = {
     carouselImages: [],
@@ -106,23 +107,42 @@ export class StoreInformation extends Component {
         <CarouselModal />
         <div>
           <div className="mb-2 text-end">
-            <CButton
-              variant="ghost"
-              size="sm"
-              onClick={() =>
-                this.props.setCarouselModal(
-                  !visible,
-                  "Add Carousel",
-                  "",
+            {carouselImages.length > 0 ? (
+              <>
+                <CButton
+                  color="info"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() =>
+                    this.props.setCarouselModal(
+                      !visible,
+                      "Edit Carousel",
+                      carouselImages,
+                      <FaIcons.FaPlus size={20} />,
+                    )
+                  }
+                >
+                  <MdIcons.MdModeEdit size="20" />
+                </CButton>
+              </>
+            ) : (
+              <>
+                <CButton
+                  variant="ghost"
+                  size="sm"
+                  onClick={() =>
+                    this.props.setCarouselModal(
+                      !visible,
+                      "Add Carousel",
+                      "",
+                      <FaIcons.FaPlus size={20} />,
+                    )
+                  }
+                >
                   <FaIcons.FaPlus size={20} />,
-                )
-              }
-            >
-              <FaIcons.FaPlus size={20} />,
-            </CButton>
-            <CButton color="info" variant="ghost" size="sm">
-              <MdIcons.MdModeEdit size="20" />
-            </CButton>
+                </CButton>
+              </>
+            )}
           </div>
           <Carousel
             showArrows={true}
@@ -163,19 +183,36 @@ export class StoreInformation extends Component {
               )
             }
           >
-            {carouselImages &&
+            {carouselImages.length > 0 ? (
               carouselImages.map((image, index) => {
                 return (
                   <div key={index}>
                     <img
                       className="d-block "
                       height="400"
-                      src={image.fileName}
-                      alt={image.fileName}
+                      src={
+                        config.api.private.baseUrl +
+                        "/api/v1/carousel/getImages/bytesArrays/" +
+                        image.imageName
+                      }
+                      alt={image.imageName}
                     />
                   </div>
                 )
-              })}
+              })
+            ) : (
+              <img
+                className="d-block "
+                height="400"
+                // src={config.api.private.baseUrl +
+                //       "/api/v1/products/getImages/bytesArrays/" +
+                //       fileImage[0].path +
+                //       fileImage[0].fileName
+                // }
+                src={NO_IMAGE_BASE64}
+                alt="unavailable"
+              />
+            )}
           </Carousel>
         </div>
 

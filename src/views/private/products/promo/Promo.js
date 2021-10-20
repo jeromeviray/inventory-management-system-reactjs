@@ -156,8 +156,8 @@ export class Promo extends Component {
                 id="floatingInput"
                 placeholder="Search"
                 className="p-2"
-                //  value={query}
-                //  onChange={this.handleOnSearch}
+              //  value={query}
+              //  onChange={this.handleOnSearch}
               />
               <CButton
                 type="button"
@@ -185,10 +185,10 @@ export class Promo extends Component {
                         value === "UNSCHEDULED"
                           ? "outline-warning"
                           : value === "END"
-                          ? "outline-danger"
-                          : value === "ALL"
-                          ? "outline-secondary"
-                          : "outline-success"
+                            ? "outline-danger"
+                            : value === "ALL"
+                              ? "outline-secondary"
+                              : "outline-success"
                       }
                       key={value}
                       className="mx-0"

@@ -34,6 +34,7 @@ export class Order extends Component {
       SHIPPED: 0,
       COMPLETED: 0,
       CANCEL: 0,
+      REFUND: 0,
     },
   }
 
@@ -152,23 +153,22 @@ export class Order extends Component {
               </CBadge>
             </CNavLink>
           </CNavItem>
-          {/* <CNavItem>
-            <CNavLink
-              href="#Cancelled Order"
-              active={activeKey === 5}
-              onClick={() => {
-                this.setState({
-                  activeKey: 5,
-                  orderStatus: "CANCEL",
-                })
-              }}
-            >
-              Cancelled{" "}
-              <CBadge color="warning">
-                {totalCounts.CANCEL ? totalCounts.CANCEL : 0}
-              </CBadge>
-            </CNavLink>
-          </CNavItem> */}
+          {(permission === Roles.SUPER_ADMIN || permission === Roles.ADMIN) && (
+            <CNavItem>
+              <CNavLink
+                href="#refund"
+                active={activeKey === 5}
+                onClick={() => {
+                  this.setState({ activeKey: 5, orderStatus: "refund" })
+                }}
+              >
+                Refund{" "}
+                <CBadge color="warning">
+                  {totalCounts.REFUND ? totalCounts.REFUND : 0}
+                </CBadge>
+              </CNavLink>
+            </CNavItem>
+          )}
         </CNav>
 
         <CTabContent style={tabStyle}>

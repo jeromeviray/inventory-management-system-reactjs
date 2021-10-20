@@ -65,8 +65,8 @@ export class BranchModal extends Component {
           action: action,
           editorState: storeInfo.description
             ? EditorState.createWithContent(
-                convertFromRaw(JSON.parse(storeInfo.description)),
-              )
+              convertFromRaw(JSON.parse(storeInfo.description)),
+            )
             : EditorState.createEmpty(),
         })
       } else if (action === "close") {

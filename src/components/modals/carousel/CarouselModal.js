@@ -16,6 +16,7 @@ import { setCarouselModal } from "src/service/apiActions/modalAction/modalAction
 import { connect } from "react-redux"
 import ImageUploading from "react-images-uploading"
 import { MdDelete } from "react-icons/md"
+import CarouselApiService from "src/service/restAPI/CarouselApiService"
 
 export class CarouselModal extends Component {
   state = {
@@ -24,41 +25,88 @@ export class CarouselModal extends Component {
     loading: false,
     action: "",
     carouselImages: [],
-       removedImages: [],
-    alert: true
+    removedImages: [],
+    alert: true,
   }
   componentDidUpdate(prevProps, prevState) {
     this.manageBrandModal(prevProps, prevState)
   }
   manageBrandModal = (prevProps, prevState) => {
     if (prevProps.modalVisible !== this.props.modalVisible) {
-      let { visible, action, brand, icon } = this.props.modalVisible
+      let { visible, action, carousel, icon } = this.props.modalVisible
       if (action === "Add Carousel") {
         this.setState({
           visible: visible,
           action: action,
           icon: icon,
         })
-      } else if (action === "Edit Carosuel") {
+      } else if (action === "Edit Carousel") {
         this.setState({
           visible: visible,
           action: action,
           icon: icon,
-          brandName: brand.brand,
-          brandId: brand.id,
         })
-      } else {
+        this.getImages(carousel)
+      } else if (action === "close") {
         this.setState({
           visible: visible,
           action: "",
           icon: "",
-          brandName: "",
-          brandId: "",
+          carouselImages: [],
         })
       }
     }
   }
+  async getImages(carousel) {
+    for (let i = 0; i < carousel.length; i++) {
+      CarouselApiService.getImages(carousel[i].imageName)
+        .then((response) => {
+          this.loadImage(response.data, carousel[i].imageName)
+        })
+        .catch((error) => {
+          const message =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.error_message ||
+            error.toString()
+          const status =
+            (error.response &&
+              error.response.data &&
+              error.response.data.code) ||
+            error.status ||
+            error.toString()
+          this.setState({
+            status: status,
+            message: message,
+          })
+        })
+    }
+  }
 
+  loadImage = (image, fileName) => {
+    let { carouselImages } = this.state
+    if (!image) {
+      return
+    }
+
+    let reader = new FileReader()
+    reader.onloadend = () => {
+      carouselImages.push({
+        data_url: reader.result,
+        file: null,
+        image_created: true,
+        filename: fileName,
+      })
+      this.setState({
+        carouselImages: carouselImages,
+      })
+    }
+    if (image) {
+      reader.readAsDataURL(image)
+    }
+  }
   handleImageOnchange = (imageList, addUpdateIndex) => {
     this.setState({
       carouselImages: imageList,
@@ -70,8 +118,11 @@ export class CarouselModal extends Component {
       removedImages.push(carouselImages[index].filename)
     }
   }
+
   render() {
     let { visible, icon, action, loading, carouselImages, alert } = this.state
+    console.log(carouselImages)
+
     return (
       <div>
         <CModal size="xl" visible={visible} fullscreen="lg" scrollable>
@@ -83,7 +134,7 @@ export class CarouselModal extends Component {
             <CModalTitle>
               <div className="d-flex align-items-center">
                 {icon}
-                {action + " Brand"}
+                {action + " Carousel"}
               </div>
             </CModalTitle>
           </CModalHeader>
