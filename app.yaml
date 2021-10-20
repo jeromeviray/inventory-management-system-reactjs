@@ -8,26 +8,24 @@ handlers:
   - url: /.*
     static_files: build/index.html
     upload: build/index.html
+# scp -i "PHDEV001.pem" ./target/inventory-0.0.1-SNAPSHOT.jar ubuntu@ec2-13-229-154-20.ap-southeast-1.compute.amazonaws.com
+# ssh -i "PHDEV001.pem" ubuntu@ec2-13-229-154-20.ap-southeast-1.compute.amazonaws.com
+# http://13.229.154.20/
+# [Unit]
+# Description=Java Application as a Service
+# [Service]
+# User=ec2-user
+# #change this directory into your workspace
+# #mkdir workspace
+# WorkingDirectory=/home/ec2-user/workspace
+# #path to the executable bash script which executes the jar file
+# ExecStart=/bin/bash /home/ec2-user/workspace/inventory-management.sh
+# SuccessExitStatus=143
+# TimeoutStopSec=10
+# Restart=on-failure
+# RestartSec=5
+# [Install]
+# WantedBy=multi-user.target
 
-
-scp -i "PHDEV001.pem" ./target/inventory-0.0.1-SNAPSHOT.jar ubuntu@ec2-13-229-154-20.ap-southeast-1.compute.amazonaws.com
-ssh -i "PHDEV001.pem" ubuntu@ec2-13-229-154-20.ap-southeast-1.compute.amazonaw
-
-[Unit]
-Description=Java Application as a Service
-[Service]
-User=ec2-user
-#change this directory into your workspace
-#mkdir workspace 
-WorkingDirectory=/home/ec2-user/workspace
-#path to the executable bash script which executes the jar file
-ExecStart=/bin/bash /home/ec2-user/workspace/inventory-management.sh
-SuccessExitStatus=143
-TimeoutStopSec=10
-Restart=on-failure
-RestartSec=5
-[Install]
-WantedBy=multi-user.target
-
-#!/bin/sh
-java -jar /home/ubuntu/www/inventory-management-api/target.jar
+# #!/bin/sh
+# java -jar /home/ubuntu/www/inventory-management-api/target.jar
