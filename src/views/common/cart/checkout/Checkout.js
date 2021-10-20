@@ -15,14 +15,14 @@ import {
   CContainer,
 } from "@coreui/react"
 import { connect } from "react-redux"
+import { BsDash, BsPlus } from "react-icons/bs";
 //action
 import {
   getCart,
-  removeCartItem,
+  removeCartItem, quantityAction
 } from "src/service/apiActions/cartAction/cartAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { getOrderItems } from "src/service/apiActions/orderAction/orderAction"
-
 import config from "../../../../config";
 
 import { NO_IMAGE_BASE64 } from "src/service/redux/constants"
@@ -87,9 +87,23 @@ export class Checkout extends Component {
     } else {
       pendingItem.push(cartItems[position])
     }
+
     let totalPrice = check.reduce((sum, currentState, index) => {
       if (currentState === true) {
-        return sum + cartItems[index].amount
+        let status = cartItems[index].product.promo && cartItems[index].product.promo.status
+        console.log(cartItems[index])
+        let amount
+        if (status === "ONGOING") {
+          const { product } = cartItems[index]
+          let percentage = product.promo.percentage
+          let discount = (product.product.productPrice * percentage) / 100
+          let price = product.product.productPrice - discount
+          amount = cartItems[index].quantity * price
+
+        } else {
+          amount = cartItems[index].amount
+        }
+        return sum + amount
       }
       return sum
     }, 0)
@@ -135,6 +149,34 @@ export class Checkout extends Component {
         )
     }
   }
+  incrementValue = (index) => {
+    const { cartItems } = this.state;
+    const productId = cartItems[index].product.product.id
+    this.props.quantityAction("increase", productId).then(() => {
+      this.retrieveCartItems()
+    })
+
+  }
+
+  decrementValue = (index) => {
+    const { cartItems } = this.state;
+    const productId = cartItems[index].product.product.id
+    this.props.quantityAction("decrease", productId).then(() => {
+      this.retrieveCartItems()
+    })
+
+  }
+  handleQuantityOnChange = (event) => {
+    event.preventDefault();
+
+    let { value, max, min } = event.target;
+    value = Math.max(Number(min), Math.min(Number(max), Number(value)));
+
+    this.setState({
+      quantity: value
+    })
+
+  }
   render() {
     let { cartItems, checked } = this.state
     const headerStyle = {
@@ -170,12 +212,24 @@ export class Checkout extends Component {
                 cartItems.map((item, index) => {
                   const { quantity, addedAt, } = item
                   const { product, inventory, promo } = item.product
-                  let disabled = promo ? false : inventory.totalStock > 0 ? false : true;
+                  let percentage = 0
+                  let discount = 0
+                  let price = 0
+                  let amount = item.amount
                   let status = promo && promo.status;
-                  const percentage = promo && promo.percentage
-                  let discount = (product.productPrice * percentage) / 100
-                  let price = product.productPrice - discount
-                  let amount = quantity * (price)
+
+
+                  if (status === "ONGOING") {
+                    percentage = promo && promo.percentage
+                    discount = (product.productPrice * percentage) / 100
+                    price = product.productPrice - discount
+                    amount = quantity * (price)
+                  } else {
+                    amount = quantity * product.productPrice
+                  }
+
+                  let maxQuantity = status === "ONGOING" ? promo.quantity : inventory.totalStock
+                  let disabled = status === "ONGOING" ? false : inventory.totalStock <= 0 ? true : false;
                   return (
                     <CCard
                       key={index}
@@ -238,7 +292,33 @@ export class Checkout extends Component {
                                 </span>
                               </CCol>
                               <CCol className="text-dark d-flex flex-column align-items-center">
-                                <span>{quantity}</span>
+                                <div className="quantity-container">
+                                  <CButton
+                                    className="decrement-btn"
+                                    type="button"
+                                    disabled={quantity === 1 ? true : false}
+                                    onClick={() => this.decrementValue(index)}
+                                  >
+                                    <BsDash />
+
+                                  </CButton>
+                                  <input
+                                    type="text"
+                                    className="input-quantity"
+                                    value={quantity}
+                                    pattern="[0-9]*"
+                                    onChange={this.handleQuantityOnChange}
+                                    max={status === "ONGOING" ? promo.quantity : inventory.totalStock}
+                                    min={1}
+                                    readOnly={true}
+
+                                  />
+                                  <CButton className="increment-btn"
+                                    disabled={quantity === maxQuantity ? true : maxQuantity <= 0 ? true : false}
+                                    onClick={() => this.incrementValue(index)} >
+                                    <BsPlus />
+                                  </CButton>
+                                </div>
                               </CCol>
                               <CCol className="text-dark  d-flex justify-content-end">
                                 <span>
@@ -264,7 +344,7 @@ export class Checkout extends Component {
                               {addedAt}
                             </div>
                             <div>
-                              Stock: <span>{inventory.totalStock}</span>{disabled ? this.manageStatus(inventory.status) : ""}
+                              Stock: <span className="me-2">{status === "ONGOING" ? promo.quantity : inventory.totalStock}</span>{disabled ? this.manageStatus(inventory.status) : ""}
                             </div>
                           </span>
                           <div className="d-flex align-items-center">
@@ -306,4 +386,5 @@ export default connect(mapStateToProps, {
   removeCartItem,
   clearMessage,
   getOrderItems,
+  quantityAction
 })(Checkout)

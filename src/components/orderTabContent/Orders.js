@@ -363,7 +363,7 @@ export class Orders extends Component {
                       </Link>
 
                       {permission === Roles.SUPER_ADMIN ||
-                      permission === Roles.ADMIN ? (
+                        permission === Roles.ADMIN ? (
                         this.renderOrderAction(
                           this.state.status,
                           order,

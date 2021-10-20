@@ -1,5 +1,5 @@
 import { SET_MESSAGE } from "src/constants/userConstants";
-import { ADD_TO_CART, GET_CART_ITEMS, REMOVE_ITEM } from "src/service/redux/constants";
+import { ADD_TO_CART, GET_CART_ITEMS, QUANTITY_ACTION, REMOVE_ITEM } from "src/service/redux/constants";
 import CartApiService from "src/service/restAPI/CartApiService"
 
 export const addToCart = (id) => async (dispatch) => {
@@ -122,6 +122,55 @@ export const removeCartItem = (id) => async (dispatch) => {
         },
         (error) => {
             console.log(error);
+            const errorMessage =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+
+            const status = (error.response &&
+                error.response.data &&
+                error.response.data.code) ||
+                error.toString();
+
+            dispatch({
+                type: SET_MESSAGE,
+                payload: {
+                    status: status,
+                    data: {
+                        message: errorMessage
+                    }
+                }
+            })
+            return Promise.reject();
+        }
+    )
+}
+
+export const quantityAction = (action, productId) => async (dispatch) => {
+    return CartApiService.quantityAction(action, productId).then(
+        (response) => {
+            dispatch({
+                type: QUANTITY_ACTION,
+                payload: {
+                    status: 200,
+                    action: QUANTITY_ACTION,
+                    data: {
+                    }
+                }
+            })
+            dispatch({
+                type: SET_MESSAGE,
+                payload: {
+                    status: 200,
+                    data: {
+                        message: action + " Quantity Product Id: " + productId
+                    }
+                }
+            })
+        },
+        (error) => {
             const errorMessage =
                 (error.response &&
                     error.response.data &&

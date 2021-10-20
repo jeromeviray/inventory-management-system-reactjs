@@ -24,7 +24,7 @@ export class CarouselModal extends Component {
     loading: false,
     action: "",
     carouselImages: [],
-       removedImages: [],
+    removedImages: [],
     alert: true
   }
   componentDidUpdate(prevProps, prevState) {
@@ -121,9 +121,9 @@ export class CarouselModal extends Component {
                       style={
                         isDragging
                           ? {
-                              backgroundColor: "#8E9293",
-                              border: "4px dashed #ffffff",
-                            }
+                            backgroundColor: "#8E9293",
+                            border: "4px dashed #ffffff",
+                          }
                           : undefined
                       }
                       onClick={onImageUpload}

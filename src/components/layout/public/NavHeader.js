@@ -138,7 +138,6 @@ export class NavHeader extends Component {
     const margin = {
       marginBottom: "12px",
     }
-    console.log(items)
     return (
       <CHeader position="sticky">
         <CContainer>

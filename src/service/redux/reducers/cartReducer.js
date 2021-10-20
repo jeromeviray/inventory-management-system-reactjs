@@ -1,4 +1,4 @@
-const { ADD_TO_CART, GET_CART_ITEMS, REMOVE_ITEM } = require("../constants");
+const { ADD_TO_CART, GET_CART_ITEMS, REMOVE_ITEM, QUANTITY_ACTION } = require("../constants");
 
 const cartReducer = (state = {}, action) => {
     const { type, payload } = action;
@@ -18,6 +18,14 @@ const cartReducer = (state = {}, action) => {
                 }
             }
         case REMOVE_ITEM:
+            return {
+                status: payload.status,
+                action: payload.action,
+                data: {
+
+                }
+            }
+        case QUANTITY_ACTION:
             return {
                 status: payload.status,
                 action: payload.action,
