@@ -32,9 +32,10 @@ export class Order extends Component {
       PENDING: 0,
       CONFIRMED: 0,
       SHIPPED: 0,
-      COMPLETED: 0,
+      DELIVERED: 0,
       CANCEL: 0,
-      REFUND: 0,
+      REQUEST_REFUND: 0,
+      REFUNDED: 0,
     },
   }
 
@@ -52,6 +53,7 @@ export class Order extends Component {
   manageorderRepsonse = (prevProps, prevState) => {
     if (prevProps.orderResponse !== this.props.orderResponse) {
       let { status, action, data } = this.props.orderResponse
+      console.log(data)
       if (status === 200 && action === "GET_ORDERS") {
         this.setState({
           totalCounts: data.orderStatusCount,
@@ -153,22 +155,34 @@ export class Order extends Component {
               </CBadge>
             </CNavLink>
           </CNavItem>
-          {(permission === Roles.SUPER_ADMIN || permission === Roles.ADMIN) && (
-            <CNavItem>
-              <CNavLink
-                href="#refund"
-                active={activeKey === 5}
-                onClick={() => {
-                  this.setState({ activeKey: 5, orderStatus: "refund" })
-                }}
-              >
-                Refund{" "}
-                <CBadge color="warning">
-                  {totalCounts.REFUND ? totalCounts.REFUND : 0}
-                </CBadge>
-              </CNavLink>
-            </CNavItem>
-          )}
+          <CNavItem>
+            <CNavLink
+              href="#refund"
+              active={activeKey === 5}
+              onClick={() => {
+                this.setState({ activeKey: 5, orderStatus: "request_refund" })
+              }}
+            >
+              Request Refund{" "}
+              <CBadge color="warning">
+                {totalCounts.REQUEST_REFUND ? totalCounts.REQUEST_REFUND : 0}
+              </CBadge>
+            </CNavLink>
+          </CNavItem>
+          <CNavItem>
+            <CNavLink
+              href="#refund"
+              active={activeKey === 6}
+              onClick={() => {
+                this.setState({ activeKey: 6, orderStatus: "refunded" })
+              }}
+            >
+              Refunded{" "}
+              <CBadge color="warning">
+                {totalCounts.REFUNDED ? totalCounts.REFUNDED : 0}
+              </CBadge>
+            </CNavLink>
+          </CNavItem>
         </CNav>
 
         <CTabContent style={tabStyle}>

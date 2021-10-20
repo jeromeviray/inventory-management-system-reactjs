@@ -107,7 +107,8 @@ export class Orders extends Component {
       }
     })
   }
-  renderCustomerAction = (orderStatus, order) => {
+  renderCustomerAction = (orderStatus, order, paymentStatus) => {
+    console.log(paymentStatus)
     let orderButton = <></>
     switch (orderStatus.toLowerCase()) {
       case "pending":
@@ -120,6 +121,20 @@ export class Orders extends Component {
             Cancel Order
           </CButton>
         )
+        break
+      case "delivered":
+        orderButton =
+          paymentStatus === "Paid" ? (
+            <CButton
+              onClick={() => {
+                this.handleOrder(order, "request_refund")
+              }}
+            >
+              Request Refund
+            </CButton>
+          ) : (
+            <></>
+          )
         break
     }
     return orderButton
@@ -171,6 +186,17 @@ export class Orders extends Component {
             {paymentStatus === "Paid"
               ? "Payment Recieved"
               : "Mark as Payment Received"}
+          </CButton>
+        )
+        break
+      case "request_refund":
+        orderButton = (
+          <CButton
+            onClick={() => {
+              this.handleOrder(order, "accept_refund")
+            }}
+          >
+            Accept Refund
           </CButton>
         )
         break
@@ -295,6 +321,9 @@ export class Orders extends Component {
                 break
               case 2:
                 paymentStatus = "Failed"
+                break
+              case 3:
+                paymentStatus = "Refunded"
                 break
             }
             return (
@@ -439,8 +468,7 @@ export class Orders extends Component {
                               order,
                               paymentStatus,
                             )
-                          : // item.orderStatus === "PENDING" ? <><CButton>Cancel</CButton></>:<></>
-                            this.renderCustomerAction(
+                          : this.renderCustomerAction(
                               this.state.status,
                               order,
                               paymentStatus,
