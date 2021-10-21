@@ -1,0 +1,2 @@
+(this["webpackJsonp@project/inventory-management-system"]=this["webpackJsonp@project/inventory-management-system"]||[]).push([[77],{640:function(e,t,n){"use strict";n.r(t),n.d(t,"Reports",(function(){return o}));var r=n(0),s=n(8);class o extends r.Component{render(){return Object(s.jsx)("div",{children:"all reports"})}}t.default=o}}]);
+//# sourceMappingURL=77.4e820859.chunk.js.map
