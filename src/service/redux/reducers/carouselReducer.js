@@ -1,17 +1,18 @@
-import { GET_CAROUSEL_IMAGES } from "../constants"
+import { GET_CAROUSEL_IMAGES, SAVE_CAROUSEL_IMAGES, UPDATE_CAROUSEL_IMAGES } from "../constants"
 
 const carouselReducer = (state = {}, action) => {
+  const { payload, type } = action
   let status = 200
   let statusType = "info"
   let carouselData = {}
 
-  if (action.payload !== undefined && action.payload.status !== undefined) {
-    status = action.payload.status
+  if (payload !== undefined && payload.status !== undefined) {
+    status = payload.status
     statusType = "success"
     if (status >= 400) {
       statusType = "error"
     }
-    carouselData = action.payload.data
+    carouselData = payload.data
   }
   let carouselResponse = {
     statusType: statusType,
@@ -20,10 +21,22 @@ const carouselReducer = (state = {}, action) => {
     action: "RETRIEVE",
   }
 
-  switch (action.type) {
+  switch (type) {
     case GET_CAROUSEL_IMAGES:
       carouselResponse["carouselData"] = carouselData.carouselImages
       break
+    case SAVE_CAROUSEL_IMAGES:
+      return {
+        status: payload.status,
+        action: payload.action,
+        data: payload.data,
+      }
+    case UPDATE_CAROUSEL_IMAGES:
+      return {
+        status: payload.status,
+        action: payload.action,
+        data: payload.data,
+      }
     default:
       return state
   }

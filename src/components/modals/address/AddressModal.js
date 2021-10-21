@@ -13,15 +13,23 @@ import {
   CModalTitle,
   CModalFooter,
   CSpinner,
-  CFormSelect
+  CFormSelect,
 } from "@coreui/react"
 import { connect } from "react-redux"
 //action
 import { setAddressModal } from "src/service/apiActions/modalAction/modalAction"
-import { saveAddress } from "src/service/apiActions/addressAction/addressAction"
+import {
+  saveAddress,
+  updateAddress,
+} from "src/service/apiActions/addressAction/addressAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 
-import { regions, provinces, cities, barangays } from 'select-philippines-address';
+import {
+  regions,
+  provinces,
+  cities,
+  barangays,
+} from "select-philippines-address"
 
 export class AddressModal extends Component {
   state = {
@@ -37,7 +45,8 @@ export class AddressModal extends Component {
     baranggayId: "",
     cityId: "",
     provinceId: "",
-    regionId: ""
+    regionId: "",
+    id: "",
   }
 
   addressStates = {
@@ -54,21 +63,21 @@ export class AddressModal extends Component {
 
   componentDidMount() {
     regions().then((regions) => {
-      let regionsData = [];
+      let regionsData = []
       regions.map((region) => {
         regionsData[region.id] = {
           name: region.region_name,
-          code: region.region_code
-        };
+          code: region.region_code,
+        }
       })
       this.setState({
-        regionsData: regionsData
+        regionsData: regionsData,
       })
-    });
+    })
   }
 
   componentDidUpdate(prevPros, prevState) {
-    this.manageModalVisible(prevPros, prevState);
+    this.manageModalVisible(prevPros, prevState)
   }
 
   manageModalVisible = (prevProps, prevState) => {
@@ -85,15 +94,108 @@ export class AddressModal extends Component {
           visible: visible,
           icon: icon,
           action: action,
+          id: address.id,
         })
+        this.handleOnEditSetState(address)
       } else {
         this.setState({
           visible: visible,
           icon: "",
           action: "",
+          regionId: "",
+          provinceId: "",
+          cityId: "",
+          baranggayId: "",
         })
+        this.onResetValue()
       }
     }
+  }
+  handleOnEditSetState = (address) => {
+    const {
+      firstName,
+      lastName,
+      phoneNumber,
+      region,
+      city,
+      province,
+      barangay,
+      street,
+    } = address
+    const { regionsData } = this.state
+    const regionIndex = regionsData.findIndex(
+      (item) => item && item.name === region,
+    )
+    this.getProvince(regionsData[regionIndex].code, province)
+
+    this.setState({
+      firstName: firstName,
+      lastName: lastName,
+      phoneNumber: phoneNumber,
+      region: region,
+      city: city,
+      province: province,
+      barangay: barangay,
+      street: street,
+      regionId: regionIndex,
+    })
+  }
+  getProvince = (code, province) => {
+    provinces(code).then((provinces) => {
+      let provincesData = []
+      provinces.map((dt, index) => {
+        provincesData[index] = {
+          name: dt.province_name,
+          code: dt.province_code,
+        }
+      })
+      let provinceIndex = provincesData.findIndex(
+        (item) => item && item.name === province,
+      )
+      this.setState({
+        provinceId: provinceIndex,
+        provincesData: provincesData,
+      })
+      this.getCity(provincesData[provinceIndex].code)
+    })
+  }
+  getCity = (code) => {
+    const { city } = this.state
+    cities(code).then((item) => {
+      let citiesData = []
+      item.map((dt, index) => {
+        citiesData[index] = {
+          name: dt.city_name,
+          code: dt.city_code,
+        }
+      })
+      let cityIndex = citiesData.findIndex((item) => item && item.name === city)
+      this.setState({
+        citiesData: citiesData,
+        cityId: cityIndex,
+      })
+      this.getBarangay(citiesData[cityIndex].code)
+    })
+  }
+  getBarangay = (code) => {
+    console.log(code)
+    const { barangay } = this.state
+    barangays(code).then((item) => {
+      let baranggaysData = []
+      item.map((dt, index) => {
+        baranggaysData[index] = {
+          name: dt.brgy_name,
+          code: dt.brgy_code,
+        }
+      })
+      let barangayIndex = baranggaysData.findIndex(
+        (item) => item && item.name === barangay,
+      )
+      this.setState({
+        baranggaysData: baranggaysData,
+        baranggayId: barangayIndex,
+      })
+    })
   }
 
   handleOnChange = (event) => {
@@ -103,9 +205,10 @@ export class AddressModal extends Component {
   }
 
   handleOnSubmit = (event) => {
+    event.preventDefault()
+
     const form = event.currentTarget
     if (form.checkValidity() === false) {
-      event.preventDefault()
       event.stopPropagation()
     }
     this.setState({
@@ -122,6 +225,7 @@ export class AddressModal extends Component {
       barangay,
       street,
       postalCode,
+      id,
     } = this.state
 
     let address = {
@@ -138,6 +242,7 @@ export class AddressModal extends Component {
     if (action === "Add") {
       this.handleSaveAddress(address)
     } else if (action === "Edit") {
+      this.handleUpdateAddress(id, address)
     }
   }
 
@@ -153,115 +258,138 @@ export class AddressModal extends Component {
         if (status === 200) {
           this.setState({
             loading: false,
+            regionId: "",
+            provinceId: "",
+            cityId: "",
+            baranggayId: "",
           })
           this.onResetValue()
+          this.props.setAddressModal(false, "close", "", "")
         }
       })
       .catch(() => {
-        let { status, data } = this.props.messageResponse
         this.setState({
           loading: false,
         })
       })
   }
 
-
+  handleUpdateAddress = (id, address) => {
+    console.log(id)
+    this.props
+      .updateAddress(id, address)
+      .then(() => {
+        let { status } = this.props.messageResponse
+        if (status === 200) {
+          this.setState({
+            loading: false,
+            regionId: "",
+            provinceId: "",
+            cityId: "",
+            baranggayId: "",
+          })
+          this.onResetValue()
+          this.props.setAddressModal(false, "close", "", "")
+        }
+      })
+      .catch(() => {
+        this.setState({
+          loading: false,
+        })
+      })
+  }
   onRegionChanged = (event) => {
-    const regionsData = this.state.regionsData;
-
+    const regionsData = this.state.regionsData
 
     if (event.target.value == "") {
-      return;
+      return
     }
 
-    const data = regionsData[event.target.value];
-
+    const data = regionsData[event.target.value]
     this.setState({
       regionId: event.target.value,
-      region: data.name
+      region: data.name,
     })
 
     provinces(data.code).then((province) => {
-      let provincesData = [];
+      let provincesData = []
       province.map((dt, index) => {
         provincesData[index] = {
           name: dt.province_name,
-          code: dt.province_code
-        };
+          code: dt.province_code,
+        }
       })
       this.setState({
-        provincesData: provincesData
+        provincesData: provincesData,
       })
-    });
+    })
   }
 
   onProvinceChanged = (event) => {
-    const provincesData = this.state.provincesData;
+    const provincesData = this.state.provincesData
 
     if (event.target.value == "") {
-      return;
+      return
     }
 
-    const data = provincesData[event.target.value];
+    const data = provincesData[event.target.value]
 
     this.setState({
       provinceId: event.target.value,
-      province: data.name
+      province: data.name,
     })
 
-
     cities(data.code).then((city) => {
-      let citiesData = [];
+      let citiesData = []
       city.map((dt, index) => {
         citiesData[index] = {
           name: dt.city_name,
-          code: dt.city_code
-        };
+          code: dt.city_code,
+        }
       })
       this.setState({
-        citiesData: citiesData
+        citiesData: citiesData,
       })
-    });
+    })
   }
 
   onCityChanged = (event) => {
-    const citiesData = this.state.citiesData;
+    const citiesData = this.state.citiesData
 
     if (event.target.value == "") {
-      return;
+      return
     }
-    const data = citiesData[event.target.value];
+    const data = citiesData[event.target.value]
 
     this.setState({
       cityId: event.target.value,
-      city: data.name
+      city: data.name,
     })
-
     barangays(data.code).then((barangay) => {
-      let baranggaysData = [];
+      let baranggaysData = []
       barangay.map((dt, index) => {
         baranggaysData[index] = {
           name: dt.brgy_name,
-          code: dt.brgy_code
-        };
+          code: dt.brgy_code,
+        }
       })
       this.setState({
-        baranggaysData: baranggaysData
+        baranggaysData: baranggaysData,
       })
-    });
+    })
   }
 
   onBaranggayChanged = (event) => {
-    const baranggaysData = this.state.baranggaysData;
+    const baranggaysData = this.state.baranggaysData
 
     if (event.target.value == "") {
-      return;
+      return
     }
-    const data = baranggaysData[event.target.value];
+    const data = baranggaysData[event.target.value]
 
     this.setState({
       baranggayId: event.target.value,
-      barangay: data.name
+      barangay: data.name,
     })
   }
 
@@ -271,12 +399,7 @@ export class AddressModal extends Component {
       firstName,
       lastName,
       phoneNumber,
-      region,
-      city,
-      province,
-      barangay,
       street,
-      postalCode,
       loading,
       action,
       regionsData,
@@ -287,10 +410,9 @@ export class AddressModal extends Component {
       cityId,
       regionId,
       provinceId,
-    } = this.state;
+    } = this.state
     return (
       <>
-
         <CModal size="lg" visible={visible}>
           <CModalHeader
             onDismiss={() => this.props.setAddressModal(false, "close", "", "")}
@@ -299,7 +421,6 @@ export class AddressModal extends Component {
           </CModalHeader>
           <CModalBody>
             <CForm
-
               className="row g-3 needs-validation"
               id="address-form"
               onSubmit={this.handleOnSubmit}
@@ -351,9 +472,7 @@ export class AddressModal extends Component {
                   </CFormLabel>
                 </CFormFloating>
               </CCol>
-              <CCol md={6}>
-
-              </CCol>
+              <CCol md={6}></CCol>
               <CCol md={12}>
                 <CFormFloating>
                   <CFormControl
@@ -379,9 +498,15 @@ export class AddressModal extends Component {
                     onChange={this.onRegionChanged}
                     required
                   >
-                    <option value="" disabled>-- Choose Region --</option>
+                    <option value="" disabled>
+                      -- Choose Region --
+                    </option>
                     {regionsData.map((region, index) => {
-                      return <option value={index} key={index}>{region.name}</option>
+                      return (
+                        <option value={index} key={index}>
+                          {region.name}
+                        </option>
+                      )
                     })}
                   </CFormSelect>
                   <CFormLabel htmlFor="floatingRegion">Region</CFormLabel>
@@ -398,9 +523,15 @@ export class AddressModal extends Component {
                     onChange={this.onProvinceChanged}
                     required
                   >
-                    <option value="" disabled>-- Choose Province --</option>
+                    <option value="" disabled>
+                      -- Choose Province --
+                    </option>
                     {provincesData.map((region, index) => {
-                      return <option value={index} key={region.name}>{region.name}</option>
+                      return (
+                        <option value={index} key={region.name}>
+                          {region.name}
+                        </option>
+                      )
                     })}
                   </CFormSelect>
                   <CFormLabel htmlFor="floatingProvince">Province</CFormLabel>
@@ -417,9 +548,15 @@ export class AddressModal extends Component {
                     onChange={this.onCityChanged}
                     required
                   >
-                    <option value="" disabled>-- Choose City --</option>
+                    <option value="" disabled>
+                      -- Choose City --
+                    </option>
                     {citiesData.map((region, index) => {
-                      return <option value={index} key={index}>{region.name}</option>
+                      return (
+                        <option value={index} key={index}>
+                          {region.name}
+                        </option>
+                      )
                     })}
                   </CFormSelect>
                   <CFormLabel htmlFor="floatingCity">City</CFormLabel>
@@ -436,30 +573,20 @@ export class AddressModal extends Component {
                     onChange={this.onBaranggayChanged}
                     required
                   >
-                    <option value="" disabled>-- Choose Barangay --</option>
+                    <option value="" disabled>
+                      -- Choose Barangay --
+                    </option>
                     {baranggaysData.map((region, index) => {
-                      return <option value={index} key={index}>{region.name}</option>
+                      return (
+                        <option value={index} key={index}>
+                          {region.name}
+                        </option>
+                      )
                     })}
                   </CFormSelect>
                   <CFormLabel htmlFor="floatingBarangay">Barangay</CFormLabel>
                 </CFormFloating>
               </CCol>
-              {/* <CCol md={3}>
-                <CFormFloating>
-                  <CFormControl
-                    name="postalCode"
-                    type="number"
-                    id="floatingPostalCode"
-                    placeholder="Postal Code"
-                    value={postalCode}
-                    onChange={this.handleOnChange}
-                    required
-                  />
-                  <CFormLabel htmlFor="floatingPostalCode">
-                    Postal code
-                  </CFormLabel>
-                </CFormFloating>
-              </CCol> */}
             </CForm>
           </CModalBody>
           <CModalFooter>
@@ -498,4 +625,5 @@ export default connect(mapStateToProps, {
   setAddressModal,
   saveAddress,
   clearMessage,
+  updateAddress,
 })(AddressModal)

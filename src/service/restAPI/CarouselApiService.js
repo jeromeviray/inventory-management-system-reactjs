@@ -12,10 +12,15 @@ export class CarouselApiService {
       headers: authHeader(),
     })
   }
-
+  updateCarouselImages(formData) {
+    return axios.put("/carousel/update", formData, {
+      headers: authHeader(),
+    })
+  }
   getImages(fileName) {
     return axios.get("/carousel/getImages/bytesArrays/" + fileName, {
       headers: authHeader(),
+      responseType: "blob",
     })
   }
 }
