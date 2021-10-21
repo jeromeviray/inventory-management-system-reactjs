@@ -2,10 +2,9 @@ import React, { Component } from "react"
 import { CRow, CCol } from "@coreui/react"
 import { connect } from "react-redux"
 //action
-import { getDiscoverProducts } from "src/service/apiActions/productAction/productAction"
+import { getPopularProducts } from "src/service/apiActions/productAction/productAction"
 import ProductCard from "src/components/products/ProductCard"
-import ProductDetialsModal from "src/components/modals/product/ProductDetialsModal"
-
+import { Link } from "react-router-dom"
 export class PopularProducts extends Component {
   state = {
     message: "",
@@ -34,7 +33,7 @@ export class PopularProducts extends Component {
     return (
       <>
         <CRow className=" pt-2 pb-2 mb-4">
-          <h4>Popular Product</h4>
+          <h4>Popular Products</h4>
           {products.data.slice(0, 8).map((product, index) => {
             return (
               <CCol xs="6" sm="6" md="4" lg="3" key={index}>
@@ -47,6 +46,7 @@ export class PopularProducts extends Component {
               </CCol>
             )
           })}
+          <CCol> <Link className="nav-link text-end mt-2" to="/products/all/popular"> View More</Link></CCol>
         </CRow>
       </>
     )
@@ -59,5 +59,5 @@ const mapStateToProps = (state) => {
   }
 }
 export default connect(mapStateToProps, {
-  getDiscoverProducts,
+  getPopularProducts,
 })(PopularProducts)

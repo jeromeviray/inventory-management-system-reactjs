@@ -1,8 +1,10 @@
 import React, { Component } from "react"
-import { CCardTitle, CContainer, CRow, CCol } from "@coreui/react"
+import { CCardTitle, CContainer, CRow, CCol, CFooter } from "@coreui/react"
 import { connect } from "react-redux"
 import config from "src/config"
 import { Link } from "react-router-dom"
+import * as BsIcons from "react-icons/bs"
+import * as FaIcons from "react-icons/fa"
 export class Footer extends Component {
   state = {
     storeInfo: [],
@@ -31,124 +33,106 @@ export class Footer extends Component {
       marginBottom: "5px",
     }
     return (
-      <div
-        className="bg-dark p-3 border-red text-white position-relative "
-        style={{ zIndex: "2" }}
-      >
-        <CContainer className="">
-          <CRow className="align-items-center justify-content-center mb-3">
-            <CCol>
-              <h5>Contact Us: </h5>
-              <div className="font-style d-flex text-light">
-                <div className="font-style d-flex flex-column align-items-start ">
-                  <h6 className="m-0 pe-3 mb-2">Contact #:</h6>
-                  <h6 className="m-0 pe-3 mb-2">Email:</h6>
-                  <h6 className="m-0 pe-3 mb-2">Location:</h6>
-                </div>
-                <div className="font-style d-flex flex-column align-items-start ">
-                  <strong style={{ ...margin }}>
-                    {storeInfo.contactNumber ? (
-                      <>
-                        <span>{storeInfo.contactNumber}</span>
-                      </>
-                    ) : (
-                      <span>09458144695</span>
-                    )}
-                  </strong>
-                  <strong style={{ ...margin }}>
-                    {storeInfo.email ? (
-                      <>
-                        <span>{storeInfo.email}</span>
-                      </>
-                    ) : (
-                      <span>jeromeviray4@gmail.com</span>
-                    )}
-                  </strong>
-                  <strong style={{ ...margin }}>
-                    {storeInfo.location ? (
-                      <>
-                        <span>{storeInfo.location}</span>
-                      </>
-                    ) : (
-                      <span>San Agustin Concepcion Tarlac</span>
-                    )}
-                  </strong>
-                </div>
-              </div>
-            </CCol>
-            <CCol>
-              <h5>Terms and Condition </h5>
+
+      <CFooter className="pt-5 bg-dark text-white">
+        <CRow className=" w-100">
+          <CCol className="mb-5 text-center" sm="12" md="4">
+            <CCardTitle>
               <Link
-                className="nav-link "
-                to={config.api.private.prefixFrontendUrl + "#"}
+                className="nav-link text-white"
+                to={config.api.private.prefixFrontendUrl + "/home"}
                 style={{ cursor: "pointer" }}
               >
-                Terms and Conditions
+                {storeInfo.storeName ? (
+                  <strong style={{ ...margin }}>
+                    {storeInfo.storeName.toUpperCase()}
+                  </strong>
+                ) : (
+                  <>
+                    <strong style={{ ...margin }}>
+                      Inventory Management System
+                    </strong>
+                  </>
+                )}
               </Link>
-            </CCol>
-            <CCol>
-              <h5>Contact Us: </h5>
-              <div className="font-style d-flex text-light">
-                <div className="font-style d-flex flex-column align-items-start ">
-                  <h6 className="m-0 pe-3 mb-2">Contact #:</h6>
-                  <h6 className="m-0 pe-3 mb-2">Email:</h6>
-                  <h6 className="m-0 pe-3 mb-2">Location:</h6>
-                </div>
-                <div className="font-style d-flex flex-column align-items-start ">
-                  <strong style={{ ...margin }}>
-                    {storeInfo.contactNumber ? (
-                      <>
-                        <span>{storeInfo.contactNumber}</span>
-                      </>
-                    ) : (
-                      <span>09458144695</span>
-                    )}
-                  </strong>
-                  <strong style={{ ...margin }}>
-                    {storeInfo.email ? (
-                      <>
-                        <span>{storeInfo.email}</span>
-                      </>
-                    ) : (
-                      <span>jeromeviray4@gmail.com</span>
-                    )}
-                  </strong>
-                  <strong style={{ ...margin }}>
-                    {storeInfo.location ? (
-                      <>
-                        <span>{storeInfo.location}</span>
-                      </>
-                    ) : (
-                      <span>San Agustin Concepcion Tarlac</span>
-                    )}
-                  </strong>
-                </div>
-              </div>
-            </CCol>
-          </CRow>
-        </CContainer>
-        <CContainer className="text-center">
-          <CCardTitle>
+            </CCardTitle>
+          </CCol>
+          <CCol className="mb-5" sm="12" md="4">
+
+            <h5 className="text-center mb-3">Contact Us: </h5>
+
+            <div className="font-style d-flex flex-column w-50 " style={{ margin: "0 auto" }}>
+              <strong style={{ ...margin }}>
+                <BsIcons.BsTelephone size={18} />
+                {storeInfo.contactNumber ? (
+                  <>
+                    <span className="ms-2">{storeInfo.contactNumber}</span>
+                  </>
+                ) : (
+                  <span className="ms-2">09458144695</span>
+                )}
+              </strong>
+              <strong style={{ ...margin }}>
+                <BsIcons.BsEnvelope size={18} />
+                {storeInfo.email ? (
+                  <>
+                    <span className="ms-2">{storeInfo.email}</span>
+                  </>
+                ) : (
+                  <span className="ms-2">jeromeviray4@gmail.com</span>
+                )}
+              </strong>
+              <strong style={{ ...margin }}>
+                <BsIcons.BsGeoAlt size={18} />
+                {storeInfo.location ? (
+                  <>
+                    <span className="ms-2">{storeInfo.location}</span>
+                  </>
+                ) : (
+                  <span className="ms-2">San Agustin Concepcion Tarlac</span>
+                )}
+              </strong>
+            </div>
+          </CCol>
+
+          <CCol className="mb-5" sm="12" md="4">
+
+            <h5 className="text-center mb-3">Keep Connected </h5>
+
+            <div className="w-50 text-color" style={{ margin: "0 auto" }}>
+              <a className="nav-link text-white" href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">
+                <FaIcons.FaFacebookSquare size={20} />
+                <span className="ms-2">Facebook Page</span>
+              </a>
+              <a className="nav-link text-white" href="https://twitter.com/" target="_blank" rel="noopener noreferrer">
+                <FaIcons.FaTwitterSquare size={20} />
+                <span className="ms-2">Twitter</span>
+              </a>
+              <a className="nav-link text-white" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">
+                <BsIcons.BsInstagram size={20} />
+
+                <span className="ms-2">Instagram</span>
+              </a>
+            </div>
+          </CCol>
+
+        </CRow>
+        <CFooter className="text-white w-100 bg-dark ">
+          <div>
+            <span className="ms-1">&copy; 2021 Inventory Management System.</span>
+          </div>
+          <div className="ms-auto">
             <Link
               className="nav-link text-white"
-              to={config.api.private.prefixFrontendUrl + "/home"}
+              to={config.api.private.prefixFrontendUrl + "/termsandconditions"}
               style={{ cursor: "pointer" }}
             >
-              {storeInfo.storeName ? (
-                <strong style={{ ...margin }}>
-                  {storeInfo.storeName.toUpperCase()}
-                </strong>
-              ) : (
-                <>
-                  <strong style={{ ...margin }}>
-                    Inventory Management System
-                  </strong>
-                </>
-              )}
+              <span className="ms-2">Terms & Conditions</span>
             </Link>
-          </CCardTitle>
-        </CContainer>
-      </div>
+
+          </div>
+        </CFooter>
+      </CFooter>
     )
   }
 }

@@ -75,7 +75,7 @@ export class ProductsCategory extends Component {
     this.getProductsByCategoryName(categoryName, query, page, limit)
   }
   render() {
-    const { products, hasError, message, query } = this.state
+    const { products, categoryName, message, } = this.state
     return (
       <>
         {message && (
@@ -96,6 +96,7 @@ export class ProductsCategory extends Component {
           <span className="ms-2">back</span>
         </CButton>
         <CRow className="mb-4">
+          <h4>{categoryName} Products</h4>
           {products &&
             products.data.map((item, index) => {
               return (

@@ -59,6 +59,7 @@ export class PromoProducts extends Component {
           <span className="ms-2">back</span>
         </CButton>
         <CRow className="mb-4">
+          <h4>Promo Products</h4>
           {products &&
             products.data.map((item, index) => {
               return (
