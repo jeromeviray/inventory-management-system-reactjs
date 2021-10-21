@@ -1,13 +1,14 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import ProductCard from "src/components/products/ProductCard"
-import { CRow, CCol, CContainer } from "@coreui/react"
+import { CRow, CCol, CButton } from "@coreui/react"
+import * as IoIcons from "react-icons/io5"
+
+import { history } from "src/_helper/history"
 //action
 import { getDiscoverProducts } from "src/service/apiActions/productAction/productAction"
 //modal
-import ProductDetialsModal from "src/components/modals/product/ProductDetialsModal"
 import ReactPaginate from "react-paginate"
-import ReactSearchAutocomplete from "react-search-autocomplete/dist/components/ReactSearchAutocomplete"
 import { withRouter } from "react-router"
 export class DiscoverProducts extends Component {
   state = {
@@ -66,7 +67,17 @@ export class DiscoverProducts extends Component {
             </div>
           </div>
         )}
+        <CButton
+          onClick={() => history.goBack()}
+          variant="ghost"
+          color="secondary"
+          className="d-flex align-items-center"
+        >
+          <IoIcons.IoChevronBack size={20} />
+          <span className="ms-2">back</span>
+        </CButton>
         <CRow className="mb-4" key={new Date()}>
+          <h4>Discover Products</h4>
           {products &&
             products.data.map((item, index) => {
               return (

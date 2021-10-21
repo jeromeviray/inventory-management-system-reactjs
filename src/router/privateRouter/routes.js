@@ -27,9 +27,7 @@ const Products = React.lazy(() =>
   import("../../views/private/products/Products"),
 )
 const Promo = React.lazy(() => import("src/views/private/products/promo/Promo"))
-// const Inventory = React.lazy(() =>
-//   import("../../views/private/inventory/Inventory"),
-// )
+
 const Order = React.lazy(() => import("../../views/private/order/Order"))
 const Wishlist = React.lazy(() =>
   import("../../views/private/wishlist/WishlistController"),
@@ -58,6 +56,7 @@ const DiscoverProducts = React.lazy(() =>
 const PromoProducts = React.lazy(() =>
   import("../../views/common/productFeatures/promo/PromoProducts"),
 )
+const PopularProducts = React.lazy(() => import("src/views/common/productFeatures/popularController/PopularProductController"))
 const About = React.lazy(() => import("../../views/common/public/about/About"))
 // const Checkout = React.lazy(() => import('src/views/common/cart/Checkout'))
 // const CustomerAddress = React.lazy(() => import('src/views/common/cart/customerAddress/CustomerAddress'))
@@ -78,13 +77,13 @@ const ProductDetails = React.lazy(() =>
 const CustomerAddressController = React.lazy(() =>
   import("src/views/common/address/CustomerAddressController"),
 )
-const TermsAndCondition = React.lazy(() =>
-  import("src/views/common/termsAndCondition/TermsAndCondition"),
+const TermsAndConditionController = React.lazy(() =>
+  import("src/views/private/termsAndCondition/TermsAndConditionController"),
 )
 const StoreInformation = React.lazy(() =>
   import("src/views/private/store/StoreInformation"),
 )
-
+const TermsAndCondition = React.lazy(() => import("src/views/common/termsAndCondition/TermsAndCondition"))
 export const routes = [
   {
     path: config.api.private.prefixFrontendUrl + "/app",
@@ -227,7 +226,7 @@ export const routes = [
     path: config.api.private.prefixFrontendUrl + "/app/terms",
     exact: true,
     name: "Terms and Condition",
-    component: TermsAndCondition,
+    component: TermsAndConditionController,
     permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
   },
 ]
@@ -267,6 +266,12 @@ export const publicRoutes = [
     path: config.api.private.prefixFrontendUrl + "/products/all/promo",
     name: "Promo Products",
     component: PromoProducts,
+  },
+  {
+    exact: true,
+    path: config.api.private.prefixFrontendUrl + "/products/all/popular",
+    name: "Propular Products",
+    component: PopularProducts,
   },
   {
     exact: true,
@@ -324,6 +329,14 @@ export const publicRoutes = [
     path: config.api.private.prefixFrontendUrl + "/user/order/:id",
     name: "Details",
     component: OrderDetails,
+  },
+  {
+    exact: true,
+    path:
+      config.api.private.prefixFrontendUrl +
+      "/termsandconditions",
+    name: "Terms and Conditions",
+    component: TermsAndCondition,
   },
 ]
 const routers = {

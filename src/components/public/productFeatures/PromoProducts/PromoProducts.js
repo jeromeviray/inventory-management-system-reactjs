@@ -4,7 +4,7 @@ import { connect } from "react-redux"
 //action
 import { getProductsWithPromo } from "src/service/apiActions/productAction/productAction"
 import ProductCard from "src/components/products/ProductCard"
-
+import { Link } from "react-router-dom"
 export class PromoProducts extends Component {
   state = {
     message: "",
@@ -41,7 +41,7 @@ export class PromoProducts extends Component {
 
     return (
       <>
-        <CRow className=" pt-2 pb-2 mb-4">
+        {products.length > 0 ? <CRow className=" pt-2 pb-2 mb-4">
           <h4>Product Sale</h4>
           {products.data.slice(0, 8).map((product, index) => {
             return (
@@ -55,7 +55,9 @@ export class PromoProducts extends Component {
               </CCol>
             )
           })}
+          <CCol> <Link className="nav-link text-end mt-2" to="/products/all/promo"> View More</Link></CCol>
         </CRow>
+          : <></>}
       </>
     )
   }

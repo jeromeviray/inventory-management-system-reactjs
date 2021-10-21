@@ -29,6 +29,7 @@ const PopularProducts = React.lazy(() =>
 const ProductDetialsModal = React.lazy(() =>
   import("src/components/modals/product/ProductDetialsModal"),
 )
+const Discover = React.lazy(() => import("src/components/public/productFeatures/discoverProduct/Discover"))
 const CategoryList = React.lazy(() =>
   import("src/components/category/CategoryList"),
 )
@@ -102,6 +103,7 @@ export class Home extends Component {
             )}
             <PopularProducts />
             <PromoProducts />
+            <Discover />
           </CContainer>
         </Suspense>
       </>
