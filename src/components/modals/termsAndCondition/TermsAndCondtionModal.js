@@ -52,8 +52,8 @@ export class TermsAndCondtionModal extends Component {
           action: action,
           editorState: termsAndCondition.content
             ? EditorState.createWithContent(
-                convertFromRaw(JSON.parse(termsAndCondition.content)),
-              )
+              convertFromRaw(JSON.parse(termsAndCondition.content)),
+            )
             : EditorState.createEmpty(),
         })
       } else if (action === "Add") {

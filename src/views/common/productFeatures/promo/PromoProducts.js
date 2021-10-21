@@ -23,7 +23,7 @@ export class PromoProducts extends Component {
     const { query, page, limit, status } = this.state
     this.getProductsWithPromo(status, query, page, limit)
   }
-    getProductsWithPromo = (status, query, page, limit) => {
+  getProductsWithPromo = (status, query, page, limit) => {
     this.props.getProductsWithPromo(status, query, page, limit)
   }
   componentDidUpdate(prevProps, prevState) {

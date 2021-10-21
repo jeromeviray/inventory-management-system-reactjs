@@ -11,6 +11,7 @@ import {
   CForm,
   CInputGroup,
   CFormControl,
+  CTooltip,
 } from "@coreui/react"
 //icons
 import * as MdIcons from "react-icons/md"
@@ -184,40 +185,42 @@ export class Brand extends Component {
                     <CTableDataCell>{brand.totalProducts}</CTableDataCell>
                     <CTableDataCell>{brand.createdAt}</CTableDataCell>
                     <CTableDataCell className="text-center w-25" colSpan="1">
-                      <CButton
-                        color="info"
-                        className="me-2"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() =>
-                          this.props.addBrandModal(
-                            !visible,
-                            "Edit",
-                            brand,
-                            <MdIcons.MdModeEdit size="20" className="me-2" />,
-                          )
-                        }
-                      >
-                        <MdIcons.MdModeEdit size="20" />
-                      </CButton>
-                      {/* {permission === Roles.SUPER_ADMIN ? ( */}
-                      <CButton
-                        color="danger"
-                        className="ms-2"
-                        variant="ghost"
-                        onClick={() =>
-                          this.props.setAlertModal(
-                            !visible,
-                            "DELETEBRAND",
-                            "BRAND",
-                            brand.id,
-                          )
-                        }
-                        size="sm"
-                      >
-                        <MdIcons.MdDelete size="20" />
-                      </CButton>
-                      {/* ) : null} */}
+                      <CTooltip content="Edit Brand">
+                        <CButton
+                          color="info"
+                          className="me-2"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() =>
+                            this.props.addBrandModal(
+                              !visible,
+                              "Edit",
+                              brand,
+                              <MdIcons.MdModeEdit size="20" className="me-2" />,
+                            )
+                          }
+                        >
+                          <MdIcons.MdModeEdit size="20" />
+                        </CButton>
+                      </CTooltip>
+                      <CTooltip content="Delete Brand">
+                        <CButton
+                          color="danger"
+                          className="ms-2"
+                          variant="ghost"
+                          onClick={() =>
+                            this.props.setAlertModal(
+                              !visible,
+                              "DELETEBRAND",
+                              "BRAND",
+                              brand.id,
+                            )
+                          }
+                          size="sm"
+                        >
+                          <MdIcons.MdDelete size="20" />
+                        </CButton>
+                      </CTooltip>
                     </CTableDataCell>
                   </CTableRow>
                 )

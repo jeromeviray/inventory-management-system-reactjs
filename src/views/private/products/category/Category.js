@@ -11,6 +11,7 @@ import {
   CForm,
   CInputGroup,
   CFormControl,
+  CTooltip
 } from "@coreui/react"
 //icons
 import * as MdIcons from "react-icons/md"
@@ -166,38 +167,45 @@ export class Category extends Component {
                       <CTableDataCell>{category.totalProducts}</CTableDataCell>
                       <CTableDataCell>{category.createdAt}</CTableDataCell>
                       <CTableDataCell className="text-center w-25" colSpan="1">
-                        <CButton
-                          color="info"
-                          className="me-2"
-                          variant="ghost"
-                          size="sm"
-                          onClick={() =>
-                            this.props.addCategoryModal(
-                              !visible,
-                              "Edit",
-                              category,
-                              <MdIcons.MdModeEdit size="20" className="me-2" />,
-                            )
-                          }
-                        >
-                          <MdIcons.MdModeEdit size="20" />
-                        </CButton>
-                        <CButton
-                          color="danger"
-                          className="ms-2"
-                          variant="ghost"
-                          onClick={() =>
-                            this.props.setAlertModal(
-                              !visible,
-                              "DELETECATEGORY",
-                              "CATEGORY",
-                              category.id,
-                            )
-                          }
-                          size="sm"
-                        >
-                          <MdIcons.MdDelete size="20" />
-                        </CButton>
+                        <CTooltip content="Edit Category">
+                          <CButton
+                            color="info"
+                            className="me-2"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() =>
+                              this.props.addCategoryModal(
+                                !visible,
+                                "Edit",
+                                category,
+                                <MdIcons.MdModeEdit
+                                  size="20"
+                                  className="me-2"
+                                />,
+                              )
+                            }
+                          >
+                            <MdIcons.MdModeEdit size="20" />
+                          </CButton>
+                        </CTooltip>
+                        <CTooltip content="Delete Category">
+                          <CButton
+                            color="danger"
+                            className="ms-2"
+                            variant="ghost"
+                            onClick={() =>
+                              this.props.setAlertModal(
+                                !visible,
+                                "DELETECATEGORY",
+                                "CATEGORY",
+                                category.id,
+                              )
+                            }
+                            size="sm"
+                          >
+                            <MdIcons.MdDelete size="20" />
+                          </CButton>
+                        </CTooltip>
                       </CTableDataCell>
                     </CTableRow>
                   )

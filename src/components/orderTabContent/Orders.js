@@ -8,6 +8,7 @@ import {
   CContainer,
   CButton,
   CForm,
+  CCol,
 } from "@coreui/react"
 import { Link } from "react-router-dom"
 //action
@@ -33,6 +34,7 @@ export class Orders extends Component {
     token: "",
     permission: "",
     path: "",
+    updated: false,
   }
 
   orderReviews = {}
@@ -105,7 +107,38 @@ export class Orders extends Component {
       }
     })
   }
-
+  renderCustomerAction = (orderStatus, order, paymentStatus) => {
+    console.log(paymentStatus)
+    let orderButton = <></>
+    switch (orderStatus.toLowerCase()) {
+      case "pending":
+        orderButton = (
+          <CButton
+            onClick={() => {
+              this.handleOrder(order, "cancel")
+            }}
+          >
+            Cancel Order
+          </CButton>
+        )
+        break
+      case "delivered":
+        orderButton =
+          paymentStatus === "Paid" ? (
+            <CButton
+              onClick={() => {
+                this.handleOrder(order, "request_refund")
+              }}
+            >
+              Request Refund
+            </CButton>
+          ) : (
+            <></>
+          )
+        break
+    }
+    return orderButton
+  }
   renderOrderAction(orderStatus, order, paymentStatus) {
     let orderButton = <></>
     switch (orderStatus.toLowerCase()) {
@@ -156,6 +189,17 @@ export class Orders extends Component {
           </CButton>
         )
         break
+      case "request_refund":
+        orderButton = (
+          <CButton
+            onClick={() => {
+              this.handleOrder(order, "accept_refund")
+            }}
+          >
+            Accept Refund
+          </CButton>
+        )
+        break
     }
     return orderButton
   }
@@ -175,20 +219,17 @@ export class Orders extends Component {
         product: {
           id: parseInt(key),
         },
-        orderId: order.id,
       })
+      this.orderReviews[order.orderId][key].submitted = true
     }
-    this.props.saveComments(formattedReviews).then(() => {
-      for (var key in orderReviews) {
-        this.orderReviews[order.orderId][key].submitted = true
-      }
-    })
+    this.props.saveComments(order.orderId, formattedReviews)
+    this.setState({ update: true })
   }
 
   handleOrderReview(orderId, item, rating, comment) {
     const { orders } = this.state
     let orderIndex = orders.findIndex((ctt2) => ctt2.orderId == orderId)
-    const { comments } = orders[orderIndex]
+    let { comments } = orders[orderIndex]
 
     let submitted = false
 
@@ -200,9 +241,14 @@ export class Orders extends Component {
           submitted: false,
         },
       }
+    } else if (
+      typeof this.orderReviews[orderId][item.product.id] !== "undefined" &&
+      this.orderReviews[orderId][item.product.id].submitted
+    ) {
+      comment = this.orderReviews[orderId][item.product.id].comment
+      submitted = this.orderReviews[orderId][item.product.id].submitted
     }
 
-    console.log(comments)
     let index =
       comments && comments.findIndex((ctt) => ctt.product.id == item.product.id)
 
@@ -236,9 +282,17 @@ export class Orders extends Component {
           </CCard>
         ) : (
           orders.map((order, index) => {
-            let hasPendingReview = order.comments.findIndex(
-              (comment) => comment.order_id == order.id,
-            )
+            let hasPendingReview =
+              order.orderItems.length != order.comments.length
+
+            if (hasPendingReview && this.orderReviews[order.orderId]) {
+              hasPendingReview = false
+              for (var key in this.orderReviews[order.orderId]) {
+                if (this.orderReviews[order.orderId][key].submitted == false) {
+                  hasPendingReview = true
+                }
+              }
+            }
 
             const canReview =
               (order.orderStatus == "DELIVERED" ||
@@ -267,6 +321,9 @@ export class Orders extends Component {
                 break
               case 2:
                 paymentStatus = "Failed"
+                break
+              case 3:
+                paymentStatus = "Refunded"
                 break
             }
             return (
@@ -313,7 +370,7 @@ export class Orders extends Component {
                       this.handleOrderView(event, order)
                     }}
                   >
-                    <CContainer>
+                    <CContainer key={new Date()}>
                       {order.orderItems.map((item, index) => {
                         this.handleOrderReview(order.orderId, item, 5, "")
                         const { rating, comment, submitted } =
@@ -333,7 +390,7 @@ export class Orders extends Component {
                         )
                       })}
                     </CContainer>
-                    {hasPendingReview >= 0 && canReview && (
+                    {hasPendingReview && canReview && (
                       <CButton type="submit" style={{ float: "right" }}>
                         Submit Product Review
                       </CButton>
@@ -341,102 +398,101 @@ export class Orders extends Component {
                   </CForm>
                 </CCardBody>
                 <CCardFooter className="p-4">
-                  <div className="d-flex justify-content-between align-items-end">
-                    <div className="d-flex align-items-bottom">
-                      {/* {order.orderItems.map((item, index) => {
-                                                return (
+                  <CRow className="">
+                    <CCol sm="12" lg="6">
+                      <div className="d-flex flex-column">
+                        <div style={fontStyle} className="mt-2">
+                          <span className="text-black-50 me-2">
+                            Date of Ordered:
+                          </span>
+                          <span style={{ fontWeight: "500" }}>
+                            {order.orderedAt}
+                          </span>
+                        </div>
 
-                                                )
-
-                                            })} */}
-                      <Link
-                        to={{
-                          pathname:
-                            config.api.private.prefixFrontendUrl +
-                            path +
-                            order.orderId,
-                          state: order.orderId,
-                        }}
-                        className="m-2"
-                      >
-                        View More
-                      </Link>
-
-                      {permission === Roles.SUPER_ADMIN ||
-                      permission === Roles.ADMIN ? (
-                        this.renderOrderAction(
-                          this.state.status,
-                          order,
-                          paymentStatus,
-                        )
-                      ) : (
-                        <></>
-                      )}
-                    </div>
-                    <div className="d-flex flex-column">
-                      <div style={fontStyle} className="mt-2">
-                        <span className="text-black-50 me-2">
-                          Date of Ordered:
-                        </span>
-                        <span style={{ fontWeight: "500" }}>
-                          {order.orderedAt}
-                        </span>
+                        <div style={fontStyle} className="mt-2">
+                          <span
+                            style={fontStyle}
+                            className="text-black-50 me-2"
+                          >
+                            Payment Method:
+                          </span>
+                          <span style={{ fontWeight: "500" }}>
+                            {order.paymentMethod.paymentMethod}
+                          </span>
+                        </div>
+                        <div style={fontStyle} className="mt-2">
+                          <span
+                            style={fontStyle}
+                            className="text-black-50 me-2"
+                          >
+                            Payment Status:
+                          </span>
+                          <span style={{ fontWeight: "500" }}>
+                            {paymentStatus}
+                          </span>
+                        </div>
+                        <div style={fontStyle} className="mt-2">
+                          <span
+                            style={fontStyle}
+                            className="text-black-50 me-2"
+                          >
+                            Order Status:
+                          </span>
+                          <span
+                            className="text-danger"
+                            style={{ fontWeight: "500" }}
+                          >
+                            {order.orderStatus}
+                          </span>
+                        </div>
+                        <div className="mt-2">
+                          <span
+                            style={fontStyle}
+                            className="text-black-50 me-2"
+                          >
+                            Total Amount
+                          </span>
+                          <span style={{ fontWeight: "500" }}>
+                            &#8369;{order.totalAmount.toFixed(2)}
+                          </span>
+                        </div>
                       </div>
-
-                      <div style={fontStyle} className="mt-2">
-                        <span style={fontStyle} className="text-black-50 me-2">
-                          Payment Method:
-                        </span>
-                        <span style={{ fontWeight: "500" }}>
-                          {order.paymentMethod.paymentMethod}
-                        </span>
-                      </div>
-                      <div style={fontStyle} className="mt-2">
-                        <span style={fontStyle} className="text-black-50 me-2">
-                          Payment Status:
-                        </span>
-                        <span style={{ fontWeight: "500" }}>
-                          {paymentStatus}
-                        </span>
-                      </div>
-                      <div style={fontStyle} className="mt-2">
-                        <span style={fontStyle} className="text-black-50 me-2">
-                          Order Status:
-                        </span>
-                        <span
-                          className="text-danger"
-                          style={{ fontWeight: "500" }}
+                    </CCol>
+                    <CCol sm="12" lg="6">
+                      <div className="d-flex align-items-end  h-100 justify-content-end mt-3">
+                        {permission === Roles.SUPER_ADMIN ||
+                        permission === Roles.ADMIN
+                          ? this.renderOrderAction(
+                              this.state.status,
+                              order,
+                              paymentStatus,
+                            )
+                          : this.renderCustomerAction(
+                              this.state.status,
+                              order,
+                              paymentStatus,
+                            )}
+                        <Link
+                          to={{
+                            pathname:
+                              config.api.private.prefixFrontendUrl +
+                              path +
+                              order.orderId,
+                            state: order.orderId,
+                          }}
+                          className="m-2"
                         >
-                          {order.orderStatus}
-                        </span>
+                          View More
+                        </Link>
                       </div>
-                      <div className="mt-2">
-                        <span style={fontStyle} className="text-black-50 me-2">
-                          Total Amount
-                        </span>
-                        <span style={{ fontWeight: "500" }}>
-                          &#8369;{order.totalAmount.toFixed(2)}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
+                    </CCol>
+                  </CRow>
                 </CCardFooter>
               </CCard>
             )
           })
         )}
-        {/* <ReactPaginate
-                    previousLabel={"previous"}
-                    nextLabel={"next"}
-                    breakLabel={"..."}
-                    breakClassName={"break-me"}
-                    // pageCount={inventories.totalPages}
-                    marginPagesDisplayed={2}
-                    pageRangeDisplayed={5}
-                    // onPageChange={this.handlePageClick}
-                    containerClassName={"pagination"}
-                    activeClassName={"active"}
-                /> */}
       </>
     )
   }

@@ -1,30 +1,30 @@
-import authHeader from '../auth/authHeader';
-import axios from './RestApi';
+import authHeader from "../auth/authHeader"
+import axios from "./RestApi"
 
 export class CommentApiService {
-    getComments(productId, page, limit) {
-        return axios.get("/comments", {
-            params: {
-                productId: productId,
-                page: page,
-                limit: limit,
-            }
-        })
-    }
-    saveComment(commentDetails) {
-        return axios.post("/comments", commentDetails, {
-            headers: authHeader()
-        })
-    }
-    saveComments(commentDetails) {
-        return axios.post("/comments/bulk", commentDetails, {
-            headers: authHeader()
-        })
-    }
-    deleteComment(commentId) {
-        return axios.delete("/comments/" + commentId, {
-            headers: authHeader()
-        })
-    }
+  getComments(productId, page, limit) {
+    return axios.get("/comments", {
+      params: {
+        productId: productId,
+        page: page,
+        limit: limit,
+      },
+    })
+  }
+  saveComment(commentDetails) {
+    return axios.post("/comments", commentDetails, {
+      headers: authHeader(),
+    })
+  }
+  saveComments(orderId, commentDetails) {
+    return axios.post("/comments/bulk/" + orderId, commentDetails, {
+      headers: authHeader(),
+    })
+  }
+  deleteComment(commentId) {
+    return axios.delete("/comments/" + commentId, {
+      headers: authHeader(),
+    })
+  }
 }
-export default new CommentApiService();
+export default new CommentApiService()

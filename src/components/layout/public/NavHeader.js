@@ -19,7 +19,7 @@ import { connect } from "react-redux"
 import {
   searchProductByBarcodeOrName,
   getDiscoverProducts,
-  getProductsByCategoryName
+  getProductsByCategoryName,
 } from "src/service/apiActions/productAction/productAction"
 import { getStoreInformation } from "src/service/apiActions/storeAction/StoreInformationAction"
 import config from "../../../config"
@@ -138,7 +138,6 @@ export class NavHeader extends Component {
     const margin = {
       marginBottom: "12px",
     }
-    console.log(items)
     return (
       <CHeader position="sticky">
         <CContainer>
@@ -148,17 +147,11 @@ export class NavHeader extends Component {
             style={{ cursor: "pointer" }}
           >
             {storeInfo.acronym ? (
-              <strong style={{ ...margin }}>
-                {storeInfo.acronym}
-              </strong>
+              <strong style={{ ...margin }}>{storeInfo.acronym}</strong>
             ) : storeInfo.storeName ? (
-              <strong style={{ ...margin }}>
-                {storeInfo.storeName}
-              </strong>
+              <strong style={{ ...margin }}>{storeInfo.storeName}</strong>
             ) : (
-              <strong style={{ ...margin }}>
-                IMSs
-              </strong>
+              <strong style={{ ...margin }}>IMSs</strong>
             )}
           </Link>
           {isLoggedIn ? (
@@ -240,5 +233,5 @@ export default connect(mapStateToProps, {
   searchProductByBarcodeOrName,
   getDiscoverProducts,
   getProductsByCategoryName,
-  getStoreInformation
+  getStoreInformation,
 })(withRouter(NavHeader))

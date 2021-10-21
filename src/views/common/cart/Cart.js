@@ -336,7 +336,7 @@ export class Cart extends Component {
                         Total Amount
                       </span>
                       <span style={{ fontWeight: "500" }}>
-                        &#8369;{totalAmount.toFixed(2)}
+                        &#8369;{Tamount.toFixed(2)}
                       </span>
                     </div>
                   </div>

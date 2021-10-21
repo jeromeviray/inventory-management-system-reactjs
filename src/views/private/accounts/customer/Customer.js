@@ -12,6 +12,7 @@ import {
   CInputGroup,
   CFormControl,
   CForm,
+  CTooltip,
 } from "@coreui/react"
 //action
 import { setAlertModal } from "src/service/apiActions/modalAction/modalAction"
@@ -162,38 +163,45 @@ export class Customer extends Component {
                       </CTableDataCell>
                       <CTableDataCell>{account.created}</CTableDataCell>
                       <CTableHeaderCell className="text-center" colSpan="1">
-                        <CButton
-                          color="info"
-                          className="me-2"
-                          variant="ghost"
-                          size="sm"
-                          onClick={() =>
-                            this.props.addEmployeeModal(
-                              !visible,
-                              "Edit",
-                              customer,
-                              <MdIcons.MdModeEdit size="20" className="me-2" />,
-                            )
-                          }
-                        >
-                          <MdIcons.MdModeEdit size="20" />
-                        </CButton>
-                        <CButton
-                          color="danger"
-                          className="ms-2"
-                          variant="ghost"
-                          onClick={() =>
-                            this.props.setAlertBanModal(
-                              !visible,
-                              "BANACCOUNT",
-                              "CUSTOMER",
-                              account.id,
-                            )
-                          }
-                          size="sm"
-                        >
-                          <FaIcons.FaBan size="20" />
-                        </CButton>
+                        <CTooltip content="Edit Customer Account">
+                          <CButton
+                            color="info"
+                            className="me-2"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() =>
+                              this.props.addEmployeeModal(
+                                !visible,
+                                "Edit",
+                                customer,
+                                <MdIcons.MdModeEdit
+                                  size="20"
+                                  className="me-2"
+                                />,
+                              )
+                            }
+                          >
+                            <MdIcons.MdModeEdit size="20" />
+                          </CButton>
+                        </CTooltip>
+                        <CTooltip content="Ban Customer Account">
+                          <CButton
+                            color="danger"
+                            className="ms-2"
+                            variant="ghost"
+                            onClick={() =>
+                              this.props.setAlertBanModal(
+                                !visible,
+                                "BANACCOUNT",
+                                "CUSTOMER",
+                                account.id,
+                              )
+                            }
+                            size="sm"
+                          >
+                            <FaIcons.FaBan size="20" />
+                          </CButton>
+                        </CTooltip>
                       </CTableHeaderCell>
                     </CTableRow>
                   )

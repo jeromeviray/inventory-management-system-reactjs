@@ -15,18 +15,14 @@ import {
   CTableDataCell,
   CTableBody,
   CTableCaption,
-  CFormSelect,
-  CToast,
-  CToastBody,
-  CToastClose,
-  CToaster,
   CRow,
   CCol,
   CFormControl,
   CContainer,
   CCallout,
-  CAlert,
 } from "@coreui/react"
+import { BsDash, BsPlus } from "react-icons/bs";
+
 import Barcode from "react-barcode"
 //action
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
@@ -355,7 +351,27 @@ export class SupplyModal extends Component {
         }
       })
   }
+  incrementValue = (index) => {
+    const { productItems } = this.state
+    productItems[index].numberReceived++
+    this.setState({
+      productItems: productItems
+    })
+  }
 
+  decrementValue = (index) => {
+    const { productItems } = this.state
+    productItems[index].numberReceived--
+    this.setState({
+      productItems: productItems
+    })
+  }
+  handleQuantityOnChange = (event) => {
+    event.preventDefault();
+
+    let { value, max, min } = event.target;
+    value = Math.max(Number(min), Math.min(Number(max), Number(value)));
+  }
   render() {
     let {
       loading,
@@ -591,15 +607,35 @@ export class SupplyModal extends Component {
                               background="#f5f5f548"
                             />
                           </CTableDataCell>
-                          <CTableDataCell>
-                            <CFormControl
-                              type="number"
-                              min={1}
-                              value={productItem.numberReceived}
-                              onChange={(event) =>
-                                this.handleOnChange(index, event)
-                              }
-                            />
+                          <CTableDataCell className="text-center" >
+                            <div className="quantity-container">
+                              <CButton
+                                className="decrement-btn"
+                                type="button"
+                                disabled={productItem.numberReceived === 1 ? true : false}
+                                onClick={() => this.decrementValue(index)}
+                              >
+                                <BsDash />
+
+                              </CButton>
+                              <input
+                                type="text"
+                                className="input-quantity"
+                                value={productItem.numberReceived}
+                                pattern="[0-9]*"
+                                onChange={this.handleQuantityOnChange}
+                                // max={status === "ONGOING" ? promo.quantity : inventory.totalStock}
+                                min={1}
+                                readOnly={true}
+
+                              />
+                              <CButton className="increment-btn"
+                                // disabled={quantity === maxQuantity ? true : maxQuantity <= 0 ? true : false}
+                                onClick={() => this.incrementValue(index)}
+                              >
+                                <BsPlus />
+                              </CButton>
+                            </div>
                           </CTableDataCell>
                           <CTableDataCell>
                             <CButton

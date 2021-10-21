@@ -14,6 +14,7 @@ import * as BiIcons from "react-icons/bi"
 // import * as MdIcons from "react-icons/md"
 import * as VscIcons from "react-icons/vsc"
 import * as IoIcons from "react-icons/io5"
+import * as MdIcons from "react-icons/md"
 
 import { Component } from "react"
 import { connect } from "react-redux"
@@ -22,7 +23,7 @@ import eventBus from "src/_helper/EventBus"
 import Roles from "src/router/config"
 import { logout } from "src/service/apiActions/userAction/userAction"
 import { getMe } from "src/service/apiActions/accountAction/accountAction"
-
+import config from "src/config"
 const style = {
   marginRight: "10px",
 }
@@ -43,6 +44,7 @@ class AppHeaderDropdown extends Component {
       let href = this.manageHrefLinkBasedInPermission(getPermission)
       this.setState({
         hrefLink: href,
+        permission: getPermission,
       })
     }
     eventBus.on("logout", () => {
@@ -79,11 +81,9 @@ class AppHeaderDropdown extends Component {
     }
   }
   render() {
-    let { account, hrefLink } = this.state
-    const firstName = account && account.firstName
-    const lastName = account && account.lastName
-    console.log(firstName)
-
+    let { account, hrefLink, permission } = this.state
+    // const firstName = account && account.firstName
+    // const lastName = account && account.lastName
     return (
       <CDropdown variant="nav-item">
         <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
@@ -105,10 +105,30 @@ class AppHeaderDropdown extends Component {
             <VscIcons.VscAccount style={style} size={20} />
             Profile
           </CDropdownItem>
+
           <CDropdownItem href={hrefLink + "order"}>
             <IoIcons.IoBagCheck style={style} size={20} />
             Order
           </CDropdownItem>
+          {permission === "CUSTOMER" || permission === "USER" ? (
+            <>
+              <CDropdownItem
+                href={config.api.private.prefixFrontendUrl + "/user/wishlist"}
+              >
+                <BiIcons.BiHistory style={style} size={20} />
+                Wishlist
+              </CDropdownItem>
+              <CDropdownItem
+                href={config.api.private.prefixFrontendUrl + "/user/addresses"}
+              >
+                <MdIcons.MdLocationOn style={style} size={20} />
+                My Address
+              </CDropdownItem>
+            </>
+          ) : (
+            <></>
+          )}
+
           <CDropdownDivider />
           <CDropdownItem onClick={this.handleLogOut}>
             <BiIcons.BiLogOut size={20} style={style} />

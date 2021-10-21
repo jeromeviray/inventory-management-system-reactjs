@@ -11,6 +11,7 @@ import {
   CInputGroup,
   CFormControl,
   CForm,
+  CTooltip,
 } from "@coreui/react"
 //icons
 import * as MdIcons from "react-icons/md"
@@ -192,38 +193,45 @@ export class Employee extends Component {
                       </CTableDataCell>
                       <CTableDataCell>{account.created}</CTableDataCell>
                       <CTableHeaderCell className="text-center" colSpan="1">
-                        <CButton
-                          color="info"
-                          className="me-2"
-                          variant="ghost"
-                          size="sm"
-                          onClick={() =>
-                            this.props.addEmployeeModal(
-                              !visible,
-                              "Edit",
-                              employee,
-                              <MdIcons.MdModeEdit size="20" className="me-2" />,
-                            )
-                          }
-                        >
-                          <MdIcons.MdModeEdit size="20" />
-                        </CButton>
-                        <CButton
-                          color="danger"
-                          className="ms-2"
-                          variant="ghost"
-                          onClick={() =>
-                            this.props.setAlertModal(
-                              !visible,
-                              "DELETEEMPLOYEE",
-                              "EMPLOYEE",
-                              account.id,
-                            )
-                          }
-                          size="sm"
-                        >
-                          <MdIcons.MdDelete size="20" />
-                        </CButton>
+                        <CTooltip content="Edit Account">
+                          <CButton
+                            color="info"
+                            className="me-2"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() =>
+                              this.props.addEmployeeModal(
+                                !visible,
+                                "Edit",
+                                employee,
+                                <MdIcons.MdModeEdit
+                                  size="20"
+                                  className="me-2"
+                                />,
+                              )
+                            }
+                          >
+                            <MdIcons.MdModeEdit size="20" />
+                          </CButton>
+                        </CTooltip>
+                        <CTooltip content="Delete Account">
+                          <CButton
+                            color="danger"
+                            className="ms-2"
+                            variant="ghost"
+                            onClick={() =>
+                              this.props.setAlertModal(
+                                !visible,
+                                "DELETEEMPLOYEE",
+                                "EMPLOYEE",
+                                account.id,
+                              )
+                            }
+                            size="sm"
+                          >
+                            <MdIcons.MdDelete size="20" />
+                          </CButton>
+                        </CTooltip>
                       </CTableHeaderCell>
                     </CTableRow>
                   )
