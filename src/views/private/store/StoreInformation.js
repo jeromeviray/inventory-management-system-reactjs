@@ -69,6 +69,7 @@ export class StoreInformation extends Component {
       let { action } = this.props.modalVisible
       if (action === "close") {
         this.props.getStoreInformation()
+        this.props.getCarouselImages()
       }
     }
   }

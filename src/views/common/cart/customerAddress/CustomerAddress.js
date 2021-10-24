@@ -13,12 +13,15 @@ import {
 import { connect } from "react-redux"
 //icons
 import * as FaIcons from "react-icons/fa"
+import * as MdIcons from "react-icons/md"
 // modal
 import AddressModal from "src/components/modals/address/AddressModal"
+import AlertModal from "src/components/modals/alert/AlertModal"
 //action
 import { getAdress } from "src/service/apiActions/addressAction/addressAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { setAddressModal } from "src/service/apiActions/modalAction/modalAction"
+import { setAlertModal } from "src/service/apiActions/modalAction/modalAction"
 //history
 import { history } from "src/_helper/history"
 import config from "../../../../config"
@@ -30,7 +33,7 @@ export class CustomerAddress extends Component {
     addresses: [],
     addressId: "",
     visible: false,
-    isCart: false
+    isCart: false,
   }
 
   componentDidMount() {
@@ -83,6 +86,7 @@ export class CustomerAddress extends Component {
     return (
       <>
         <AddressModal />
+        <AlertModal />
         <CButton
           shape="rounded-pill"
           color="primary"
@@ -111,7 +115,9 @@ export class CustomerAddress extends Component {
               province,
               region,
               city,
-              postalCode } = address;
+              postalCode,
+              id,
+            } = address
 
             let checked = this.props.getValue == address.id
             return (
@@ -134,26 +140,68 @@ export class CustomerAddress extends Component {
                         }
                         onChange={this.handleOnChange}
                       />
-
-                      <CCardTitle className="ps-4">
-                        {address.firstName + " " + address.lastName}
-                      </CCardTitle>
                     </div>
-                    <div className="ps-5">
-                      {street + ", " + barangay + ", " + city + ", " + province + ", " + region}
+                    <div className="d-flex align-items-center justify-content-between ">
+                      <CCardTitle>{firstName + " " + lastName}</CCardTitle>
+                      <div className=" text-end">
+                        <CButton
+                          color="info"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() =>
+                            this.props.setAddressModal(
+                              !visible,
+                              "Edit",
+                              address,
+                              <FaIcons.FaPlus size={20} className="me-2" />,
+                            )
+                          }
+                        >
+                          <FaIcons.FaEdit size="20" />
+                        </CButton>
+                        <CButton
+                          color="danger"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() =>
+                            this.props.setAlertModal(
+                              !visible,
+                              "DELETECUSTOMERADDRESS",
+                              "ADDRESS",
+                              id,
+                            )
+                          }
+                        >
+                          <MdIcons.MdDelete size="20" />
+                        </CButton>
+                      </div>
+                    </div>
+                    <div className="ps-2">Mobile #: {phoneNumber}</div>
+                    <div className="ps-2">
+                      Address:{" "}
+                      {street +
+                        ", " +
+                        barangay +
+                        ", " +
+                        city +
+                        ", " +
+                        province +
+                        ", " +
+                        region}
                     </div>
                   </CCardBody>
                 </CCard>
               </CCol>
             )
           })}
-          {isCart &&
+          {isCart && (
             <CCol className="m-3 text-center" style={{ fontStyle: "italic" }}>
               <CAlert color="warning">
-                To Proceed to the next step Select or Add your Address Information
+                To Proceed to the next step Select or Add your Address
+                Information
               </CAlert>
             </CCol>
-          }
+          )}
         </CRow>
         {message && (
           <div className="form-group d-flex justify-content-center align-items-center">
@@ -178,4 +226,5 @@ export default connect(mapStateToProps, {
   getAdress,
   clearMessage,
   setAddressModal,
+  setAlertModal,
 })(CustomerAddress)

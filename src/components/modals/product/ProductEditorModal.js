@@ -528,9 +528,9 @@ export class ProductEditorModal extends Component {
                         style={
                           isDragging
                             ? {
-                              backgroundColor: "#8E9293",
-                              border: "4px dashed #ffffff",
-                            }
+                                backgroundColor: "#8E9293",
+                                border: "4px dashed #ffffff",
+                              }
                             : undefined
                         }
                         onClick={onImageUpload}
@@ -611,7 +611,7 @@ export class ProductEditorModal extends Component {
                         onChange={this.handleOnChange}
                         required
                         disabled={action === "Edit" ? true : false}
-                      // disabled={autoGenerateBarcode}
+                        // disabled={autoGenerateBarcode}
                       />
                       <CFormLabel htmlFor="floatingBarcode">
                         Product Barcode
@@ -690,8 +690,11 @@ export class ProductEditorModal extends Component {
                       name="brandName"
                       id="floatingSelectBrand"
                       aria-label="Brand Names"
+                      required
                     >
-                      <option value="">Choose Brand</option>
+                      <option value="" disabled>
+                        -- Choose Brand --
+                      </option>
                       {brands.data &&
                         brands.data.map((brand, index) => {
                           return (
@@ -716,8 +719,11 @@ export class ProductEditorModal extends Component {
                       name="categoryName"
                       id="floatingSelectCategory"
                       aria-label="Categories"
+                      required
                     >
-                      <option value="">Choose Category</option>
+                      <option value="" disabled>
+                        -- Choose Category --
+                      </option>
                       {categories.data &&
                         categories.data.map((category, index) => {
                           return (

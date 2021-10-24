@@ -19,6 +19,7 @@ import { deleteSupplier } from "src/service/apiActions/supplierAction/supplierAc
 import { deleteCategory } from "src/service/apiActions/categoryAction/categoryAction"
 import { deleteProduct } from "src/service/apiActions/productAction/productAction"
 import { deletePromo } from "src/service/apiActions/promoAction/promoAction"
+import { deleteAddress } from "src/service/apiActions/addressAction/addressAction"
 import { withRouter } from "react-router"
 import { logout } from "src/service/apiActions/userAction/userAction"
 export class AlertModal extends Component {
@@ -117,6 +118,14 @@ export class AlertModal extends Component {
             action: action,
           })
           break
+        case "DELETECUSTOMERADDRESS":
+          this.setState({
+            visible: alert,
+            id: id,
+            module: module,
+            action: action,
+          })
+          break
 
         default:
           this.setState({
@@ -152,6 +161,8 @@ export class AlertModal extends Component {
       this.handleDeletePromo(id)
     } else if (action === "DELETEME" && module === "ACCOUNT") {
       this.handleDeleteMe(id)
+    } else if (action === "DELETECUSTOMERADDRESS" && module === "ADDRESS") {
+      this.handleDeleteAddress(id)
     } else {
       console.log("ERRPR")
     }
@@ -295,6 +306,7 @@ export class AlertModal extends Component {
         setInterval(() => {
           this.props.logout()
         }, 1000)
+        this.props.setAlertModal(false, "close", "", "")
       })
       .catch(() => {
         this.setState({
@@ -303,13 +315,26 @@ export class AlertModal extends Component {
         })
       })
   }
-
+  handleDeleteAddress = (id) => {
+    this.props
+      .deleteAddress(id)
+      .then(() => {
+        this.setState({
+          loading: false,
+        })
+        this.props.setAlertModal(false, "close", "", "")
+      })
+      .catch(() => {
+        this.setState({
+          successFully: false,
+          loading: false,
+        })
+      })
+  }
   render() {
     let { visible, loading } = this.state
     return (
       <div>
-
-
         <CModal
           visible={visible}
           onDismiss={() => this.props.setAlertModal(false)}
@@ -325,7 +350,7 @@ export class AlertModal extends Component {
               color="dark"
               variant="ghost"
               onClick={() => {
-                this.props.setAlertModal(false, "", "", "")
+                this.props.setAlertModal(false, "close", "", "")
               }}
             >
               No
@@ -363,5 +388,6 @@ export default connect(mapStateToProps, {
   deleteCategory,
   deleteProduct,
   deletePromo,
-  logout
+  deleteAddress,
+  logout,
 })(withRouter(AlertModal))
