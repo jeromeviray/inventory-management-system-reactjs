@@ -21,6 +21,8 @@ import { getStoreInformation } from "src/service/apiActions/storeAction/StoreInf
 
 import config from "./config"
 
+import Websocket from "src/service/Websocket";
+
 const loading = (
   <div
     className="d-flex justify-content-center align-items-center position-fixed spinner"
@@ -134,6 +136,7 @@ class App extends Component {
           </React.Suspense>
         </Router>
         <ToastContainer />
+        <Websocket />
         {/* </div> */}
       </>
     )

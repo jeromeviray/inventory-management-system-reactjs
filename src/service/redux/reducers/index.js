@@ -25,6 +25,7 @@ import commentReducer from "./commentReducer"
 import dashboardReducer from "./dashboardReducer"
 import storeInformationReducer from "./storeInformationReducer"
 import { termsAndConditionReducer } from "./termsAndConditionReducer"
+import websocketReducer from "./websocketReducer"
 
 export default combineReducers({
   //modals
@@ -76,4 +77,5 @@ export default combineReducers({
   storeInformationResponse: storeInformationReducer,
   //terms and condition
   termsAndConditionResponse: termsAndConditionReducer,
+  websocketResponse: websocketReducer
 })

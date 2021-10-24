@@ -82,7 +82,6 @@ class AppHeaderDropdown extends Component {
     let { account, hrefLink } = this.state
     const firstName = account && account.firstName
     const lastName = account && account.lastName
-    console.log(firstName)
 
     return (
       <CDropdown variant="nav-item">

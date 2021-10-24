@@ -142,7 +142,7 @@ export class IncomingSuppliesCard extends Component {
               updatedAt,
               supplyReference,
             } = supply
-            console.log(supply)
+
             return (
               <CCard className="mb-3" key={index}>
                 <CCardHeader>
