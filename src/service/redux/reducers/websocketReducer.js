@@ -1,4 +1,4 @@
-import { WEBSOCKET_REF } from "src/service/redux/constants";
+import { WEBSOCKET_EVENT, WEBSOCKET_REF } from "src/service/redux/constants";
 
 const credentials = JSON.parse(localStorage.getItem("credentials"));
 
@@ -11,6 +11,8 @@ const websocketReducer = (state = initialState, action) => {
 
     switch (type) {
         case WEBSOCKET_REF:
+            return payload;
+        case WEBSOCKET_EVENT:
             return payload;
         default:
             return state;

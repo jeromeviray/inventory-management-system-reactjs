@@ -11,22 +11,25 @@ import {
 } from "@coreui/react"
 import { DotLoader } from "react-spinners"
 
-// import Checkout from './checkout/Checkout'
-// import CustomerAddress from './customerAddress/CustomerAddress';
-// import PaymentMethod from './payment/PaymentMethod';
 import { connect } from "react-redux"
 //action
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import {
   placeOrder,
   updateOrderPaymentStatus,
+  validateCart
 } from "src/service/apiActions/orderAction/orderAction"
+
+import {
+  setCart
+} from "src/service/apiActions/cartAction/cartAction"
 
 import config from "../../../config"
 
 import { history } from "src/_helper/history"
 import { Redirect } from "react-router-dom"
 import Roles from "src/router/config"
+import { cibLetsEncrypt } from "@coreui/icons"
 
 // import SuccessOrderPlace from './SuccessOrderPlace';
 const Checkout = React.lazy(() =>
@@ -56,7 +59,8 @@ export class Cart extends Component {
     successfull: false,
     loading: false,
     redirectUrl: "",
-    clientRef: null
+    clientRef: null,
+    checkout: false
   }
 
   componentDidMount() {
@@ -83,9 +87,41 @@ export class Cart extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.websocketResponse !== prevProps.websocketResponse) {
-      this.setState({
-        clientRef: this.props.websocketResponse.data.clientRef
-      })
+      if (this.props.websocketResponse.action == "WEBSOCKET_REF") {
+        let clientRef = this.props.websocketResponse.data.clientRef;
+        this.setState({
+          clientRef: clientRef
+        })
+      } else if (this.props.websocketResponse.action == "WEBSOCKET_EVENT") {
+        let { cart } = this.state;
+        const receiveCheckoutEvent = this.props.websocketResponse.data.message;
+        if (cart.accountId != receiveCheckoutEvent.accountId) {
+          let cartItems = cart.cartItems;
+          cartItems.forEach((item, ind) => {
+            let index = receiveCheckoutEvent.items.findIndex((item2) => item2.product.id == item.product.product.id)
+            cartItems[ind].product.inventory = receiveCheckoutEvent.items[index].inventory;
+          })
+
+          cart.cartItems = cartItems;
+          console.log(setCart)
+          this.props.setCart(cart)
+        }
+      }
+    }
+    this.manageCartItemsResponse(prevProps, prevState)
+  }
+
+  manageCartItemsResponse = (prevProps, prevState) => {
+    if (prevProps.cartResponse !== this.props.cartResponse) {
+      let { action, status, data } = this.props.cartResponse
+      if (action === "CARTITEMS" && status === 200) {
+        this.setState({
+          cart: data.cart,
+          items: [],
+          Tamount: 0,
+          Tquantity: 0
+        })
+      }
     }
   }
   redirectUser = () => {
@@ -109,36 +145,72 @@ export class Cart extends Component {
       Tamount: Tamount,
     })
   }
+
   handleAddressOnChange = (id) => {
     this.setState({
       addressId: id,
     })
   }
+
   handlePaymentMethodOnChange = (id) => {
     this.setState({
       paymentMethodId: id,
     })
   }
+
   handleOnNext = () => {
-    ;
     let { step } = this.state;
-    if (step == 1) {
-      this.sendMessage()
+    if (step === 1) {
+      this.checkoutLock()
+      const { cart, items } = this.state;
+      const data = { cartId: cart.cartId, accountId: cart.accountId, items: items };
+      this.props.validateCart(data).then((data) => {
+        const response = this.props.orderResponse;
+        if (response.data.is_invalidate) {
+          return;
+        }
+        this.setState({
+          step: ++step,
+        })
+      })
+      return;
+    } else {
+      if (step === 3) return
+      this.setState({
+        step: ++step,
+      })
     }
-    if (step === 3) return
-    this.setState({
-      step: ++step,
-    })
   }
 
-  sendMessage = (msg) => {
-    console.log(this.state.clientRef);
-    this.state.clientRef.sendMessage('/app/websocket/inventory', JSON.stringify({ 'from': "SDF", 'text': "SDF" }));
+  sendMessage = (eventType = "checkout", data = {}) => {
+    this.state.clientRef.sendMessage(
+      '/app/websocket/inventory',
+      JSON.stringify({
+        'from': "test", 'message': data, eventType: eventType
+      })
+    );
+  }
+
+  checkoutLock = () => {
+    const { cart, items } = this.state;
+    this.sendMessage("checkout", { cartId: cart.cartId, accountId: cart.accountId, items: items })
+  }
+
+  releaseCheckoutLock = () => {
+    const { cart, items } = this.state;
+    this.sendMessage("release_checkout", { cartId: cart.cartId, accountId: cart.accountId, items: items })
   }
 
   handleOnPre = () => {
     let { step } = this.state
-    if (step === 1) return
+    if (step === 1) {
+      return
+    } else if (step === 2) {
+      this.releaseCheckoutLock();
+      this.setState({
+        items: []
+      });
+    }
     this.setState({
       step: --step,
     })
@@ -289,7 +361,13 @@ export class Cart extends Component {
                         <span style={{ ...headerStyle }}>Item</span>
                       </div>
                       <div>
+                        <span style={{ ...headerStyle }}>Quantity</span>
+                      </div>
+                      <div>
                         <span style={{ ...headerStyle }}>Amount</span>
+                      </div>
+                      <div>
+                        <span style={{ ...headerStyle }}>Sub Amount</span>
                       </div>
                     </div>
 
@@ -320,6 +398,10 @@ export class Cart extends Component {
                                 {product.productName}
                               </span>
                               <span>
+                                {item.quantity}
+                              </span>
+
+                              <span>
                                 &#8369;
                                 {status === "ONGOING" ? (
                                   <>
@@ -334,6 +416,9 @@ export class Cart extends Component {
                                 ) : (
                                   product.productPrice.toFixed(2)
                                 )}
+                              </span>
+                              <span>
+                                &#8369;{(price * item.quantity).toFixed(2)}
                               </span>
                             </div>
                           </>
@@ -428,11 +513,15 @@ const mapStateToProps = (state) => {
   return {
     userResponse: state.userResponse,
     messageResponse: state.messageResponse,
-    websocketResponse: state.websocketResponse
+    websocketResponse: state.websocketResponse,
+    cartResponse: state.cartResponse,
+    orderResponse: state.orderResponse
   }
 }
 export default connect(mapStateToProps, {
   clearMessage,
   placeOrder,
   updateOrderPaymentStatus,
+  validateCart,
+  setCart
 })(Cart)

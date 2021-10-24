@@ -56,9 +56,12 @@ const ForgotPassword = React.lazy(() =>
 const CustomerLayout = React.lazy(() => import("src/layout/CustomerLayout"))
 
 class App extends Component {
+  componentDidMount() {
+    this.props.getStoreInformation()
+  }
+
   componentDidUpdate(prevProps, prevState) {
     this.manageResponse(prevProps, prevState)
-    this.props.getStoreInformation()
   }
 
   manageResponse(prevProps, prevState) {
@@ -66,12 +69,16 @@ class App extends Component {
       let failMessage = this.props.messageResponse
       if (failMessage.status > 400 && failMessage.status <= 403 && this.props.isLoggedIn) {
         setTimeout(() => {
-          toast("Session Expired" + failMessage.data.message)
+          toast.warning("Session Expired" + failMessage.data.message)
           this.props.logout()
           window.location.reload()
         }, 1000)
       } else if (failMessage.data && failMessage.data.message) {
-        toast(failMessage.data.message)
+        if (failMessage.status >= 200 && failMessage.status <= 399) {
+          toast.success(failMessage.data.message)
+        } else {
+          toast.error(failMessage.data.message)
+        }
       }
     }
   }

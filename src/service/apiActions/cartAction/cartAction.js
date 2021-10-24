@@ -191,3 +191,16 @@ export const quantityAction = (action, productId) => async (dispatch) => {
     },
   )
 }
+
+export const setCart = (cart) => async (dispatch) => {
+  dispatch({
+    type: GET_CART_ITEMS,
+    payload: {
+      status: 200,
+      action: "CARTITEMS",
+      data: {
+        cart: cart,
+      },
+    },
+  })
+}

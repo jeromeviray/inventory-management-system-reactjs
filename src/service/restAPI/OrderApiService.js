@@ -47,5 +47,11 @@ export class OrderApiService {
             headers: authHeader()
         })
     }
+
+    validateCart(data) {
+        return axios.post("/orders/validate", data, {
+            headers: authHeader()
+        })
+    }
 }
 export default new OrderApiService();

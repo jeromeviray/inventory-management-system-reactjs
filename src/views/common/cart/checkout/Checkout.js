@@ -47,6 +47,7 @@ export class Checkout extends Component {
   componentDidMount() {
     this.retrieveCartItems()
   }
+
   retrieveCartItems = () => {
     this.props.getCart()
   }
@@ -62,6 +63,8 @@ export class Checkout extends Component {
           checked: new Array(data.cart.cartItems.length).fill(false),
           cart: data.cart,
           cartItems: data.cart.cartItems,
+          items: [],
+          pendingItem: []
         })
       }
     }
@@ -75,7 +78,7 @@ export class Checkout extends Component {
       })
   }
   handleOnChange = (position) => {
-    let { checked, pendingItem, cartItems } = this.state
+    let { checked, pendingItem, cartItems, totalAmount } = this.state
     let check = checked.map((item, index) => {
       return index === position ? !item : item
     })
@@ -99,7 +102,6 @@ export class Checkout extends Component {
           let discount = (product.product.productPrice * percentage) / 100
           let price = product.product.productPrice - discount
           amount = cartItems[index].quantity * price
-
         } else {
           amount = cartItems[index].amount
         }
@@ -107,18 +109,20 @@ export class Checkout extends Component {
       }
       return sum
     }, 0)
+
     let quantity = check.reduce((quantity, currentState, index) => {
       if (currentState === true) {
         return quantity + cartItems[index].quantity
       }
       return quantity
     }, 0)
+
     this.setState({
       checked: check,
       totalAmount: totalPrice,
       quantity: quantity,
     })
-    this.props.paymentDetailsOnChange(pendingItem, quantity, totalPrice)
+    this.props.paymentDetailsOnChange(pendingItem, quantity, totalPrice * quantity)
   }
 
   manageStatus = (status) => {
@@ -230,6 +234,10 @@ export class Checkout extends Component {
 
                   let maxQuantity = status === "ONGOING" ? promo.quantity : inventory.totalStock
                   let disabled = status === "ONGOING" ? false : inventory.totalStock <= 0 ? true : false;
+                  if (!disabled && quantity > maxQuantity) {
+                    disabled = true;
+                    inventory.status = "INSUFFICIENT STOCK"
+                  }
                   return (
                     <CCard
                       key={index}

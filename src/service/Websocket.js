@@ -5,7 +5,10 @@ import SockJsClient from 'react-stomp';
 
 import config from "../config"
 
-import { initWebhook } from "./apiActions/websocketAction/websocketAction";
+import {
+    initWebhook,
+    websocketEvent
+} from "./apiActions/websocketAction/websocketAction";
 
 export class Websocket extends Component {
 
@@ -21,7 +24,7 @@ export class Websocket extends Component {
                     console.log("Disconnected");
                 }}
                 onMessage={(data) => {
-                    console.log(data)
+                    this.props.websocketEvent(data);
                 }}
                 ref={(client) => {
                     console.log("")
@@ -40,5 +43,6 @@ const mapStateToProps = (state) => {
     }
 }
 export default connect(mapStateToProps, {
-    initWebhook
+    initWebhook,
+    websocketEvent
 })(Websocket)

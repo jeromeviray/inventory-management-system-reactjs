@@ -1,4 +1,4 @@
-import { GET_ORDER_BY_ID, GET_ORDERS, ORDER_ITEMS, PLACE_ORDER, UPDATE_ORDER_STATUS, GET_PAYMENT_TRANSACTIONS, UPDATE_PAYMENT_STATUS } from "src/service/redux/constants";
+import { VALIDATE_CART, GET_ORDER_BY_ID, GET_ORDERS, ORDER_ITEMS, PLACE_ORDER, UPDATE_ORDER_STATUS, GET_PAYMENT_TRANSACTIONS, UPDATE_PAYMENT_STATUS } from "src/service/redux/constants";
 import { SET_MESSAGE } from "src/constants/userConstants";
 import OrderApiService from "src/service/restAPI/OrderApiService";
 import { handleError } from "../indexAction";
@@ -170,6 +170,38 @@ export const getPaymentTransactions = (query, page, limit) => async (dispatch) =
                     }
                 }
             })
+            return Promise.resolve();
+        },
+        (error) => {
+            handleError(error, dispatch);
+            return Promise.reject();
+        }
+    )
+}
+
+export const validateCart = (data) => async (dispatch) => {
+    return OrderApiService.validateCart(data).then(
+        (response) => {
+            dispatch({
+                type: VALIDATE_CART,
+                payload: {
+                    status: 200,
+                    action: VALIDATE_CART,
+                    data: response.data
+                }
+            })
+
+            if (response.data.error_messages.length > 0) {
+                dispatch({
+                    type: SET_MESSAGE,
+                    payload: {
+                        status: 400,
+                        data: {
+                            message: response.data.error_messages.join("\n")
+                        }
+                    }
+                })
+            }
             return Promise.resolve();
         },
         (error) => {
