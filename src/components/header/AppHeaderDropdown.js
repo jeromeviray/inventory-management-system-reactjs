@@ -81,7 +81,7 @@ class AppHeaderDropdown extends Component {
     }
   }
   render() {
-    let { account, hrefLink } = this.state
+    let { account, hrefLink, permission } = this.state
     const firstName = account && account.firstName
     const lastName = account && account.lastName
 
