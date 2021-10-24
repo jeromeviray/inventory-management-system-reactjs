@@ -81,9 +81,10 @@ class AppHeaderDropdown extends Component {
     }
   }
   render() {
-    let { account, hrefLink, permission } = this.state
-    // const firstName = account && account.firstName
-    // const lastName = account && account.lastName
+    let { account, hrefLink } = this.state
+    const firstName = account && account.firstName
+    const lastName = account && account.lastName
+
     return (
       <CDropdown variant="nav-item">
         <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
