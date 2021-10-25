@@ -3,8 +3,8 @@ import { SET_MESSAGE } from "src/constants/userConstants";
 import OrderApiService from "src/service/restAPI/OrderApiService";
 import { handleError } from "../indexAction";
 
-export const getOrders = (status, page, limit) => async (dispatch) => {
-    return OrderApiService.getOrders(status, page, limit).then(
+export const getOrders = (status, query, page, limit) => async (dispatch) => {
+    return OrderApiService.getOrders(status, query, page, limit).then(
         (response) => {
             dispatch({
                 type: GET_ORDERS,
@@ -94,8 +94,8 @@ export const getOrderByOrderId = (orderId) => async (dispatch) => {
     )
 }
 
-export const updateOrderStatus = (orderId, status) => async (dispatch) => {
-    return OrderApiService.updateOrderStatus(orderId, status).then(
+export const updateOrderStatus = (orderId, status, trackingNumber, trackingUrl) => async (dispatch) => {
+    return OrderApiService.updateOrderStatus(orderId, status, trackingNumber, trackingUrl).then(
         (response) => {
             dispatch({
                 type: UPDATE_ORDER_STATUS,

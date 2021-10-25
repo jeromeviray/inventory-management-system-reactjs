@@ -20,6 +20,7 @@ import OrderCard from './OrderCard';
 //npm
 import ReactToPrint from 'react-to-print';
 import QRCode from 'qrcode.react';
+import Roles from 'src/router/config';
 
 export class OrderDetails extends Component {
     state = {
@@ -83,6 +84,8 @@ export class OrderDetails extends Component {
         let firstNameUpperCase = firstName && firstName.charAt(0).toUpperCase() + firstName.slice(1);
         let lastNameUpperCase = lastName && lastName.charAt(0).toUpperCase() + lastName.slice(1);
         let qrValue = order && order.orderId;
+
+        let permission = this.props.userResponse.credentials.roles
         return (
             <>
                 <CButton
@@ -105,20 +108,22 @@ export class OrderDetails extends Component {
 
                 {hasError ? <></> :
                     <div className="mb-4">
-                        <div className="d-flex align-items-end flex-row-reverse m-2">
+                        {permission.roleName === Roles.SUPER_ADMIN || permission.roleName === Roles.ADMIN ?
+                            <div className="d-flex align-items-end flex-row-reverse m-2  d-none d-lg-flex" >
 
-                            <ReactToPrint
-                                trigger={() =>
-                                    <CButton
-                                        color="info"
-                                        className="d-flex align-items-center"
-                                    >
-                                        <IoIcons.IoPrintOutline size={20} />
-                                    </CButton>
-                                }
-                                content={() => this.componentRef}
-                            />
-                        </div>
+                                <ReactToPrint
+                                    trigger={() =>
+                                        <CButton
+                                            color="info"
+                                            className="d-flex align-items-center"
+                                        >
+                                            <IoIcons.IoPrintOutline size={20} />
+                                        </CButton>
+                                    }
+                                    content={() => this.componentRef}
+                                />
+                            </div> : <></>
+                        }
                         <div ref={(el) => (this.componentRef = el)} className="ps-4 pe-4 pt-3">
                             <CCard className="border-envelope">
                                 <CCardBody>
@@ -222,7 +227,8 @@ export class OrderDetails extends Component {
 const mapStateToProps = (state) => {
     return {
         orderResponse: state.orderResponse,
-        messageResponse: state.messageResponse
+        messageResponse: state.messageResponse,
+        userResponse: state.userResponse
     }
 }
 export default connect(mapStateToProps, {

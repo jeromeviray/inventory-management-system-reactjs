@@ -244,11 +244,11 @@ class Products extends Component {
             </CButton>
           </div>
 
-          <div className="w-100 d-flex justify-content-end align-items-center">
+          <div className="w-100 d-flex justify-content-end align-items-center ">
             <CForm
               onSubmit={this.handleOnSubmitSearch}
               id="search-form"
-              className="w-75"
+              className="w-75  d-none d-lg-block"
             >
               <CInputGroup>
                 <CFormControl
@@ -271,6 +271,7 @@ class Products extends Component {
                 </CButton>
               </CInputGroup>
             </CForm>
+
             <div className="text-center">
               <CButton
                 className="pt-2 pb-2 ms-2"
@@ -283,7 +284,7 @@ class Products extends Component {
                 <BiIcons.BiBarcodeReader size="24" />
               </CButton>
             </div>
-            <div className="d-flex align-items-end flex-row-reverse m-2">
+            <div className="d-flex align-items-end flex-row-reverse m-2  d-none d-lg-block">
               <ReactToPrint
                 trigger={() => (
                   <CButton
@@ -298,7 +299,37 @@ class Products extends Component {
                 content={() => this.componentRef}
               />
             </div>
+
           </div>
+
+        </div>
+        <div className="justify-content-center mb-3 mt-3  d-lg-none d-flex">
+          <CForm
+            onSubmit={this.handleOnSubmitSearch}
+            id="search-form"
+            className="w-75 "
+          >
+            <CInputGroup>
+              <CFormControl
+                type="text"
+                id="floatingInput"
+                placeholder="Search"
+                className="p-2"
+                value={this.state.query}
+                onChange={this.handleSearch}
+              />
+              <CButton
+                form="search-form"
+                type="submit"
+                color="info"
+                variant="outline"
+                id="btn-search"
+                className=""
+              >
+                <FaIcons.FaSearch />
+              </CButton>
+            </CInputGroup>
+          </CForm>
         </div>
         <CCard className="mb-4 bg-transparent border-0">
           <CCardHeader>

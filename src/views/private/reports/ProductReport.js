@@ -84,7 +84,7 @@ export class ProductReport extends Component {
             <CForm
               onSubmit={this.handleOnSubmitSearch}
               id="search-form"
-              className="w-25"
+              className="w-75"
             >
               <CInputGroup>
                 <CFormControl
@@ -107,7 +107,7 @@ export class ProductReport extends Component {
                 </CButton>
               </CInputGroup>
             </CForm>
-            <div className="d-flex align-items-end flex-row-reverse m-2">
+            <div className="d-lg-flex align-items-end flex-row-reverse m-2 d-none">
               <ReactToPrint
                 trigger={() => (
                   <CButton
