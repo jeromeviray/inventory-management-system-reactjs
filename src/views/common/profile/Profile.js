@@ -136,7 +136,7 @@ export class Profile extends Component {
             <hr />
             <CCardTitle style={{ margin: "0 auto", width: "80%" }}>
               <div className="d-flex justify-content-between text-center mb-5">
-                <div className="font-style  w-100">
+                {/* <div className="font-style  w-100">
                   <h6>Phone number</h6>
                   <strong className="text-black-50">
                     {account.phoneNumber === 0 ? (
@@ -145,8 +145,8 @@ export class Profile extends Component {
                       <span>{account.phoneNumber}</span>
                     )}
                   </strong>
-                </div>
-                <div className="font-style text-center w-100">
+                </div> */}
+                <div className="font-style w-100">
                   <h6>Birthday</h6>
                   <strong className="text-black-50">
                     {account.birthday ? (
@@ -156,8 +156,6 @@ export class Profile extends Component {
                     )}
                   </strong>
                 </div>
-              </div>
-              <div className="d-flex justify-content-between text-center mb-3">
                 <div className="font-style w-100">
                   <h6>Created Date</h6>
                   <strong className="text-black-50">
@@ -169,6 +167,7 @@ export class Profile extends Component {
                   </strong>
                 </div>
               </div>
+
             </CCardTitle>
             <hr />
             <CCardTitle>

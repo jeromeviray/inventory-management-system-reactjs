@@ -49,7 +49,6 @@ export class AccountModal extends Component {
     role: "",
     email: "",
     username: "",
-    phoneNumber: "",
     password: "",
     birthday: "",
   }
@@ -76,7 +75,7 @@ export class AccountModal extends Component {
           edit: false,
         })
       } else if (action === "Edit") {
-        let { firstName, lastName, phoneNumber, account, birthday, id } =
+        let { firstName, lastName, account, birthday, id } =
           employee
         this.setState({
           visible: visible,
@@ -85,7 +84,6 @@ export class AccountModal extends Component {
           edit: true,
           firstName: firstName,
           lastName: lastName,
-          phoneNumber: phoneNumber,
           username: account.username,
           role: account.roles[0].roleName,
           email: account.email,
@@ -134,7 +132,6 @@ export class AccountModal extends Component {
       firstName,
       lastName,
       email,
-      phoneNumber,
       username,
       password,
       role,
@@ -146,7 +143,6 @@ export class AccountModal extends Component {
         firstName,
         lastName,
         email,
-        phoneNumber,
         username,
         password,
         birthday,
@@ -171,9 +167,9 @@ export class AccountModal extends Component {
       })
   }
   handleUpdateUser = () => {
-    let { firstName, lastName, phoneNumber, birthday, id } = this.state
+    let { firstName, lastName, birthday, id } = this.state
     this.props
-      .updateUser(id, firstName, lastName, phoneNumber, birthday)
+      .updateUser(id, firstName, lastName, birthday)
       .then(() => {
         let { status } = this.props.messageResponse
         if (status === 200) {
@@ -235,7 +231,6 @@ export class AccountModal extends Component {
       email,
       username,
       password,
-      phoneNumber,
       icon,
       action,
       loading,
@@ -298,21 +293,7 @@ export class AccountModal extends Component {
                       </CFormLabel>
                     </CFormFloating>
                   </CCol>
-                  <CCol sm="12" lg="6">
-                    <CFormFloating className="mb-3">
-                      <CFormControl
-                        name="phoneNumber"
-                        value={phoneNumber}
-                        onChange={this.handleOnChange}
-                        type="number"
-                        id="floatingNumberInput"
-                        placeholder="Enter First Name"
-                      />
-                      <CFormLabel htmlFor="floatingNumberInput">
-                        Phone Number
-                      </CFormLabel>
-                    </CFormFloating>
-                  </CCol>
+
                   <CCol sm="12" md="6" lg className={permission.roleName === Roles.SUPER_ADMIN ? "" : "d-none"}>
                     <CFormFloating className="mb-3">
                       <CFormSelect

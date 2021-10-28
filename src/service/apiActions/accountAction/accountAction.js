@@ -60,7 +60,6 @@ export const saveEmployee =
     firstName,
     lastName,
     email,
-    phoneNumber,
     username,
     password,
     birthday,
@@ -71,7 +70,6 @@ export const saveEmployee =
         firstName,
         lastName,
         email,
-        phoneNumber,
         username,
         password,
         birthday,
@@ -464,12 +462,12 @@ export const getMe = () => async (dispatch) => {
   )
 }
 export const updateUser =
-  (id, firstName, lastName, phoneNumber, birthday) => async (dispatch) => {
+  (id, firstName, lastName, birthday) => async (dispatch) => {
     return AccountApiService.updateUser(
       id,
       firstName,
       lastName,
-      phoneNumber,
+
       birthday,
     ).then(
       (response) => {

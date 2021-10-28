@@ -28,20 +28,17 @@ export class AccountApiService {
     firstName,
     lastName,
     email,
-    phoneNumber,
     username,
     password,
     birthday,
     role,
   ) {
-    console.log(birthday)
     return axios.post(
       "/users/account/create",
       {
         firstName,
         lastName,
         email,
-        phoneNumber,
         username,
         password,
         birthday,
@@ -57,13 +54,12 @@ export class AccountApiService {
       headers: authHeader(),
     })
   }
-  updateUser(id, firstName, lastName, phoneNumber, birthday) {
+  updateUser(id, firstName, lastName, birthday) {
     return axios.put(
       "/users/account/update/" + id,
       {
         firstName: firstName,
         lastName: lastName,
-        phoneNumber: phoneNumber,
         birthday: birthday,
       },
       {
