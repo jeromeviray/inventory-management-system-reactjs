@@ -29,6 +29,7 @@ export class ScanBarcodeModal extends Component {
       decodeBarcode: "",
       stopStreaming: false,
       action: "",
+      facingMode: "environment"
     }
   }
   componentDidUpdate(prevProps, prevState) {
@@ -82,7 +83,7 @@ export class ScanBarcodeModal extends Component {
     }
   }
   render() {
-    let { visible, decodeBarcode, stopStreaming, action } = this.state
+    let { visible, decodeBarcode, stopStreaming, action, facingMode } = this.state
     return (
       <div>
         <CModal
@@ -107,10 +108,18 @@ export class ScanBarcodeModal extends Component {
                 <CAlert color="info" dismissible>
                   <strong>Scan Product Barcode to Search</strong>
                 </CAlert>
+                <CButton variant="ghost"
+                  color="secondary"
+                  className="mb-3 d-flex justify-content-start"
+                  onClick={() => this.setState({
+                    facingMode: facingMode === "environment" ? "user" : "environment"
+                  })}>
+                  {facingMode === "environment" ? "Rear" : "Front"}
+                </CButton>
                 <BarcodeScannerComponent
                   className="w-25"
                   delay={500}
-                  facingMode
+                  facingMode={facingMode}
                   stopStream={stopStreaming}
                   torch="true"
                   onUpdate={(err, result) => {
