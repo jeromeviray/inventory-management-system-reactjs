@@ -217,6 +217,7 @@ export class Cart extends Component {
 
   releaseCheckoutLock = () => {
     const { cart } = this.state;
+    console.log(cart)
     this.sendMessage("release_checkout", { cartId: cart.cartId, accountId: cart.accountId, items: cart.cartItems })
   }
 
@@ -331,7 +332,8 @@ export class Cart extends Component {
       redirectUrl,
       shippingFee
     } = this.state
-    var totalAmount = shippingFee.shippingAmount;
+    var productTotalAmount = shippingFee.shippingAmount;
+    let totalAmount = shippingFee.shippingAmount + Tamount;
     const headerStyle = {
       fontWeight: "800",
     }
@@ -402,9 +404,9 @@ export class Cart extends Component {
                         let discount = (product.productPrice * percentage) / 100
                         let price = product.productPrice - discount
                         if (status === "ONGOING") {
-                          totalAmount += price
+                          productTotalAmount += price
                         } else {
-                          totalAmount += product.productPrice
+                          productTotalAmount += product.productPrice
                         }
 
                         return (
@@ -473,7 +475,7 @@ export class Cart extends Component {
                         Total Amount
                       </span>
                       <span style={{ fontWeight: "500" }}>
-                        &#8369;{Tamount > 0 ? totalAmount.toFixed(2) : Tamount.toFixed(2)}
+                        &#8369;{(Tamount > 0 ? totalAmount.toFixed(2) : Tamount.toFixed(2))}
                       </span>
                     </div>
                   </div>

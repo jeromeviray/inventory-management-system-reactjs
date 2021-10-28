@@ -170,7 +170,7 @@ export class IncomingSuppliesDetails extends Component {
                       Product Barcode
                     </CTableHeaderCell>
                     <CTableHeaderCell scope="col">
-                      Qunatity Recieved
+                      Quantity Recieved
                     </CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>

@@ -582,7 +582,7 @@ export class SupplyModal extends Component {
                       Product Barcode
                     </CTableHeaderCell>
                     <CTableHeaderCell scope="col">
-                      Qunatity Recieved
+                      Quantity Recieved
                     </CTableHeaderCell>
                     <CTableHeaderCell scope="col">Actions</CTableHeaderCell>
                   </CTableRow>

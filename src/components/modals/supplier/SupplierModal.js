@@ -34,6 +34,8 @@ export class SupplierModal extends Component {
   supplierState = {
     name: "",
     supplierId: "",
+    address: "",
+    phoneNumber: ''
   }
   componentDidUpdate(prevProps, prevState) {
     this.manageSupplierModal(prevProps, prevState)
@@ -79,13 +81,13 @@ export class SupplierModal extends Component {
       loading: true,
     })
 
-    let { name, action, supplierId } = this.state
+    let { name, action, supplierId, address, phoneNumber } = this.state
 
     if (name && name.length > 0) {
       if (action === "Add") {
-        this.handleCreateSupplier(name)
+        this.handleCreateSupplier(name, address, phoneNumber)
       } else if (action === "Edit") {
-        this.handleUpdateSupplier(supplierId, name)
+        this.handleUpdateSupplier(supplierId, name, address, phoneNumber)
       }
     } else {
       this.setState({
@@ -93,9 +95,9 @@ export class SupplierModal extends Component {
       })
     }
   }
-  handleCreateSupplier(name) {
+  handleCreateSupplier(name, address, phoneNumber) {
     this.props
-      .createSupplier(name)
+      .createSupplier(name, address, phoneNumber)
       .then(() => {
         let { status, data } = this.props.messageResponse
         if (status === 200) {
@@ -104,10 +106,11 @@ export class SupplierModal extends Component {
             loading: false,
           })
         }
-        setInterval(() => {
-          this.props.clearMessage()
-          window.location.reload()
-        }, 1000)
+        // setInterval(() => {
+        //   this.props.clearMessage()
+        //   window.location.reload()
+        // }, 1000)
+        this.props.setSupplierModal(false, "close", "", "")
       })
       .catch(() => {
         let { status, data } = this.props.messageResponse
@@ -117,9 +120,9 @@ export class SupplierModal extends Component {
         })
       })
   }
-  handleUpdateSupplier = (id, name) => {
+  handleUpdateSupplier = (id, name, address, phoneNumber) => {
     this.props
-      .updateSupplier(id, name)
+      .updateSupplier(id, name, address, phoneNumber)
       .then(() => {
         let { status } = this.props.messageResponse
         if (status === 200) {
@@ -129,10 +132,11 @@ export class SupplierModal extends Component {
             loading: false,
           })
         }
-        setInterval(() => {
-          this.props.clearMessage()
-          window.location.reload()
-        }, 1000)
+        // setInterval(() => {
+        //   this.props.clearMessage()
+        //   window.location.reload()
+        // }, 1000)
+        this.props.setSupplierModal(false, "close", "", "")
       })
       .catch(() => {
         let { status, data } = this.props.messageResponse
@@ -144,7 +148,7 @@ export class SupplierModal extends Component {
   }
 
   render() {
-    let { action, loading, icon, visible, name } = this.state
+    let { action, loading, icon, visible, name, address, phoneNumber } = this.state
     return (
       <>
 
@@ -173,9 +177,43 @@ export class SupplierModal extends Component {
                     type="text"
                     id="floatingSupplierInput"
                     placeholder="Enter Supplier Name"
+                    required
                   />
                   <CFormLabel htmlFor="floatingSupplierInput">
                     Enter Supplier Name
+                  </CFormLabel>
+                </CFormFloating>
+              </div>
+              <div className="mb-3">
+                <CFormFloating className="mb-3">
+                  <CFormControl
+                    name="address"
+                    value={address}
+                    onChange={this.handleOnChange}
+                    type="text"
+                    id="floatingAddressInput"
+                    placeholder="Enter Address"
+                    required
+                  />
+                  <CFormLabel htmlFor="floatingAddressInput">
+                    Enter Address
+                  </CFormLabel>
+                </CFormFloating>
+              </div>
+              <div className="mb-3">
+                <CFormFloating className="mb-3">
+                  <CFormControl
+                    name="phoneNumber"
+                    value={phoneNumber}
+                    onChange={this.handleOnChange}
+                    pattern={"^(09|\\+639)\\d{9}$"}
+                    type="text"
+                    id="floatingPhoneNumberInput"
+                    placeholder="Enter Phone Number"
+                    required
+                  />
+                  <CFormLabel htmlFor="floatingPhoneNumberInput">
+                    Enter Phone Number
                   </CFormLabel>
                 </CFormFloating>
               </div>

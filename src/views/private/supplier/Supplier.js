@@ -48,7 +48,7 @@ export class Supplier extends Component {
   }
   componentDidUpdate(prevProps, prevState) {
     this.manageSupplierResponse(prevProps, prevState)
-    //     this.manageSupplierModal(prevProps, prevState)
+    this.manageSupplierModal(prevProps, prevState)
   }
   manageSupplierResponse = (prevProps, prevState) => {
     if (prevProps.supplierResponse !== this.props.supplierResponse) {
@@ -57,6 +57,15 @@ export class Supplier extends Component {
         this.setState({
           suppliers: data.suppliers,
         })
+      }
+    }
+  }
+  manageSupplierModal = (prevProps, prevState) => {
+    if (prevProps.modalVisible !== this.props.modalVisible) {
+      let { action } = this.props.modalVisible
+      if (action === "close") {
+        const { query, page, limit } = this.state
+        this.getSuppliers(query, page, limit)
       }
     }
   }
@@ -132,6 +141,8 @@ export class Supplier extends Component {
           <CTableHead color="dark">
             <CTableRow className="text-center">
               <CTableHeaderCell scope="col">Name</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Contact Number</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Address</CTableHeaderCell>
               <CTableHeaderCell scope="col">Created Date</CTableHeaderCell>
               <CTableHeaderCell scope="col">Action</CTableHeaderCell>
             </CTableRow>
@@ -142,6 +153,8 @@ export class Supplier extends Component {
                 return (
                   <CTableRow className="text-center" key={index}>
                     <CTableDataCell>{supplier.name}</CTableDataCell>
+                    <CTableDataCell>{supplier.phoneNumber}</CTableDataCell>
+                    <CTableDataCell>{supplier.address}</CTableDataCell>
                     <CTableDataCell>{supplier.createdAt}</CTableDataCell>
                     <CTableDataCell>
                       <CTooltip content="Edit Supplier">
@@ -221,6 +234,7 @@ const mapStateToProps = (state) => {
     supplierResponse: state.supplierResponse,
     messageResponse: state.messageResponse,
     modalVisible: state.modalVisibleResponse,
+
   }
 }
 export default connect(mapStateToProps, {

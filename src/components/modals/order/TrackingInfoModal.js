@@ -41,7 +41,7 @@ export class TrackingInfoModal extends Component {
                     icon: icon,
                     order: order
                 })
-            } else {
+            } else if (action === "close") {
                 this.setState({
                     visible: visible,
                     action: "",

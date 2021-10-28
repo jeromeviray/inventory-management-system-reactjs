@@ -10,7 +10,8 @@ import {
   CForm,
   CCol,
   CFormControl,
-  CInputGroup
+  CInputGroup,
+  CTooltip
 } from "@coreui/react"
 import { Link } from "react-router-dom"
 //action
@@ -27,7 +28,12 @@ import ReactPaginate from "react-paginate"
 import TrackingInfoModal from "../modals/order/TrackingInfoModal"
 import { setTrackingInfoModal } from "src/service/apiActions/modalAction/modalAction"
 import config from "../../config"
+import * as BiIcons from "react-icons/bi"
+
 import * as FaIcons from 'react-icons/fa'
+import { setScanModal } from "src/service/apiActions/modalAction/modalAction"
+import ScanBarcodeModal from "src/components/modals/scanBarcode/ScanBarcodeModal"
+
 export class Orders extends Component {
   state = {
     message: "",
@@ -69,6 +75,8 @@ export class Orders extends Component {
   }
   componentDidUpdate(prevProps, prevState) {
     this.manageorderRepsonse(prevProps, prevState)
+    this.manageTrackingInfoModal(prevProps, prevState)
+    this.manageScannerResponse(prevProps, prevState)
   }
 
   manageTrackingInfoModal = (prevProps, prevState) => {
@@ -90,7 +98,17 @@ export class Orders extends Component {
       }
     }
   }
-
+  manageScannerResponse = (prevProps, prevState) => {
+    if (prevProps.scannerResponse !== this.props.scannerResponse) {
+      let { action, decoded } = this.props.scannerResponse
+      if (action === "DECODEDBARCODE") {
+        // const { page, limit, status } = this.state
+        // this.getProducts(decoded, status, page, limit)
+        this.props.getOrders(this.state.status, decoded, 0, 10)
+        this.setState({ query: decoded })
+      }
+    }
+  }
   manageHrefLinkBasedInPermission = (permission) => {
     if (permission === Roles.SUPER_ADMIN || permission === Roles.ADMIN) {
       return "/app/order/"
@@ -304,13 +322,14 @@ export class Orders extends Component {
     this.props.getOrders(status, query, page, 10)
   }
   render() {
-    let { message, orders, permission, path, query } = this.state
+    let { message, orders, permission, path, query, visible } = this.state
     const fontStyle = {
       fontSize: "14px",
       fontWeight: "400",
     }
     return (
       <>
+        <ScanBarcodeModal />
         <TrackingInfoModal />
         <div className="d-flex justify-content-end mb-2">
           <CForm className="w-50">
@@ -334,6 +353,20 @@ export class Orders extends Component {
               </CButton>
             </CInputGroup>
           </CForm>
+          <div className="text-center">
+            <CTooltip content="Scanner barcode">
+              <CButton
+                className="pt-2 pb-2 ms-2"
+                type="button"
+                color="info"
+                variant="outline"
+                id="btn-scan-barcode"
+                onClick={() => this.props.setScanModal(!visible, "barcode")}
+              >
+                <BiIcons.BiBarcodeReader size="24" />
+              </CButton>
+            </CTooltip>
+          </div>
         </div>
         {orders.data && orders.data.length < 0 ? (
           <CCard>
@@ -464,6 +497,7 @@ export class Orders extends Component {
                             key={item.id}
                             submitted={submitted}
                             handleOrderReview={this.handleOrderReview}
+                            permission={permission}
                           />
                         )
                       })}
@@ -604,6 +638,7 @@ const mapStateToProps = (state) => {
     messageResponse: state.messageResponse,
     userResponse: state.userResponse,
     modalVisible: state.modalVisibleResponse,
+    scannerResponse: state.scannerResponse,
 
   }
 }
@@ -612,5 +647,6 @@ export default connect(mapStateToProps, {
   clearMessage,
   updateOrderStatus,
   saveComments,
-  setTrackingInfoModal
+  setTrackingInfoModal,
+  setScanModal
 })(Orders)

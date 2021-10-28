@@ -2,19 +2,21 @@ import authHeader from "../auth/authHeader"
 import axios from "./RestApi"
 
 export class SupplierApiService {
-  createSupplier(name) {
+  createSupplier(name, address, phoneNumber) {
+    console.log(address)
     return axios.post(
       "/suppliers/create",
       {
-        name,
+        name: name,
+        address: address,
+        phoneNumber: phoneNumber
       },
       {
         headers: authHeader(),
       },
     )
   }
-  updateSupplier(id, name) {
-    console.log(name)
+  updateSupplier(id, name, address, phoneNumber) {
     return axios.put(
       "/suppliers/update/" + id,
       {

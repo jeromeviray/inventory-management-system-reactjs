@@ -12,6 +12,7 @@ import { NO_IMAGE_BASE64 } from "src/service/redux/constants"
 import ReactStars from "react-rating-stars-component"
 
 import config from "../../config";
+import Roles from "src/router/config";
 
 export class OrderCard extends Component {
   constructor(props) {
@@ -24,6 +25,7 @@ export class OrderCard extends Component {
       rating: this.props.rating,
       submitted: this.props.submitted,
       canViewReview: this.props.canViewReview,
+      permission: this.props.permission
     }
   }
   render() {
@@ -35,6 +37,7 @@ export class OrderCard extends Component {
       orderId,
       submitted,
       canViewReview,
+      permission
     } = this.state
     let isSubmitted = submitted
     if (canViewReview && !canReview) {
@@ -108,25 +111,28 @@ export class OrderCard extends Component {
                         )
                       }}
                     />
-                    <div className="mb-!2">
-                      <textarea
-                        disabled={submitted}
-                        onChange={(event) => {
-                          this.props.handleOrderReview(
-                            orderId,
-                            orderItem,
-                            rating,
-                            event.target.value,
-                          )
-                        }}
-                        id="exampleFormControlTextarea1"
-                        rows="3"
-                        style={{ width: "100%" }}
-                        placeholder="Please write a review."
-                      >
-                        {comment}
-                      </textarea>
-                    </div>
+                    {permission === Roles.SUPER_ADMIN || permission === Roles.ADMIN ?
+                      <></> :
+                      <div className="mb-!2">
+                        <textarea
+                          disabled={submitted}
+                          onChange={(event) => {
+                            this.props.handleOrderReview(
+                              orderId,
+                              orderItem,
+                              rating,
+                              event.target.value,
+                            )
+                          }}
+                          id="exampleFormControlTextarea1"
+                          rows="3"
+                          style={{ width: "100%" }}
+                          placeholder="Please write a review."
+                        >
+                          {comment}
+                        </textarea>
+                      </div>
+                    }
                   </div>
                 )}
               </div>

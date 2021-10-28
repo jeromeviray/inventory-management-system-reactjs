@@ -151,7 +151,7 @@ export class Category extends Component {
 
           <CTableHead color="dark">
             <CTableRow className="text-center">
-              <CTableHeaderCell scope="col">Brand Name</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Category Name</CTableHeaderCell>
               <CTableHeaderCell scope="col">Products</CTableHeaderCell>
               <CTableHeaderCell scope="col">Created Date</CTableHeaderCell>
               <CTableHeaderCell scope="col">Action</CTableHeaderCell>

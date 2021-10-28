@@ -8,8 +8,8 @@ import {
 } from "src/service/redux/constants"
 import SupplierApiService from "src/service/restAPI/SupplierApiService"
 
-export const createSupplier = (name) => async (dispatch) => {
-  return SupplierApiService.createSupplier(name).then(
+export const createSupplier = (name, address, phoneNumber) => async (dispatch) => {
+  return SupplierApiService.createSupplier(name, address, phoneNumber).then(
     (response) => {
       dispatch({
         type: CREATE_SUPPLIER,
@@ -55,8 +55,8 @@ export const createSupplier = (name) => async (dispatch) => {
     },
   )
 }
-export const updateSupplier = (id, name) => async (dispatch) => {
-  return SupplierApiService.updateSupplier(id, name).then(
+export const updateSupplier = (id, name, address, phoneNumber) => async (dispatch) => {
+  return SupplierApiService.updateSupplier(id, name, address, phoneNumber).then(
     (response) => {
       dispatch({
         type: UPDATE_SUPPLIER,
