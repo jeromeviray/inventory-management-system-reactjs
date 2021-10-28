@@ -9,6 +9,8 @@ import {
   CButton,
   CForm,
   CCol,
+  CFormControl,
+  CInputGroup
 } from "@coreui/react"
 import { Link } from "react-router-dom"
 //action
@@ -22,9 +24,10 @@ import { connect } from "react-redux"
 import OrderCard from "./OrderCard"
 import Roles from "src/router/config"
 import ReactPaginate from "react-paginate"
-
+import TrackingInfoModal from "../modals/order/TrackingInfoModal"
+import { setTrackingInfoModal } from "src/service/apiActions/modalAction/modalAction"
 import config from "../../config"
-
+import * as FaIcons from 'react-icons/fa'
 export class Orders extends Component {
   state = {
     message: "",
@@ -35,6 +38,8 @@ export class Orders extends Component {
     permission: "",
     path: "",
     updated: false,
+    visible: false,
+    query: ''
   }
 
   orderReviews = {}
@@ -56,13 +61,22 @@ export class Orders extends Component {
       permission: roles.roleName ? roles.roleName : roles,
       path: href,
     })
-
-    this.props.getOrders(this.state.status)
+    const { query } = this.state
+    this.props.getOrders(this.state.status, query, 0, 10)
   }
   componentDidUpdate(prevProps, prevState) {
     this.manageorderRepsonse(prevProps, prevState)
   }
 
+  manageTrackingInfoModal = (prevProps, prevState) => {
+    if (prevProps.modalVisible !== this.props.modalVisible) {
+      let { action } = this.props.modalVisible
+
+      if (action === "close") {
+        this.props.getOrders(this.state.status, this.state.query, 0, 10)
+      }
+    }
+  }
   manageorderRepsonse = (prevProps, prevState) => {
     if (prevProps.orderResponse !== this.props.orderResponse) {
       let { status, action, data } = this.props.orderResponse
@@ -84,13 +98,15 @@ export class Orders extends Component {
 
   handleOrder(orderData, orderStatus) {
     let orderId = orderData.orderId
-    this.props.updateOrderStatus(orderId, orderStatus).then(() => {
+    this.props.updateOrderStatus(orderId, orderStatus, '', '').then(() => {
       let orders = this.state.orders
       const order = this.props.orderResponse.data
       const index = orders.findIndex((o) => o.orderId == orderId)
+      const { status, query } = this.state
+
       orders.splice(index, 1)
       if (orders.length == 0) {
-        this.props.getOrders(this.state.status, 0, 10)
+        this.props.getOrders(status, query, 0, 10)
       } else {
         let totalCounts = this.props.totalCounts
         if (typeof totalCounts[orderStatus.toUpperCase()] == "undefined") {
@@ -140,6 +156,7 @@ export class Orders extends Component {
     return orderButton
   }
   renderOrderAction(orderStatus, order, paymentStatus) {
+    const { visible } = this.state
     let orderButton = <></>
     switch (orderStatus.toLowerCase()) {
       case "pending":
@@ -157,7 +174,7 @@ export class Orders extends Component {
         orderButton = (
           <CButton
             onClick={() => {
-              this.handleOrder(order, "shipped")
+              this.props.setTrackingInfoModal(!visible, "MarkAsShipped", order, "")
             }}
           >
             Mark as Shipped
@@ -265,15 +282,45 @@ export class Orders extends Component {
       submitted: submitted,
     }
   }
-
+  handleOnSearch = (event) => {
+    const { status, query } = this.state
+    this.props.getOrders(status, query, 0, 10)
+    this.setState({
+      query: event.target.value
+    })
+  }
   render() {
-    let { message, orders, permission, path } = this.state
+    let { message, orders, permission, path, query } = this.state
     const fontStyle = {
       fontSize: "14px",
       fontWeight: "400",
     }
     return (
       <>
+        <TrackingInfoModal />
+        <div className="d-flex justify-content-end mb-2">
+          <CForm className="w-50">
+            <CInputGroup>
+              <CFormControl
+                type="text"
+                id="floatingInput"
+                placeholder="Search"
+                className="p-2"
+                value={query}
+                onChange={this.handleOnSearch}
+              />
+              <CButton
+                type="button"
+                color="info"
+                variant="outline"
+                id="button-addon2"
+                className=""
+              >
+                <FaIcons.FaSearch />
+              </CButton>
+            </CInputGroup>
+          </CForm>
+        </div>
         {orders.length === 0 ? (
           <CCard>
             <CCardBody>
@@ -362,6 +409,23 @@ export class Orders extends Component {
                         ", " +
                         province}
                     </span>
+                    {order.orderStatus === "SHIPPED" ?
+                      <>
+
+                        <span
+                          style={{ fontSize: "14px", fontWeight: "400" }}
+                          className="text-black-50"
+                        >
+                          Tracking Number: {order.trackingNumber}
+                        </span>
+                        <span
+                          style={{ fontSize: "14px", fontWeight: "400" }}
+                          className="text-black-50"
+                        >
+                          Tracking Url: {order.trackingUrl}
+                        </span>
+                      </> :
+                      <></>}
                   </CRow>
                 </CCardHeader>
                 <CCardBody>
@@ -462,17 +526,17 @@ export class Orders extends Component {
                     <CCol sm="12" lg="6">
                       <div className="d-flex align-items-end  h-100 justify-content-end mt-3">
                         {permission === Roles.SUPER_ADMIN ||
-                        permission === Roles.ADMIN
+                          permission === Roles.ADMIN
                           ? this.renderOrderAction(
-                              this.state.status,
-                              order,
-                              paymentStatus,
-                            )
+                            this.state.status,
+                            order,
+                            paymentStatus,
+                          )
                           : this.renderCustomerAction(
-                              this.state.status,
-                              order,
-                              paymentStatus,
-                            )}
+                            this.state.status,
+                            order,
+                            paymentStatus,
+                          )}
                         <Link
                           to={{
                             pathname:
@@ -502,6 +566,8 @@ const mapStateToProps = (state) => {
     orderResponse: state.orderResponse,
     messageResponse: state.messageResponse,
     userResponse: state.userResponse,
+    modalVisible: state.modalVisibleResponse,
+
   }
 }
 export default connect(mapStateToProps, {
@@ -509,4 +575,5 @@ export default connect(mapStateToProps, {
   clearMessage,
   updateOrderStatus,
   saveComments,
+  setTrackingInfoModal
 })(Orders)

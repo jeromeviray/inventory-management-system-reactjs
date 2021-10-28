@@ -2,9 +2,12 @@ import authHeader from '../auth/authHeader';
 import axios from './RestApi';
 
 export class OrderApiService {
-    getOrders(status) {
+    getOrders(status, query, page, limit) {
         return axios.get("/orders/status/" + status, {
-            headers: authHeader()
+            headers: authHeader(),
+            params: {
+                query: query
+            }
         })
     }
 
@@ -42,9 +45,13 @@ export class OrderApiService {
         })
     }
 
-    updateOrderStatus(orderId, status) {
+    updateOrderStatus(orderId, status, trackingNumber, trackingUrl) {
         return axios.put("/orders/" + orderId + "/status/" + status, {}, {
-            headers: authHeader()
+            headers: authHeader(),
+            params: {
+                trackingNumber: trackingNumber,
+                trackingUrl: trackingUrl
+            }
         })
     }
 

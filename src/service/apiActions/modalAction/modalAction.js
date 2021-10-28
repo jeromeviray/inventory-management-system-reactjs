@@ -18,6 +18,7 @@ import {
   UDPATE_STORE_INFORMATION,
   SET_TERMS_AND_CONDITION_MODAL,
   SET_CAROULSE_MDOAL,
+  SET_TRACKING_INFO_MODAL,
 } from "src/service/redux/constants"
 
 export const setProductModal = (visible, action, icon) => async (dispatch) => {
@@ -264,18 +265,33 @@ export const setTermAndConditionModal =
       },
     })
   }
-  export const setCarouselModal =
-    (visible, action, carousel, icon) => async (dispatch) => {
-      dispatch({
-        type: SET_CAROULSE_MDOAL,
-        payload: {
-          status: 200,
-          data: {
-            visible: visible,
-            action: action,
-            carousel: carousel,
-            icon: icon,
-          },
+export const setCarouselModal =
+  (visible, action, carousel, icon) => async (dispatch) => {
+    dispatch({
+      type: SET_CAROULSE_MDOAL,
+      payload: {
+        status: 200,
+        data: {
+          visible: visible,
+          action: action,
+          carousel: carousel,
+          icon: icon,
         },
-      })
+      },
+    })
+  }
+
+export const setTrackingInfoModal = (visible, action, order, icon) => async (dispatch) => {
+  dispatch({
+    type: SET_TRACKING_INFO_MODAL,
+    payload: {
+      status: 200,
+      data: {
+        visible: visible,
+        action: action,
+        order: order,
+        icon: icon
+      }
     }
+  })
+}

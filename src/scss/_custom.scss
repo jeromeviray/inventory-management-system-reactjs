@@ -271,8 +271,8 @@ body {
   display: flex;
   list-style: none;
   outline: none;
-  float: right;
   margin-bottom: 50px;
+  justify-content: end;
 }
 .pagination > .active > a {
   background-color: #47ccde;

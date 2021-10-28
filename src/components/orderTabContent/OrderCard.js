@@ -45,6 +45,7 @@ export class OrderCard extends Component {
       fontWeight: "400",
     }
     return (
+
       <CRow className="mb-3">
         <CCard>
           <CCardBody>
@@ -63,10 +64,10 @@ export class OrderCard extends Component {
               />
               <div className="ms-2  w-100">
                 <CRow className="d-flex justify-content-between">
-                  <CCol className="ps-4 text-dark">
+                  <CCol sm="12" lg="3" md="12" className="ps-4 text-dark">
                     {orderItem.product.productName}
                   </CCol>
-                  <CCol className="text-dark d-flex flex-column align-items-center">
+                  <CCol sm="12" lg="3" md="2" className="text-dark d-flex flex-column align-items-center">
                     <span style={fontStyle} className="text-black-50">
                       Price
                     </span>
@@ -74,13 +75,13 @@ export class OrderCard extends Component {
                       &#8369;{orderItem.product.productPrice.toFixed(2)}
                     </span>
                   </CCol>
-                  <CCol className="text-dark d-flex flex-column align-items-center">
+                  <CCol sm="12" lg="3" md="2" className="text-dark d-flex flex-column align-items-center">
                     <span style={fontStyle} className="text-black-50">
                       Quantity
                     </span>
                     <span className="pt-3">{orderItem.quantity}</span>
                   </CCol>
-                  <CCol className="text-dark d-flex flex-column align-items-center">
+                  <CCol sm="12" lg="3" md="2" className="text-dark d-flex flex-column align-items-center">
                     <span style={fontStyle} className="text-black-50">
                       Amount
                     </span>

@@ -87,7 +87,7 @@ export class IncomingSuppliesDetails extends Component {
           </div>
         )}
         <div className={hasError ? "d-none" : "d-block"}>
-          <div className="d-flex align-items-end flex-row-reverse m-2">
+          <div className="d-lg-flex align-items-end flex-row-reverse m-2  d-none ">
             <ReactToPrint
               trigger={() => (
                 <CButton color="info" className="d-flex align-items-center">

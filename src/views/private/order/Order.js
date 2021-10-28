@@ -77,28 +77,14 @@ export class Order extends Component {
     }
     return (
       <>
-        {/* <div className="d-flex justify-content-end mb-2">
-          <CForm className="w-50">
-            <CInputGroup>
-              <CFormControl
-                type="text"
-                id="floatingInput"
-                placeholder="Search"
-                className="p-2"
-              />
-              <CButton
-                type="button"
-                color="info"
-                variant="outline"
-                id="button-addon2"
-                className=""
-              >
-                <FaIcons.FaSearch />
-              </CButton>
-            </CInputGroup>
-          </CForm>
-        </div> */}
-        <CNav variant="pills" role="tablist" layout="fill">
+
+        <CNav
+          variant="pills"
+          role="tablist"
+          layout="fill"
+
+        // className="flex-column flex-sm-row"
+        >
           <CNavItem>
             <CNavLink
               href="#pending"

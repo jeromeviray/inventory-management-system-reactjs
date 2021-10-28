@@ -17,6 +17,7 @@ import {
   SET_SUPPLIER_MODAL,
   SET_SUPPLY_MODAL,
   SET_TERMS_AND_CONDITION_MODAL,
+  SET_TRACKING_INFO_MODAL,
   UDPATE_STORE_INFORMATION,
 } from "../constants"
 
@@ -149,6 +150,13 @@ const modalVisibilityReducer = (state = {}, action) => {
         visible: payload.data.visible,
         action: payload.data.action,
         carousel: payload.data.carousel,
+        icon: payload.data.icon,
+      }
+    case SET_TRACKING_INFO_MODAL:
+      return {
+        visible: payload.data.visible,
+        action: payload.data.action,
+        order: payload.data.order,
         icon: payload.data.icon,
       }
     default:

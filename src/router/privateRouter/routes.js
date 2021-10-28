@@ -124,7 +124,7 @@ export const routes = [
     path: config.api.private.prefixFrontendUrl + "/app/sale",
     name: "Order Sales Report",
     component: Sale,
-    permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
+    permission: [Roles.SUPER_ADMIN],
   },
   {
     path: config.api.private.prefixFrontendUrl + "/app/products",

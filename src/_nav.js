@@ -25,6 +25,16 @@ const _nav = [
       Roles.SUPER_ADMIN,
     ],
   },
+  {
+    _component: "CNavItem",
+    as: NavLink,
+    anchor: "Customer Orders",
+    to: "/app/order",
+    icon: <FaIcons.FaShoppingCart size={20} style={iconMargin} />,
+    permission: [
+      Roles.ADMIN,
+    ],
+  },
   // {
   //   _component: "CNavItem",
   //   as: NavLink,
@@ -38,7 +48,7 @@ const _nav = [
     _component: "CNavGroup",
     anchor: "Transactions",
     icon: <BsIcons.BsArrowLeftRight size={20} style={iconMargin} />,
-    permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
+    permission: [Roles.SUPER_ADMIN],
     items: [
       {
         _component: "CNavItem",
@@ -46,7 +56,7 @@ const _nav = [
         anchor: "Customer Orders",
         to: "/app/order",
         icon: <FaIcons.FaShoppingCart size={20} style={iconMargin} />,
-        permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
+        permission: [Roles.SUPER_ADMIN],
       },
       {
         _component: "CNavItem",
@@ -54,7 +64,7 @@ const _nav = [
         anchor: "Order Sales Report",
         to: "/app/sale",
         icon: <FaIcons.FaMoneyBill size={20} style={iconMargin} />,
-        permission: [Roles.SUPER_ADMIN, Roles.ADMIN],
+        permission: [Roles.SUPER_ADMIN],
       },
     ],
   },
