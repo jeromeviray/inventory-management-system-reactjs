@@ -33,7 +33,10 @@ export class Orders extends Component {
     message: "",
     status: "",
     action: "",
-    orders: [],
+    orders: {
+      data: [],
+      totalCounts: 0
+    },
     token: "",
     permission: "",
     path: "",
@@ -99,7 +102,7 @@ export class Orders extends Component {
   handleOrder(orderData, orderStatus) {
     let orderId = orderData.orderId
     this.props.updateOrderStatus(orderId, orderStatus, '', '').then(() => {
-      let orders = this.state.orders
+      let orders = this.state.orders.data
       const order = this.props.orderResponse.data
       const index = orders.findIndex((o) => o.orderId == orderId)
       const { status, query } = this.state
@@ -124,19 +127,19 @@ export class Orders extends Component {
     })
   }
   renderCustomerAction = (orderStatus, order, paymentStatus) => {
-    console.log(paymentStatus)
     let orderButton = <></>
+    let cancelButtonIfNotPaid = paymentStatus === "Paid" ? <></> :
+      <CButton
+        onClick={() => {
+          this.handleOrder(order, "cancel")
+        }}
+      >
+        Cancel Order
+      </CButton>
+
     switch (orderStatus.toLowerCase()) {
       case "pending":
-        orderButton = (
-          <CButton
-            onClick={() => {
-              this.handleOrder(order, "cancel")
-            }}
-          >
-            Cancel Order
-          </CButton>
-        )
+        orderButton = (cancelButtonIfNotPaid)
         break
       case "delivered":
         orderButton =
@@ -194,16 +197,21 @@ export class Orders extends Component {
         break
       case "delivered":
         orderButton = (
-          <CButton
-            onClick={() => {
-              this.handleOrder(order, "payment_received")
-            }}
-            disabled={paymentStatus === "Paid" ? true : false}
+          paymentStatus === "Paid" ? <span
+            className="text-success p-2"
+            style={{ fontWeight: "500", fontStyle: "italic" }}
           >
-            {paymentStatus === "Paid"
-              ? "Payment Recieved"
-              : "Mark as Payment Received"}
-          </CButton>
+            Payment Received
+          </span> :
+            <CButton
+              onClick={() => {
+                this.handleOrder(order, "payment_received")
+              }}
+              disabled={paymentStatus === "Paid" ? true : false}
+            >
+
+              Mark as Payment Received
+            </CButton>
         )
         break
       case "request_refund":
@@ -245,8 +253,8 @@ export class Orders extends Component {
 
   handleOrderReview(orderId, item, rating, comment) {
     const { orders } = this.state
-    let orderIndex = orders.findIndex((ctt2) => ctt2.orderId == orderId)
-    let { comments } = orders[orderIndex]
+    let orderIndex = orders.data.findIndex((ctt2) => ctt2.orderId == orderId)
+    let { comments } = orders.data[orderIndex]
 
     let submitted = false
 
@@ -289,6 +297,12 @@ export class Orders extends Component {
       query: event.target.value
     })
   }
+  handlePageClick = (data) => {
+    let page = data.selected
+    this.setState({ page: page })
+    const { status, query } = this.state
+    this.props.getOrders(status, query, page, 10)
+  }
   render() {
     let { message, orders, permission, path, query } = this.state
     const fontStyle = {
@@ -321,14 +335,14 @@ export class Orders extends Component {
             </CInputGroup>
           </CForm>
         </div>
-        {orders.length === 0 ? (
+        {orders.data && orders.data.length < 0 ? (
           <CCard>
             <CCardBody>
               <div className="text-center">No Order Data</div>
             </CCardBody>
           </CCard>
         ) : (
-          orders.map((order, index) => {
+          orders.data && orders.data.map((order, index) => {
             let hasPendingReview =
               order.orderItems.length != order.comments.length
 
@@ -447,7 +461,7 @@ export class Orders extends Component {
                             orderId={order.orderId}
                             comment={comment}
                             rating={rating}
-                            key={index}
+                            key={item.id}
                             submitted={submitted}
                             handleOrderReview={this.handleOrderReview}
                           />
@@ -515,6 +529,17 @@ export class Orders extends Component {
                             style={fontStyle}
                             className="text-black-50 me-2"
                           >
+                            Shipping Fee
+                          </span>
+                          <span style={{ fontWeight: "500" }}>
+                            &#8369;{order.shippingFee ? order.shippingFee.shippingAmount.toFixed(2) : 0}
+                          </span>
+                        </div>
+                        <div className="mt-2">
+                          <span
+                            style={fontStyle}
+                            className="text-black-50 me-2"
+                          >
                             Total Amount
                           </span>
                           <span style={{ fontWeight: "500" }}>
@@ -557,6 +582,18 @@ export class Orders extends Component {
             )
           })
         )}
+        <ReactPaginate
+          previousLabel={"previous"}
+          nextLabel={"next"}
+          breakLabel={"..."}
+          breakClassName={"break-me"}
+          pageCount={orders.totalPages}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          onPageChange={this.handlePageClick}
+          containerClassName={"pagination"}
+          activeClassName={"active"}
+        />
       </>
     )
   }

@@ -44,6 +44,7 @@ export class OrderCard extends Component {
       fontSize: "14px",
       fontWeight: "400",
     }
+    console.log(orderItem)
     return (
 
       <CRow className="mb-3">

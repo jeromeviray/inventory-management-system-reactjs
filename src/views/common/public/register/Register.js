@@ -274,6 +274,7 @@ export class Register extends Component {
                                       </CFormFloating>
                                     </CCol>
                                   </CInputGroup>
+                                  <span className="text-danger">You have only 5 mins to verify your account. </span>
                                 </CCol>
                               </CRow>
                               <CButton
@@ -297,7 +298,7 @@ export class Register extends Component {
                           </>
                         ) : (
                           <>
-                            <CForm onSubmit={this.handleSubmit}>
+                            <CForm onSubmit={this.handleSubmit} >
                               <CCol
                                 sm="12"
                                 md="12"
@@ -364,65 +365,7 @@ export class Register extends Component {
                                   </CInputGroup>
                                 </CCol>
                               </CRow>
-                              <CRow>
-                                <CCol md="6" sm="12" lg="6">
-                                  <CInputGroup>
-                                    <CCol xs="12" sm="12" md="12" lg="12">
-                                      <CFormFloating className="mb-3 text-dark ">
-                                        <CFormControl
-                                          name="phoneNumber"
-                                          type="tel"
-                                          required
-                                          pattern={"^(09|\\+639)\\d{9}$"}
-                                          id="floatingPhoneNumber"
-                                          placeholder="Phone number"
-                                          onChange={this.handleOnChange}
-                                          value={phoneNumber}
-                                          className="rounded-pill  ps-4 pe-4"
-                                        />
-                                        <CFormLabel
-                                          htmlFor="floatingPhoneNumber "
-                                          className="ps-4 pe-4"
-                                        >
-                                          <FaIcons.FaPhone size={18} />
-                                          <span className="ps-2">
-                                            Phone number
-                                          </span>
-                                        </CFormLabel>
-                                      </CFormFloating>
-                                    </CCol>
-                                  </CInputGroup>
-                                </CCol>
-                                <CCol md="6" sm="12" lg="6">
-                                  <CInputGroup>
-                                    <CCol xs="12" sm="12" md="12" lg="12">
-                                      <CFormFloating className="mb-3 text-dark position-relative">
-                                        <CFormControl
-                                          name="email"
-                                          type="text"
-                                          pattern="^[a-z0-9](\.?[a-z0-9]){5,}@g(oogle)?mail\.com$"
-                                          id="floatingEmail"
-                                          placeholder="Email"
-                                          onChange={this.handleOnChange}
-                                          value={email}
-                                          required
-                                          className="rounded-pill ps-4 pe-4"
-                                        />
-                                        <CFormLabel
-                                          htmlFor="exampleFormControlTextarea1 "
-                                          className="ps-4 pe-4"
-                                        >
-                                          <FaIcons.FaEnvelope size={18} />
-                                          <span className="ps-2">Email</span>
-                                        </CFormLabel>
-                                        <CFormFeedback invalid>
-                                          Please provide a valid username
-                                        </CFormFeedback>
-                                      </CFormFloating>
-                                    </CCol>
-                                  </CInputGroup>
-                                </CCol>
-                              </CRow>
+
                               <CRow>
                                 <CCol md="6" sm="12" lg="6">
                                   <CInputGroup>
@@ -462,6 +405,7 @@ export class Register extends Component {
                                           placeholder="Password"
                                           onChange={this.handleOnChange}
                                           value={password}
+                                          pattern="/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/"
                                           required
                                           className="rounded-pill ps-4 pe-4"
                                         />
@@ -482,6 +426,65 @@ export class Register extends Component {
                                             <FaIcons.FaEye size={20} />
                                           )}
                                         </span>
+                                        <CFormFeedback invalid>
+                                          Please provide a valid username
+                                        </CFormFeedback>
+                                      </CFormFloating>
+                                    </CCol>
+                                  </CInputGroup>
+                                </CCol>
+                              </CRow>
+                              <CRow>
+                                {/* <CCol md="6" sm="12" lg="6">
+                                  <CInputGroup>
+                                    <CCol xs="12" sm="12" md="12" lg="12">
+                                      <CFormFloating className="mb-3 text-dark ">
+                                        <CFormControl
+                                          name="phoneNumber"
+                                          type="tel"
+                                          required
+                                          pattern={"^(09|\\+639)\\d{9}$"}
+                                          id="floatingPhoneNumber"
+                                          placeholder="Phone number"
+                                          onChange={this.handleOnChange}
+                                          value={phoneNumber}
+                                          className="rounded-pill  ps-4 pe-4"
+                                        />
+                                        <CFormLabel
+                                          htmlFor="floatingPhoneNumber "
+                                          className="ps-4 pe-4"
+                                        >
+                                          <FaIcons.FaPhone size={18} />
+                                          <span className="ps-2">
+                                            Phone number
+                                          </span>
+                                        </CFormLabel>
+                                      </CFormFloating>
+                                    </CCol>
+                                  </CInputGroup>
+                                </CCol> */}
+                                <CCol sm="12">
+                                  <CInputGroup>
+                                    <CCol xs="12" sm="12" md="12" lg="12">
+                                      <CFormFloating className="mb-3 text-dark position-relative">
+                                        <CFormControl
+                                          name="email"
+                                          type="text"
+                                          pattern="^[a-z0-9](\.?[a-z0-9]){5,}@g(oogle)?mail\.com$"
+                                          id="floatingEmail"
+                                          placeholder="Email"
+                                          onChange={this.handleOnChange}
+                                          value={email}
+                                          required
+                                          className="rounded-pill ps-4 pe-4"
+                                        />
+                                        <CFormLabel
+                                          htmlFor="exampleFormControlTextarea1 "
+                                          className="ps-4 pe-4"
+                                        >
+                                          <FaIcons.FaEnvelope size={18} />
+                                          <span className="ps-2">Email</span>
+                                        </CFormLabel>
                                         <CFormFeedback invalid>
                                           Please provide a valid username
                                         </CFormFeedback>

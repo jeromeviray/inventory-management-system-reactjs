@@ -6,7 +6,9 @@ export class OrderApiService {
         return axios.get("/orders/status/" + status, {
             headers: authHeader(),
             params: {
-                query: query
+                query: query,
+                page: page,
+                limit: limit
             }
         })
     }
@@ -33,7 +35,8 @@ export class OrderApiService {
         return axios.post("/orders/checkout", {
             customerAddressId: orderDetails.addressId,
             paymentId: orderDetails.paymentMethodId,
-            cartItems: orderDetails.items
+            cartItems: orderDetails.items,
+            shippingFeeId: orderDetails.shippingFee
         }, {
             headers: authHeader()
         })

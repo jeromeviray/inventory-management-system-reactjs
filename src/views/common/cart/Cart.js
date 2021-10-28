@@ -29,8 +29,7 @@ import config from "../../../config"
 import { history } from "src/_helper/history"
 import { Redirect } from "react-router-dom"
 import Roles from "src/router/config"
-import { cibLetsEncrypt } from "@coreui/icons"
-
+import { getShippingFees } from "src/service/apiActions/shippingFeeAction/shippingFeeAction"
 // import SuccessOrderPlace from './SuccessOrderPlace';
 const Checkout = React.lazy(() =>
   import("src/views/common/cart/checkout/Checkout"),
@@ -45,6 +44,7 @@ const SuccessOrderPlace = React.lazy(() =>
   import("src/views/common/cart/SuccessOrderPlace"),
 )
 
+
 export class Cart extends Component {
   state = {
     step: 1,
@@ -55,15 +55,17 @@ export class Cart extends Component {
     permission: "",
     addressId: undefined,
     paymentMethodId: undefined,
-
     successfull: false,
     loading: false,
     redirectUrl: "",
     clientRef: null,
-    checkout: false
+    checkout: false,
+    shippingFee: []
   }
 
   componentDidMount() {
+    window.addEventListener("beforeunload", this.releaseCheckoutLock);
+
     if (!this.props.userResponse.isLoggedIn) {
       history.push(config.api.private.prefixFrontendUrl + "/login")
     } else {
@@ -83,9 +85,15 @@ export class Cart extends Component {
       }
       this.setState({ successfull: paymentStatus == "success" })
     }
+    this.props.getShippingFees()
+  }
+
+  componentWillUnmount() {
+    this.releaseCheckoutLock();
   }
 
   componentDidUpdate(prevProps, prevState) {
+    this.manageShippingFeeResponse(prevProps, prevState)
     if (this.props.websocketResponse !== prevProps.websocketResponse) {
       if (this.props.websocketResponse.action == "WEBSOCKET_REF") {
         let clientRef = this.props.websocketResponse.data.clientRef;
@@ -95,6 +103,7 @@ export class Cart extends Component {
       } else if (this.props.websocketResponse.action == "WEBSOCKET_EVENT") {
         let { cart } = this.state;
         const receiveCheckoutEvent = this.props.websocketResponse.data.message;
+        console.log(receiveCheckoutEvent)
         if (cart.accountId != receiveCheckoutEvent.accountId) {
           let cartItems = cart.cartItems;
           cartItems.forEach((item, ind) => {
@@ -103,7 +112,6 @@ export class Cart extends Component {
           })
 
           cart.cartItems = cartItems;
-          console.log(setCart)
           this.props.setCart(cart)
         }
       }
@@ -124,6 +132,16 @@ export class Cart extends Component {
       }
     }
   }
+  manageShippingFeeResponse(prevProps, prevState) {
+    if (prevProps.cartResponse !== this.props.cartResponse) {
+      let { action, status, data } = this.props.shippingFeeResponse
+      if (action === "GET_SHIPPING_FEES" && status === 200) {
+        this.setState({
+          shippingFee: data.shippingFees[0]
+        })
+      }
+    }
+  }
   redirectUser = () => {
     const isLoggedIn = this.props.userResponse.isLoggedIn
     if (isLoggedIn) {
@@ -139,6 +157,7 @@ export class Cart extends Component {
     }
   }
   handleCartOnChange = (items, Tquantity, Tamount) => {
+    console.log(Tamount)
     this.setState({
       items: items,
       Tquantity: Tquantity,
@@ -197,8 +216,8 @@ export class Cart extends Component {
   }
 
   releaseCheckoutLock = () => {
-    const { cart, items } = this.state;
-    this.sendMessage("release_checkout", { cartId: cart.cartId, accountId: cart.accountId, items: items })
+    const { cart } = this.state;
+    this.sendMessage("release_checkout", { cartId: cart.cartId, accountId: cart.accountId, items: cart.cartItems })
   }
 
   handleOnPre = () => {
@@ -267,11 +286,13 @@ export class Cart extends Component {
     }
   }
   handleOnPlaceOrder = (event) => {
-    let { addressId, paymentMethodId, items } = this.state
+    let { addressId, paymentMethodId, items, shippingFee, cartId } = this.state
     let orderDetails = {
       addressId: addressId,
       paymentMethodId: paymentMethodId,
       items: items,
+      shippingFee: shippingFee.id,
+      cartId: cartId
     }
     this.setState({
       loading: true,
@@ -308,8 +329,9 @@ export class Cart extends Component {
       successfull,
       loading,
       redirectUrl,
+      shippingFee
     } = this.state
-    var totalAmount = 0
+    var totalAmount = shippingFee.shippingAmount;
     const headerStyle = {
       fontWeight: "800",
     }
@@ -418,7 +440,7 @@ export class Cart extends Component {
                                 )}
                               </span>
                               <span>
-                                &#8369;{(price * item.quantity).toFixed(2)}
+                                &#8369;{(product.productPrice * item.quantity).toFixed(2)}
                               </span>
                             </div>
                           </>
@@ -442,10 +464,16 @@ export class Cart extends Component {
                     </div>
                     <div className="d-flex justify-content-between align-items-center pb-2">
                       <span className="text-muted font-style me-2">
+                        Shipping Fee (Metro Manila 3 to 5 Days, Provincial 7 to 10 Days)
+                      </span>
+                      <span style={{ fontWeight: "500" }}>  &#8369;{shippingFee.shippingAmount && shippingFee.shippingAmount.toFixed(2)}</span>
+                    </div>
+                    <div className="d-flex justify-content-between align-items-center pb-2">
+                      <span className="text-muted font-style me-2">
                         Total Amount
                       </span>
                       <span style={{ fontWeight: "500" }}>
-                        &#8369;{Tamount.toFixed(2)}
+                        &#8369;{Tamount > 0 ? totalAmount.toFixed(2) : Tamount.toFixed(2)}
                       </span>
                     </div>
                   </div>
@@ -515,7 +543,8 @@ const mapStateToProps = (state) => {
     messageResponse: state.messageResponse,
     websocketResponse: state.websocketResponse,
     cartResponse: state.cartResponse,
-    orderResponse: state.orderResponse
+    orderResponse: state.orderResponse,
+    shippingFeeResponse: state.shippingFeeResponse
   }
 }
 export default connect(mapStateToProps, {
@@ -523,5 +552,6 @@ export default connect(mapStateToProps, {
   placeOrder,
   updateOrderPaymentStatus,
   validateCart,
-  setCart
+  setCart,
+  getShippingFees
 })(Cart)

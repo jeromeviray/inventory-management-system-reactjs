@@ -17,12 +17,7 @@ export class RightFormCard extends Component {
       <CCard className="right-to-left border-0">
         <CCardBody className="text-center">
           <div className=" d-flex flex-wrap" style={{ height: "90%" }}>
-            <CCol
-              xs="12"
-              className="d-flex justify-content-end align-items-center p-2"
-            >
-              <h3 className="">logo</h3>
-            </CCol>
+
             <CCol
               xs="12"
               className="d-flex justify-content-center align-items-center flex-column"

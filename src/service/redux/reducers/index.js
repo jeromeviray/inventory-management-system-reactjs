@@ -26,6 +26,7 @@ import dashboardReducer from "./dashboardReducer"
 import storeInformationReducer from "./storeInformationReducer"
 import { termsAndConditionReducer } from "./termsAndConditionReducer"
 import websocketReducer from "./websocketReducer"
+import shippingFeeReducer from "./shippingFeeReducer"
 
 export default combineReducers({
   //modals
@@ -77,5 +78,7 @@ export default combineReducers({
   storeInformationResponse: storeInformationReducer,
   //terms and condition
   termsAndConditionResponse: termsAndConditionReducer,
-  websocketResponse: websocketReducer
+  websocketResponse: websocketReducer,
+  //shipping
+  shippingFeeResponse: shippingFeeReducer
 })

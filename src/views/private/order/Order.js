@@ -1,6 +1,5 @@
 import React, { Component, Suspense } from "react"
 import { connect } from "react-redux"
-import Roles from "src/router/config"
 
 import {
   CNav,
@@ -8,19 +7,14 @@ import {
   CNavLink,
   CTabContent,
   CTabPane,
-  CSpinner,
-  CForm,
-  CInputGroup,
-  CButton,
   CBadge,
-  CFormControl,
 } from "@coreui/react"
 import { DotLoader } from "react-spinners"
 
 // icon
 // import * as FiIcons from 'react-icons/fi'
 //component tab
-import * as FaIcons from "react-icons/fa"
+// import * as FaIcons from "react-icons/fa"
 
 const Orders = React.lazy(() => import("src/components/orderTabContent/Orders"))
 
@@ -53,7 +47,6 @@ export class Order extends Component {
   manageorderRepsonse = (prevProps, prevState) => {
     if (prevProps.orderResponse !== this.props.orderResponse) {
       let { status, action, data } = this.props.orderResponse
-      console.log(data)
       if (status === 200 && action === "GET_ORDERS") {
         this.setState({
           totalCounts: data.orderStatusCount,

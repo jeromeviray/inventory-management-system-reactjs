@@ -27,6 +27,7 @@ import config from "../../../../config";
 
 import { NO_IMAGE_BASE64 } from "src/service/redux/constants"
 
+
 //icon
 // import * as IoIcons from "react-icons/io5";
 
@@ -94,10 +95,11 @@ export class Checkout extends Component {
     let totalPrice = check.reduce((sum, currentState, index) => {
       if (currentState === true) {
         let status = cartItems[index].product.promo && cartItems[index].product.promo.status
-        console.log(cartItems[index])
         let amount
         if (status === "ONGOING") {
           const { product } = cartItems[index]
+          console.log(cartItems[index])
+
           let percentage = product.promo.percentage
           let discount = (product.product.productPrice * percentage) / 100
           let price = product.product.productPrice - discount
@@ -122,7 +124,7 @@ export class Checkout extends Component {
       totalAmount: totalPrice,
       quantity: quantity,
     })
-    this.props.paymentDetailsOnChange(pendingItem, quantity, totalPrice * quantity)
+    this.props.paymentDetailsOnChange(pendingItem, quantity, totalPrice)
   }
 
   manageStatus = (status) => {

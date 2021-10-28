@@ -12,7 +12,7 @@ export const getOrders = (status, query, page, limit) => async (dispatch) => {
                     status: 200,
                     action: "GET_ORDERS",
                     data: {
-                        orders: response.data.orders,
+                        orders: response.data,
                         orderStatusCount: response.data.orderCounts
                     }
                 }
