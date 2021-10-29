@@ -43,5 +43,10 @@ export class BrandApiService {
       headers: { Authorization: token },
     })
   }
+  getBrandsList() {
+    return axios.get("/brands/list", {
+      headers: authHeader()
+    })
+  }
 }
 export default new BrandApiService()

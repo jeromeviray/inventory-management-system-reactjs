@@ -34,8 +34,8 @@ import { saveProduct } from "src/service/apiActions/productAction/productAction"
 import { setProductModal } from "../../../service/apiActions/modalAction/modalAction"
 import { clearMessage } from "src/service/apiActions/messageAction/messageAction"
 import { getImage } from "src/service/apiActions/productAction/productAction"
-import { getCategories } from "src/service/apiActions/categoryAction/categoryAction"
-import { getBrands } from "src/service/apiActions/brandAction/brandAction"
+import { getCategoriesList } from "src/service/apiActions/categoryAction/categoryAction"
+import { getBrandsList } from "src/service/apiActions/brandAction/brandAction"
 import { updateProduct } from "src/service/apiActions/productAction/productAction"
 //api
 import ProductApiService from "src/service/restAPI/ProductApiService"
@@ -61,11 +61,13 @@ export class ProductEditorModal extends Component {
       images: [],
       productImage: [],
       removedImages: [],
-
       editorState: EditorState.createEmpty(),
       autoGenerateBarcode: false,
       brands: [],
       categories: [],
+      query: '',
+      page: 0,
+      limit: 10
     }
   }
 
@@ -90,7 +92,7 @@ export class ProductEditorModal extends Component {
     this.getCategories()
   }
   getCategories = () => {
-    this.props.getCategories().catch(() => {
+    this.props.getCategoriesList().catch(() => {
       let { status, data } = this.props.messageResponse
       this.setState({
         message: data.message,
@@ -98,7 +100,7 @@ export class ProductEditorModal extends Component {
     })
   }
   getBrands = () => {
-    this.props.getBrands().catch(() => {
+    this.props.getBrandsList().catch(() => {
       let failMessage = this.props.messageResponse
       this.setState({
         message: failMessage.data.message,
@@ -115,7 +117,9 @@ export class ProductEditorModal extends Component {
   manageBrandsResponse = (prevProps, prevState) => {
     if (prevProps.brandResponse !== this.props.brandResponse) {
       let { status, action, data } = this.props.brandResponse
-      if (status === 200 && action === "GETBRANDS") {
+
+      console.log(this.props.brandResponse)
+      if (status === 200 && action === "GET_BRANDS_LIST") {
         this.setState({
           brands: data.brands,
         })
@@ -125,9 +129,11 @@ export class ProductEditorModal extends Component {
   manageCategoryResponse = (prevProps, prevState) => {
     if (prevProps.categoryResponse !== this.props.categoryResponse) {
       let { action, data, status } = this.props.categoryResponse
-      if (action === "GET_CATEGORIES" && status === 200) {
+      if (action === "GET_CATEGORIES_LIST" && status === 200) {
+        console.log(this.props.categoryResponse)
+
         this.setState({
-          categories: data.categories,
+          categories: data.categoriesList,
         })
       }
     }
@@ -135,7 +141,6 @@ export class ProductEditorModal extends Component {
   manageModalVisible = (prevProps, prevState) => {
     if (prevProps.modalVisibleResponse !== this.props.modalVisibleResponse) {
       let { action, visible, icon } = this.props.modalVisibleResponse
-      console.log(this.props.modalVisibleResponse)
       if (action === "Add") {
         this.setState({
           visible: visible,
@@ -144,7 +149,7 @@ export class ProductEditorModal extends Component {
         })
       } else if (action === "Edit") {
         let { product, action, visible, icon } = this.props.modalVisibleResponse
-        console.log(product);
+
         let {
           productName,
           productDescription,
@@ -459,6 +464,7 @@ export class ProductEditorModal extends Component {
       brands,
       categories,
     } = this.state
+    console.log(categories)
     const styleOption = {
       fontWeight: "600",
       fontSize: "16px",
@@ -528,9 +534,9 @@ export class ProductEditorModal extends Component {
                         style={
                           isDragging
                             ? {
-                                backgroundColor: "#8E9293",
-                                border: "4px dashed #ffffff",
-                              }
+                              backgroundColor: "#8E9293",
+                              border: "4px dashed #ffffff",
+                            }
                             : undefined
                         }
                         onClick={onImageUpload}
@@ -610,8 +616,8 @@ export class ProductEditorModal extends Component {
                         value={barcode}
                         onChange={this.handleOnChange}
                         required
-                        disabled={action === "Edit" ? true : false}
-                        // disabled={autoGenerateBarcode}
+                      // disabled={action === "Edit" ? true : false}
+                      // disabled={autoGenerateBarcode}
                       />
                       <CFormLabel htmlFor="floatingBarcode">
                         Product Barcode
@@ -632,40 +638,6 @@ export class ProductEditorModal extends Component {
                       </CButton>
                     </div>
                   </div>
-
-                  {/* <CRow className="align-items-end">
-                    <CCol sm="8" md="8" lg="8">
-                      <CFormFloating className="mb-3">
-                        <CFormControl
-                          type="number"
-                          id="floatingBarcode"
-                          placeholder="Product Barcode"
-                          name="barcode"
-                          value={barcode}
-                          onChange={this.handleOnChange}
-                          required
-                          disabled={autoGenerateBarcode}
-                        />
-                        <CFormLabel htmlFor="floatingBarcode">
-                          Product Barcode
-                        </CFormLabel>
-                      </CFormFloating>
-                    </CCol>
-                    <CCol sm="4" md="4" lg="4">
-                      <CFormCheck
-                        value={autoGenerateBarcode}
-                        onChange={() =>
-                          this.setState({
-                            autoGenerateBarcode: !autoGenerateBarcode,
-                          })
-                        }
-                        name="autoGenerateBarcode"
-                        className="mb-3"
-                        id="autoGenerateBarcode"
-                        label="Generate Barcode"
-                      />
-                    </CCol>
-                  </CRow> */}
                 </CCol>
                 <CCol sm="12" md="6" lg>
                   <CFormFloating className="mb-3">
@@ -692,11 +664,11 @@ export class ProductEditorModal extends Component {
                       aria-label="Brand Names"
                       required
                     >
-                      <option value="" disabled>
+                      <option value="" >
                         -- Choose Brand --
                       </option>
-                      {brands.data &&
-                        brands.data.map((brand, index) => {
+                      {brands &&
+                        brands.map((brand, index) => {
                           return (
                             <option
                               key={index}
@@ -721,11 +693,11 @@ export class ProductEditorModal extends Component {
                       aria-label="Categories"
                       required
                     >
-                      <option value="" disabled>
+                      <option value="" >
                         -- Choose Category --
                       </option>
-                      {categories.data &&
-                        categories.data.map((category, index) => {
+                      {categories &&
+                        categories.map((category, index) => {
                           return (
                             <option
                               key={index}
@@ -817,8 +789,8 @@ export default connect(mapStateToProps, {
   saveProduct,
   clearMessage,
   getImage,
-  getCategories,
-  getBrands,
+  getCategoriesList,
+  getBrandsList,
   updateProduct,
   setScanModal,
   getDecodedBarcode,

@@ -330,7 +330,7 @@ export class Cart extends Component {
       successfull,
       loading,
       redirectUrl,
-      shippingFee
+      shippingFee,
     } = this.state
     var productTotalAmount = shippingFee.shippingAmount;
     let totalAmount = shippingFee.shippingAmount + Tamount;
@@ -478,7 +478,19 @@ export class Cart extends Component {
                         &#8369;{(Tamount > 0 ? totalAmount.toFixed(2) : Tamount.toFixed(2))}
                       </span>
                     </div>
+                    {step >= 2 ?
+                      <>
+                        <hr />
+                        <div className="d-flex justify-content-between align-items-center pb-2">
+
+                          <span className=" font-style me-2 text-warning" style={{ fontStyle: "italic" }}>
+                            You have 8 minutes to finish your checkout process and after 8 minutes if your are not finish, your quantity will release.
+                          </span>
+                        </div>
+                      </>
+                      : <></>}
                   </div>
+
                   <CCardFooter>
                     <div className="d-grid gap-2 mx-auto">
                       {step > 1 ? (

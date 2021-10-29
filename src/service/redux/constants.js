@@ -82,6 +82,7 @@ export const UPDATE_BRAND = "UPDATE_BRAND"
 export const DELETE_BRAND = "DELETE_BRAND"
 export const FAIL_BRAND = "FAIL_BRAND"
 export const CLEAR_BRAND = "CLEAR_BRAND"
+export const GET_BRANDS_LIST = "GET_BRANDS_LIST"
 
 // order
 export const GET_ORDERS = "GET_ORDERS"

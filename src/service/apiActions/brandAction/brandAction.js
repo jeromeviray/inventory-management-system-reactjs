@@ -3,6 +3,7 @@ import {
   DELETE_BRAND,
   FAIL_BRAND,
   GET_BRANDS,
+  GET_BRANDS_LIST,
   SAVE_BRAND,
   UPDATE_BRAND,
 } from "src/service/redux/constants"
@@ -48,7 +49,46 @@ export const getBrands = (query, page, limit) => async (dispatch) => {
     },
   )
 }
+export const getBrandsList = () => async (dispatch) => {
+  return BrandApiService.getBrandsList().then(
+    (response) => {
+      dispatch({
+        type: GET_BRANDS_LIST,
+        payload: {
+          status: 200,
+          action: GET_BRANDS_LIST,
+          data: {
+            brands: response.data,
+          },
+        },
+      })
+      return Promise.resolve()
+    },
+    (error) => {
+      const errorMessage =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
 
+      const status =
+        (error.response && error.response.data && error.response.data.code) ||
+        error.toString()
+
+      dispatch({
+        type: SET_MESSAGE,
+        payload: {
+          status: status,
+          data: {
+            message: errorMessage,
+          },
+        },
+      })
+      return Promise.reject()
+    },
+  )
+}
 export const savingBrand = (brand, token) => async (dispatch) => {
   return BrandApiService.saveBrand(brand, token).then(
     (response) => {
