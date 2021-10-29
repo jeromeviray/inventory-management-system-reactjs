@@ -405,7 +405,7 @@ export class Register extends Component {
                                           placeholder="Password"
                                           onChange={this.handleOnChange}
                                           value={password}
-                                          pattern="/^[A-Za-z]\w{7,14}$/"
+                                          pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
                                           required
                                           className="rounded-pill ps-4 pe-4"
                                         />
